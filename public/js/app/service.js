@@ -5,7 +5,8 @@ var Service = {
 	notebookService: require('notebook'),
 	noteService: require('note'),
 	tagService: require('tag'),
-	userService: require('user')
+	userService: require('user'),
+	tagService: require('tag')
 };
 // 分发服务
 // route = /note/notebook

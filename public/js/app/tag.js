@@ -191,7 +191,7 @@ function reRenderTags() {
 Tag.renderTagNav = function(tags) {
 	tags = tags || [];
 	for(var i in tags) {
-		var tag = tags[i];
+		var tag = tags[i].Title;
 		if(tag == "red" || tag == "blue" || tag == "yellow" || tag == "green") {
 			continue;
 		}

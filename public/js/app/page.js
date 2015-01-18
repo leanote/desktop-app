@@ -1318,7 +1318,10 @@ function initPage() {
 			}
 		}
 		
-		Tag.renderTagNav(tagsJson);
+		// 标签
+		Service.tagService.getTags(function(tags) {
+			Tag.renderTagNav(tags);
+		});
 
 		// init notebook后才调用
 		// initSlimScroll();
