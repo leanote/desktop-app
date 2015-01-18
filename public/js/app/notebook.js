@@ -21,6 +21,34 @@ Notebook.getCurNotebookId = function() {
 	return Notebook.curNotebookId;
 };
 
+Notebook.getCurNotebook = function() {
+	return Notebook.cache[Notebook.curNotebookId];
+};
+
+// 笔记本的笔记数量更新
+Notebook._updateNotebookNumberNotes = function(notebookId, n) {
+	var self = this;
+	var notebook = self.getNotebook(notebookId);
+	if(!notebook) {
+		return;
+	}
+	notebook.NumberNotes += n;
+	if(notebook.NumberNotes < 0) {
+		notebook.NumberNotes = 0;
+	}
+	$("#numberNotes_" + notebookId).html(notebook.NumberNotes);
+};
+// addNote, copyNote, moveNote
+Notebook.incrNotebookNumberNotes = function(notebookId) {
+	var self = this;
+	self._updateNotebookNumberNotes(notebookId, 1);
+};
+// moteNote, deleteNote
+Notebook.minusNotebookNumberNotes = function(notebookId) {
+	var self = this;
+	self._updateNotebookNumberNotes(notebookId, -1);
+};
+
 // 得到notebook标题, 给note显示其notebook标题用
 // called by Note
 Notebook.getNotebook = function(notebookId) {
@@ -58,6 +86,7 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 		icoObj.before(switchObj);
 		if(!isShare) {
 			if(!Notebook.isAllNotebookId(treeNode.NotebookId) && !Notebook.isTrashNotebookId(treeNode.NotebookId)) {
+				icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + (treeNode.NumberNotes || 0) + '</span>'));
 				icoObj.after($('<span class="fa notebook-setting" title="setting"></span>'));
 			}
 		} else {
@@ -227,7 +256,7 @@ Notebook.renderNotebooks = function(notebooks) {
 	notebooks = [{NotebookId: Notebook.allNotebookId, Title: getMsg("all"), drop:false, drag: false}].concat(notebooks);
 	notebooks.push({NotebookId: Notebook.trashNotebookId, Title: getMsg("trash"), drop:false, drag: false});
 	Notebook.notebooks = notebooks; // 缓存之
-	
+
 	self.tree = $.fn.zTree.init($("#notebookList"), self.getTreeSetting(), notebooks);
 	
 	// 展开/折叠图标
@@ -260,6 +289,41 @@ Notebook.cacheAllNotebooks = function(notebooks) {
 		Notebook.cache[notebook.NotebookId] = notebook;
 		if(!isEmpty(notebook.Subs)) {
 			self.cacheAllNotebooks(notebook.Subs);
+		}
+	}
+}
+
+// 展开到笔记本
+Notebook.expandNotebookTo = function(notebookId, userId) {
+	var me = this;
+	var selected = false;
+	var tree = me.tree;
+	
+	// 共享的
+	if(userId) {
+		tree = Share.trees[userId];
+	}
+	if(!tree) {
+		return;
+	}
+	var curNode = tree.getNodeByTId(notebookId);
+	if(!curNode) {
+		return;
+	}
+	while(true) {
+		var pNode = curNode.getParentNode();
+		if(pNode) {
+			tree.expandNode(pNode, true);
+			if(!selected) {
+				Notebook.changeNotebookNav(notebookId);
+				selected = true;
+			}
+			curNode = pNode;
+		} else {
+			if(!selected) {
+				Notebook.changeNotebookNav(notebookId);
+			}
+			break;
 		}
 	}
 }
@@ -339,7 +403,7 @@ Notebook.getChangedNotebooks = function(notebooks) {
 		if(!isEmpty(notebook.Subs)) {
 			classes = "dropdown-submenu";
 		}
-		var eachForNew = t('<li role="presentation" class="clearfix ?"><div class="new-note-left pull-left" title="为该笔记本新建笔记" href="#" notebookId="?">?</div><div title="为该笔记本新建markdown笔记" class="new-note-right pull-left" notebookId="?">M</div>', classes, notebook.NotebookId, notebook.Title, notebook.NotebookId);
+		var eachForNew = tt('<li role="presentation" class="clearfix ?"><div class="new-note-left pull-left" title="为该笔记本新建笔记" href="#" notebookId="?">?</div><div title="为该笔记本新建markdown笔记" class="new-note-right pull-left" notebookId="?">M</div>', classes, notebook.NotebookId, notebook.Title, notebook.NotebookId);
 		
 		if(!isEmpty(notebook.Subs)) {
 			eachForNew  += "<ul class='dropdown-menu'>";
@@ -418,11 +482,11 @@ Notebook.renderShareNotebooks = function(sharedUserInfos, shareNotebooks) {
 		userNotebooks.ShareNotebooks = [{NotebookId: "-2", Title: "默认共享"}].concat(userNotebooks.ShareNotebooks)
 
 		var username = userInfo.Username || userInfo.Email;
-		var header = t('<div class="folderNote closed"><div class="folderHeader"><a><h1 title="? 的共享"><i class="fa fa-angle-right"></i>?</h1></a></div>', username, username);
+		var header = tt('<div class="folderNote closed"><div class="folderHeader"><a><h1 title="? 的共享"><i class="fa fa-angle-right"></i>?</h1></a></div>', username, username);
 		var body = '<ul class="folderBody">';
 		for(var j in userNotebooks.ShareNotebooks) {
 			var notebook = userNotebooks.ShareNotebooks[j];
-			body += t('<li><a notebookId="?">?</a></li>', notebook.NotebookId, notebook.Title)
+			body += tt('<li><a notebookId="?">?</a></li>', notebook.NotebookId, notebook.Title)
 		}
 		body += "</ul>";
 		
@@ -482,10 +546,11 @@ Notebook.toggleToMyNav = function(userId, notebookId) {
 	$("#tagSearch").hide();
 }
 Notebook.changeNotebookNav = function(notebookId) {
+	Notebook.curNotebookId = notebookId;
 	Notebook.toggleToMyNav();
 	
-	// 1
-	Notebook.selectNotebook($(t('#notebookList [notebookId="?"]', notebookId)));
+	// 1 改变当前的notebook
+	Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', notebookId)));
 	
 	var notebook = Notebook.cache[notebookId];
 	
@@ -517,7 +582,10 @@ Notebook.curActiveNotebookIsAll = function() {
 // 1. 改变note, 此时需要先保存
 // 2. ajax得到该notebook下的所有note
 // 3. 使用Note.RederNotes()
-Notebook.changeNotebook = function(notebookId) {
+// callback Pjax, 当popstate时调用
+Notebook.changeNotebookSeq = 1;
+Notebook.changeNotebook = function(notebookId, callback) {
+	var me = this;
 	Notebook.changeNotebookNav(notebookId);
 	
 	Notebook.curNotebookId = notebookId;
@@ -528,7 +596,7 @@ Notebook.changeNotebook = function(notebookId) {
 	// 2 先清空所有
 	Note.clearAll();
 	
-	var url = "/note/ListNotes/";
+	var url = "/note/listNotes/";
 	var param = {notebookId: notebookId};
 	
 	// 废纸篓
@@ -539,28 +607,75 @@ Notebook.changeNotebook = function(notebookId) {
 		param = {};
 		// 得到全部的...
 		cacheNotes = Note.getNotesByNotebookId();
-		if(!isEmpty(cacheNotes)) { // 万一真的是没有呢?
-			Note.renderNotesAndFirstOneContent(cacheNotes);
+		// 数量一致
+		if(!isEmpty(cacheNotes)) { 
+			if(callback) {
+				callback(cacheNotes);
+			} else {
+				Note.renderNotesAndFirstOneContent(cacheNotes);
+			}
 			return;
-		}
+		} 
 	} else {
 		cacheNotes = Note.getNotesByNotebookId(notebookId);
-		if(!isEmpty(cacheNotes)) { // 万一真的是没有呢?
-			Note.renderNotesAndFirstOneContent(cacheNotes);
+		var notebook = Notebook.cache[notebookId];
+		var len = cacheNotes ? cacheNotes.length : 0;
+		// alert( notebook.NumberNotes + " " + len);
+		if(len == notebook.NumberNotes) { 
+			if(callback) {
+				callback(cacheNotes);
+			} else {
+				Note.renderNotesAndFirstOneContent(cacheNotes);
+			}
 			return;
+		} else {
+			Note.clearCacheByNotebookId(notebookId);
+			log('数量不一致');
 		}
 	}
 	
 	// 2 得到笔记本
 	// 这里可以缓存起来, note按notebookId缓存
-	ajaxGet(url, param, Note.renderNotesAndFirstOneContent);
+	// 这里可能点击过快导致前面点击的后来才返回
+	me.showNoteAndEditorLoading();
+	me.changeNotebookSeq++;
+	(function(seq) {
+		var callback2 = function(cacheNotes) { 
+			// 后面点击过快, 之前的结果不要了
+			if(seq != me.changeNotebookSeq) {
+				log("notebook changed too fast!");
+				log(cacheNotes);
+				return;
+			}
+			if(callback) {
+				callback(cacheNotes);
+			} else {
+				Note.renderNotesAndFirstOneContent(cacheNotes);
+			}
+			me.hideNoteAndEditorLoading();
+		};
+		if(Notebook.isTrashNotebookId(notebookId)) {
+			Service.noteService.getTrashNotes(callback2);
+		} else {
+			Service.noteService.getNotes(notebookId, callback2);
+		}
+		// ajaxGet(url, param, );
+	})(me.changeNotebookSeq);
 }
+
+// 笔记列表与编辑器的mask loading
+Notebook.showNoteAndEditorLoading = function() {
+	$("#noteAndEditorMask").show();
+};
+Notebook.hideNoteAndEditorLoading = function() {
+	$("#noteAndEditorMask").hide();
+};
 
 // 是否是当前选中的notebookId
 // 还包括共享
 // called by Note
 Notebook.isCurNotebook = function(notebookId) {
-	return $(t('#notebookList [notebookId="?"], #shareNotebooks [notebookId="?"]', notebookId, notebookId)).attr("class") == "active";
+	return $(tt('#notebookList [notebookId="?"], #shareNotebooks [notebookId="?"]', notebookId, notebookId)).attr("class") == "active";
 }
 
 // 改变nav, 为了新建note
@@ -571,17 +686,14 @@ Notebook.changeNotebookForNewNote = function(notebookId) {
 		return;
 	}
 	
-	Notebook.changeNotebookNav(notebookId);
+	Notebook.changeNotebookNav(notebookId, true);
 	Notebook.curNotebookId = notebookId;
 	
-	var url = "/note/ListNotes/";
-	var param = {notebookId: notebookId};
-		
 	// 2 得到笔记本
 	// 这里可以缓存起来, note按notebookId缓存
-	ajaxGet(url, param, function(ret) {
+	Service.noteService.getNotes(notebookId, function(notes) {
 		// note 导航
-		Note.renderNotes(ret, true);
+		Note.renderNotes(notes, true);
 	});
 };
 
@@ -589,7 +701,7 @@ Notebook.changeNotebookForNewNote = function(notebookId) {
 // 显示共享信息
 Notebook.listNotebookShareUserInfo = function(target) {
 	var notebookId = $(target).attr("notebookId");
-	showDialogRemote("share/listNotebookShareUserInfo", {notebookId: notebookId});
+	showDialogRemote("/share/listNotebookShareUserInfo", {notebookId: notebookId});
 }
 // 共享笔记本
 Notebook.shareNotebooks= function(target) {
@@ -632,7 +744,7 @@ Notebook.setNotebook2Blog = function(target) {
 			}
 		});
 	}
-	ajaxPost("blog/setNotebook2Blog", {notebookId: notebookId, isBlog: isBlog}, function(ret) {
+	ajaxPost("/notebook/setNotebook2Blog", {notebookId: notebookId, isBlog: isBlog}, function(ret) {
 		if(ret) {
 			// 这里要设置notebook下的note的blog状态
 			Note.setAllNoteBlogStatus(notebookId, isBlog);
@@ -689,7 +801,7 @@ Notebook.addNotebook = function() {
 // rename 调用
 Notebook.doAddNotebook = function(notebookId, title, parentNotebookId) {
 	var self = Notebook;
-	ajaxPost("/notebook/addNotebook", {notebookId: notebookId, title: title, parentNotebookId: parentNotebookId}, function(ret) {
+	Service.notebookService.addNotebook(notebookId, title, parentNotebookId, function(ret) {
 		if(ret.NotebookId) {
 			Notebook.cache[ret.NotebookId] = ret;
 			var notebook = self.tree.getNodeByTId(notebookId);
@@ -772,16 +884,16 @@ $(function() {
 	//-------------------
 	// 右键菜单
 	var notebookListMenu = {
-		width: 150, 
+		width: 180, 
 		items: [
-			{ text: "分享给好友", alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
+			{ text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
 			{ type: "splitLine" },
-			{ text: "公开为博客", alias: 'set2Blog', icon: "", action: Notebook.setNotebook2Blog },
-			{ text: "取消公开为博客", alias: 'unset2Blog', icon: "", action: Notebook.setNotebook2Blog }, // Unset
+			{ text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
+			{ text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
 			{ type: "splitLine" },
-			{ text: "添加子笔记本", icon: "", action: Notebook.addChildNotebook },
-			{ text: "重命名", icon: "", action: Notebook.updateNotebookTitle },
-			{ text: "删除", icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
+			{ text: getMsg("addChildNotebook"), faIcon: "fa-sitemap", action: Notebook.addChildNotebook },
+			{ text: getMsg("rename"), faIcon: "fa-pencil", action: Notebook.updateNotebookTitle },
+			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
 		],
 		onShow: applyrule,
     	onContextMenu: beforeContextMenu,
@@ -789,16 +901,17 @@ $(function() {
     	children: "li a"
 	}
 	
+	// for search
 	var notebookListMenu2 = {
-		width: 150, 
+		width: 180, 
 		items: [
-			{ text: "分享给好友", alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
+			{ text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
 			{ type: "splitLine" },
-			{ text: "公开为博客", alias: 'set2Blog', icon: "", action: Notebook.setNotebook2Blog },
-			{ text: "取消公开为博客", alias: 'unset2Blog', icon: "", action: Notebook.setNotebook2Blog }, // Unset
+			{ text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
+			{ text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
 			{ type: "splitLine" },
-			{ text: "重命名", icon: "", action: Notebook.updateNotebookTitle },
-			{ text: "删除", icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
+			{ text: getMsg("rename"), icon: "", action: Notebook.updateNotebookTitle },
+			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
 		],
 		onShow: applyrule,
     	onContextMenu: beforeContextMenu,

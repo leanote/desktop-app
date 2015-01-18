@@ -30,7 +30,92 @@
   font-weight: normal;
   font-style: normal;
 }
+*,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+}
+body {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+}
+h1,
+h2,
+h3 {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-weight: 300 !important;
+}
 /*"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue", Helvetica, "Microsoft Yahei", Verdana, Simsun, "Segoe UI", "Segoe UI Web Regular", "Segoe UI Symbol",  "BBAlpha Sans", "S60 Sans", Arial, sans-serif;*/
+#noteItemList,
+#notebook,
+#leftNotebook,
+.slimScrollDiv,
+#editorContent,
+#editorContent_ifr,
+.mce-edit-area,
+.mce-container-body,
+.mce-tinymce,
+#editor .mce-ifr,
+.wmd-input,
+#noteReadContent,
+#attachList,
+#tags,
+.editor-content,
+.preview-container {
+  -webkit-overflow-scrolling: touch !important;
+}
+.ios7-a {
+  display: inline-block;
+  padding: 0 10px 0 5px;
+  height: 36px;
+  vertical-align: middle;
+  line-height: 36px;
+  cursor: pointer;
+}
+#tool {
+  border-bottom: 1px solid #ddd;
+  height: 36px;
+  margin-left: -5px;
+}
+#tag {
+  height: 36px;
+  line-height: 36px;
+}
+#editor,
+#mdEditor {
+  position: absolute;
+  z-index: 2;
+  top: 66px;
+  bottom: 0px;
+  right: 0;
+  left: 5px;
+  padding: 0;
+  display: none;
+}
+#mdEditor {
+  z-index: 1;
+  background-color: #fff;
+  bottom: 5px;
+}
+#mdEditor #md-section-helper,
+#mdEditor #wmd-input {
+  font-size: 14px;
+  line-height: 22px;
+}
+#tag .dropdown {
+  line-height: 30px;
+}
+.btn {
+  border-radius: 2px;
+}
+.alert {
+  margin-bottom: 10px;
+}
 #logo {
   font-family: "leanoteregular";
   font-size: 36px;
@@ -52,6 +137,15 @@
 #switcher span:before {
   content: "b";
 }
+.noteSplit {
+  position: absolute;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  overflow: hidden;
+  z-index: 5;
+  cursor: col-resize;
+}
 .dropdown-menu {
   border-radius: 3px;
   margin: 0;
@@ -59,6 +153,28 @@
   /*overflow-x: hidden; */
   /*overflow-y: scroll;*/
   box-shadow: rgba(0, 0, 0, 0.172549) 0px 6px 12px 0px;
+}
+.dropdown-menu:before {
+  content: "";
+  width: 20px;
+  height: 12px;
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background-image: url("../../images/triangle_2x.png");
+  background-size: 20px 12px;
+}
+.dropdown-submenu .dropdown-menu:before {
+  background: none;
+}
+#searchNotebookForAddDropdownList,
+#searchNotebookForAddShareDropdownList {
+  left: -200px;
+}
+#searchNotebookForAddDropdownList:before,
+#searchNotebookForAddShareDropdownList:before {
+  left: 190px;
+  right: inherit;
 }
 .dropdown-menu li {
   list-style: none;
@@ -86,6 +202,19 @@
   overflow-x: hidden;
   overflow-y: hidden;
   */
+}
+#noteAndEditorMask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #fff;
+  text-align: center;
+  padding-top: 60px;
+  opacity: .3;
+  z-index: 20;
+  display: none;
 }
 .dropdown-submenu {
   position: relative;
@@ -184,9 +313,6 @@
   line-height: 40px;
   margin-top: 10px;
 }
-#searchNotebookForAddDropdownList {
-  left: -200px;
-}
 #searchNotebookForAdd {
   line-height: normal;
   width: 200px;
@@ -198,6 +324,9 @@
 }
 #myNotebooks .folderBody {
   padding-top: 3px;
+}
+.folderBody {
+  overflow-x: hidden;
 }
 #searchNotebookForList {
   height: 30px;
@@ -256,12 +385,25 @@
   border: 1px solid #eee;
   border-radius: 3px;
 }
+.notebook-number-notes {
+  position: absolute;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  display: inline-block;
+  line-height: 20px !important;
+  height: 20px;
+  margin-top: 5px;
+  padding: 0 3px;
+}
 .notebook-setting {
   display: none;
   position: absolute;
-  right: 3px;
+  right: 1px;
   top: 0;
   bottom: 0;
+  z-index: 2;
   line-height: 30px;
 }
 .notebook-setting:before {
@@ -285,6 +427,656 @@
 .ztree {
   padding: 0px;
 }
+#upload {
+  position: absolute;
+  z-index: 0;
+  bottom: 0;
+  right: 0;
+  left: 0px;
+  padding: 0;
+  background-color: #fff;
+  text-align: center;
+  display: none;
+}
+#upload #drop {
+  width: 100%;
+  height: 100%;
+  padding-top: 100px;
+}
+#drop.in {
+  border: 1px solid #000000;
+}
+#drop.hover {
+  border: 2px solid #000000;
+}
+#uploadMsg {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  bottom: 10px;
+  overflow: scroll;
+  list-style: none;
+}
+#uploadAttach {
+  position: relative;
+  margin-top: 5px;
+}
+.dropzone {
+  text-align: center;
+}
+.dropzone input {
+  display: none;
+}
+.dropzone.in {
+  border: 1px solid #000000;
+}
+.dropzone.hover {
+  border: 2px solid #000000;
+}
+#attachUploadMsg,
+#avatarUploadMsg {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  max-height: 240px;
+  z-index: 3;
+}
+#attachUploadMsg .alert,
+#avatarUploadMsg .alert {
+  margin: 0;
+  padding: 0 3px;
+  margin-top: 10px;
+}
+#attachMenu {
+  width: 450px;
+  padding: 10px 5px;
+}
+#attachList {
+  margin: 0;
+  padding: 0;
+  max-height: 450px;
+  overflow-y: auto;
+}
+#attachList li {
+  display: block;
+  margin: 0;
+  padding: 0 3px;
+  border-radius: 3px;
+  border-bottom: 1px dashed #eee;
+  height: 45px;
+  line-height: 45px;
+}
+#attachList li div {
+  float: left;
+}
+#attachList li .attach-title {
+  width: 290px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#attachList li .attach-process {
+  float: right;
+}
+#attachList li.loading {
+  text-align: center;
+}
+.animated {
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 0.5s;
+  -moz-animation-duration: 0.5s;
+  -ms-animation-duration: 0.5s;
+  -o-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+}
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  -moz-animation-name: fadeIn;
+  -o-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+  }
+}
+@-moz-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -moz-transform: translateY(0);
+  }
+}
+@-o-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -o-transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -o-transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  -moz-animation-name: fadeInUp;
+  -o-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+}
+#historyList img {
+  max-width: 100%;
+}
+#avatar {
+  height: 60px;
+  max-width: 200px;
+  display: inline-block;
+  margin: 10px;
+}
+#noteReadTitle {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#noteReadInfo {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #666;
+}
+.my-link,
+.new-markdown-text-abbr,
+.new-note-text-abbr {
+  display: none;
+}
+#myAvatar {
+  height: 30px;
+  max-width: 30px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+#tool {
+  position: relative;
+}
+#tag {
+  position: absolute;
+  right: 300px;
+  top: 0;
+  left: 5px;
+  bottom: 0;
+}
+#tagColor {
+  left: 10px;
+}
+#tagColor:before {
+  content: "";
+  background-image: none;
+}
+#addTagInput {
+  width: 100px;
+}
+#notesAndSort {
+  height: 36px;
+}
+#noteItemListWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36px;
+  bottom: 3px;
+}
+#mdEditorPreview {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#left-column,
+#right-column,
+#mdSplitter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+#mdSplitter {
+  width: 5px;
+  height: 100%;
+  overflow: hidden;
+  z-index: 5;
+  cursor: col-resize;
+  left: 450px;
+  background: none;
+}
+#left-column {
+  left: 0;
+  width: 450px;
+}
+#right-column {
+  left: 450px;
+  right: 0;
+  overflow: hidden;
+}
+.wmd-panel-editor,
+.preview-container,
+#wmd-input {
+  height: 100%;
+}
+.wmd-input,
+.wmd-input:focus,
+#md-section-helper {
+  width: 100%;
+  border: 1px #eee solid;
+  border-radius: 5px;
+  outline: none;
+  font-size: 14px;
+  resize: none;
+  overflow-x: hidden;
+}
+/* 不能为display: none */
+#md-section-helper {
+  position: absolute;
+  height: 0;
+  overflow-y: scroll;
+  padding: 0 6px;
+  top: 10px;
+  /*一条横线....*/
+  z-index: -1;
+  opacity: none;
+}
+.preview-container {
+  overflow: auto;
+}
+.wmd-preview {
+  width: 100%;
+  font-size: 14px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.wmd-button-row,
+.preview-button-row {
+  padding: 0px;
+  height: auto;
+  margin: 0;
+}
+.wmd-spacer {
+  width: 0px;
+  height: 20px;
+  margin-left: 10px;
+  background-color: Silver;
+  display: inline-block;
+  list-style: none;
+}
+.wmd-button,
+.preview-button {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  list-style: none;
+  cursor: pointer;
+  font-size: 17px;
+}
+.wmd-button {
+  margin-left: 10px;
+}
+.preview-button {
+  margin-right: 10px;
+}
+.wmd-button > span,
+.preview-button > span {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  font-size: 14px;
+}
+.top-nav {
+  margin: 0 10px;
+  display: inline-block;
+  line-height: 60px;
+}
+.cm-item {
+  position: relative;
+}
+.cm-item .cm-text {
+  position: absolute;
+  left: 23px;
+  right: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.cm-item .cm-text .c-text {
+  display: initial;
+}
+.b-m-mpanel {
+  border-radius: 3px;
+}
+/* item list */
+#noteItemList {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  overflow-y: hidden;
+  padding: 0 5px;
+}
+#noteItemList .item {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #ebeff2;
+  border-radius: 3px;
+  margin-top: 5px;
+  background-color: #fff;
+}
+#noteItemList .item:hover,
+#noteItemList .contextmenu-hover {
+  background-color: #ddd !important;
+}
+.item-active,
+#noteItemList .item-active:hover {
+  background-color: #65bd77 !important;
+  color: #fff;
+}
+.item-active .fa,
+#noteItemList .item-active:hover .fa {
+  color: #eee !important;
+}
+.item-active .item-title,
+#noteItemList .item-active:hover .item-title {
+  color: #fff;
+}
+#noteItemList .item-thumb {
+  width: 100px;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1;
+  right: 0px;
+  top: 4px;
+  height: 100px;
+  background-color: #fff;
+  margin-right: 5px;
+  line-height: 100px;
+  text-align: center;
+}
+.item-thumb img {
+  max-width: 100px;
+}
+.item-title {
+  /*font-weight: 400;*/
+  font-size: 16px;
+  height: 22px;
+  line-height: 20px;
+  overflow: hidden;
+  margin-bottom: 0px;
+  color: #000000;
+  border-bottom: dashed 1px #ebeff2;
+}
+#noteItemList .item-desc {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  right: 0px;
+  margin-left: 4px;
+}
+#noteItemList .item-desc .fa {
+  color: #666;
+}
+#noteItemList .item-image .item-desc {
+  right: 100px;
+}
+.item-info {
+  margin: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.desc {
+  margin: 0;
+}
+#editorMask {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0;
+  left: 0;
+  background-color: #fff;
+  display: none;
+  z-index: -10;
+  padding-top: 50px;
+  text-align: center;
+}
+#editorMask .fa,
+#editorMask a {
+  font-size: 24px;
+}
+#editorMask a {
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid #ebeff2;
+  padding: 10px;
+}
+#editorMask a:hover {
+  background-color: #65bd77;
+  color: #fff;
+}
+.note-mask {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0;
+  left: 3px;
+  z-index: -1;
+}
+#noteMaskForLoading {
+  padding-top: 60px;
+  background: #fff;
+  text-align: center;
+  opacity: .3;
+}
+#themeForm td {
+  padding: 5px;
+  text-align: center;
+}
+#themeForm img {
+  border: 1px solid #eee;
+  padding: 2px;
+}
+.dropdown-menu .divider {
+  margin: 3px 0;
+}
+.ace_eidtor,
+.ace_editor * {
+  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+/* leanote nav */
+.leanoteNav {
+  position: absolute;
+  right: 0px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: #fff;
+  opacity: 0.5;
+  z-index: 11;
+  margin-top: 4px;
+}
+.leanoteNav h1 {
+  margin: 0;
+  font-size: 16px;
+  padding: 3px;
+  cursor: pointer;
+}
+.leanoteNav i {
+  padding: 3px;
+}
+.leanoteNav span {
+  display: none;
+}
+.leanoteNav .leanoteNavContent {
+  display: none;
+  overflow: auto;
+}
+.leanoteNav.unfolder {
+  min-width: 200px;
+  max-width: 300px;
+  opacity: 0.8;
+}
+.leanoteNav.unfolder h1 {
+  border-bottom: 1px dashed #ebeff2;
+}
+.leanoteNav.unfolder span {
+  display: inline;
+}
+.leanoteNav.unfolder .leanoteNavContent {
+  display: block;
+  min-height: 30px;
+}
+.leanoteNav ul {
+  margin: 0;
+  padding-left: 23px;
+}
+.leanoteNav ul li {
+  list-style-type: disc;
+}
+.leanoteNav ul li a:hover {
+  color: #0fb264;
+}
+.leanoteNav ul .nav-h2 {
+  margin-left: 20px;
+}
+.leanoteNav ul .nav-h3 {
+  margin-left: 30px;
+}
+.leanoteNav ul .nav-h4 {
+  margin-left: 40px;
+}
+.leanoteNav ul .nav-h5 {
+  margin-left: 50px;
+}
+.scrollTo-a {
+  cursor: pointer !important;
+}
+#editorContent {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  outline: none;
+  margin-top: 5px;
+  bottom: 5px !important;
+}
+#editorContent pre {
+  position: relative;
+  -mo-height: auto !important;
+}
+#editorContent pre .toggle-raw {
+  position: absolute;
+  left: 2px;
+  top: -2px;
+  z-index: 100;
+  display: none;
+}
+#editorContent pre:hover .toggle-raw {
+  display: block;
+}
+.ace_invisible_space {
+  visibility: hidden !important;
+}
+.mce-tinymce-inline {
+  border-width: 0 !important;
+}
+#editorContent a {
+  color: #2a6496;
+  text-decoration: underline;
+}
+#editorContent pre {
+  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  color: #4D4D4C;
+}
+#editorContent .ace-tomorrow {
+  padding: 0;
+  padding-left: 44px;
+}
+#editorContent .ace-to-pre {
+  padding: 0;
+  padding-left: 5px;
+}
+#editorContent .ace_scrollbar-v {
+  overflow-y: hidden;
+}
+#editorContent .leanote-image-container {
+  display: inline-block;
+  width: 100px;
+}
+#editorContent .leanote-image-container .loader {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 3px;
+  margin-top: 5px;
+}
+#editorContent .leanote-image-container .progress {
+  display: inline-block;
+  margin: 0;
+  width: 80px;
+}
+.close:focus {
+  outline: none;
+}
 ::selection {
   background: #000000;
   color: #ffffff;
@@ -296,18 +1088,6 @@
 ::-webkit-selection {
   background: #000000;
   color: #ffffff;
-}
-*,
-body {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-}
-h1,
-h2,
-h3 {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
-  font-weight: 300 !important;
 }
 a {
   color: #000000;
@@ -328,7 +1108,6 @@ a.raw:hover {
   height: 60px;
   background-color: #25313e;
   color: #ffffff;
-  border-bottom: 1px solid #ebeff2;
   /* for app */
   webkit-user-select: none;
   /* 还不知 */
@@ -353,8 +1132,6 @@ a.raw:hover {
   height: 59px;
   padding-left: 10px;
   padding-top: 0px;
-  border-bottom: 1px solid transparent;
-  border-color: rgba(255, 255, 255, 0.1);
 }
 #logo span {
   background-color: #000;
@@ -427,9 +1204,6 @@ a.raw:hover {
   font-size: 28px;
   color: #999999;
 }
-.dropdown-menu {
-  border: 1px solid #0fb264;
-}
 .dropdown-menu li > a {
   color: #000000;
 }
@@ -440,14 +1214,6 @@ a.raw:hover {
 .dropdown-menu li > a:hover,
 .dropdown-menu li > a:focus {
   background-color: #ebeff2;
-}
-.ios7-a {
-  display: inline-block;
-  padding: 0 10px 0 5px;
-  height: 40px;
-  vertical-align: middle;
-  line-height: 38px;
-  cursor: pointer;
 }
 /*********************/
 #page {
@@ -485,15 +1251,6 @@ a.raw:hover {
   text-align: center;
   padding-top: 100px;
   z-index: 1000;
-}
-.noteSplit {
-  position: absolute;
-  top: 0;
-  width: 5px;
-  height: 100%;
-  overflow: hidden;
-  z-index: 5;
-  cursor: col-resize;
 }
 #notebookSplitter {
   left: 170px;
@@ -785,81 +1542,6 @@ a.raw:hover {
   right:0;*/
   float: right;
 }
-/* item list */
-#noteItemList {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  width: 100%;
-  overflow-y: hidden;
-  background-color: #f7f7f7;
-  padding: 0 5px;
-}
-#noteItemList .item {
-  position: relative;
-  height: 110px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 5px;
-  border: 1px solid #ebeff2;
-  border-radius: 3px;
-  margin-top: 5px;
-  background-color: #fff;
-}
-#noteItemList .item:hover,
-#noteItemList .contextmenu-hover {
-  background-color: #ddd !important;
-  color: #000000;
-}
-.item-active,
-#noteItemList .item-active:hover {
-  background-color: #65bd77 !important;
-  color: #fff;
-}
-.item-active .item-desc .fa,
-#noteItemList .item-active:hover .item-desc .fa {
-  color: #eee !important;
-}
-.item-active .item-title,
-#noteItemList .item-active:hover .item-title {
-  color: #fff;
-}
-#noteItemList .item-thumb {
-  width: 100px;
-  overflow: hidden;
-  position: absolute;
-  z-index: 1;
-  right: 0px;
-  height: 100px;
-  background-color: #fff;
-  margin-right: 5px;
-  line-height: 100px;
-  text-align: center;
-}
-.item-thumb img {
-  max-width: 100px;
-}
-#noteItemList .item-desc {
-  position: absolute;
-  left: 0;
-  right: 100px;
-  margin-left: 4px;
-}
-#noteItemList .item-desc .fa {
-  color: #666;
-}
-.item-title {
-  /*font-weight: 400;*/
-  font-size: 16px;
-  height: 22px;
-  line-height: 20px;
-  overflow: hidden;
-  margin-bottom: 0px;
-  color: #000000;
-  border-bottom: dashed 1px #ebeff2;
-}
 /* note */
 /* editor */
 #editorTool {
@@ -883,52 +1565,6 @@ a.raw:hover {
 }
 #noteTitle:focus {
   outline: none !important;
-}
-#editorMask {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  right: 0;
-  left: 0;
-  background-color: #fff;
-  z-index: -10;
-  padding-top: 50px;
-  text-align: center;
-}
-#editorMask .fa,
-#editorMask a {
-  font-size: 24px;
-}
-#editorMask a {
-  display: inline-block;
-  border-radius: 3px;
-  border: 1px solid #ebeff2;
-  padding: 10px;
-}
-#editorMask a:hover {
-  background-color: #65bd77;
-  color: #fff;
-}
-#editor,
-#mdEditor {
-  position: absolute;
-  z-index: 2;
-  top: 71px;
-  bottom: 0px;
-  right: 0;
-  left: 5px;
-  padding: 0;
-  display: none;
-}
-#mdEditor {
-  z-index: 1;
-  background-color: #fff;
-  bottom: 10px;
-}
-#mdEditor #md-section-helper,
-#mdEditor #wmd-input {
-  font-size: 14px;
-  line-height: 22px;
 }
 #editorContent {
   position: absolute;
@@ -1001,13 +1637,6 @@ a.raw:hover {
   border-bottom: 1px solid #ddd;
 }
 /* tag */
-#tag {
-  height: 40px;
-  line-height: 38px;
-}
-#tag .dropdown {
-  line-height: 30px;
-}
 #addTagInput {
   line-height: 25px;
   display: none;
@@ -1048,73 +1677,6 @@ a.raw:hover {
 }
 .label i:hover {
   opacity: 1;
-}
-/* leanote nav */
-#leanoteNav {
-  position: absolute;
-  right: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  background-color: #fff;
-  opacity: 0.5;
-  z-index: 11;
-  margin-right: 2px;
-}
-#leanoteNav h1 {
-  margin: 0;
-  font-size: 18px;
-  padding: 3px;
-  cursor: pointer;
-}
-#leanoteNav i {
-  padding: 3px;
-}
-#leanoteNav span {
-  display: none;
-}
-#leanoteNav #leanoteNavContent {
-  display: none;
-  overflow: auto;
-}
-#leanoteNav.unfolder {
-  min-width: 200px;
-  max-width: 300px;
-  opacity: 0.8;
-}
-#leanoteNav.unfolder h1 {
-  border-bottom: 1px dashed #ebeff2;
-}
-#leanoteNav.unfolder span {
-  display: inline;
-}
-#leanoteNav.unfolder #leanoteNavContent {
-  display: block;
-  min-height: 30px;
-}
-#leanoteNav ul {
-  margin: 0;
-  padding-left: 23px;
-}
-#leanoteNav ul li {
-  list-style-type: disc;
-}
-#leanoteNav ul li a:hover {
-  color: #0fb264;
-}
-#leanoteNav ul .nav-h2 {
-  margin-left: 20px;
-}
-#leanoteNav ul .nav-h3 {
-  margin-left: 30px;
-}
-#leanoteNav ul .nav-h4 {
-  margin-left: 40px;
-}
-#leanoteNav ul .nav-h5 {
-  margin-left: 50px;
-}
-.scrollTo-a {
-  cursor: pointer !important;
 }
 #noteRead {
   position: absolute;
@@ -1258,18 +1820,8 @@ background-position:-1px -670px
 .dropdown-menu li {
   cursor: default;
 }
-#topNav a {
-  display: inline-block;
-  line-height: 60px;
-}
 .tab-pane {
   padding: 5px 0 0 0;
-}
-.alert {
-  margin-bottom: 10px;
-}
-.btn {
-  border-radius: 0 !important;
 }
 #notebookNavForNewNote li,
 #notebookNavForNewSharedNote > li {
@@ -1313,36 +1865,6 @@ background-position:-1px -670px
 #toggleEditorMode {
   margin: 0 10px !important;
 }
-#upload {
-  position: absolute;
-  z-index: 0;
-  bottom: 0;
-  right: 0;
-  left: 0px;
-  padding: 0;
-  background-color: #fff;
-  text-align: center;
-  display: none;
-}
-#upload #drop {
-  width: 100%;
-  height: 100%;
-  padding-top: 100px;
-}
-#drop.in {
-  border: 1px solid #000000;
-}
-#drop.hover {
-  border: 2px solid #000000;
-}
-#uploadMsg {
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  bottom: 10px;
-  overflow: scroll;
-  list-style: none;
-}
 #searchNotebookForList {
   color: #ccc;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1374,4 +1896,417 @@ background-position:-1px -670px
   border: 1px #ccc solid;
   opacity: 0.8;
   filter: alpha(opacity=80);
+}
+@media screen and (max-width: 700px) {
+  #toggleEditorMode,
+  #lea,
+  #myBlog,
+  #demoRegister,
+  .noteSplit,
+  #logo,
+  #tipsBtn,
+  #contentHistory,
+  #curNotebookForNewNote,
+  #curNotebookForNewSharedNote,
+  .for-split,
+  #listNotebookDropdownMenu,
+  #listShareNotebookDropdownMenu,
+  .new-markdown-text,
+  .new-note-text,
+  .username,
+  #notebookMin,
+  .ui-loader,
+  #md-section-helper,
+  #right-column,
+  .writing-mobile-hide {
+    display: none !important;
+  }
+  *,
+  .ztree li a.level0 span,
+  .ztree li a.level1 span,
+  .label {
+    font-size: 16px;
+  }
+  .label i {
+    opacity: 1;
+    width: 20px;
+  }
+  .label i:hover,
+  .label i:focus {
+    color: #65bd77 !important;
+  }
+  a:focus,
+  a:hover,
+  a:active {
+    color: #65bd77 !important;
+  }
+  #noteItemList .item {
+    height: 120px;
+  }
+  #leftNotebook {
+    width: 140px !important;
+    max-width: 140px;
+  }
+  #notebook {
+    display: block !important;
+  }
+  #leftNotebook .slimScrollDiv {
+    display: block !important;
+  }
+  #switcher {
+    padding-top: 0;
+    padding-right: 0;
+  }
+  #switcher i {
+    padding: 20px 0;
+    font-size: 20px;
+  }
+  #newNoteMarkdownBtn {
+    width: 10px;
+    overflow: hidden;
+  }
+  #noteAndEditor {
+    left: 140px !important;
+  }
+  #noteList {
+    display: block;
+    width: 100% !important;
+  }
+  #note {
+    visibility: hidden;
+    z-index: -1;
+    overflow-x: hidden;
+    left: 0 !important;
+  }
+  #note #editor {
+    visibility: hidden;
+  }
+  #note .mce-tinymce {
+    visibility: hidden !important;
+  }
+  #note.editor-show {
+    visibility: visible;
+    z-index: initial;
+  }
+  #note.editor-show #editor {
+    visibility: visible;
+  }
+  #note.editor-show .mce-tinymce {
+    visibility: visible !important;
+  }
+  #leftSwitcher {
+    display: block !important;
+  }
+  #leftSwitcher2 {
+    display: none !important;
+  }
+  .full-editor #leftNotebook {
+    display: none;
+  }
+  .full-editor #noteAndEditor {
+    left: 0 !important;
+  }
+  .full-editor #noteList {
+    display: none;
+  }
+  #searchWrap {
+    margin-left: 3px;
+  }
+  #searchNote {
+    border-top: none;
+    border-bottom: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding-right: 10px;
+  }
+  #searchNote input {
+    width: 55px;
+    padding-left: 5px;
+    padding-right: 2px;
+    margin-top: 3px;
+    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-transition: 0.3s ease;
+    -moz-transition: 0.3s ease;
+    transition: 0.3s ease;
+  }
+  #searchNote input:focus {
+    width: 100px;
+  }
+  #tool {
+    position: relative;
+  }
+  #tag {
+    position: absolute;
+    right: 140px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  #tag #tags {
+    left: 50px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    position: absolute;
+    line-height: 40px;
+    line-height: inherit !important;
+  }
+  #tag #tagDropdown {
+    float: left;
+    width: 50px;
+    line-height: 40px;
+    overflow: hidden;
+    padding-left: 3px;
+  }
+  #tag .add-tag-text {
+    display: none;
+  }
+  #tag #addTagInput {
+    width: 30px;
+    display: inline-block;
+  }
+  #tag #tagColor {
+    display: none !important;
+  }
+  #left-column {
+    width: 100% !important;
+  }
+  #mdEditor #wmd-input {
+    font-size: 16px;
+  }
+  .new-markdown-text-abbr,
+  .new-note-text-abbr {
+    display: inline;
+  }
+  .my-link {
+    display: block;
+  }
+  #themeForm img {
+    height: 70px !important;
+  }
+  .slimScrollBar,
+  .slimScrollRail {
+    display: none !important;
+  }
+  #noteItemList,
+  #notebook,
+  #leftNotebook,
+  .slimScrollDiv,
+  #editorContent_ifr,
+  .mce-edit-area,
+  .mce-container-body,
+  .mce-tinymce,
+  #editor .mce-ifr,
+  .wmd-input,
+  #noteReadContent,
+  #attachList,
+  #tags {
+    -webkit-overflow-scrolling: touch !important;
+    overflow: auto !important;
+  }
+  #attachMenu {
+    width: 320px;
+  }
+  #attachList {
+    max-height: 200px;
+  }
+  #attachList li .attach-title {
+    width: 170px;
+  }
+  #dropAttach .btn {
+    padding: 5px 3px;
+    margin-top: 3px;
+    display: block;
+  }
+  #myTag .folderBody li {
+    margin: 5px;
+  }
+  #myTag .folderBody li a:hover span {
+    color: #65bd77;
+  }
+  #noteItemList .item-thumb {
+    width: 80px;
+    height: 80px;
+    margin-top: 15px;
+  }
+  #noteItemList .item {
+    height: 118px;
+  }
+  #noteItemList .item-setting,
+  #noteItemList .item-blog {
+    font-size: 16px;
+    width: 30px;
+    display: inline-block;
+  }
+  #noteMaskForLoading {
+    opacity: 0.8;
+  }
+  #editorContent .ace-tomorrow {
+    padding: 0;
+  }
+}
+@media screen and (max-width: 1024px) {
+  #noteItemList,
+  #notebook,
+  #leftNotebook,
+  .slimScrollDiv,
+  #editorContent_ifr,
+  .mce-edit-area,
+  .mce-container-body,
+  .mce-tinymce,
+  #editor .mce-ifr,
+  .wmd-input,
+  #noteReadContent,
+  #attachList,
+  #tags {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  #tag {
+    position: absolute;
+    right: 310px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  #tag #tags {
+    left: 50px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    position: absolute;
+    line-height: 40px;
+    line-height: inherit !important;
+  }
+  #tag #tagDropdown {
+    float: left;
+    width: 50px;
+    line-height: 40px;
+    overflow: hidden;
+    padding-left: 3px;
+  }
+  #tag .add-tag-text {
+    display: none;
+  }
+  #tag #addTagInput {
+    width: 30px;
+    display: inline-block;
+  }
+  #tag #tagColor {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 800px) {
+  #noteItemList,
+  #notebook,
+  #leftNotebook,
+  .slimScrollDiv,
+  #editorContent_ifr,
+  .mce-edit-area,
+  .mce-container-body,
+  .mce-tinymce,
+  #editor .mce-ifr,
+  .wmd-input,
+  #noteReadContent,
+  #attachList,
+  #tags {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  #lea,
+  .lea-blog,
+  #myBlog,
+  #demoRegister,
+  .noteSplit,
+  #tipsBtn,
+  #contentHistory,
+  #curNotebookForNewNote,
+  #curNotebookForNewSharedNote,
+  .for-split,
+  #listNotebookDropdownMenu,
+  #listShareNotebookDropdownMenu,
+  .username,
+  .ui-loader,
+  #md-section-helper,
+  #right-column {
+    display: none !important;
+  }
+  #tag {
+    position: absolute;
+    right: 160px;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  #tag #tags {
+    left: 50px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    position: absolute;
+    line-height: 40px;
+    line-height: inherit !important;
+  }
+  #tag #tagDropdown {
+    float: left;
+    width: 50px;
+    line-height: 40px;
+    overflow: hidden;
+    padding-left: 3px;
+  }
+  #tag .add-tag-text {
+    display: none;
+  }
+  #tag #addTagInput {
+    width: 30px;
+    display: inline-block;
+  }
+  #tag #tagColor {
+    display: none !important;
+  }
+  .my-link {
+    display: block;
+  }
+  #attachMenu {
+    width: 320px;
+  }
+  #attachList {
+    max-height: 200px;
+  }
+  #attachList li .attach-title {
+    width: 170px;
+  }
+  #dropAttach .btn {
+    padding: 5px 3px;
+    margin-top: 3px;
+    display: block;
+  }
+  #myTag .folderBody li {
+    margin: 5px;
+  }
+  #myTag .folderBody li a:hover span {
+    color: #65bd77;
+  }
+  #left-column {
+    width: 100% !important;
+  }
+  #mdEditor #wmd-input {
+    font-size: 16px;
+  }
+  .my-link {
+    display: block;
+  }
+  #themeForm img {
+    height: 70px !important;
+  }
 }

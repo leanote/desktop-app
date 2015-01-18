@@ -13,7 +13,7 @@ function retIsOk(ret) {
 	return false;
 }
 
-var urlPrefix = window.location.protocol + "//" + window.location.host;
+var urlPrefix = top.UrlPrefix;
 
 // load image
 function getImageSize(url, callback) {
@@ -260,13 +260,22 @@ var o = {
 			for(var i in datas){
 				var each = datas[i];
 				var classes = "";
-				var src = urlPrefix + each.Path;
+				// life edit
+				// 之前的
+				if(each.Path != "" && each.Path[0] == "/") {
+					each.Path = each.Path.substr(1);
+				}
+				if(each.Path != "" && each.Path.substr(0, 7) == "upload/") {
+					var src = urlPrefix + "/" + each.Path;
+				} else {
+					var src = urlPrefix + "/file/outputImage?fileId=" + each.FileId;
+				}
 				// log(src);
 				if(selectedMap[src]) {
 					classes = 'class="selected"';
 				}
 				html += '<li ' + classes + '>';
-				html += '<a title="" href="javascript:;" class="a-img"><img alt="" data-original="' + src + '" ></a>';
+				html += '<a title="" href="javascript:;" class="a-img"><img  alt="" src="' + src + '" data-original="' + src + '" ></a>';
 				// html += '<div class="tools"><a href="javascript:;" class="del" data-id="' + each.FileId + '"><span class="glyphicon glyphicon-trash"></span></a></div>';
 				html += '<div class="tools clearfix" data-id="' + each.FileId + '"><div class="file-title pull-left">' + each.Title + '</div><div class="pull-right"><a href="javascript:;" class="del" data-id="' + each.FileId + '"><span class="glyphicon glyphicon-trash"></span></a></div></div>';
 				html += "</li>";
@@ -280,7 +289,7 @@ var o = {
     		}
 
     		// $("#imageList img").lazyload({effect : "fadeIn"});
-    		$("#imageList img").lazyload();
+    		// $("#imageList img").lazyload();
     	});
     },
 
@@ -290,7 +299,8 @@ var o = {
 		num = this.maxSelected;
 		self.previewO.html("");
 		for(var i = 1; i <= num; ++i) {
-			self.previewO.append("<li>" + i + "</li>");
+			// self.previewO.append("<li>" + i + "</li>");
+			self.previewO.append("<li>?</li>");
 		}
 	},
 		
@@ -302,7 +312,7 @@ var o = {
 		for(var i = 0; i < this.maxSelected; ++i) {
 			var target = lis.eq(i);
 			if(i > size) {
-				target.html(i+1);
+				target.html('?');
 			} else {
 				src = this.selectedImages[i];
 
@@ -344,16 +354,32 @@ var o = {
 		self.clearAttrs();
 	},
 	addSelectedImage: function($li) {
-		if(this.maxSelected <= this.selectedImages.length) {
+		if(this.maxSelected > 1 && this.maxSelected <= this.selectedImages.length) {
 			return false;
 		}
 		
+		// life 为了图片安全
 		if(typeof $li == "object") {
 			var src = $li.find("img").attr('src');
 		} else {
-			src = $li;
+			// 也有可能来自url
+			if($li.indexOf("http://") != -1 || $li.indexOf("https://") != -1) {
+				src = $li;
+			} else {
+				// 来自内部
+				src = urlPrefix + "/file/outputImage?fileId=" + $li;
+			}
 		}
-		this.selectedImages.push(src);
+		
+		// 如果只允许选1个
+		if(this.maxSelected == 1) {
+			// 先把其它的去掉
+			$("#imageList li").removeClass("selected");
+			this.selectedImages = [src];
+		} else {
+			this.selectedImages.push(src);
+		}
+		
 		this.reRenderSelectedImages(false, src);
 	
 		return true;
@@ -697,12 +723,12 @@ var o = {
 	        // trigger to show file select
 	        $(this).parent().find('input').click();
 	    });
-
 	    // Initialize the jQuery File Upload plugin
 	    $('#upload').fileupload({
 	        dataType: 'json',
+	        pasteZone: '',
 	        acceptFileTypes: /(\.|\/)(gif|jpg|jpeg|png|jpe)$/i,
-	        maxFileSize: 210000,
+	        // maxFileSize: 210000,
 
 	        // This element will accept file drag/drop uploading
 	        dropZone: $('#drop'),
@@ -718,9 +744,17 @@ var o = {
 	        // This function is called when a file is added to the queue;
 	        // either via the browse button, or via drag/drop:
 	        add: function(e, data) {
-
+	        	// 文件大小限制
+				var size = data.files[0].size;
+	            var maxFileSize = +parent.GlobalConfigs["uploadImageSize"] || 100;
+	            if(typeof size == 'number' && size > 1024 * 1024 * maxFileSize) {
+	                var tpl = $('<li><div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a></div></li>');
+	                tpl.find('div').append('<b>Warning:</b> ' + data.files[0].name + ' <small>[<i>' + formatFileSize(data.files[0].size) + '</i>] is bigger than ' + maxFileSize + 'M</small> ');
+	                tpl.appendTo(ul);
+	            	return;
+	            }
+	            
 	            var tpl = $('<li><div class="alert alert-info"><img class="loader" src="public/images/ajax-loader.gif"> <a class="close" data-dismiss="alert">×</a></div></li>');
-
 	            // Append the file name and file size
 	            tpl.find('div').append(data.files[0].name + ' <small>[<i>' + formatFileSize(data.files[0].size) + '</i>]</small>');
 
@@ -732,6 +766,7 @@ var o = {
 	            // Automatically upload the file once it is added to the queue
 	            var jqXHR = data.submit();
 	        },
+	        
 
 	        done: function(e, data) {
 	            if (data.result.Ok == true) {
@@ -746,6 +781,11 @@ var o = {
 	                var tpl = $('<li><div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a></div></li>');
 	                tpl.find('div').append('<b>Error:</b> ' + data.files[0].name + ' <small>[<i>' + formatFileSize(data.files[0].size) + '</i>]</small> ' + data.result.Msg);
 	                data.context.append(tpl);
+	                setTimeout((function(tpl) {
+	                	return function() {
+		                	tpl.remove();
+	                	}
+	                })(tpl), 3000);
 	            }
 	            $("#upload-msg").scrollTop(1000);
 	        },
@@ -812,3 +852,11 @@ var o = {
 $(function() {
 	o.init();
 });
+
+// 为md得到图片链接
+function mdGetImgSrc() {
+	if(o.selectedImages && o.selectedImages.length) {
+		return o.selectedImages[0];
+	}
+	return "";
+}

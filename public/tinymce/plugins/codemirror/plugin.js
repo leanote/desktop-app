@@ -19,11 +19,12 @@ tinymce.PluginManager.add('codemirror', function(editor, url) {
 		editor.selection.setContent('<span class="CmCaReT" style="display:none">&#0;</span>');
 
 		// Open editor window
+		var height = $(document).height();
 		var win = editor.windowManager.open({
 			title: 'HTML source code',
 			url: url + '/source.html',
 			width: 800,
-			height: 550,
+			height: height-150,
 			resizable : true,
 			maximizable : true,
 			buttons: [
@@ -38,14 +39,14 @@ tinymce.PluginManager.add('codemirror', function(editor, url) {
 	};
 
 	// Add a button to the button bar
-	editor.addButton('code', {
+	editor.addButton('code_source', {
 		title: 'Source code',
 		image: url + '/img/file-html.png',
 		onclick: showSourceEditor
 	});
 
 	// Add a menu item to the tools menu
-	editor.addMenuItem('code', {
+	editor.addMenuItem('code_source', {
 		icon: 'code',
 		text: 'Source code',
 		context: 'tools',

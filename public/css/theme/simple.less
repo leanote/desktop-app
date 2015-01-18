@@ -20,17 +20,6 @@
 ::-moz-selection { background:@selectionBg; color:@selectionColor; } 
 ::-webkit-selection { background:@selectionBg; color:@selectionColor; }
 
-html,body {
-}
-*, body {
-  font-family: @fontFamily;
-  font-weight: 300;
-  font-size: @fontSize;
-}
-h1, h2, h3 {
-  font-family: @fontFamily;
-  font-weight: 300 !important;
-}
 a {
   color: @aBlackColor;
   cursor: pointer;
@@ -158,7 +147,7 @@ a.raw:hover {
 }
 
 .dropdown-menu {
-  border: 1px solid @hColor;
+  // border: 1px solid @hColor;
 }
 .dropdown-menu li > a {
   color: @aBlackColor;
@@ -168,15 +157,6 @@ a.raw:hover {
 }
 .dropdown-menu  li > a:hover, .dropdown-menu li > a:focus {
   background-color: @borderColor;
-}
-
-.ios7-a {
-  display: inline-block;
-  padding: 0 10px 0 5px;
-  height: 40px;
-  vertical-align: middle;
-  line-height: 38px;
-  cursor: pointer; 
 }
 
 /*********************/
@@ -216,15 +196,7 @@ a.raw:hover {
   padding-top: 100px;
   z-index: 1000;
 }
-.noteSplit {
-  position: absolute;
-  top: 0;
-  width: 5px;
-  height: 100%;
-  overflow: hidden;
-  z-index: 5;
-  cursor: col-resize;
-}
+
 #notebookSplitter {
   left: @leftNotebookWidth;
 }
@@ -504,84 +476,6 @@ a.raw:hover {
   float: right;
 }
 
-/* item list */
-#noteItemList {
-  position: absolute;
-  top: 0;
-  left:0;
-  right:0;
-  bottom: 0;
-  width: 100%;
-  overflow-y: hidden;
-  padding: 0 5px;}
-#noteItemList .item {
-  position: relative;
-  height: 110px;
-  overflow: hidden;
-  cursor: pointer;
-  padding: 5px;
-border: 1px solid @borderColor;
- border-radius: 3px;
-  margin-top: 5px;
-  background-color: #fff;}
-
-#noteItemList .item:hover, 
-#noteItemList .contextmenu-hover {
-  background-color: #ddd !important;
-  //color: @aBlackColor;
-  .item-title {
-    //color: @aBlackColor;
-    //font-weight: 800;
-  }
-}
-
-.item-active, #noteItemList .item-active:hover {
-  background-color: #65bd77 !important; // #eee;/*@bgColor*/;
-  color: #fff;
-  .fa {
-	 color: #eee !important;
-  }
-  .item-title {
-    color: #fff;
-    // font-weight: 800;
-  }
-}#noteItemList .item-thumb  {
-  width: 100px; 
-  height: 100px; 
-  overflow: hidden;
-  position: absolute; 
-  z-index: 1;
-  right: 0px;
-  height: 100px;
-  background-color: #fff;
-  margin-right: 5px;
-  line-height: 100px;
-  text-align: center;
-}
-  .item-thumb img {
-     max-width: 100px;
-  }
-#noteItemList .item-desc {
-  position: absolute; 
-  left: 0;
-  right: 100px;
-  margin-left: 4px;
-  .fa { // folder, calender 颜色暗些
-  	color: #666;
-  }
-}
-
-.item-title {
-    /*font-weight: 400;*/
-    font-size: 16px;
-    height: 22px;
-    line-height: 20px;
-    overflow: hidden;
-    margin-bottom: 0px;
-    color: @aBlackColor;
-    border-bottom: dashed 1px @borderColor;
-  }
-
 /* editor */
 #editorTool {
   margin: 0;
@@ -609,45 +503,6 @@ border: 1px solid @borderColor;
   // outline:thin dotted #333;outline:1px auto -webkit-focus-ring-color;outline-offset:-2px
   outline: none !important;
   // border: 1px solid @hColor;
-}
-#editorMask {
-	position: absolute; top: 0px; bottom: 0px; right: 0; left: 0; 
-	background-color: #fff;
-	z-index: -10;
-	.fa, a {
-		font-size: 24px;
-	}
-	padding-top: 50px;
-	text-align: center;
-	a {
-		display: inline-block;
-		border-radius: 3px;
-		border: 1px solid @borderColor;
-		padding: 10px;
-		&:hover {
-			background-color: @noteActiveBg;
-			color: #fff;
-		}
-	}
-}
-#editor, #mdEditor {
-  position: absolute; 
-	z-index: 2;
-  top: 71px; 
-  bottom: 0px;
-  right: 0; 
-  left: 5px;  
-  padding: 0; // 0px 0px 0px 0px;
-  display: none;
-}
-#mdEditor {
-	z-index: 1;
-	background-color: #fff;
-    bottom: 10px; 
-    #md-section-helper, #wmd-input {
-		font-size: 14px;
-		line-height: 22px;			
-    }
 }
 
 #editorContent {
@@ -729,19 +584,8 @@ border: 1px solid @borderColor;
 }
 
 /*标签与其它工具*/
-#tool {
-  border-bottom: 1px solid #ddd;
-}
 
 /* tag */
-#tag {
-  height: 40px;
-  line-height: 38px
-}
-// 前面的38影响了dropdown
-#tag .dropdown {
-  line-height: 30px;
-}
 #addTagInput {
   line-height: 25px;
   display: none;
@@ -783,88 +627,6 @@ border: 1px solid @borderColor;
 .label i:hover {
   opacity: 1;
   // font-weight: bold;
-}
-
-/* leanote nav */
-
-#leanoteNavTrigger {
- 
-}
-
-#leanoteNav {
-  position: absolute; 
-  right: 5px;
-  border: 1px solid #ccc; 
-  border-radius: 3px;
-  background-color: #fff;
-  opacity: 0.5;
-  // display: none;
-  z-index: 11;
-  margin-right: 2px;
-  h1 {
-	margin:0;
-  	font-size: 18px;
-  	padding: 3px;
-  	cursor: pointer;
-  }
-  i {
-    padding: 3px;
-  }
-  span {
-  	display: none;
-  }
-  #leanoteNavContent {
-  	display: none;
-	overflow: auto;
-  } 
-}
-
-#leanoteNav.unfolder {
-  min-width: 200px;
-  max-width: 300px;
-  // bottom: 1px;
-  opacity: 0.8;
-  h1 {
-  	border-bottom: 1px dashed @borderColor;
-  }
-  span {
-	  display: inline;
-  }
-  
-  #leanoteNavContent {
-  	display: block;
-	min-height: 30px;
-  }
-}
-
-#leanoteNav ul {
-  margin:0;
-  padding-left: 23px;
-  li {
-  	list-style-type: disc;
-  	a {
-  		&:hover {
-  			color: @hColor;
-  		}	
-  	}
-  }
-}
-#leanoteNav ul .nav-h1 {
-}
-#leanoteNav ul .nav-h2 {
-  margin-left: 20px;
-}
-#leanoteNav ul .nav-h3 {
-  margin-left: 30px;
-}
-#leanoteNav ul .nav-h4 {
-  margin-left: 40px;
-}
-#leanoteNav ul .nav-h5 {
-  margin-left: 50px;
-}
-.scrollTo-a {
-  cursor: pointer !important;
 }
 
 //---------------
@@ -1024,13 +786,7 @@ background-position:-1px -670px
 .tab-pane {
 	padding: 5px 0 0 0;
 }
-.alert {
-	margin-bottom: 10px;
-}
 
-.btn {
-	border-radius: 0 !important;
-}
 
 .mce-container-body iframe {
   //overflow-x: hidden;
@@ -1086,38 +842,8 @@ background-position:-1px -670px
 	margin: 0 10px !important;
 }
 
-
-// leaui image drop drag
-#upload {
-	position: absolute;
-	z-index: 0;
-	bottom: 0;
-	right: 0;
-	left: 0px;
-	padding: 0;
-	background-color: #fff;
-	text-align: center;
-	display: none;
-}
-#upload #drop {
-	width: 100%;
-	height: 100%;
-	padding-top: 100px;
-}
-#drop.in {
-    border: 1px solid #000000;
-}
-#drop.hover {
-    border: 2px solid #000000;
-}
-#uploadMsg {
-	position: absolute;
-	top: 3px;
-	right: 3px;
-	bottom: 10px;
-	overflow: scroll;
-	list-style: none;
-}
 #notebookList {
 	border-top: 1px dashed #eee;
 }
+
+@import "mobile.less";

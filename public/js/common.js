@@ -17,11 +17,14 @@ var Note = {
 var Tag = {};
 var Notebook = {};
 var Share = {};
+var Mobile = {}; // 手机端处理
+var LeaAce = {};
 
 // markdown
 var Converter;
 var MarkdownEditor;
 var ScrollLink;
+var MD;
 
 //---------------------
 // 公用方法
@@ -61,6 +64,7 @@ function t() {
 	}
 	return text;
 }
+var tt = t; // 当slimscroll滑动时t被重新赋值了
 
 // 判断数组是否相等
 function arrayEqual(a, b) {
@@ -175,15 +179,9 @@ function _ajaxCallback(ret, successFunc, failureFunc) {
 	}
 }
 function _ajax(type, url, param, successFunc, failureFunc, async) {
-	log("-------------------ajax:");
-	log(url);
-	log(param);
-	if(typeof async == "undefined") {
-		async = true;
-	} else {
-		async = false;
-	}
-	$.ajax({
+	Service.dispatch(url, param, successFunc);
+	/*
+	return $.ajax({
 		type: type,
 		url: url,
 		data: param,
@@ -195,6 +193,7 @@ function _ajax(type, url, param, successFunc, failureFunc, async) {
 			_ajaxCallback(ret, successFunc, failureFunc);
 		}
 	});
+	*/
 }
 
 /**
@@ -208,7 +207,7 @@ function _ajax(type, url, param, successFunc, failureFunc, async) {
  * @returns
  */
 function ajaxGet(url, param, successFunc, failureFunc, async) {
-	_ajax("GET", url, param, successFunc, failureFunc, async);
+	return _ajax("GET", url, param, successFunc, failureFunc, async);
 }
 
 /**
@@ -274,25 +273,51 @@ ajaxPostJson(
 	});
 */
 
+function getVendorPrefix() {
+  // 使用body是为了避免在还需要传入元素
+  var body = document.body || document.documentElement,
+    style = body.style,
+    vendor = ['webkit', 'khtml', 'moz', 'ms', 'o'],
+    i = 0;
+ 
+  while (i < vendor.length) {
+    // 此处进行判断是否有对应的内核前缀
+    if (typeof style[vendor[i] + 'Transition'] === 'string') {
+      return vendor[i];
+    }
+    i++;
+  }
+}
+
 //-----------------
 
 // 切换编辑器时要修改tabIndex
 function editorIframeTabindex(index) {
-	var $i = $("#editorContent_ifr");
-	if($i.size() == 0) {
-		setTimeout(function() {
-			editorIframeTabindex(index);
-		}, 100);
-	} else {
+	var $i = $("#editorContent");
+	// var $i = $("#editorContent_ifr");
+	// if($i.size() == 0) {
 		$i.attr("tabindex", index);
-	}
+		setTimeout(function() {
+			$i.attr("tabindex", index);
+		}, 500);
+		setTimeout(function() {
+			$i.attr("tabindex", index);
+		}, 1000);
+	// } else {
+		// $i.attr("tabindex", index);
+	// }
 }
 //切换编辑器
+LEA.isM = false;
+LEA.isMarkdownEditor = function() {
+	return LEA.isM;
+}
 function switchEditor(isMarkdown) {
+	LEA.isM = isMarkdown;
 	// 富文本永远是2
 	if(!isMarkdown) {
 		$("#editor").show();
-		$("#mdEditor").css("z-index", 1);
+		$("#mdEditor").css("z-index", 1).hide();
 		
 		// 刚开始没有
 		editorIframeTabindex(2);
@@ -307,26 +332,56 @@ function switchEditor(isMarkdown) {
 	}
 }
 
+
+
 // editor 设置内容
 // 可能是tinymce还没有渲染成功
 var previewToken = "<div style='display: none'>FORTOKEN</div>"
+var clearIntervalForSetContent;
 function setEditorContent(content, isMarkdown, preview) {
 	if(!content) {
 		content = "";
 	}
+	if(clearIntervalForSetContent) {
+		clearInterval(clearIntervalForSetContent);
+	}
 	if(!isMarkdown) {
+		// 先destroy之前的ace
+		/*
+		if(typeof tinymce != "undefined" && tinymce.activeEditor) {
+			var editor = tinymce.activeEditor;
+			var everContent = $(editor.getBody());
+			if(everContent) {
+				LeaAce.destroyAceFromContent(everContent);
+			}
+		}
+		*/
+
 		$("#editorContent").html(content);
-		var editor = tinymce.activeEditor;
-		if(editor) {
+		if(typeof tinymce != "undefined" && tinymce.activeEditor) {
+			var editor = tinymce.activeEditor;
 			editor.setContent(content);
+			/*
+			if(LeaAce.canAce() && LeaAce.isAce) {
+				try {
+					LeaAce.initAceFromContent(editor);
+				} catch(e) {
+					log(e);
+				}
+			} else {
+				// 为了在firefox下有正常的显示
+				$("#editorContent pre").removeClass("ace-tomorrow ace_editor");
+			}
+			*/
 			editor.undoManager.clear(); // 4-7修复BUG
 		} else {
 			// 等下再设置
-			setTimeout(function() {
+			clearIntervalForSetContent = setTimeout(function() {
 				setEditorContent(content, false);
 			}, 100);
 		}
 	} else {
+	/*
 		$("#wmd-input").val(content);
 		$("#wmd-preview").html(""); // 防止先点有的, 再点tinymce再点没内容的
 		if(!content || preview) { // 没有内容就不要解析了
@@ -341,11 +396,36 @@ function setEditorContent(content, isMarkdown, preview) {
 				MarkdownEditor.refreshPreview();
 			} else {
 				// 等下再设置
-				setTimeout(function() {
+				clearIntervalForSetContent = setTimeout(function() {
 					setEditorContent(content, true, preview);
 				}, 200);
 			}
 		}
+	*/
+		if(MD) {
+			MD.setContent(content);
+		} else {
+			clearIntervalForSetContent = setTimeout(function() {
+				setEditorContent(content, true);
+			}, 100);
+		}
+	}
+}
+
+// 复制图片
+function pasteImage(e) {
+	Common.pasteImage(e, FileReader, function(url) {
+		insertImage(url);
+	});
+}
+
+// 插入图片(链接)
+// TODO Markdown 插入图片
+function insertImage(link) {
+	if(LEA.isMarkdownEditor()) {
+		MD.insertLink(link);
+	} else {
+		tinymce.activeEditor.insertContent('<img src="' + link + '">');
 	}
 }
 
@@ -362,7 +442,24 @@ function getEditorContent(isMarkdown) {
 	if(!isMarkdown) {
 		var editor = tinymce.activeEditor;
 		if(editor) {
-			var content = $(editor.getBody());
+			var content = $(editor.getBody()).clone();
+			// 删除toggle raw 
+			content.find('.toggle-raw').remove();
+
+			// 替换掉ace editor
+			var pres = content.find('pre');
+			for(var i = 0 ; i < pres.length; ++i) {
+				var pre = pres.eq(i);
+				var id = pre.attr('id');
+				var aceEditor = LeaAce.getAce(id);
+				if(aceEditor) {
+					var val = aceEditor.getValue();
+					val = val.replace(/</g, '&lt').replace(/>/g, '&gt');
+					pre.removeAttr('style', '').removeAttr('contenteditable').removeClass('ace_editor');
+					pre.html(val);
+				}
+			}
+			
 			// 去掉恶心的花瓣注入
 			// <pinit></pinit>
 			// 把最后的<script>..</script>全去掉
@@ -397,7 +494,10 @@ function getEditorContent(isMarkdown) {
 			return content;
 		}
 	} else {
-		return [$("#wmd-input").val(), $("#wmd-preview").html()]
+		// return [$("#wmd-input").val(), $("#wmd-preview").html()]
+		if(MD) {
+			return [MD.getContent(), '<div>' + $("#preview-contents").html() + '</div>']
+		}
 	}
 }
 
@@ -474,8 +574,14 @@ function showDialogRemote(url, data) {
 	$("#leanoteDialogRemote").modal({remote: url});
 }
 
-function hideDialogRemote() {
-	$("#leanoteDialogRemote").modal('hide');
+function hideDialogRemote(timeout) {
+	if(timeout) {
+		setTimeout(function() {
+			$("#leanoteDialogRemote").modal('hide');
+		}, timeout);
+	} else {
+		$("#leanoteDialogRemote").modal('hide');
+	}
 }
 //---------------
 // notify
@@ -541,10 +647,18 @@ function goNowToDatetime(goNow) {
 	if(!goNow) {
 		return "";
 	}
+	// new Date();
+	if(typeof goNow == 'object') {
+		var date = new Date(goNow);
+		return date.format("yyyy-MM-dd hh:mm:ss");
+	}
 	return goNow.substr(0, 10) + " " + goNow.substr(11, 8);
 }
 function getCurDate() {
 	return (new Date()).format("yyyy-M-d");
+}
+function getCurDatetime() {
+	return (new Date()).format("yyyy-M-d hh:mm:ss");
 }
 
 // 回车键的动作
@@ -588,6 +702,10 @@ function resizeEditor(second) {
     ifrParent.height(height);
     // log(height + '---------------------------------------')
     $("#editorContent_ifr").height(height);
+
+    // life 12.9
+    // inline editor
+    $("#editorContent").css("top", $("#mceToolbar").height());
     
     /*
     // 第一次时可能会被改变
@@ -645,12 +763,11 @@ function hideAlert(id, timeout) {
 function post(url, param, func, btnId) {
 	var btnPreText;
 	if(btnId) {
-		btnPreText = $(btnId).html();
-		$(btnId).html("正在处理").addClass("disabled");
+		$(btnId).button("loading"); // html("正在处理").addClass("disabled");
 	}
 	ajaxPost(url, param, function(ret) {
-		if(btnPreText) {
-			$(btnId).html(btnPreText).removeClass("disabled");
+		if(btnId) {
+			$(btnId).button("reset");
 		}
 		if (typeof ret == "object") {
 			if(typeof func == "function") {
@@ -678,9 +795,9 @@ function isEmailFromInput(inputId, msgId, selfBlankMsg, selfInvalidMsg) {
 		}
 	}
 	if(!val) {
-		msg(msgId, selfBlankMsg || "请输入邮箱");
+		msg(msgId, selfBlankMsg || getMsg("inputEmail"));
 	} else if(!isEmail(val)) {
-		msg(msgId, selfInvalidMsg || "请输入正确的邮箱");
+		msg(msgId, selfInvalidMsg || getMsg("errorEmail"));
 	} else {
 		return val;
 	}
@@ -708,9 +825,14 @@ function hideLoading() {
 }
 
 // 注销, 先清空cookie
+function setCookie(c_name, value, expiredays){
+	var exdate = new Date();
+	exdate.setDate(exdate.getDate() + expiredays);
+	document.cookie = c_name+ "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString());
+}
 function logout() {
-	$.removeCookie("LEANOTE_SESSION");
-	location.href = "/logout?id=1";
+	setCookie("LEANOTE_SESSION", '', -1);
+	location.href = UrlPrefix + "/logout?id=1";
 }
 
 // 得到图片width, height, callback(ret); ret = {width:11, height:33}
@@ -843,15 +965,336 @@ function restoreBookmark() {
 }
 
 // 是否是手机浏览器
-var u = navigator.userAgent;
-LEA.isMobile = /Mobile|Android|iPhone/i.test(u);
+// var u = navigator.userAgent;
+// LEA.isMobile = /Mobile|Android|iPhone/i.test(u);
 // LEA.isMobile = u.indexOf('Android')>-1 || u.indexOf('Linux')>-1;
 // LEA.isMobile = false;
 //if($("body").width() < 600) {
 //	location.href = "/mobile/index";
 //}
 
-// 国际化 i18n
-function getMsg(key) {
-	return MSG[key] || key;
+// 表单验证
+var vd = {
+	isInt: function(o) {
+	    var intPattern=/^0$|^[1-9]\d*$/; //整数的正则表达式
+	    result=intPattern.test(o);
+	    return result;
+	},
+	isNumeric: function(o) {
+		return $.isNumeric(o);
+	},
+	isFloat: function(floatValue){
+	    var floatPattern=/^0(\.\d+)?$|^[1-9]\d*(\.\d+)?$/; //小数的正则表达式
+	    result=floatPattern.test(floatValue);
+	    return result;
+	},
+	isEmail: function(emailValue){
+	    var emailPattern=/^[^@.]+@([^@.]+\.)+[^@.]+$/; //邮箱的正则表达式
+	    result=emailPattern.test(emailValue);
+	    return result;
+	},
+	isBlank: function(o) { 
+		return !$.trim(o);
+	},
+	has_special_chars: function(o) {
+		return /['"#$%&\^<>\?*]/.test(o);
+	},
+	
+	// life
+	// 动态验证
+	// rules = {max: function() {}};
+	// <input data-rules='[{rule: 'requried', msg:"请填写标题"}]' data-msg_target="#msg"/>
+	init: function(form, rule_funcs) {
+		var get_val = function(target) {
+			if(target.is(":checkbox")) {
+				var name = target.attr('name');
+				var val = $('input[name="' + name + '"]:checked').length;
+				return val;
+			} else if(target.is(":radio")) {
+			} else {
+				return target.val();
+			}
+		}
+		var default_rule_funcs = {
+			// 必须输入
+			required: function(target) {
+				return get_val(target);
+			},
+			// 最少
+			min: function(target, rule) {
+				var val = get_val(target);
+				if(val === "" && !is_required(target)) {
+					return true;
+				}
+				if(val < rule.data) {
+					return false;
+				}
+				return true;
+			},
+			minLength: function(target, rule) {
+				var val = get_val(target);
+				if(val === "" && !is_required(target)) {
+					return true;
+				}
+				if(val.length < rule.data) {
+					return false;
+				}
+				return true;
+			},
+			email: function(target, rule) {
+				var val = get_val(target);
+				if(val === "" && !is_required(target)) {
+					return true;
+				}
+				return isEmail(val);
+			},
+			noSpecialChars: function(target) {
+				var val = get_val(target);
+				if(!val) {
+					return true;
+				}
+				if(/[^0-9a-zzA-Z_\-]/.test(val)) {
+					return false;
+				}
+				return true;
+			},
+			password: function(target, rule) {
+				var val = get_val(target);
+				if(val === "" && !is_required(target)) {
+					return true;
+				}
+				return val.length >= 6
+			},
+			equalTo: function(target, rule) {
+				var val = get_val(target);
+				if(val === "" && !is_required(target)) {
+					return true;
+				}
+				return $(rule.data).val() == val;
+			}
+		}
+		rule_funcs = rule_funcs || {};
+		rule_funcs = $.extend(default_rule_funcs, rule_funcs);
+		var rules = {}; // name对应的
+		var msg_targets = {};
+		// 是否是必须输入的
+		function is_required(target) { 
+			var name = get_name(target);
+			var rules = get_rules(target, name);
+			var required_rule = rules[0];
+			if(required_rule['rule'] == "required")  {
+				return true;
+			}
+			return false;
+		}
+		// 先根据msg_target_name, 再根据name
+		function get_rules(target, name) {
+			if(!rules[name]) {
+				rules[name] = eval("(" + target.data("rules") + ")");
+			}
+			return rules[name];
+		}
+		
+		// 以name为索引, 如果多个input name一样, 但希望有不同的msg怎么办?
+		// 添加data-u_name=""
+		function get_msg_target(target, name) {
+			if(!msg_targets[name]) {
+				var t = target.data("msg_target");
+				if(!t) {
+					// 在其父下append一个
+					var msg_o = $('<div class="help-block alert alert-warning" style="display: block;"></div>');
+					target.parent().append(msg_o);
+					msg_targets[name] = msg_o;
+				} else {
+					msg_targets[name] = $(t);
+				}
+			}
+			
+			return msg_targets[name];
+		}
+		function hide_msg(target, name) {
+			var msgT = get_msg_target(target, name);
+			// 之前是正确信息, 那么不隐藏
+			if(!msgT.hasClass("alert-success")) {
+				msgT.hide();
+			}
+		}
+		function show_msg(target, name, msg, msgData) {
+			var t = get_msg_target(target, name);
+			t.html(getMsg(msg, msgData)).removeClass("hide alert-success").addClass("alert-danger").show();
+		}
+		
+		// 验证前修改
+		function pre_fix(target) {
+			var fix_name = target.data("pre_fix");
+			if(!fix_name) {
+				return;
+			}
+			switch(fix_name) {
+				case 'int': int_fix(target);
+				break;
+				case 'price': price_fix(target);
+				break;
+				case 'decimal': decimal_fix(target);
+				break;
+			}
+		}
+		
+		// 验证各个rule
+		// 正确返回true
+		function apply_rules(target, name) {
+			var rules = get_rules(target, name);
+			
+			// 是否有前置fix data-pre_fix
+			pre_fix(target);
+			
+			if(!rules) {
+				return true;
+			}
+			for(var i = 0; i < rules.length; ++i) {
+				var rule = rules[i];
+				var rule_func_name = rule.rule;
+				var msg = rule.msg;
+				var msgData = rule.msgData;
+				if(!rule_funcs[rule_func_name](target, rule)) {
+					show_msg(target, name, msg, msgData);
+					return false;
+				}
+			}
+			
+			hide_msg(target, name);
+			
+			// 这里, 如果都正确, 是否有sufix验证其它的
+			var post_rule = target.data('post_rule');
+			if(post_rule) {
+				setTimeout(function() {
+					var post_target = $(post_rule);
+					apply_rules(post_target, get_name(post_target));
+				},0);
+			}
+			
+			return true;
+		}
+		
+		function focus_func(e) {
+			var target = $(e.target);
+			var name = get_name(target);
+			// 验证如果有错误, 先隐藏
+			hide_msg(target, name);
+			
+			// key up的时候pre_fix
+			pre_fix(target);
+		}
+		function unfocus_func(e) {
+			var target = $(e.target);
+			var name = get_name(target);
+			// 验证各个rule
+			apply_rules(target, name);
+		}
+		
+		// u_name是唯一名, msg, rule的索引
+		function get_name(target) {
+			return target.data('u_name') || target.attr("name") || target.attr("id");
+		}
+		
+		var $allElems = $(form).find('[data-rules]');
+		var $form = $(form);
+		$form.on({
+			keyup: function(e) {
+				if(e.keyCode != 13) { // 不是enter
+					focus_func(e)
+				}
+			},
+			blur: unfocus_func,
+		}, 'input[type="text"], input[type="password"]');
+		$form.on({
+			change: function(e) {
+				if($(this).val()) {
+					focus_func(e);
+				} else {
+					unfocus_func(e);
+				}
+			}
+		}, 'select');
+		$form.on({
+			change: function(e) {
+				unfocus_func(e);
+			}
+		}, 'input[type="checkbox"]');
+		
+		// 验证所有的
+		this.valid = function() {
+			var $ts = $allElems;
+			var is_valid = true;
+			for(var i = 0; i < $ts.length; ++i) {
+				var target = $ts.eq(i);
+				var name = get_name(target);
+				// 验证各个rule
+				if(!apply_rules(target, name)) {
+					is_valid = false;
+					target.focus();
+					return false
+				} else {
+				}
+			}
+			return is_valid;
+		}
+		
+		// 验证某一元素(s)
+		// .num-in, #life
+		this.validElement = function(targets) {
+			var targets = $(targets);
+			var ok = true;
+			for(var i = 0; i < targets.length; ++i) {
+				var target = targets.eq(i);
+				var name = get_name(target);
+				// 验证各个rule
+				if(!apply_rules(target, name)) {
+					ok = false;
+				}
+			}
+			return ok;
+		}
+	}
+};
+
+// 返回hash的#a=1&b=3 返回{a:1, b:3}
+function getHashObject() {
+	var hash = location.hash; // #life	
+	if(!hash) {
+		return {};
+	}
+	var hashKV = hash.substr(1);
+	var kvs = hashKV.split("&");
+	var kvsObj = {};
+	for(var i = 0; i < kvs.length; ++i) {
+		var kv = kvs[i].split('=');
+		if(kv.length == 2) {
+			kvsObj[kv[0]] = kv[1];
+		}
+	}
+	return kvsObj;
+}
+function getHash(key, value) {
+	var kvs = getHashObject();
+	return kvs[key];
+}
+function setHash(key, value) {
+	var hash = location.hash; // #life	
+	if(!hash) {
+		location.href = "#" + key + "=" + value;
+		return;
+	}
+	var kvs = getHashObject();
+	kvs[key] = value;
+	var str = "";
+	for(var i in kvs) {
+		if(kvs[i]) {
+			if(str) {
+				str += "&";
+			}
+			str += i + '=' + kvs[i];
+		}
+	}
+	location.href = "#" + str;
 }

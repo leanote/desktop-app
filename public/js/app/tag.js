@@ -19,7 +19,6 @@ Tag.mapCn2En = {
 	"红色": "red",
 	"绿色": "green",
 	"黄色": "yellow",
-
 }
 Tag.mapEn2Cn = {
 	"blue": "蓝色",
@@ -88,7 +87,7 @@ Tag.renderReadOnlyTags = function(tags) {
 	// 先清空
 	$("#noteReadTags").html("");
 	if(isEmpty(tags)) {
-		$("#noteReadTags").html("无标签");
+		$("#noteReadTags").html(getMsg("noTag"));
 	}
 	
 	var i = true;
@@ -109,7 +108,7 @@ Tag.renderReadOnlyTags = function(tags) {
 		if(!classes) {
 			classes = getNextDefaultClasses();
 		}
-		tag = t('<span class="?">?</span>', classes, text);
+		tag = tt('<span class="?">?</span>', classes, text);
 		
 		$("#noteReadTags").append(tag);
 	}
@@ -142,8 +141,10 @@ Tag.appendTag = function(tag) {
 		}
 	}
 	
-	text = Tag.mapEn2Cn[text] || text;
-	tag = t('<span class="?">?<i title="删除">X</i></span>', classes, text);
+	if(LEA.locale == "zh") {
+		text = Tag.mapEn2Cn[text] || text;
+	}
+	tag = tt('<span class="?">?<i title="' + getMsg("delete") + '">X</i></span>', classes, text);
 
 	// 避免重复
 	$("#tags").children().each(function() {
@@ -164,6 +165,9 @@ Tag.appendTag = function(tag) {
 	if (!isColor) {
 		reRenderTags();
 	}
+	
+	// 笔记已污染
+	Note.curNoteIsDirtied();
 }
 
 // 为了颜色间隔, add, delete时调用
@@ -193,7 +197,7 @@ Tag.renderTagNav = function(tags) {
 		}
 		var text = Tag.mapEn2Cn[tag] || tag;
 		var classes = Tag.classes[tag] || "label label-default";
-		$("#tagNav").append(t('<li><a> <span class="?">?</span></li>', classes, text));
+		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">?</span></li>', text, classes, text));
 	}
 }
 
@@ -266,8 +270,8 @@ $(function() {
 	//-------------
 	// nav 标签搜索
 	function searchTag() {
-		var tag = $.trim($(this).text());
-		tag = Tag.mapCn2En[tag] || tag;
+		var tag = $.trim($(this).data("tag"));
+		// tag = Tag.mapCn2En[tag] || tag;
 		
 		// 学习changeNotebook
 		

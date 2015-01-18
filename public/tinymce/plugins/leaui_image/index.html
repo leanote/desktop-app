@@ -15,10 +15,9 @@
     <script src="public/js/html5shiv.js">
     </script>
 <![endif]-->
+
 </head>
-
-<body>
-
+<body class="md" id="body">
 <div style="margin: 3px;">
 	<div class="holder"></div>
 
@@ -112,7 +111,7 @@
         </div>
 
         <div class="tab-pane fade" id="url">
-        	<form class="form-inline" id="imageUrlForm" style="margin: 100px 0 0 100px;">
+        	<form class="form-inline" id="imageUrlForm" style="">
         		<div class="form-group">
 				    <label class="control-label" for="imageUrl">URL:</label>
 				</div>
@@ -154,7 +153,15 @@
 var G = {};
 G.imageSrcPrefix = 'upload';
 G.perPageItems = 12;
-G.maxSelected = 10;
+G.maxSelected = 1;
+/*
+var url = location.href;
+var classes = "";
+if(url.indexOf("md=1") >= 0) {
+	classes = "md";
+	document.getElementById("body").className = classes;
+}
+*/
 </script>
 
 <script src="public/js/jquery.js"></script>
@@ -163,6 +170,8 @@ G.maxSelected = 10;
 <script src="public/js/jquery.fileupload.js"></script>
 <script src="public/js/jquery.iframe-transport.js"></script>
 <script src="public/js/jquery.pagination.js"></script>
+<!--
 <script src="public/js/jquery.lazyload.min.js"></script>
+-->
 <script src="public/js/main.js"></script>
 </html>
