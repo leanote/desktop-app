@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="leanote,leanote.com">
+<meta name="description" content="leanote, 不只是笔记!">
+<meta name="author" content="leanote">
+<title>登录</title>
+<link href="public/css/bootstrap.css" rel="stylesheet">
+<link href="public/css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
+<link href="public/css/index.css" rel="stylesheet">
+<style>
+html, body {
+	height: 100%;
+}
+</style>
+</head>
+<body id="boxBody">
+<section id="box"  class="animated fadeInUp">
+	<div>
+		<h1 id="logo">leanote</h1>
+		<div id="boxForm">
+			<div id="boxHeader">登录</div>
+			<form>
+				<div class="alert alert-danger" id="loginMsg"></div>
+				<input id="from" type="hidden" value="" />
+				<div class="form-group">
+					<label class="control-label">用户名或Email</label>
+					<input type="text" class="form-control" id="email" name="email" value=""> 
+				</div>
+				<div class="form-group"> 
+					<label class="control-label">密码</label>
+				    <input type="password" class="form-control" id="pwd" name="pwd">
+				</div>
+				
+				<div class="clearfix">
+					<a href="/findPassword" class="pull-right m-t-xs"><small>忘记密码?</small></a>
+					<button id="loginBtn" class="btn btn-success">登录</button>
+				</div>
+				
+				<div class="line line-dashed"></div>
+				
+				<p class="text-muted text-center"><small>还无帐户?</small></p>
+			
+				<a href="/register" class="btn btn-default btn-block">注册</a>
+			</form>	
+		</div>
+    </div>
+</section>
+
+<div id="boxFooter">
+	<p>
+		<a href="/index">主页</a>
+	</p>
+	<p>
+		<a href="/index">leanote</a> © 2015
+	</p>
+</div>
+
+<script src="public/js/jquery-1.9.0.min.js"></script>
+<script src="public/js/bootstrap.js"></script>
+
+<script>
+$(function() {
+	$("#email").focus();
+	if($("#email").val()) {
+		$("#pwd").focus();
+	}
+	function showMsg(msg, id) {
+		$("#loginMsg").html(msg).show();
+		if(id) {
+			$("#" + id).focus();
+		}
+	}
+	function hideMsg() {
+		$("#loginMsg").hide();
+	}
+	$("#loginBtn").click(function(e){
+		e.preventDefault();
+		var email = $("#email").val();
+		var pwd = $("#pwd").val();
+		var captcha = $("#captcha").val()
+		if(!email) {
+			showMsg("请输入用户名", "email");
+			return;
+		}
+		if(!pwd) {
+			showMsg("请输入密码", "pwd");
+			return;
+		} else {
+			if(pwd.length < 6) {
+				showMsg("密码有误", "pwd");
+				return;
+			}
+		}
+		if(needCaptcha && !captcha) {
+			showMsg("请输入验证码", "captcha");
+			return;
+		}
+		
+		$("#loginBtn").html("正在登录...").addClass("disabled");
+		
+		$.post("/doLogin", {email: email, pwd: pwd, captcha: $("#captcha").val()}, function(e) {
+			$("#loginBtn").html("登录").removeClass("disabled");
+			if(e.Ok) {
+				$("#loginBtn").html("登录成功, 正在跳转...");
+				var from = $("#from").val() || "http:\/\/leanote.com\/note" || "/note";
+				location.href = from;
+			} else {
+				if(e.Item && $.trim($("#captchaContainer").text()) == "") {
+					$("#captchaContainer").html($("#tCaptcha").html());
+					needCaptcha = true
+				}
+				
+				showMsg(e.Msg);
+			}
+		});
+	});
+	
+	
+});
+</script>
+</body>
+</html>
