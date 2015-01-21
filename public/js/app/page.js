@@ -1294,37 +1294,55 @@ LeaAce = {
 	}
 };
 
+// 全量同步
+function fullSync() {
+
+}
+
 // note.html调用
 // 实始化页面
+// 判断是否登录
 function initPage() {
-	$(function() {
-		// 获取笔记本
-		Service.notebookService.getNotebooks(function(notebooks) {
-			Notebook.renderNotebooks(notebooks);
-		});
+	function _init() {
+		$(function() {
+			// 获取笔记本
+			Service.notebookService.getNotebooks(function(notebooks) {
+				Notebook.renderNotebooks(notebooks);
+			});
 
-		// 获得笔记
-		Service.noteService.getNotes('', function(notes) {
-			Note.renderNotesAndFirstOneContent(notes);
-			if(!curNotebookId) {
-				Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
-			}
-		});
+			// 获得笔记
+			Service.noteService.getNotes('', function(notes) {
+				Note.renderNotesAndFirstOneContent(notes);
+				if(!curNotebookId) {
+					Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
+				}
+			});
 
-		// 指定笔记, 也要保存最新笔记
-		if(latestNotes.length > 0) {
-			for(var i = 0; i < latestNotes.length; ++i) {
-				Note.addNoteCache(latestNotes[i]);
+			// 指定笔记, 也要保存最新笔记
+			if(latestNotes.length > 0) {
+				for(var i = 0; i < latestNotes.length; ++i) {
+					Note.addNoteCache(latestNotes[i]);
+				}
 			}
+			
+			// 标签
+			Service.tagService.getTags(function(tags) {
+				Tag.renderTagNav(tags);
+			});
+
+			// init notebook后才调用
+			// initSlimScroll();
+			LeaAce.handleEvent();
+		});
+	};
+
+	// 判断是否登录	
+	UserService.init(function(userInfo) {
+		if(userInfo) {
+			UserInfo = userInfo;
+			_init();
+		} else {
+			location.href = 'login.html';
 		}
-		
-		// 标签
-		Service.tagService.getTags(function(tags) {
-			Tag.renderTagNav(tags);
-		});
-
-		// init notebook后才调用
-		// initSlimScroll();
-		LeaAce.handleEvent();
 	});
 }

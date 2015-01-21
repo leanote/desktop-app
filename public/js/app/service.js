@@ -6,10 +6,19 @@ var Service = {
 	noteService: require('note'),
 	tagService: require('tag'),
 	userService: require('user'),
-	tagService: require('tag')
+	tagService: require('tag'),
+	apiService: require('api'),
+	syncServie: require('sync');
 };
+
+// 全局变量
+var ApiService = Service.apiService;
+var UserService = Service.userService;
+var SyncService = Service.syncService;
+
 // 分发服务
 // route = /note/notebook
+// 过时
 Service.dispatch = function(router, param, callback) {
 	var me = this;
 	router = $.trim(router);
@@ -27,28 +36,7 @@ Service.dispatch = function(router, param, callback) {
 	}
 };
 
-/*
-var db = openDatabase('leanote', '1.0', 'my first database', 2 * 1024 * 1024);
-db.transaction(function (tx) {
-	log(tx);
-  tx.executeSql('CREATE TABLE IF NOT EXISTS users (id unique, text)');
-  tx.executeSql('INSERT INTO users (id, text) VALUES (1, "synergies")');
-  tx.executeSql('INSERT INTO users (id, text) VALUES (2, "luyao")');
-  alert(30);
-});
-
-// Query out the data
-db.transaction(function (tx) {
-  tx.executeSql('SELECT * FROM users', [], function (tx, results) {
-    var len = results.rows.length, i;
-    for (i = 0; i < len; i++) {
-      alert(results.rows.item(i).text);
-    }
-  });
-});
-*/
-
-// clipbord
+// 右键菜单
 $(document).on('contextmenu', function (e) {
 	e.preventDefault();
 	var $target = $(e.target);
@@ -100,6 +88,4 @@ Menu.prototype.popup = function (x, y) {
 this.menu.popup(x, y);
 };
 var menu = new Menu();
-
 var FS = require('fs');
- 

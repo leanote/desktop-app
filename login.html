@@ -62,6 +62,8 @@ html, body {
 
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/bootstrap.js"></script>
+<script src="public/js/app/service.js"></script>
+<script src="public/js/common.js"></script>
 
 <script>
 $(function() {
@@ -96,31 +98,19 @@ $(function() {
 				return;
 			}
 		}
-		if(needCaptcha && !captcha) {
-			showMsg("请输入验证码", "captcha");
-			return;
-		}
 		
-		$("#loginBtn").html("正在登录...").addClass("disabled");
-		
-		$.post("/doLogin", {email: email, pwd: pwd, captcha: $("#captcha").val()}, function(e) {
-			$("#loginBtn").html("登录").removeClass("disabled");
-			if(e.Ok) {
-				$("#loginBtn").html("登录成功, 正在跳转...");
-				var from = $("#from").val() || "http:\/\/leanote.com\/note" || "/note";
-				location.href = from;
+		$("#loginBtn").html("loading...").addClass("disabled");
+		ApiService.auth(email, pwd, function(ret) {
+			$("#loginBtn").html("Sign in").removeClass("disabled");
+			if(ret.Ok) {
+				$("#loginBtn").html("Success...");
+				location.href = 'index.html';
 			} else {
-				if(e.Item && $.trim($("#captchaContainer").text()) == "") {
-					$("#captchaContainer").html($("#tCaptcha").html());
-					needCaptcha = true
-				}
-				
-				showMsg(e.Msg);
+				showMsg(ret.Msg);
 			}
+
 		});
 	});
-	
-	
 });
 </script>
 </body>

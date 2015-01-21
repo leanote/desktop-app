@@ -14,4 +14,4 @@ Notebook.addNotebook("4", "life2", "1");
 // Notebook.reCountNotebookNumberNotes('54bb2e89c596f2239a000000');
 
 
-Api.uploadImage();
+Api.auth('c@a.com', 'abc123');
