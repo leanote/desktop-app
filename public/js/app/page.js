@@ -1295,8 +1295,13 @@ LeaAce = {
 };
 
 // 全量同步
-function fullSync() {
-
+function fullSync(callback) {
+	log('full sync');
+	SyncService.fullSync(function(ret) {
+		log('after....')
+		log(ret);
+		callback && callback();
+	});
 }
 
 // note.html调用
@@ -1340,7 +1345,9 @@ function initPage() {
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
-			_init();
+			fullSync(function() {
+				_init();
+			});
 		} else {
 			location.href = 'login.html';
 		}

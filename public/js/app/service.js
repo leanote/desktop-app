@@ -8,13 +8,13 @@ var Service = {
 	userService: require('user'),
 	tagService: require('tag'),
 	apiService: require('api'),
-	syncServie: require('sync');
+	syncServie: require('sync')
 };
 
 // 全局变量
 var ApiService = Service.apiService;
 var UserService = Service.userService;
-var SyncService = Service.syncService;
+var SyncService = Service.syncServie;
 
 // 分发服务
 // route = /note/notebook
@@ -51,8 +51,6 @@ $(document).on('contextmenu', function (e) {
 });
   
 var gui = require('nw.gui');
-console.log("life")
-console.log(gui);
 function Menu() {
 this.menu = new gui.Menu();
 this.cut = new gui.MenuItem({
