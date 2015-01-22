@@ -624,6 +624,12 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	Note.contentAjaxSeq++;
 	var seq = Note.contentAjaxSeq;
 	function setContent(ret) {
+		if(ret) {
+			cacheNote.InitSync = false;
+		}
+		ret = ret || {};
+		log(">>")
+		log(ret);
 		Note.contentAjax = null;
 		if(seq != Note.contentAjaxSeq) {
 			return;
@@ -641,7 +647,8 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		callback && callback(ret);
 	}
 	
-	if(cacheNote.Content) {
+	// 不是刚同步过来的, 且有内容
+	if(!cacheNote.InitSync && cacheNote.Content) {
 		setContent(cacheNote);
 		return;
 	}
@@ -654,10 +661,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	}
 	
 	self.showContentLoading();
-	if(Note.contentAjax != null) {
-		Note.contentAjax.abort();
-	}
-	Note.contentAjax = ajaxGet(url, param, setContent);
+	Service.noteService.getNoteContent(cacheNote.NoteId, setContent); // ajaxGet(url, param, setContent);
 }
 
 // 渲染
