@@ -15,10 +15,13 @@ var Service = {
 var ApiService = Service.apiService;
 var UserService = Service.userService;
 var SyncService = Service.syncServie;
+var ServerService = require('server');
 
 // 分发服务
 // route = /note/notebook
 // 过时
+Service.dispatch = function() {};
+/*
 Service.dispatch = function(router, param, callback) {
 	var me = this;
 	router = $.trim(router);
@@ -35,6 +38,7 @@ Service.dispatch = function(router, param, callback) {
 		callback && callback(false);
 	}
 };
+*/
 
 // 右键菜单
 $(document).on('contextmenu', function (e) {

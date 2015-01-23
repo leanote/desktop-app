@@ -17,4 +17,5 @@ app/tmp/main.go
 .settings
 .project
 public/config.codekit
+/data
 
