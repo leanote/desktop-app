@@ -1304,6 +1304,12 @@ function fullSync(callback) {
 	});
 }
 
+// 增量同步
+function incrSync() {
+	log('full sync');
+	SyncService.incrSync(Notebook, Note);
+}
+
 // note.html调用
 // 实始化页面
 // 判断是否登录
@@ -1312,6 +1318,7 @@ function initPage() {
 		$(function() {
 			// 获取笔记本
 			Service.notebookService.getNotebooks(function(notebooks) {
+				log(notebooks);
 				Notebook.renderNotebooks(notebooks);
 			});
 
@@ -1345,9 +1352,14 @@ function initPage() {
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
-			fullSync(function() {
+			// 之前已同步过, 就不要full sync了
+			if('LastSyncUsn' in UserInfo) {
 				_init();
-			});
+	 		} else {
+				fullSync(function() {
+					_init();
+				});
+	 		}
 		} else {
 			location.href = 'login.html';
 		}

@@ -102,13 +102,13 @@ $(function() {
 		$("#loginBtn").html("loading...").addClass("disabled");
 		ApiService.auth(email, pwd, function(ret) {
 			$("#loginBtn").html("Sign in").removeClass("disabled");
+			// console.log(ret);
 			if(ret.Ok) {
 				$("#loginBtn").html("Success...");
 				location.href = 'index.html';
 			} else {
 				showMsg(ret.Msg);
 			}
-
 		});
 	});
 });

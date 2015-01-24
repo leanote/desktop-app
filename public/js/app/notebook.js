@@ -973,3 +973,10 @@ $(function() {
 		Notebook.contextmenuSearch.showMenu(e, $p);
 	});
 });
+
+
+//---------------
+// 笔记本解决冲突
+Notebook.fixConflict = function() {
+
+};

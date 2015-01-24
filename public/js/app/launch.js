@@ -11,7 +11,6 @@ UserService.init(function(userInfo) {
 		UserInfo = userInfo;
 		location.href = 'note.html';
 	} else {
-		alert(2);
 		location.href = 'login.html';
 	}
 });

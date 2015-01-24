@@ -628,8 +628,8 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 			cacheNote.InitSync = false;
 		}
 		ret = ret || {};
-		log(">>")
-		log(ret);
+		// log(">>")
+		// log(ret);
 		Note.contentAjax = null;
 		if(seq != Note.contentAjaxSeq) {
 			return;
@@ -744,14 +744,20 @@ Note.renderNote = function(note) {
 	
 	// 笔记是新render的, 没有污染过
 	note.isDirty = false;
-}
+};
 
 // render content
 Note.renderNoteContent = function(content) {
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
+
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.curNoteId = content.NoteId;
-}
+	// life
+	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
+	content.Desc = Note.genDesc(content.Content);
+	content.ImgSrc = Note.getImgSrc(content.Content);
+	Note.renderChangedNote(content);
+};
 
 // 初始化时渲染最初的notes
 /**
@@ -845,6 +851,26 @@ Note.renderNotes = function(notes, forNewNote, isShared) {
 			})(i), i*2000);
 	}
 }
+;
+Note._getNoteHtmlObjct = function(note, isShared) {
+	var baseClasses = "item-my";
+	if(isShared) {
+		baseClasses = "item-shared";
+	}
+	var classes = baseClasses;
+
+	var tmp;
+	if(note.ImgSrc) {
+		tmp = tt(Note.itemTpl, classes, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+	} else {
+		tmp = tt(Note.itemTplNoImg, classes, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+	}
+	if(!note.IsBlog) {
+		tmp = $(tmp);
+		tmp.find(".item-blog").hide();
+	}
+	return tmp;
+},
 Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 	var baseClasses = "item-my";
 	if(isShared) {
@@ -1866,3 +1892,81 @@ $(function() {
 
 // 定时器启动
 Note.startInterval();
+
+//----------------------
+// 冲突解决, 增量sync时
+// note是服务器端的笔记, newNote是本地复制后的笔记
+Note.fixSyncConflict = function(note, newNote) {
+	// Note.cache[note.NoteId] = note;
+	// Note.cache[newNote.NoteId] = newNote;
+	Note.addNoteCache(note);
+	Note.addNoteCache(newNote);
+
+	var target = $(tt('[noteId="?"]', note.NoteId)); // 
+	// 如果当前笔记在笔记列表中, 那么生成一个新笔记放在这个笔记上面
+	if(target.length > 0) {
+		var newHtmlObject = Note._getNoteHtmlObjct(note);
+		newHtmlObject.insertBefore(target);
+	}
+	// 当前这个换成新复制的
+	target.attr('noteId', newNote.NoteId);
+	// 重新render 左侧下, 因为有冲突了, 不要render内容啊
+
+	// 如果当前编辑的是这个笔记, 那切换到newNote上来
+	if(Note.curNoteId == note.NoteId) {
+		Note.curNoteId = newNote.NoteId;
+	}
+};
+
+// 添加同步的notes
+Note.addSyncNotes = function(notes) {
+	if(isEmpty(notes)) { 
+		return;
+	}
+	for(var i in notes) {
+		var note = notes[i];
+		Note.addNoteCache(note);
+		// 添加到当前的笔记列表中
+		var newHtmlObject = Note._getNoteHtmlObjct(note);
+		log(newHtmlObject);
+		$('#noteItemList').prepend(newHtmlObject);
+	}
+}
+// 更新
+Note.updateSyncNotes = function(notes) {
+	log("??")
+	if(isEmpty(notes)) { 
+		return;
+	}
+	log("what?")
+	for(var i in notes) {
+		var note = notes[i];
+		note.InitSync = true; // 需要重新获取内容
+		Note.addNoteCache(note);
+		// 如果当前修改的是本笔记, 那么重新render之
+		log('->>>')
+		log(Note.curNoteId);
+		if(Note.curNoteId == note.NoteId) {
+			log('yes---');
+			Note.changeNote(Note.curNoteId);
+		}
+	}
+}
+
+// 删除
+Note.deleteSyncNotes = function(notes) {
+	if(isEmpty(notes)) { 
+		return;
+	}
+	for(var i in notes) {
+		var noteId = notes[i];
+		note = Note.getNote(noteId);
+		if(note) {
+			Note.clearCacheByNotebookId(note.NotebookId);
+			delete Note.cache[noteId];
+			// 如果在笔记列表中则删除
+			$(tt('[noteId="?"]', note.NoteId)).remove();
+		}
+	}
+}
+
