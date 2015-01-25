@@ -871,7 +871,7 @@ Notebook.deleteNotebook = function(target) {
 		}
 	});
 };
-Notebook.deleteNotebookFromTree = function() {
+Notebook.deleteNotebookFromTree = function(notebookId) {
 	var self = this;
 	self.tree.removeNode(self.tree.getNodeByTId(notebookId));
 	if(self.tree2) {
@@ -1069,9 +1069,10 @@ Notebook.updateSync = function(notebooks) {
 // 删除
 Notebook.deleteSync = function(notebooks) {
 	var me = this;
-	if(isEmpty(notes)) { 
+	if(isEmpty(notebooks)) { 
 		return;
 	}
+	log('delete notebook sync');
 	for(var i in notebooks) {
 		var notebookId = notebooks[i];
 		// 删除
