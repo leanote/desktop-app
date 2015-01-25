@@ -245,7 +245,7 @@ Notebook.allNotebookId = "0";
 Notebook.trashNotebookId = "-1";
 Notebook.curNotebookIsTrashOrAll = function() {
 	return Notebook.curNotebookId == Notebook.trashNotebookId || Notebook.curNotebookId == Notebook.allNotebookId ;
-}
+};
 Notebook.renderNotebooks = function(notebooks) {
 	var self = this;
 
@@ -765,7 +765,7 @@ Notebook.updateNotebookTitle = function(target) {
 	} else {
 		self.tree.editName(self.tree.getNodeByTId(notebookId));
 	}
-}
+};
 Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 	var self = Notebook;
 	ajaxPost("/notebook/updateNotebookTitle", {notebookId: notebookId, title: newTitle}, function(ret) {
@@ -778,10 +778,32 @@ Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 		if(self.tree2) {
 			var notebook = self.tree.getNodeByTId(notebookId);
 			notebook.Title = newTitle;
-			self.tree.updateNode(notebook);
+			self.tree.updateNode(notebook);  // 同步到对方
 		}
 	});
-}
+};
+
+// 修改标题 for sync
+Notebook.renderUpdateNoteTitle = function(notebookId, newTitle) {
+	var self = this;
+	// 修改缓存
+	Notebook.cache[notebookId].Title = newTitle;
+	// 改变nav
+	Notebook.changeNav();
+	
+	var notebook = self.tree.getNodeByTId(notebookId);
+	if(!notebook) {
+		return;
+	}
+	notebook.Title = newTitle;
+	if(self.tree) {
+		self.tree.updateNode(notebook);
+	}
+	if(self.tree2) {
+		self.tree2.updateNode(notebook);
+	}
+};
+
 
 //-----------
 // 添加笔记本
@@ -1011,50 +1033,36 @@ Notebook.addSync = function(notebooks) {
 	if(isEmpty(notebooks)) { 
 		return;
 	}
-	log('add sync');
+	log('add sync notebook');
 	for(var i in notebooks) {
 		var notebook = notebooks[i];
 		Notebook.setCache(notebook);
 		me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
-		/*
-		// 添加到当前的笔记列表中
-		var newHtmlObject = Note._getNoteHtmlObjct(note);
-		log(newHtmlObject);
-		$('#noteItemList').prepend(newHtmlObject);
-		*/
 	}
 }
 // 本地 -> 添加到服务器上的
-// LocalNotebookId
-// NotebookId是新的
+// 不用做任何操作
 Notebook.addChange = function(notebooks) {
+	return;
 	var me = this;
 	if(isEmpty(notebooks)) { 
 		return;
 	}
 	for(var i in notebooks) {
 		var notebook = notebooks[i];
-		me.tree.addNodes(self.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
 	}
 };
 // 更新
-Notebook.updateSync = function(notes) {
-	log("??")
-	if(isEmpty(notes)) { 
+// 不对移动做修改, 只修改标题
+Notebook.updateSync = function(notebooks) {
+	var me = this;
+	if(isEmpty(notebooks)) { 
 		return;
 	}
-	log("what?")
-	for(var i in notes) {
-		var note = notes[i];
-		note.InitSync = true; // 需要重新获取内容
-		Note.addNoteCache(note);
-		// 如果当前修改的是本笔记, 那么重新render之
-		log('->>>')
-		log(Note.curNoteId);
-		if(Note.curNoteId == note.NoteId) {
-			log('yes---');
-			Note.changeNote(Note.curNoteId);
-		}
+	log("update notebook sync");
+	for(var i in notebooks) {
+		var notebook = notebooks[i];
+		me.renderUpdateNoteTitle(notebook.NotebookId, notebook.Title);
 	}
 };
 
