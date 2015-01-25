@@ -805,7 +805,7 @@
 	},
 	//method of operate ztree dom
 	view = {
-		addNodes: function(setting, parentNode, newNodes, isSilent, is_new) { // life is_new
+		addNodes: function(setting, parentNode, newNodes, isSilent, is_new, is_edit) { // life is_new
 			if (setting.data.keep.leaf && parentNode && !parentNode.isParent) {
 				return;
 			}
@@ -836,21 +836,26 @@
 						parentNode.Subs = [];
 					}
 				}
+				if(is_edit == undefined) {
+					is_edit = true;
+				}
 
 				data.addNodesData(setting, parentNode, newNodes);
-				view.createNodes(setting, parentNode.level + 1, newNodes, parentNode, is_new);
+				view.createNodes(setting, parentNode.level + 1, newNodes, parentNode, is_new, is_edit);
 				
 				// 之前这个父没有子的, 先添加子, 再展开, 再编辑!
 				if (!isSilent) {
 					if(parentNode.Subs.length == 1) {
 						view.expandCollapseParentNode(setting, parentNode, true, true, function() {
-							view.editNode(setting, newNodes[0]);
+							if(is_edit) {
+								view.editNode(setting, newNodes[0]);
+							}
 						});
 					}
 				}
 			} else {
 				data.addNodesData(setting, data.getRoot(setting), newNodes);
-				view.createNodes(setting, 0, newNodes, null, is_new);
+				view.createNodes(setting, 0, newNodes, null, is_new, is_edit);
 			}
 		},
 		appendNodes: function(setting, level, nodes, parentNode, initFlag, openFlag) {
@@ -1021,7 +1026,7 @@
 		},
 		// 第一次一起调用, nodes所有notebooks
 		// life is_new, 为了在最前面添加
-		createNodes: function(setting, level, nodes, parentNode, is_new) {
+		createNodes: function(setting, level, nodes, parentNode, is_new, is_edit) {
 			if (!nodes || nodes.length == 0) return;
 			var root = data.getRoot(setting),
 			childKey = setting.data.key.children,
@@ -1029,12 +1034,16 @@
 			root.createdNodes = [];
 			var zTreeHtml = view.appendNodes(setting, level, nodes, parentNode, true, openFlag);
 			// 根节点下添加
+			if(is_edit == undefined) {
+				is_edit = true;
+			}
 			if (!parentNode) {
 				if(is_new) {
 					// 在最前面添加
 					setting.treeObj.find("li").eq(0).after(zTreeHtml.join(''));
 					// edit it
-					view.editNode(setting, nodes[0]);
+					if(is_edit)
+						view.editNode(setting, nodes[0]);
 				} else {
 					setting.treeObj.append(zTreeHtml.join(''));
 				}
@@ -1044,7 +1053,8 @@
 					if(is_new) {
 						ulObj.prepend(zTreeHtml.join(''));
 						// edit it
-						view.editNode(setting, nodes[0]);
+						if(is_edit) 
+							view.editNode(setting, nodes[0]);
 					} else {
 						ulObj.append(zTreeHtml.join(''));
 					}
@@ -1521,13 +1531,13 @@
 
 			var zTreeTools = {
 				setting : setting,
-				addNodes : function(parentNode, newNodes, isSilent, is_new) { // is_new life
+				addNodes : function(parentNode, newNodes, isSilent, is_new, is_edit) { // is_new life
 					if (!newNodes) return null;
 					if (!parentNode) parentNode = null;
 					if (parentNode && !parentNode.isParent && setting.data.keep.leaf) return null;
 					var xNewNodes = tools.clone(tools.isArray(newNodes)? newNodes: [newNodes]);
 					function addCallback() {
-						view.addNodes(setting, parentNode, xNewNodes, (isSilent==true), is_new);
+						view.addNodes(setting, parentNode, xNewNodes, (isSilent==true), is_new, is_edit);
 					}
 
 					if (tools.canAsync(setting, parentNode)) {

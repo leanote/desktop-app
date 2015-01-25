@@ -1919,7 +1919,7 @@ Note.fixSyncConflict = function(note, newNote) {
 };
 
 // 添加同步的notes
-Note.addSyncNotes = function(notes) {
+Note.addSync = function(notes) {
 	if(isEmpty(notes)) { 
 		return;
 	}
@@ -1933,7 +1933,7 @@ Note.addSyncNotes = function(notes) {
 	}
 }
 // 更新
-Note.updateSyncNotes = function(notes) {
+Note.updateSync = function(notes) {
 	log("??")
 	if(isEmpty(notes)) { 
 		return;
@@ -1954,7 +1954,7 @@ Note.updateSyncNotes = function(notes) {
 }
 
 // 删除
-Note.deleteSyncNotes = function(notes) {
+Note.deleteSync = function(notes) {
 	if(isEmpty(notes)) { 
 		return;
 	}

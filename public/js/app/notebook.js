@@ -843,22 +843,22 @@ Notebook.deleteNotebook = function(target) {
 	
 	ajaxGet("/notebook/deleteNotebook", {notebookId: notebookId}, function(ret) {
 		if(ret.Ok) {
-			/*
-			$(target).parent().remove();
-			*/
-			self.tree.removeNode(self.tree.getNodeByTId(notebookId));
-			if(self.tree2) {
-				self.tree2.removeNode(self.tree2.getNodeByTId(notebookId));
-			}
-			delete Notebook.cache[notebookId];
-			
-			// 改变nav
-			Notebook.changeNav();
+			self.deleteNotebookFromTree(notebookId);
 		} else {
 			alert(ret.Msg);
 		}
 	});
-}
+};
+Notebook.deleteNotebookFromTree = function() {
+	var self = this;
+	self.tree.removeNode(self.tree.getNodeByTId(notebookId));
+	if(self.tree2) {
+		self.tree2.removeNode(self.tree2.getNodeByTId(notebookId));
+	}
+	delete Notebook.cache[notebookId];
+	// 改变nav
+	Notebook.changeNav();	
+};
 
 $(function() {
 	//-------------------
@@ -977,6 +977,96 @@ $(function() {
 
 //---------------
 // 笔记本解决冲突
-Notebook.fixConflict = function() {
+//----------------------
+// 冲突解决, 增量sync时
+// note是服务器端的笔记, newNote是本地复制后的笔记
+Notebook.fixSyncConflict = function(note, newNote) {
+	// Note.cache[note.NoteId] = note;
+	// Note.cache[newNote.NoteId] = newNote;
+	/*
+	Note.addNoteCache(note);
+	Note.addNoteCache(newNote);
 
+	var target = $(tt('[noteId="?"]', note.NoteId)); // 
+	// 如果当前笔记在笔记列表中, 那么生成一个新笔记放在这个笔记上面
+	if(target.length > 0) {
+		var newHtmlObject = Note._getNoteHtmlObjct(note);
+		newHtmlObject.insertBefore(target);
+	}
+	// 当前这个换成新复制的
+	target.attr('noteId', newNote.NoteId);
+	// 重新render 左侧下, 因为有冲突了, 不要render内容啊
+
+	// 如果当前编辑的是这个笔记, 那切换到newNote上来
+	if(Note.curNoteId == note.NoteId) {
+		Note.curNoteId = newNote.NoteId;
+	}
+	*/
 };
+
+// notebooks
+// <- server 服务器端添加过来的
+Notebook.addSync = function(notebooks) {
+	var me = this;
+	if(isEmpty(notebooks)) { 
+		return;
+	}
+	log('add sync');
+	for(var i in notebooks) {
+		var notebook = notebooks[i];
+		Notebook.setCache(notebook);
+		me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
+		/*
+		// 添加到当前的笔记列表中
+		var newHtmlObject = Note._getNoteHtmlObjct(note);
+		log(newHtmlObject);
+		$('#noteItemList').prepend(newHtmlObject);
+		*/
+	}
+}
+// 本地 -> 添加到服务器上的
+// LocalNotebookId
+// NotebookId是新的
+Notebook.addChange = function(notebooks) {
+	var me = this;
+	if(isEmpty(notebooks)) { 
+		return;
+	}
+	for(var i in notebooks) {
+		var notebook = notebooks[i];
+		me.tree.addNodes(self.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
+	}
+};
+// 更新
+Notebook.updateSync = function(notes) {
+	log("??")
+	if(isEmpty(notes)) { 
+		return;
+	}
+	log("what?")
+	for(var i in notes) {
+		var note = notes[i];
+		note.InitSync = true; // 需要重新获取内容
+		Note.addNoteCache(note);
+		// 如果当前修改的是本笔记, 那么重新render之
+		log('->>>')
+		log(Note.curNoteId);
+		if(Note.curNoteId == note.NoteId) {
+			log('yes---');
+			Note.changeNote(Note.curNoteId);
+		}
+	}
+};
+
+// 删除
+Notebook.deleteSync = function(notebooks) {
+	var me = this;
+	if(isEmpty(notes)) { 
+		return;
+	}
+	for(var i in notebooks) {
+		var notebookId = notebooks[i];
+		// 删除
+		me.deleteNotebookFromTree(notebookId);
+	}
+}
