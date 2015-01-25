@@ -768,7 +768,7 @@ Notebook.updateNotebookTitle = function(target) {
 };
 Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 	var self = Notebook;
-	ajaxPost("/notebook/updateNotebookTitle", {notebookId: notebookId, title: newTitle}, function(ret) {
+	NotebookService.updateNotebookTitle(notebookId, newTitle, function() {
 		// 修改缓存
 		Notebook.cache[notebookId].Title = newTitle;
 		// 改变nav

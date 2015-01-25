@@ -15,6 +15,9 @@ var Service = {
 var ApiService = Service.apiService;
 var UserService = Service.userService;
 var SyncService = Service.syncServie;
+var NoteService = Service.noteService;
+var NotebookService = Service.notebookService;
+var TagService = Service.tagService;
 var ServerService = require('server');
 
 // 分发服务
