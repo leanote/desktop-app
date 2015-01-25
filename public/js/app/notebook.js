@@ -787,6 +787,9 @@ Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 Notebook.renderUpdateNoteTitle = function(notebookId, newTitle) {
 	var self = this;
 	// 修改缓存
+	if(!Notebook.cache[notebookId]) {
+		return;
+	}
 	Notebook.cache[notebookId].Title = newTitle;
 	// 改变nav
 	Notebook.changeNav();
@@ -1040,13 +1043,6 @@ Notebook.addSync = function(notebooks) {
 // 不用做任何操作
 Notebook.addChange = function(notebooks) {
 	return;
-	var me = this;
-	if(isEmpty(notebooks)) { 
-		return;
-	}
-	for(var i in notebooks) {
-		var notebook = notebooks[i];
-	}
 };
 // 更新
 // 不对移动做修改, 只修改标题
@@ -1058,7 +1054,13 @@ Notebook.updateSync = function(notebooks) {
 	log("update notebook sync");
 	for(var i in notebooks) {
 		var notebook = notebooks[i];
-		me.renderUpdateNoteTitle(notebook.NotebookId, notebook.Title);
+		// 更新可以是本笔记本删除后, 更新的服务器版
+		if(me.cache[notebook.NotebookId]) {
+			me.renderUpdateNoteTitle(notebook.NotebookId, notebook.Title);
+		} else {
+			Notebook.setCache(notebook);
+			me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
+		}
 	}
 };
 
