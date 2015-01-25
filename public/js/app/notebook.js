@@ -862,14 +862,10 @@ Notebook.deleteNotebook = function(target) {
 	if(!notebookId) {
 		return;
 	}
-	
-	ajaxGet("/notebook/deleteNotebook", {notebookId: notebookId}, function(ret) {
-		if(ret.Ok) {
-			self.deleteNotebookFromTree(notebookId);
-		} else {
-			alert(ret.Msg);
-		}
-	});
+
+	NotebookService.deleteNotebook(notebookId, function() {
+		self.deleteNotebookFromTree(notebookId);
+	})
 };
 Notebook.deleteNotebookFromTree = function(notebookId) {
 	var self = this;
