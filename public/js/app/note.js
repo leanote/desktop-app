@@ -1054,14 +1054,16 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 	// 2
 	var note = Note.cache[noteId];
 	var url = "/note/deleteNote"
+	var serverFunc = NoteService.deleteNote;
 	if(note.IsTrash) {
 		url = "/note/deleteTrash";
+		serverFunc = NoteService.deleteTrash;
 	} else {
 		// 减少数量
 		Notebook.minusNotebookNumberNotes(note.NotebookId);
 	}
-	
-	ajaxGet(url, {noteId: noteId, userId: note.UserId, isShared: isShared}, function(ret) {
+
+	serverFunc.call(NoteService, noteId, function(ret) {
 		if(ret) {
 			Note.changeToNext(target);
 			

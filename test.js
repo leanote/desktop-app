@@ -16,11 +16,14 @@ Api.addNotebook({
   Title: "哈哈"
 }, function() {});
 */
+Api.test();
+/*
 User.userId = '54bdc65599c37b0da9000002';
 console.log(User.getCurActiveUserId());
 Note.getDirtyNotes(function(ret) {
   console.log(ret);
 });
+*/
 /*
 Note.getNoteByServerNoteId("54c6313799c37bdeec000008", function(ret){ 
   console.log(ret);
