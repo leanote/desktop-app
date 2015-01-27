@@ -414,7 +414,7 @@ function setEditorContent(content, isMarkdown, preview) {
 
 // 复制图片
 function pasteImage(e) {
-	Common.pasteImage(e, FileReader, function(url) {
+	FileService.pasteImage(e, FileReader, function(url) {
 		insertImage(url);
 	});
 }

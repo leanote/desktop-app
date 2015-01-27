@@ -9,7 +9,8 @@
     "min_width": 400,
     "min_height": 200,
     "width":  1100,
-    "height": 600 
+    "height": 600
+    // "transparent": true
   }
 }
 

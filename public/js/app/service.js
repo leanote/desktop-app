@@ -19,6 +19,7 @@ var NoteService = Service.noteService;
 var NotebookService = Service.notebookService;
 var TagService = Service.tagService;
 var ServerService = require('server');
+var FileService = require('file');
 
 // 分发服务
 // route = /note/notebook
