@@ -20,9 +20,17 @@ Api.addNotebook({
 User.userId = '54bdc65599c37b0da9000002';
 // console.log(User.getCurActiveUserId());
 Note.getDirtyNotes(function(ret) {
+  Api.updateNote(ret[2], function(ret2){
+    console.log(ret2);
+  });
+
+  // console.log(ret[2]);
+  /*
   Api.addNote(ret[0], function(ret2){
     console.log(ret2);
-  })
+  });
+  */
+
 });
 /*
 Note.getNoteByServerNoteId("54c6313799c37bdeec000008", function(ret){ 

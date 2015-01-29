@@ -436,7 +436,8 @@ function log(o) {
                     </ul>
                     <form id="uploadAttach" method="post" action="/attach/UploadAttach" enctype="multipart/form-data">
                               <div id="dropAttach" class="dropzone">
-                                  <a class="btn btn-success btn-choose-file">
+                                  <input id="chooseFileInput" type="file" name="file" multiple/>
+                                  <a id="chooseFile" class="btn btn-success btn-choose-file">
                           <i class="fa fa-upload"></i>
                                     <span>Choose File</span>
                                   </a>
@@ -448,7 +449,6 @@ function log(o) {
                                     <i class="fa fa-link"></i>
                                     <span>Link All</span>
                                   </a>
-                                  <input type="file" name="file" multiple/>
                               </div>
                               <div id="attachUploadMsg">
                               </div>

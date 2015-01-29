@@ -1583,6 +1583,7 @@ var Attach = {
 	attachsMap: {}, // attachId => attachInfo
 	init: function() {
 		var self = this;
+		var me = this;
 		// 显示attachs
 		$("#showAttach").click(function(){ 
 			self.renderAttachs(Note.curNoteId);
@@ -1650,6 +1651,20 @@ var Attach = {
 				tinymce.activeEditor.insertContent('<a target="_blank" href="' + src + '">' + title + '</a>');
 			}
 		});
+
+		$('#chooseFile').click(function() {
+			$('#chooseFileInput').click();
+		});
+		// 得到路径, 保存文件即可
+		$('#chooseFileInput').change(function() { 
+			var files = $(this).val();
+			$(this).val('');
+			FileService.addAttach(files, Note.curNoteId, function(files) {
+				if(files) {
+					me.addAttachs(files);
+				}
+			});
+		});
 	},
 	attachListO: $("#attachList"),
 	attachNumO: $("#attachNum"),
@@ -1695,7 +1710,7 @@ var Attach = {
 		var attachNum = attachs.length;
 		for(var i = 0; i < attachNum; ++i) {
 			var each = attachs[i];
-			html += '<li class="clearfix" data-id="' + each.AttachId + '">' +
+			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
 						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
@@ -1703,7 +1718,7 @@ var Attach = {
 						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 
 					'</li>';
-			self.attachsMap[each.AttachId] = each;
+			self.attachsMap[each.FileId] = each;
 		}
 		self.attachListO.html(html);
 		
@@ -1747,6 +1762,11 @@ var Attach = {
 		}
 		self.loadedNoteAttachs[attachInfo.NoteId].push(attachInfo);
 		self.renderAttachs(attachInfo.NoteId);
+	},
+	addAttachs: function(attachInfos) {
+		for(var i in attachInfos) {
+			this.addAttach(attachInfos[i]);
+		}
 	},
 	// 删除
 	deleteAttach: function(attachId) {
