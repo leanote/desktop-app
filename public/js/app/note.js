@@ -1598,15 +1598,9 @@ var Attach = {
 			var attachId = $(this).closest('li').data("id");
 			var t = this;
 			if(confirm("Are you sure to delete it ?")) {
-				$(t).button("loading");
-				ajaxPost("/attach/deleteAttach", {attachId: attachId}, function(re) {
-					$(t).button("reset");
-					if(reIsOk(re)) {
-						self.deleteAttach(attachId);
-					} else {
-						alert(re.Msg);
-					}
-				});
+				// $(t).button("loading");
+				self.deleteAttach(attachId);
+				// $(t).button("reset");
 			}
 		});
 		// 下载
@@ -1679,8 +1673,10 @@ var Attach = {
 	renderNoteAttachNum: function(noteId, needHide) {
 		var self = this;
 		var note = Note.getNote(noteId);
-		if(note.AttachNum) {
-			self.attachNumO.html("(" + note.AttachNum + ")").show();
+		var attachs = note.Attachs;
+		var attachNum = attachs ? attachs.length : 0;
+		if(attachNum) {
+			self.attachNumO.html("(" + attachNum + ")").show();
 			self.downloadAllBtnO.show();
 			self.linkAllBtnO.show();
 		} else {
@@ -1708,6 +1704,7 @@ var Attach = {
 		*/
 		var html = "";
 		var attachNum = attachs.length;
+		console.log(attachs);
 		for(var i = 0; i < attachNum; ++i) {
 			var each = attachs[i];
 			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
@@ -1732,14 +1729,22 @@ var Attach = {
 	// 渲染noteId的附件
 	// 当点击"附件"时加载, 
 	// TODO 判断是否已loaded
+	// note添加一个Attachs
 	renderAttachs: function(noteId) {
 		var self = this;
+		var note = Note.getNote(noteId);
+		note.Attachs = note.Attachs || [];
+		self.loadedNoteAttachs[noteId] = note.Attachs; // 一个对象
+		self._renderAttachs(note.Attachs);
+		return;
+		/*
+
 		if(self.loadedNoteAttachs[noteId]) {
 			self._renderAttachs(self.loadedNoteAttachs[noteId]);
 			return;
 		}
 		// 显示loading
-		self.attachListO.html('<li class="loading"><img src="/images/loading-24.gif"/></li>');
+		self.attachListO.html('<li class="loading"><img src="public/images/loading-24.gif"/></li>');
 		// ajax获取noteAttachs
 		ajaxGet("/attach/getAttachs", {noteId: noteId}, function(ret) {
 			var list = [];
@@ -1753,20 +1758,27 @@ var Attach = {
 			self.loadedNoteAttachs[noteId] = list;
 			self._renderAttachs(list);
 		});
+		*/
 	},
 	// 添加附件, attachment_upload上传调用
 	addAttach: function(attachInfo) {
 		var self = this;
-		if(!self.loadedNoteAttachs[attachInfo.NoteId]) {
-			self.loadedNoteAttachs[attachInfo.NoteId] = [];
-		}
 		self.loadedNoteAttachs[attachInfo.NoteId].push(attachInfo);
 		self.renderAttachs(attachInfo.NoteId);
+		// TOOD 更新Note表
+		self.updateAttachToDB(attachInfo.NoteId);
 	},
 	addAttachs: function(attachInfos) {
+		var self = this;
+		var noteId = '';
 		for(var i in attachInfos) {
-			this.addAttach(attachInfos[i]);
+			var attachInfo = attachInfos[i];
+			noteId = attachInfo.NoteId;
+			self.loadedNoteAttachs[noteId].push(attachInfo);
 		}
+		self.renderAttachs(attachInfo.NoteId);
+		// TOOD 更新Note表
+		self.updateAttachToDB(noteId);
 	},
 	// 删除
 	deleteAttach: function(attachId) {
@@ -1774,7 +1786,7 @@ var Attach = {
 		var noteId = Note.curNoteId;
 		var attachs = self.loadedNoteAttachs[noteId];
 		for(var i = 0; i < attachs.length; ++i) {
-			if(attachs[i].AttachId == attachId) {
+			if(attachs[i].FileId == attachId) {
 				// 删除之, 并render之
 				attachs.splice(i, 1);
 				break;
@@ -1782,6 +1794,15 @@ var Attach = {
 		}
 		// self.loadedNoteAttachs[noteId] = attachs;
 		self.renderAttachs(noteId);
+		// TODO 更新
+		self.updateAttachToDB(noteId);
+	},
+
+	// 更新到Note表中
+	updateAttachToDB: function(noteId) {
+		var self = this;
+		var attachs = self.loadedNoteAttachs[noteId]
+		NoteService.updateAttach(noteId, attachs);
 	},
 	
 	// 下载
