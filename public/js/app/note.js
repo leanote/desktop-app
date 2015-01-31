@@ -894,6 +894,9 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			tmp = $(tmp);
 			tmp.find(".item-blog").hide();
 		}
+		if(note.ConflictNoteId) {
+			$(tmp).addClass('item-conflict');
+		}
 		Note.noteItemListO.append(tmp);
 		
 		/*
@@ -1978,6 +1981,7 @@ Note.fixSyncConflict = function(note, newNote) {
 	}
 	// 当前这个换成新复制的
 	target.attr('noteId', newNote.NoteId);
+	target.addClass('item-conflict');
 	// 重新render 左侧下, 因为有冲突了, 不要render内容啊
 
 	// 如果当前编辑的是这个笔记, 那切换到newNote上来
