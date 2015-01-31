@@ -1,0 +1,23 @@
+# node_modules
+
+## needle 
+
+https://github.com/tomas/needle/issues/97
+
+When i post a file (multipart) with another key-value pair (contains UTF8 characters), my servers got incorrect encoding.
+
+then i see the code in multipart.js (generate_part) is :
+return_part += part.value
+the value look like in UTF8 encoding but send out with binary encoding
+
+Finally i get the collect UTF8 characters by change to :
+return_part += new Buffer(part.value+'', 'utf8').toString("binary");
+
+
+// filename也有问题
+// 这里filename被encodeURIComponent, 中文会有问题
+// return_part += '; filename="' + encodeURIComponent(filename) + '"\r\n'; 
+// return_part += '; filename="' + filename + '"\r\n'; 
+// 改成这样
+return_part += '; filename="' + new Buffer(filename, 'utf8').toString("binary") + '"\r\n'; 
+// return_part += new Buffer(part.value+'', 'utf8').toString("binary");

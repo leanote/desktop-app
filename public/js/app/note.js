@@ -1606,14 +1606,24 @@ var Attach = {
 		// 下载
 		self.attachListO.on("click", ".download-attach", function(e) {
 			e.stopPropagation();
-			var attachId = $(this).closest('li').data("id");
-			window.open(UrlPrefix + "/attach/download?attachId=" + attachId);
+			var $li = $(this).closest('li');
+			var attachId = $li.data("id");
+
+			$('#downloadFileInput').attr('nwsaveas', $li.find('.attach-title').text()).click();
+			// window.open(UrlPrefix + "/attach/download?attachId=" + attachId);
 			// location.href = "/attach/download?attachId=" + attachId;
 		});
 		// 下载全部
 		self.downloadAllBtnO.click(function() {
-			window.open(UrlPrefix + "/attach/downloadAll?noteId=" + Note.curNoteId);
+
+			// window.open(UrlPrefix + "/attach/downloadAll?noteId=" + Note.curNoteId);
 			// location.href = "/attach/downloadAll?noteId=" + Note.curNoteId;
+		});
+		// 下载
+		$('#downloadFileInput').change(function(e) {
+			var value = $(this).val();
+			$(this).val('');
+			alert(value);
 		});
 		
 		// make link
@@ -1646,6 +1656,7 @@ var Attach = {
 			}
 		});
 
+		// 添加Attach
 		$('#chooseFile').click(function() {
 			$('#chooseFileInput').click();
 		});
@@ -1653,6 +1664,13 @@ var Attach = {
 		$('#chooseFileInput').change(function() { 
 			var files = $(this).val();
 			$(this).val('');
+
+			// 如果是新建的笔记, 必须先保存note
+			var note = Note.getCurNote();
+			if(note && note.IsNew) {
+				Note.curChangedSaveIt(true);
+			}
+
 			FileService.addAttach(files, Note.curNoteId, function(files) {
 				if(files) {
 					me.addAttachs(files);
@@ -1707,11 +1725,18 @@ var Attach = {
 		console.log(attachs);
 		for(var i = 0; i < attachNum; ++i) {
 			var each = attachs[i];
+			var path = each.Path;
+			// 本地是否有, 没有, 是否是在显示的时候才去从服务器上抓? 不
+			if(path) {
+				var d = '<i class="fa fa-download"></i>';
+			} else {
+				d = 'no'
+			}
 			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
 						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
-						'	  <button type="button" class="btn btn-sm btn-primary download-attach"><i class="fa fa-download"></i></button> ' +
+						'	  <button type="button" class="btn btn-sm btn-primary download-attach">' + d + '</button> ' +
 						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 
 					'</li>';

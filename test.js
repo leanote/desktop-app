@@ -18,20 +18,24 @@ Api.addNotebook({
 */
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
+Note.getNoteByServerNoteId('54ccc53d99c37bf812000001', function(doc) {
+  console.log(doc);
+});
+/*
 // console.log(User.getCurActiveUserId());
 Note.getDirtyNotes(function(ret) {
+  console.log(ret);
+
   Api.updateNote(ret[2], function(ret2){
     console.log(ret2);
   });
 
   // console.log(ret[2]);
-  /*
-  Api.addNote(ret[0], function(ret2){
+  Api.addNote(ret[3], function(ret2){
     console.log(ret2);
   });
-  */
-
 });
+*/
 /*
 Note.getNoteByServerNoteId("54c6313799c37bdeec000008", function(ret){ 
   console.log(ret);
