@@ -1725,7 +1725,7 @@ var Attach = {
 		*/
 		var html = "";
 		var attachNum = attachs.length;
-		console.log(attachs);
+		// console.log(attachs);
 		for(var i = 0; i < attachNum; ++i) {
 			var each = attachs[i];
 			var path = each.Path;

@@ -13,12 +13,12 @@ Notebook.addNotebook("3", "工作");
 Notebook.addNotebook("4", "life2", "1");
 
 Api.addNotebook({
-  Title: "哈哈"
+  Title: "哈哈"54ce31fa99c37b1d5c00057e
 }, function() {});
 */
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
-Note.getNoteByServerNoteId('54ce29b399c37b1d5c000479', function(doc) {
+Note.getNoteByServerNoteId('54ce32fc99c37b1d5c0005a4', function(doc) {
   console.log(doc);
 });
 /*
