@@ -1314,6 +1314,9 @@ function incrSync() {
 // 实始化页面
 // 判断是否登录
 function initPage() {
+	// 注入前端变量
+	WebService.set(Notebook, Note, Tag);
+
 	function _init() {
 		$(function() {
 			// 获取笔记本
@@ -1338,7 +1341,7 @@ function initPage() {
 			}
 			
 			// 标签
-			Service.tagService.getTags(function(tags) {
+			TagService.getTags(function(tags) {
 				Tag.renderTagNav(tags);
 			});
 

@@ -257,10 +257,10 @@ Note.curHasChanged = function(force) {
 		}
 	}
 	
-	if(!arrayEqual(cacheNote.Tags, tags)) {
-		hasChanged.hasChanged = true;
-		hasChanged.Tags = tags;
-	}
+	// if(!arrayEqual(cacheNote.Tags, tags)) {
+	hasChanged.hasChanged = true;
+	hasChanged.Tags = tags;
+	// }
 	
 	// 比较text, 因为note Nav会添加dom会导致content改变
 	if((force && cacheNote.Content != content) || (!force && (/**/(!cacheNote.IsMarkdown && $(cacheNote.Content).text() != contentText) || (cacheNote.IsMarkdown && cacheNote.Content != contentText)) /**/) ) {
@@ -393,7 +393,7 @@ Note.getImgSrc = function(content) {
 // 定时保存传false
 Note.saveInProcess = {}; // noteId => bool, true表示该note正在保存到服务器, 服务器未响应
 Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
-Note.curChangedSaveIt = function(force) {
+Note.curChangedSaveIt = function(force, callback) {
 	var me = this;
 	// 如果当前没有笔记, 不保存
 	if(!Note.curNoteId || Note.isReadOnly) {
@@ -440,10 +440,14 @@ Note.curChangedSaveIt = function(force) {
 				Pjax.changeNote(ret);
 			}
 			showMsg(getMsg("saveSuccess"), 1000);
+
+			callback && callback();
 		});
 		
 		return hasChanged;
 	}
+	
+	callback && callback();
 	return false;
 };
 
@@ -1447,7 +1451,33 @@ Note.copyNote = function(target, data, isShared) {
 	
 	// 增加数量
 	Notebook.incrNotebookNumberNotes(notebookId)
-}
+};
+
+
+// 删除笔记标签
+// item = {noteId => usn}
+Note.deleteNoteTag = function(item, tag) {
+	if(!item) {
+		return;
+	}
+	for(var noteId in item) {
+		var note = Note.getNote(noteId);
+		if(note) {
+			note.Tags = note.Tags || [];
+			for(var i in note.Tags) {
+				if(note.Tags[i] == tag) {
+					note.Tags.splice(i, 1);
+					continue;
+				}
+			}
+			// 如果当前笔记是展示的笔记, 则重新renderTags
+			if(noteId == Note.curNoteId) {
+				Tag.renderTags(note.Tags);
+			}
+		}
+	}
+};
+
 
 // 这里速度不慢, 很快
 Note.getContextNotebooks = function(notebooks) {

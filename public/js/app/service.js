@@ -18,8 +18,10 @@ var SyncService = Service.syncServie;
 var NoteService = Service.noteService;
 var NotebookService = Service.notebookService;
 var TagService = Service.tagService;
+var WebService = require('web');
 var ServerService = require('server');
 var FileService = require('file');
+
 
 // 分发服务
 // route = /note/notebook
