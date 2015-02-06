@@ -189,6 +189,23 @@ Tag.appendTag = function(tag, save) {
 	}
 };
 
+// nodejs端调用
+Tag.addTagsNav = function(tags) {
+	tags = tags || [];
+	for(var i = 0; i <  tags.length; ++i) {
+		Tag.addTagNav(tags[i]);
+	}
+};
+
+// 删除, nodejs调用
+Tag.deleteTagsNav = function(tags) {
+	tags = tags || [];
+	for(var i = 0; i <  tags.length; ++i) {
+		var title = tags[i];
+		$('#myTag li[data-tag="' + title + '"]').remove();
+	}
+};
+
 // 为了颜色间隔, add, delete时调用
 function reRenderTags() {
 	var defautClasses = [ "label label-default", "label label-info" ];
