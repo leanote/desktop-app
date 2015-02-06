@@ -202,6 +202,7 @@ h3 {
   overflow-x: hidden;
   overflow-y: hidden;
   */
+  background: #fcfcfc;
 }
 #noteAndEditorMask {
   position: absolute;
@@ -415,9 +416,9 @@ h3 {
 #myTag .folderBody {
   padding: 0 3px;
   padding-bottom: 3px;
+  padding-left: 5px;
 }
 #myTag .folderBody li {
-  float: left;
   padding: 3px;
   line-height: normal;
 }
@@ -675,7 +676,7 @@ h3 {
   position: absolute;
   left: 0;
   right: 0;
-  top: 36px;
+  top: 69px;
   bottom: 3px;
 }
 #mdEditorPreview {
@@ -1076,6 +1077,64 @@ h3 {
 }
 .close:focus {
   outline: none;
+}
+.sync-icon {
+  padding: 0 3px;
+}
+#newMyNote {
+  position: absolute;
+  right: 3px;
+  top: 0;
+  bottom: 0;
+  line-height: 30px;
+  width: 50px;
+}
+#newMyNote * {
+  font-size: 14px;
+}
+#newMyNote .new-split {
+  color: #ccc;
+  display: none;
+}
+#newMyNote #newNoteBtn {
+  display: inline-block;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  text-align: center;
+  height: 25px;
+  width: 20px;
+  line-height: initial;
+}
+#newMyNote #newNoteMarkdownBtn {
+  display: inline-block;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  /* width: 100px; */
+  margin-left: 1px;
+  padding: 0 1px;
+  height: 25px;
+  line-height: initial;
+  text-align: center;
+}
+#myNotebookNavForListNav {
+  position: absolute;
+  line-height: 30px;
+  left: 55px;
+  right: 55px;
+  text-align: center;
+  font-style: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#searchNote {
+  margin-top: 2px;
+}
+#sortType {
+  position: absolute;
+  left: 4px;
+  line-height: 36px;
+  color: #ccc;
 }
 @font-face {
   font-family: 'Open Sans';

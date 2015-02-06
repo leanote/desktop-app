@@ -42,60 +42,11 @@ function log(o) {
   <div id="page">
     <div id="pageInner">
 
-      <!-- 头部 -->
-      <!-- <div id="headerContainer"> -->
-      <div id="header">
-
-      <!--  
-        <div id="headerLeft" class="pull-left">
-        </div>
-      -->
-        <div id="logo" class="pull-left">
-          <!--<span>lea</span>note -->
-          <!--<img style="height: 45px;" src="/images/logo/leanote_white.png" title="leanote, 不一样的笔记" alt="leanote">-->
-        </div>
-        <div id="switcher" class="pull-left">
-           <i class="fa fa-align-justify" id="leftSwitcher" title="Hidden slide bar"></i>
-           <span id="leftSwitcher2" title="Show slide bar"></span>
-        </div>
-        <!-- search -->
-        <div class="pull-left" id="searchWrap">
-          <form class="navbar-form form-inline col-lg-2" id="searchNote">
-            <input class="form-control" placeholder="Search" type="text" id="searchNoteInput">
-          </form>
-        </div>
-
+      <!-- header start -->
+      <div id="header" style="display: none">
         <!-- 全局按钮 -->
         <div class="pull-left" style="" id="newNoteWrap">
           <!-- 新建笔记 -->
-          <div id="newMyNote">
-            <a id="newNoteBtn" title="New note">
-              <i class="fa fa-file-o"></i>
-              <span class="new-note-text">New note</span>
-              <span class="new-note-text-abbr">New</span>
-            </a>
-            <span class="new-split">|</span>
-            <a id="newNoteMarkdownBtn" title="New markdown note">
-              <span class="new-markdown-text">New Markdown</span>
-              <span class="new-markdown-text-abbr">Md</span>
-            </a>
-            <span class="for-split"> - </span>
-            <span id="curNotebookForNewNote" notebookId=""></span>
-            <!--
-            <div class="dropdown" style="display: inline-block">
-              <a class="ios7-a dropdown-toggle"
-                id="listNotebookDropdownMenu" data-toggle="dropdown"> 
-                <i class="fa fa-angle-down"></i>
-              </a>
-              <div class="dropdown-menu dropdown-list" id="searchNotebookForAddDropdownList">
-                <input type="text" placeholder="Search notebook" class="form-control" id="searchNotebookForAdd"/>
-                <ul class="clearfix" role="menu" aria-labelledby="listNotebookDropdownMenu" id="notebookNavForNewNote">
-                </ul>
-              </div>
-            </div>
-            -->
-          </div>
-          
           <!-- 只为新建别人的笔记 -->
           <div id="newSharedNote" style="display: none">
             <a id="newSharedNoteBtn">
@@ -127,30 +78,6 @@ function log(o) {
           </span>
         </div>
           
-        <div class="pull-right" style="margin: 0 10px" id="myProfile">
-          <div class="dropdown">
-            <a class="dropdown-toggle" title="{{.userInfo.Username}}" data-toggle="dropdown" style="line-height: 60px;"> 
-              <span class="username">
-                lif@leanote.com
-              </span>
-              <i class="fa fa-angle-down"></i>
-            </a>
-            <ul class="dropdown-menu li-a" role="menu">
-              <li role="presentation" class="my-link" >
-                <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}">
-                <i class="fa fa-bold"></i>
-                Blog</a>
-              </li>
-              
-              <li role="presentation" class="divider"></li>
-              <li role="presentation" onclick="logout()">
-                <i class="fa fa-sign-out"></i> 
-                Logout
-              </li>
-            </ul>
-          </div>
-        </div>
-
         <div class="pull-right top-nav writting-hide" id="myBlog">
           <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}"> 
             Blog
@@ -159,6 +86,7 @@ function log(o) {
 
         <div style="clear: both"></div>
       </div>
+      <!-- header end -->
 
       <div id="mainContainer" class="clearfix">
         <div id="mainMask">
@@ -169,6 +97,20 @@ function log(o) {
         </div>
         <div id="leftNotebook">
           <div id="notebook">
+
+            <div class="folderNote closed" id="myShareNotebooks">
+              <div class="folderHeader">
+                <i class="fa fa-star-o fa-left"></i>
+                <span>
+                  Started
+                </span>
+              </div>
+  
+              <ul class="folderBody" id="shareNotebooks">
+                <li>a</li>
+              </ul>
+            </div>
+
             <div class="folderNote opened" id="myNotebooks">
               <div class="folderHeader clearfix">
                 <i class="fa fa-book pull-left fa-left"></i> 
@@ -203,16 +145,14 @@ function log(o) {
               </ul>
             </div>
 
-            <div class="folderNote closed" id="myShareNotebooks">
+            <!-- Trash -->
+            <div class="folderTrash closed" id="">
               <div class="folderHeader">
-                <i class="fa fa-file fa-left"></i>
+                <i class="fa fa-trash fa-left"></i>
                 <span>
-                  Recent Notes
+                  Trash
                 </span>
               </div>
-  
-              <ul class="folderBody" id="shareNotebooks">
-              </ul>
             </div>
             
             <!--
@@ -253,11 +193,37 @@ function log(o) {
           </div>
           
           <!-- 
-          底下隐藏/展开 
-          <div id="notebookBottom">
-            <i class="fa fa-angle-left" id="leftSwitcher"></i>
-          </div>
+          底下
+          用于同步
           -->
+          <div id="notebookBottom" class="clearfix">
+            <!--  fa-spin -->
+            <a class="pull-left sync-icon"><i class="fa fa-refresh"></i></a>
+            <div class="pull-right" id="myProfile">
+              <div class="dropdown">
+                <a class="dropdown-toggle" title="{{.userInfo.Username}}" data-toggle="dropdown"> 
+                  <span class="username">
+                   life@leanote.com
+                  </span>
+                  <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu li-a" role="menu">
+                  <li role="presentation" class="my-link" >
+                    <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}">
+                    <i class="fa fa-bold"></i>
+                    Blog</a>
+                  </li>
+                  
+                  <li role="presentation" class="divider"></li>
+                  <li role="presentation" onclick="logout()">
+                    <i class="fa fa-sign-out"></i> 
+                    Logout
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
         </div>
 
         <div class="noteSplit" id="notebookSplitter"></div>
@@ -268,68 +234,39 @@ function log(o) {
             <br />
             loading...
           </div>
+
           <div id="noteList">
           <div class="clearfix" id="notesAndSort" style="position: relative">
-            <div class="pull-left">
-              <!-- 我的笔记本 -->
-              <div class="dropdown" id="myNotebookNavForListNav">
-                <a class="ios7-a dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">
-                  <span id="curNotebookForListNote">Newest</span>
-                  <!--
-                  <i class="fa fa-angle-down"></i>
-                  -->
-                </a>
-                <!-- 如果notebook过多, 则会产生滚动 弃用
-                <div class="dropdown-menu dropdown-list" style="left: 5px;">
-                  <ul role="menu" aria-labelledby="dropdownMenu1" id="notebookNavForListNote"></ul>
-                </div>
-                -->
-              </div>
-              
-              <!-- 共享的笔记本 -->
-              <div class="dropdown" id="sharedNotebookNavForListNav" style="display: none">
-                <a class="ios7-a dropdown-toggle" id="dropdownMenu2" data-toggle="dropdown">
-                  <span id="curSharedNotebookForListNote">Newest</span>
-                  <!--
-                  <i class="fa fa-angle-down"></i>
-                  -->
-                </a>
-                <ul class="dropdown-menu" role="menu"
-                  aria-labelledby="dropdownMenu2" style="left: 5px;" id="sharedNotebookNavForListNote">
-                </ul>
-              </div>
 
+            <a id="sortType">
+                <i class="fa fa-sort-amount-desc"></i>
+            </a>
+
+            <!-- 我的笔记本 -->
+            <div id="myNotebookNavForListNav">
+                <span id="curNotebookForListNote">Newest</span>
             </div>
 
             <div class="pull-left" id="tagSearch" style="line-height: 38px">
             </div>
-            <div id="sortType">
-              <div class="dropdown">
-                <a class="ios7-a dropdown-toggle" id="dropdownMenu1"
-                  data-toggle="dropdown"> 
-                  <!--  
-                  <i class="fa fa-sort-alpha-asc">
-                  </i>Sort <i class="fa fa-angle-down"></i>
-                  -->
-                </a>
-                <!--
-                <ul class="dropdown-menu" role="menu"
-                  aria-labelledby="dropdownMenu1"
-                  style="right: 3px; ! important; left: -100px; min-width: 100px;">
-                  <li role="presentation"><a role="menuitem" tabindex="-1"
-                    href="#">创建日期</a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1"
-                    href="#">修改日期</a></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1"
-                    href="#">标题</a></li>
-                  <li role="presentation" class="divider"></li>
-                  <li role="presentation"><a role="menuitem" tabindex="-1"
-                    href="#">Separated </a></li>
-                </ul>
-                -->
-              </div>
+
+            <div id="newMyNote">
+              <a id="newNoteBtn" title="New note">
+                <span class="new-note-text"  title="New note">+</span>
+              </a>
+              <span class="new-split">|</span>
+              <a id="newNoteMarkdownBtn" title="New markdown note">
+                <span class="new-markdown-text" title="New markdown note">+M</span>
+              </a>
+              <span id="curNotebookForNewNote" notebookId="" style="display: none"></span>
             </div>
+           
           </div>
+
+          <!-- 搜索 -->
+          <form class="navbar-form form-inline" id="searchNote">
+            <input class="form-control" placeholder="Search" type="text" id="searchNoteInput">
+          </form>
 
           <!-- 笔记列表 -->
           <!-- wrap 为了slimScroll -->
@@ -423,10 +360,13 @@ function log(o) {
               
               <ul class="pull-right" id="editorTool">
 
+                <!--
                 <li><a class="ios7-a " id="saveBtn" title="Save ctrl+s"
                   data-toggle="dropdown">
                   <span class="fa fa-save"></span>
-                  </a></li>
+                  </a>
+                </li>
+                -->
                   
                 <li class="dropdown" id="attachDropdown">
                   <a class="ios7-a dropdown-toggle" data-toggle="dropdown" id="showAttach" title="Attachments">
@@ -435,7 +375,6 @@ function log(o) {
                   </a>
                   <div class="dropdown-menu" id="attachMenu">
                     <ul id="attachList">
-                      
                     </ul>
                     <form id="uploadAttach" method="post" action="/attach/UploadAttach" enctype="multipart/form-data">
                               <div id="dropAttach" class="dropzone">
@@ -461,13 +400,22 @@ function log(o) {
                   </div>
                 </li>
                 
+                <!--
                 <li><a class="ios7-a " id="tipsBtn"
                   data-toggle="dropdown" title="Tips">
                   <span class="fa fa-question"></span>
-                  </a></li>
+                  </a>
+                </li>
+                -->
+
                 <li><a class="ios7-a " id="contentHistory"
                   data-toggle="dropdown" title="Histories">
                   <span class="fa fa-history"></span>
+                  </a></li>
+
+                  <li><a class="ios7-a " id="expand"
+                  data-toggle="dropdown" title="Expand">
+                  <span class="fa fa-expand"></span>
                   </a></li>
               </ul>
             </div>

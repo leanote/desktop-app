@@ -99,21 +99,29 @@ a.raw:hover {
 	}
 }
 #searchNote {
-  padding-left: 0;
-  line-height: 60px;
+  // padding-left: 0;
+  // padding-right: 0;
+  padding: 0 10px;
+  line-height: 30px;
+  width: 100%;
   margin:0;
+  margin-top: 2px;
 
   input {
     background-size: 18px 13px;
     border-color: @borderColor;
-    padding-left: 14px;
+    padding-left: 10px;
     height: 30px;
-    width: 250px;
+    // width: 250px;
     line-height: 20px;
     box-shadow: none;
-    &:focus {
+    display: block;
+    width: 93%;
+    margin: 0 auto;
+    outline: none;
+    &:focus, &:active {
       outline: none !important;
-      border-color: @hColor;
+      // border-color: @hColor;
       box-shadow: none;
     }
   }
@@ -160,31 +168,7 @@ a.raw:hover {
 }
 
 /*********************/
-#page {
-  overflow: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-#pageInner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-#mainContainer {
-  position: absolute;
-  top: @headerHeight;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: auto;
-  zoom: 1;
-}
+
 #mainMask {
   position: absolute;
   left: 0;
@@ -214,12 +198,12 @@ a.raw:hover {
 #notebook, #notebookMin {
   position: absolute;
   left: 0;
-  // bottom: 30px; 为了给bottom
-  bottom: 0;
+  bottom: 30px; // 为了给bottom
+  // bottom: 0;
   top: 0;
   right: 0;
   /*border: 1px solid #ccc;*/
-  background-color: @bgColor;
+  background-color: #f5f6f7;
   overflow-y: auto;
   overflow-x: auto;
   z-index: 2;
@@ -282,12 +266,10 @@ a.raw:hover {
   line-height: 30px;
   text-align: right;
   padding-right: 5px;
-  background-color: #eee;
-  #leftSwitcher {
-  	border: 1px solid #ccc;
-  	padding: 3px 8px;
-  	cursor: pointer;
-  }
+  background-color: #f5f6f7;
+  border-top: 1px solid transparent;
+  border-color: rgba(0, 0, 0, 0.05);
+ 
 }
 
 #noteAndEditor {
@@ -470,11 +452,7 @@ a.raw:hover {
   background-color: @bgColor;
   border-bottom: 1px solid @borderColor;
 }
-#sortType {
-/*  position: absolute;
-  right:0;*/
-  float: right;
-}
+
 
 /* editor */
 #editorTool {
@@ -612,7 +590,7 @@ a.raw:hover {
   background-color: #5cb85c;
 }
 .label {
-  border-radius: 0;
+  border-radius: 3px;
   font-weight: normal;
 }
 .label i {
@@ -847,3 +825,4 @@ background-position:-1px -670px
 }
 
 @import "mobile.less";
+

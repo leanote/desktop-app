@@ -209,6 +209,7 @@ h1, h2, h3 {
   overflow-x: hidden;
   overflow-y: hidden;
   */
+  background: #fcfcfc;
 }
 // 笔记列表与editor的遮罩
 #noteAndEditorMask {
@@ -453,9 +454,10 @@ h1, h2, h3 {
 #myTag .folderBody {
 	padding: 0 3px;
 	padding-bottom: 3px;
+	padding-left: 5px;
 }
 #myTag .folderBody li {
-	float: left;
+	// float: left;
 	padding: 3px;
 	line-height: normal;
 }
@@ -727,7 +729,8 @@ h1, h2, h3 {
 }
 #noteItemListWrap {
 	position: absolute; left: 0; right: 0; 
-	top: 36px; bottom: 3px;
+	top: 69px; 
+	bottom: 3px;
 }
 
 // -------------------
@@ -1184,4 +1187,65 @@ top: 4px;
 
 .close:focus {
 	outline: none;
+}
+
+
+// 
+.sync-icon {
+	padding: 0 3px;
+}
+#newMyNote {
+	position: absolute;
+	right: 3px;
+	top: 0;
+	bottom: 0;
+	line-height: 30px;
+	width: 50px;
+	* {
+		font-size: 14px;
+	}
+	.new-split {
+		// font-size: 12px;
+		color: #ccc;
+		display: none;
+	}
+	#newNoteBtn {
+		display: inline-block;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		text-align: center;
+		height: 25px;
+		width: 20px;
+		line-height: initial;
+	}
+	#newNoteMarkdownBtn	{
+		display: inline-block;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		/* width: 100px; */
+		margin-left: 1px;
+		padding: 0 1px;
+		height: 25px;
+		line-height: initial;
+		text-align: center;
+	}
+}
+#myNotebookNavForListNav {
+	position: absolute;
+	line-height: 30px;
+	left: 55px;
+	right: 55px;
+	text-align: center;
+	font-style: 16px;
+	text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+}
+#searchNote {
+	margin-top: 2px;
+}
+
+#sortType {
+  position: absolute;
+  left: 4px;
+  line-height: 36px;
+  color: #ccc;
 }

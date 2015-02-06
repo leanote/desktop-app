@@ -96,7 +96,7 @@ editorMode.prototype.normalMode = function() {
 	this.resizeEditor();
 	
 	$("#noteList").width(UserInfo.NoteListWidth);
-	$("#note").css("left", UserInfo.NoteListWidth);
+	$("#note").css("left", UserInfo.NoteListWidth + 2);
 }
 editorMode.prototype.writtingMode = function() {
 	// $("#pageInner").removeClass("animated fadeInUp");
@@ -259,7 +259,7 @@ var Resize = {
 		self.noteAndEditor.css("left", notebookWidth);
 		self.noteList.width(noteListWidth);
 		self.noteSplitter.css("left", noteListWidth);
-		self.note.css("left", noteListWidth);
+		self.note.css("left", noteListWidth + 2);
 		
 		UserInfo.NotebookWidth = notebookWidth;
 		UserInfo.NoteListWidth = noteListWidth;
@@ -1314,7 +1314,7 @@ function incrSync() {
 // 实始化页面
 // 判断是否登录
 function initPage() {
-	// 注入前端变量
+	// 注入前端变量#
 	WebService.set(Notebook, Note, Tag);
 
 	function _init() {
