@@ -72,7 +72,29 @@ Notebook.getNotebookTitle = function(notebookId) {
 	<li><a>August 13, 2013</a></li>
 </ul>
  */
- 
+
+// 得到下级notebooks
+Notebook.getSubNotebooks = function(parentNotebookId) { 
+	var me = this;
+	var treeObj = me.tree;
+
+	var parentNode = treeObj.getNodeByTId(parentNotebookId); 
+	if(!parentNode) {
+		return;
+	}
+	
+	var nextLevel = parentNode.level+1;
+	function filter(node) {
+		return node.level == nextLevel;
+	}
+	var nodes = treeObj.getNodesByFilter(filter, false, parentNode);
+
+	if(nodes && nodes.length == 0) {
+		return false;
+	}
+	return nodes;
+};
+
 Notebook.getTreeSetting = function(isSearch, isShare){ 
 	var noSearch = !isSearch;
 	
@@ -149,7 +171,10 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 			}
 		}
 		
-		ajaxPost("/notebook/dragNotebooks", {data: JSON.stringify(ajaxData)});
+		// {siblings: [id1, id2], parentNotebookId: 'xx', curNotebookId: 'yy'}
+		NotebookService.dragNotebooks(ajaxData.curNotebookId, ajaxData.parentNotebookId, ajaxData.siblings);
+
+		// ajaxPost("/notebook/dragNotebooks", {data: JSON.stringify(ajaxData)});
 		
 		// 这里慢!
 		setTimeout(function() {
@@ -866,7 +891,17 @@ Notebook.deleteNotebook = function(target) {
 		return;
 	}
 
-	NotebookService.deleteNotebook(notebookId, function() {
+	// TODO, 如果删除的是父, 那子树要移到前面去
+	// 查看是否有子
+	if(self.getSubNotebooks(notebookId)) {
+		alert('This notebook has sub notebooks, please delete sub notebooks firstly.');
+		return;
+	}
+	NotebookService.deleteNotebook(notebookId, function(ok, msg) {
+		if(!ok) {
+			alert(msg || "error");
+			return;
+		}
 		self.deleteNotebookFromTree(notebookId);
 	})
 };

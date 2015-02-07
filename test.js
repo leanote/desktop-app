@@ -18,7 +18,7 @@ Api.addNotebook({
 */
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
-Note.getNoteByServerNoteId('54ce32fc99c37b1d5c0005a4', function(doc) {
+Note.hasNotes('54bdc65599c37b0da9000005', function(doc) {
   console.log(doc);
 });
 /*
