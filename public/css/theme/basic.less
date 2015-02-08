@@ -362,7 +362,7 @@ h1, h2, h3 {
 
 // blog
 #noteItemList {
-	.item-setting, .item-blog {
+	.item-setting, .item-blog, .item-star {
 	  position: absolute; 
 	  right: 1px;
 	  font-size: 10px;
@@ -371,7 +371,7 @@ h1, h2, h3 {
 	  border-radius: 5px;
 	  cursor: pointer;
 	  .fa {
-		  color: #fff !important;
+		  color: #fff;
 	  }
 	  width: 20px;
 	  text-align: center;
@@ -384,15 +384,35 @@ h1, h2, h3 {
 	  
 	 .item-blog {
 	 	top: 1px;
+	 	// 暂不支持
+	 	display: none;
 	 }
 	  
 	 .item-setting {
 	 	bottom: 0;
 	 	display: none;
 	 }
+	 .item-star {
+	 	bottom: 0;
+	 	right: 23px;
+	 	display: none;
+	}
+	// 是star的
+	.item-is-star {
+		.item-star {
+			// display: block;
+			.fa:before {
+	 			content: "\f005";
+	 		}
+	 		.fa {
+		 		color: yellow !important;
+	 		}
+		}
+
+	}
 }
 #noteItemList .item:hover  {
-	 .item-setting {
+	 .item-setting, .item-star {
 	 	display: block;
 	 }
 }
@@ -913,8 +933,11 @@ h1, h2, h3 {
   background-color: #65bd77 !important; // #eee;/*@bgColor*/;
   color: #fff;
   .fa {
-	 color: #eee !important;
+	 color: #eee;
   }
+  .item-info .fa {
+	 color: #eee !important;
+	}
   .item-title {
     color: #fff;
     // font-weight: 800;
@@ -1248,4 +1271,39 @@ top: 4px;
   left: 4px;
   line-height: 36px;
   color: #ccc;
+}
+
+#starNotes {
+	li {
+		position: relative;
+		margin: 0;
+		height: 30px;
+		border-bottom: 1px dashed #eee;
+		&.selected {
+			background: #eee;
+		}
+		a {
+			padding-left: 20px;
+			line-height: 30px;
+			display: block;
+			text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+		}
+		.delete-star {
+			position: absolute;
+			right: 10px;
+			bottom: 0;
+			color: #ccc;
+			display: none;
+			cursor: pointer;
+			&:hover {
+				color: #000;
+			}
+		}
+		&:hover {
+			.delete-star {
+				display: block;
+			}
+		}
+	}
+
 }

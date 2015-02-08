@@ -11,7 +11,9 @@ Note.curNoteId = "";
 
 Note.interval = ""; // 定时器
 
-Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-setting"><i class="fa fa-cog" title="setting"></i></div>';
+// 这里, settings, blog, star
+Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-star"><i class="fa fa-star-o" title="Star"></i></div><div class="item-setting"><i class="fa fa-cog" title="setting"></i></div>';
+
 // for render
 Note.itemTplNoImg = '<li href="#" class="item ?" noteId="?">'
 Note.itemTplNoImg += Note.itemIsBlog +'<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
@@ -22,7 +24,7 @@ Note.itemTpl +=Note.itemIsBlog + '<div class="item-desc" style=""><p class="item
 
 // for new
 Note.newItemTpl = '<li href="#" class="item item-active ?" fromUserId="?" noteId="?">'
-Note.newItemTpl += Note.itemIsBlog + '<div class="item-desc" style="right: 0px;"><p class="item-title">?</p><p class="item-text"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span><br /><span class="desc">?</span></p></div></li>';
+Note.newItemTpl += Note.itemIsBlog + '<div class="item-desc" style="right: 0px;"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
 
 Note.noteItemListO = $("#noteItemList");
 
@@ -482,10 +484,14 @@ Note.startUpdatePoolNoteInterval = function() {
 };
 
 
-// 样式
+// 选中note
 Note.selectTarget = function(target) {
 	$(".item").removeClass("item-active");
 	$(target).addClass("item-active");
+
+	// 判断是否在star中
+	var noteId = $(target).attr('noteId');
+	Note.selectStar(noteId);
 }
 
 // 改变note
@@ -677,7 +683,7 @@ Note.renderChangedNote = function(changedNote) {
 	if(!changedNote) {
 		return;
 	}
-	
+
 	// 找到左侧相应的note
 	var $leftNoteNav = $(tt('[noteId="?"]', changedNote.NoteId));
 	if(changedNote.Title) {
@@ -700,6 +706,9 @@ Note.renderChangedNote = function(changedNote) {
 		$leftNoteNav.find(".item-thumb").remove(); // 以前有, 现在没有了
 		$leftNoteNav.removeClass("item-image");
 	}
+
+	// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
+	Note.changeStarNoteTitle(changedNote);
 }
 
 // 清空右侧note信息, 可能是共享的, 
@@ -869,10 +878,16 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 	} else {
 		tmp = tt(Note.itemTplNoImg, classes, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	}
+	// blog ?
 	if(!note.IsBlog) {
 		tmp = $(tmp);
 		tmp.find(".item-blog").hide();
 	}
+	// star ?
+	if(note.Star) {
+		$(tmp).addClass('item-is-star');
+	}
+
 	return tmp;
 },
 Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
@@ -897,6 +912,10 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 		if(!note.IsBlog) {
 			tmp = $(tmp);
 			tmp.find(".item-blog").hide();
+		}
+		// star ?
+		if(note.Star) {
+			$(tmp).addClass('item-is-star');
 		}
 		if(note.ConflictNoteId) {
 			$(tmp).addClass('item-conflict');
@@ -1478,6 +1497,91 @@ Note.deleteNoteTag = function(item, tag) {
 	}
 };
 
+// 渲染列表
+Note.starNotes = [];
+Note.starItemT = '<li data-id="?"><a>?<span class="delete-star" title="Remove">X</span></a></li>';
+Note.starNotesO = $('#starNotes');
+Note.renderStars = function(notes) {
+	var me = this;
+	var notes = notes || me.starNotes;
+	me.starNotes = notes;
+	me.starNotesO.html('');
+	for(var i = 0; i < notes.length; ++i) {
+		var note = notes[i];
+		var t = tt(me.starItemT, note.NoteId, note.Title);
+		me.starNotesO.append(t);
+	}
+
+
+};
+
+// 点击笔记, 判断是否在star中, 如果在, 则也选中
+Note.selectStar = function(noteId) {
+	var me = this;
+	var target = me.starNotesO.find('li[data-id="' + noteId + '"]');
+	me.starNotesO.find('li').removeClass('selected');
+	target.addClass('selected');
+};
+
+// 点击, note
+Note.renderStarNote = function(target) {
+	var me = this;
+	var noteId = target.data('id');
+	me.starNotesO.find('li').removeClass('selected');
+	target.addClass('selected');
+
+	// 把当前笔记放在第一位
+	me.clearAll();
+	me.renderNotes(me.starNotes);
+	me.changeNoteForPjax(noteId, true, false);
+	me.directToNote(noteId);
+
+	// $('#curNotebookForLisNote').text("Starred");
+	Notebook.changeCurNotebookTitle('Starred', true);
+};
+
+// 笔记标签改了后, 如果在star中, 则也要改标题
+Note.changeStarNoteTitle = function(note) {
+	var me = this;
+	var cacheNote = me.getNote(note.NoteId);
+	if(!cacheNote.Star) {
+		return;
+	}
+	var target = me.starNotesO.find('li[data-id="' + note.NoteId + '"]');
+	target.find('a').text(note.Title);
+};
+
+// 收藏或取消收藏
+Note.star = function(noteId) {
+	var me = this;
+	var note = me.getNote(noteId);
+	if(!note) { 
+		return;
+	}
+	var $target = $('[noteId="' + noteId + '"]');
+	NoteService.star(noteId, function(ok, isStarred) {
+		if(ok) {
+			note.Star = isStarred;
+			if(isStarred) {
+				me.starNotes.unshift(note);
+				$target.addClass('item-is-star');
+			} else {
+				$target.removeClass('item-is-star');
+				// 删除该stars
+				for(var i  = 0; i < me.starNotes.length; ++i) {
+					var tNote = me.starNotes[i];
+					if(tNote.NoteId == noteId) { 
+						me.starNotes.splice(i, 1);
+						break;
+					}
+				}
+			}
+
+			// 重新渲染之
+			me.renderStars(me.starNotes);
+		}
+	});
+};
 
 // 这里速度不慢, 很快
 Note.getContextNotebooks = function(notebooks) {
@@ -1989,6 +2093,29 @@ $(function() {
 		var $p = $(this).parent();
 		Note.contextmenu.showMenu(e, $p);
 	});
+
+	// 收藏
+	$("#noteItemList").on("click", ".item-my .item-star", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var $li = $(this).closest('li');
+		var noteId = $li.attr('noteId');
+		Note.star(noteId);
+	});
+
+	// 取消收藏
+	Note.starNotesO.on('click', '.delete-star', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var $li = $(this).closest('li');
+		var noteId = $li.data('id');
+		Note.star(noteId);
+	});
+	Note.starNotesO.on('click', 'a', function(e) {
+		var $li = $(this).closest('li');
+		Note.renderStarNote($li);
+	});
+
 });
 
 // 定时器启动

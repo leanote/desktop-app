@@ -584,7 +584,7 @@ Notebook.changeNotebookNav = function(notebookId) {
 	}
 	
 	// 2
-	$("#curNotebookForListNote").html(notebook.Title);
+	Notebook.changeCurNotebookTitle(notebook.Title);
 	
 	// 3
 	Notebook.changeNotebookNavForNewNote(notebookId, notebook.Title);
@@ -686,7 +686,14 @@ Notebook.changeNotebook = function(notebookId, callback) {
 		}
 		// ajaxGet(url, param, );
 	})(me.changeNotebookSeq);
-}
+};
+
+// 改变标签, isStarred是否是星笔记本
+Notebook.changeCurNotebookTitle = function(title, isStarred) {
+	var me = this;
+	$("#curNotebookForListNote").html(title);
+	me.isStarred = isStarred;
+};
 
 // 笔记列表与编辑器的mask loading
 Notebook.showNoteAndEditorLoading = function() {

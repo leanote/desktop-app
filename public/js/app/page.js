@@ -1332,6 +1332,10 @@ function initPage() {
 					Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
 				}
 			});
+			// 获取star笔记
+			NoteService.getStarNotes(function(notes) {
+				Note.renderStars(notes);
+			});
 
 			// 指定笔记, 也要保存最新笔记
 			if(latestNotes.length > 0) {
