@@ -153,13 +153,12 @@ h1, h2, h3 {
 .dropdown-menu {
   border-radius: 3px;
   margin:0;
-  border: 1px solid @hColor;
+  // border: 1px solid @hColor;
   // border: 1px solid #e6eaed;
   /*overflow-x: hidden; */
   /*overflow-y: scroll;*/
   box-shadow: rgba(0, 0, 0, 0.172549) 0px 6px 12px 0px;
-  
-	&:before {
+  &:before {
 		content: "";
 		width: 20px;
 		height: 12px;
@@ -181,6 +180,45 @@ h1, h2, h3 {
 		right: inherit;
 	}
 }
+
+.sync-icon {
+	margin-left: 10px;
+}
+#myProfile {
+	.dropdown-menu {
+		top: -110px;
+		&:before {
+			top: auto;
+			bottom: -12px;
+			transform: rotate(180deg);
+		}
+	}
+	position: absolute;
+	left: 30px;
+	right: 0;
+	text-align: right;
+	.dropdown-toggle {
+		position: relative;
+		width: 100%;
+		display: block;
+		.username {
+			position: absolute;
+			display: block;
+			left: 0;
+			right: 18px;
+			line-height: 30px;
+			white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+		}
+		.account-more  {
+			position: absolute;
+			right: 3px;
+			line-height: 30px;
+		}
+	}
+
+	
+}
+
 
 .dropdown-menu li {
 	list-style: none;
@@ -1214,9 +1252,7 @@ top: 4px;
 
 
 // 
-.sync-icon {
-	padding: 0 3px;
-}
+
 #newMyNote {
 	position: absolute;
 	right: 3px;

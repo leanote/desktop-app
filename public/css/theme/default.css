@@ -149,7 +149,6 @@ h3 {
 .dropdown-menu {
   border-radius: 3px;
   margin: 0;
-  border: 1px solid #0fb264;
   /*overflow-x: hidden; */
   /*overflow-y: scroll;*/
   box-shadow: rgba(0, 0, 0, 0.172549) 0px 6px 12px 0px;
@@ -175,6 +174,43 @@ h3 {
 #searchNotebookForAddShareDropdownList:before {
   left: 190px;
   right: inherit;
+}
+.sync-icon {
+  margin-left: 10px;
+}
+#myProfile {
+  position: absolute;
+  left: 30px;
+  right: 0;
+  text-align: right;
+}
+#myProfile .dropdown-menu {
+  top: -110px;
+}
+#myProfile .dropdown-menu:before {
+  top: auto;
+  bottom: -12px;
+  transform: rotate(180deg);
+}
+#myProfile .dropdown-toggle {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+#myProfile .dropdown-toggle .username {
+  position: absolute;
+  display: block;
+  left: 0;
+  right: 18px;
+  line-height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#myProfile .dropdown-toggle .account-more {
+  position: absolute;
+  right: 3px;
+  line-height: 30px;
 }
 .dropdown-menu li {
   list-style: none;
@@ -1097,9 +1133,6 @@ h3 {
 }
 .close:focus {
   outline: none;
-}
-.sync-icon {
-  padding: 0 3px;
 }
 #newMyNote {
   position: absolute;

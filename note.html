@@ -201,25 +201,24 @@ function log(o) {
           <div id="notebookBottom" class="clearfix">
             <!--  fa-spin -->
             <a class="pull-left sync-icon"><i class="fa fa-refresh"></i></a>
+            
             <div class="pull-right" id="myProfile">
               <div class="dropdown">
-                <a class="dropdown-toggle" title="{{.userInfo.Username}}" data-toggle="dropdown"> 
+                <a class="dropdown-toggle" data-toggle="dropdown"> 
                   <span class="username">
                    life@leanote.com
-                  </span>
-                  <i class="fa fa-angle-down"></i>
+                  </span><i class="fa fa-angle-down account-more"></i>
                 </a>
-                <ul class="dropdown-menu li-a" role="menu">
-                  <li role="presentation" class="my-link" >
-                    <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}">
-                    <i class="fa fa-bold"></i>
-                    Blog</a>
+                <ul class="dropdown-menu li-a   " role="menu">
+                  <li role="presentation">
+                    <a>Theme</a>
                   </li>
-                  
+                  <li role="presentation">
+                    <a href="login.html">Switch account</a>
+                  </li>
                   <li role="presentation" class="divider"></li>
-                  <li role="presentation" onclick="logout()">
-                    <i class="fa fa-sign-out"></i> 
-                    Logout
+                  <li role="presentation">
+                    <a>Full async force</a>
                   </li>
                 </ul>
               </div>
@@ -379,26 +378,26 @@ function log(o) {
                     <ul id="attachList">
                     </ul>
                     <form id="uploadAttach" method="post" action="/attach/UploadAttach" enctype="multipart/form-data">
-                              <div id="dropAttach" class="dropzone">
-                                  <input id="chooseFileInput" type="file" name="file" multiple/>
-                                  <input id="downloadFileInput" type="file" nwsaveas="" style=""/>
+                        <div id="dropAttach" class="dropzone">
+                            <input id="chooseFileInput" type="file" name="file" multiple/>
+                            <input id="downloadFileInput" type="file" nwsaveas="" style=""/>
 
-                                  <a id="chooseFile" class="btn btn-success btn-choose-file">
-                                    <i class="fa fa-upload"></i>
-                                    <span>Choose Files</span>
-                                  </a>
-                                  <a class="btn btn-default" id="downloadAllBtn">
-                                    <i class="fa fa-download"></i>
-                                    <span>Download All</span>
-                                  </a>
-                                  <a class="btn btn-default" id="linkAllBtn">
-                                    <i class="fa fa-link"></i>
-                                    <span>Link All</span>
-                                  </a>
-                              </div>
-                              <div id="attachUploadMsg">
-                              </div>
-                          </form>
+                            <a id="chooseFile" class="btn btn-success btn-choose-file">
+                              <i class="fa fa-upload"></i>
+                              <span>Choose Files</span>
+                            </a>
+                            <a class="btn btn-default" id="downloadAllBtn">
+                              <i class="fa fa-download"></i>
+                              <span>Download All</span>
+                            </a>
+                            <a class="btn btn-default" id="linkAllBtn">
+                              <i class="fa fa-link"></i>
+                              <span>Link All</span>
+                            </a>
+                        </div>
+                        <div id="attachUploadMsg">
+                        </div>
+                    </form>
                   </div>
                 </li>
                 
@@ -755,6 +754,10 @@ function log(o) {
     </div>
   </div>
 </div>
+
+<!-- 为了上传图片 -->
+<input id="chooseImageInput" type="file" name="file" multiple style="display: none"/>
+
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/jquery.ztree.all-3.5.js"></script>
 <script src="public/js/i18n/msg.en.js"></script>

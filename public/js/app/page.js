@@ -498,11 +498,11 @@ function initEditor() {
 		skin : "custom",
 		language: LEA.locale, // 语言
 		plugins : [
-				"autolink link leaui_image lists charmap hr", "paste",
+				"autolink link image lists charmap hr", "paste",
 				"searchreplace leanote_nav leanote_code tabfocus",
 				"table directionality textcolor" ], // nonbreaking
 				
-		toolbar1 : "formatselect | forecolor backcolor | bold italic underline strikethrough | leaui_image | leanote_code leanote_inline_code | bullist numlist | alignleft aligncenter alignright alignjustify",
+		toolbar1 : "formatselect | forecolor backcolor | bold italic underline strikethrough | image | leanote_code leanote_inline_code | bullist numlist | alignleft aligncenter alignright alignjustify",
 		toolbar2 : "outdent indent blockquote | link unlink | table | hr removeformat | subscript superscript |searchreplace | pastetext pasteCopyImage | leanote_ace_pre | fontselect fontsizeselect",
 
 		// 使用tab键: http://www.tinymce.com/wiki.php/Plugin3x:nonbreaking
@@ -1372,3 +1372,31 @@ function initPage() {
 		}
 	});
 }
+
+// 初始bind事件上传图片
+// tinymce, markdown触发之
+function initUploadImage() {
+	$('#chooseImageInput').change(function() {
+		var $this = $(this);
+		var imagePath = $this.val();
+		$this.val('');
+		// 上传之
+		FileService.uploadImage(imagePath, function(newImage, msg) {
+			if(newImage) {
+				var note = Note.getCurNote();
+				if(!note.IsMarkdown) {
+					var url = EvtService.getImageLocalUrl(newImage.FileId);
+					tinymce.activeEditor.insertContent('<img src="' + url + '">');
+				} else {
+					// TODO markdown insert Image
+				}
+			} else {
+				alert(msg || "error");
+			}
+		});
+	});
+
+}
+$(function() {
+	initUploadImage();
+});

@@ -21,7 +21,7 @@ var TagService = Service.tagService;
 var WebService = require('web');
 var ServerService = require('server');
 var FileService = require('file');
-
+var EvtService = require('evt');
 
 // 分发服务
 // route = /note/notebook
