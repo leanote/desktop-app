@@ -1407,8 +1407,10 @@ Note.moveNote = function(target, data) {
 	if(!note.IsTrash) {
 		Notebook.minusNotebookNumberNotes(note.NotebookId);
 	}
-	
-	ajaxGet("/note/moveNote", {noteId: noteId, notebookId: notebookId}, function(ret) {
+
+	NoteService.moveNote(noteId, notebookId, function(ret) {
+	// });
+	// ajaxGet("/note/moveNote", {noteId: noteId, notebookId: notebookId}, function(ret) {
 		if(ret && ret.NoteId) {
 			if(note.IsTrash) {
 				Note.changeToNext(target);
@@ -1452,24 +1454,29 @@ Note.copyNote = function(target, data, isShared) {
 		return;
 	}
 	
+	/*
 	var url = "/note/copyNote";
 	var data = {noteId: noteId, notebookId: notebookId};
 	if(isShared) {
 		url = "/note/copySharedNote";
 		data.fromUserId = note.UserId;
 	}
+	*/
 	
-	ajaxGet(url, data, function(ret) {
-		if(ret && ret.NoteId) {
+	NoteService.copyNote(noteId, notebookId, function(newNote) {
+		if(newNote && newNote.NoteId) {
 			// 重新清空cache 之后的
 			Note.clearCacheByNotebookId(notebookId);
 			// 改变缓存, 添加之
-			Note.setNoteCache(ret)
+			Note.setNoteCache(newNote)
+
+			// 增加数量
+			Notebook.incrNotebookNumberNotes(notebookId)
+		} else {
+			alert('error');
 		}
 	});
 	
-	// 增加数量
-	Notebook.incrNotebookNumberNotes(notebookId)
 };
 
 
@@ -1633,21 +1640,21 @@ Note.initContextmenu = function() {
 	var noteListMenu = {
 		width: 180, 
 		items: [
-			{ text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Note.listNoteShareUserInfo},
-			{ type: "splitLine" },
-			{ text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Note.setNote2Blog },
-			{ text: getMsg("cancelPublic"), alias: 'unset2Blog', faIcon: "fa-undo", action: Note.setNote2Blog },
+			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Note.listNoteShareUserInfo},
+			// { type: "splitLine" },
+			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Note.setNote2Blog },
+			// { text: getMsg("cancelPublic"), alias: 'unset2Blog', faIcon: "fa-undo", action: Note.setNote2Blog },
 			// { type: "splitLine" },
 			// { text: "分享到社区", alias: 'html2Image', icon: "", action: Note.html2Image},
 			// { text: "导出PDF", alias: 'exportPDF', icon: "", action: Note.exportPDF},
-			{ type: "splitLine" },
-			{ text: getMsg("delete"), icon: "", faIcon: "fa-trash-o", action: Note.deleteNote },
-			{ text: getMsg("move"), alias: "move", faIcon: "fa-arrow-right",
+			// { type: "splitLine" },
+			{text: getMsg("delete"), icon: "", faIcon: "fa-trash-o", action: Note.deleteNote },
+			{text: getMsg("move"), alias: "move", faIcon: "fa-arrow-right",
 				type: "group", 
 				width: 180, 
 				items: notebooksMove
 			},
-			{ text: getMsg("copy"), alias: "copy", icon:"", faIcon: "fa-copy",
+			{text: getMsg("copy"), alias: "copy", icon:"", faIcon: "fa-copy",
 				type: "group", 
 				width: 180, 
 				items: notebooksCopy
