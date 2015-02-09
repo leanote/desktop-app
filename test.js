@@ -20,10 +20,12 @@ Api.addNotebook({
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
 
+/*
 User.init(function() {
   Api.getAttach('54d8c8de99c37b02fa000002', function() {
   });
 });
+*/
 
 /*
 Note.hasNotes('54bdc65599c37b0da9000005', function(doc) {
@@ -69,3 +71,12 @@ while((result = reg.exec(content)) != null) {
 }
 console.log("??");
 */
+
+var a = '<img src="http://127.0.0.1:8008/api/file/getImage?fileId=34232323234iji3"';
+// var reg = /fileId=(.+?)"/g;
+var reg = new RegExp("http://127.0.0.1:8008/api/file/getImage\\?fileId=(.{10})", 'g');
+
+console.log(reg);
+while(s = reg.exec(a)) {
+  console.log(s);
+}

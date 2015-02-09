@@ -1590,6 +1590,24 @@ Note.star = function(noteId) {
 	});
 };
 
+// 内容已同步成功
+Note.contentSynced = function(noteId, content) {
+	var me = this;
+	var note = me.getCurNote();
+	if(!note) {
+		return;
+	}
+	if(note.InitSync) {
+		// 重新render内容
+		note.InitSync = false;
+		note.Content = content;
+		if(me.curNoteId == noteId) {
+			// 重新渲染
+			Note.changeNote(noteId);
+		}
+	}
+};
+
 // 这里速度不慢, 很快
 Note.getContextNotebooks = function(notebooks) {
 	var moves = [];
