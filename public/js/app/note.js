@@ -1725,6 +1725,9 @@ Note.initContextmenu = function() {
 var Attach = {
 	loadedNoteAttachs: {}, // noteId => [attch1Info, attach2Info...] // 按笔记
 	attachsMap: {}, // attachId => attachInfo
+	getAttach: function(attachId) { 
+		return this.attachsMap[attachId];
+	},
 	init: function() {
 		var self = this;
 		var me = this;
@@ -1748,10 +1751,12 @@ var Attach = {
 			}
 		});
 		// 下载
+		var curAttachId = '';
 		self.attachListO.on("click", ".download-attach", function(e) {
 			e.stopPropagation();
 			var $li = $(this).closest('li');
 			var attachId = $li.data("id");
+			curAttachId = attachId;
 
 			$('#downloadFileInput').attr('nwsaveas', $li.find('.attach-title').text()).click();
 			// window.open(UrlPrefix + "/attach/download?attachId=" + attachId);
@@ -1759,7 +1764,6 @@ var Attach = {
 		});
 		// 下载全部
 		self.downloadAllBtnO.click(function() {
-
 			// window.open(UrlPrefix + "/attach/downloadAll?noteId=" + Note.curNoteId);
 			// location.href = "/attach/downloadAll?noteId=" + Note.curNoteId;
 		});
@@ -1767,7 +1771,18 @@ var Attach = {
 		$('#downloadFileInput').change(function(e) {
 			var value = $(this).val();
 			$(this).val('');
-			alert(value);
+			var curAttach = me.getAttach(curAttachId);
+			if(curAttach) {
+				FileService.download(curAttach.Path, value, function(ok, msg) {
+					if(!ok) {
+						alert(msg || "error");
+					} else {
+						// TODO 提示下载成功
+					}
+				});
+			} else {
+				alert('error');
+			}
 		});
 		
 		// make link
@@ -1775,7 +1790,7 @@ var Attach = {
 			e.stopPropagation();
 			var attachId = $(this).closest('li').data("id");
 			var attach = self.attachsMap[attachId];
-			var src = UrlPrefix + "/attach/download?attachId=" + attachId;
+			var src = EvtService.getAttachLocalUrl(attachId); // + "/attach/download?attachId=" + attachId;
 			if(LEA.isMarkdownEditor() && MD) {
 				MD.insertLink(src, attach.Title);
 			} else {
@@ -1871,16 +1886,20 @@ var Attach = {
 			var each = attachs[i];
 			var path = each.Path;
 			// 本地是否有, 没有, 是否是在显示的时候才去从服务器上抓? 不
+			var disabled = '';
 			if(path) {
 				var d = '<i class="fa fa-download"></i>';
 			} else {
-				d = 'no'
+				d = '...'
+				disabled = 'disabled';
+				// 通过后端去下载
+				NoteService.downloadAttachFromServer(Note.curNoteId, each.ServerFileId, each.FileId);
 			}
 			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
 						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
-						'	  <button type="button" class="btn btn-sm btn-primary download-attach">' + d + '</button> ' +
+						'	  <button type="button" class="btn btn-sm btn-primary download-attach" ' + disabled + '>' + d + '</button> ' +
 						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 
 					'</li>';
@@ -1979,6 +1998,21 @@ var Attach = {
 		var self = this;
 	},
 	downloadAll: function() {
+	},
+
+	// 服务器端同步成功后调用
+	attachSynced: function(attachs, attach, noteId) {
+		var me = this;
+		var fileId = attach.FileId;
+		var note = Note.getNote(noteId);
+		if(note) {
+			note.Attachs = attachs;
+			me.attachsMap[fileId] = attach;
+			if(noteId == Note.curNoteId) {
+				// 重新render之
+				me.renderAttachs(noteId);
+			}
+		}
 	}
 }
 

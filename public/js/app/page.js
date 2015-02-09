@@ -1315,7 +1315,7 @@ function incrSync() {
 // 判断是否登录
 function initPage() {
 	// 注入前端变量#
-	WebService.set(Notebook, Note, Tag);
+	WebService.set(Notebook, Note, Attach, Tag);
 
 	function _init() {
 		$(function() {

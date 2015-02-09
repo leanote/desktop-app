@@ -18,9 +18,18 @@ Api.addNotebook({
 */
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
+User.userId = '54d7620d99c37b030600002c';
+
+User.init(function() {
+  Api.getAttach('54d8c8de99c37b02fa000002', function() {
+  });
+});
+
+/*
 Note.hasNotes('54bdc65599c37b0da9000005', function(doc) {
   console.log(doc);
 });
+*/
 /*
 // console.log(User.getCurActiveUserId());
 Note.getDirtyNotes(function(ret) {
