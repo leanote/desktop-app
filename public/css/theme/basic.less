@@ -37,6 +37,14 @@
 }
 html,body {
 }
+#pageInner {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	overflow: hidden;
+}
 *,.h1,
 .h2,
 .h3,
@@ -89,21 +97,31 @@ h1, h2, h3 {
   height: 36px;
   line-height: 36px;
 }
+#tags {
+	display: block; float: left;line-height: 25px;height: 25px;margin-top: 0;
+	.label {
+		margin-right: 2px;
+	}
+}
+#tagDropdown {
+	float: left;
+}
 
 #editor, #mdEditor{
   position: absolute; 
   z-index: 2;
-  top: 66px; 
-  bottom: 0px; 
+  top: 36px; 
+  bottom: 30px; 
   right: 0; 
-  left: 5px;  
+  // left: 5px;  
+  left: 0;
   padding: 0; // 0px 0px 0px 0px;
   display: none;
 }
 #mdEditor {
 	z-index: 1;
 	background-color: #fff;
-    bottom: 5px; 
+    // bottom: 5px; 
     #md-section-helper, #wmd-input {
 		font-size: 14px;
 		line-height: 22px;			
@@ -400,7 +418,7 @@ h1, h2, h3 {
 
 // blog
 #noteItemList {
-	.item-setting, .item-blog, .item-star {
+	.item-setting, .item-blog, .item-star, .item-conflict-info {
 	  position: absolute; 
 	  right: 1px;
 	  font-size: 10px;
@@ -435,6 +453,15 @@ h1, h2, h3 {
 	 	right: 23px;
 	 	display: none;
 	}
+	.item-conflict-info {
+		bottom: 0;
+		right: 45px;
+		.fa {
+			color: #f0ad4e !important;
+		}
+		display: none;
+	}
+	
 	// 是star的
 	.item-is-star {
 		.item-star {
@@ -453,6 +480,11 @@ h1, h2, h3 {
 	 .item-setting, .item-star {
 	 	display: block;
 	 }
+	 &.item-conflict {
+		.item-conflict-info {
+			display: block;
+		}
+	}
 }
 
 // share
@@ -765,15 +797,24 @@ h1, h2, h3 {
 #tool {
 	position: relative;
 }
+#editorBottom {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 30px;
+	border-top: 1px solid #eee;
+}
 #tag {
 	position: absolute;
-	right: 300px;
+	right: 0;
 	top: 0;
 	left: 5px;
 	bottom: 0;
 }
 #tagColor {
 	left: 10px;
+	top: -130px;
 	&:before {
 		content: "";
 		background-image: none;
@@ -790,6 +831,9 @@ h1, h2, h3 {
 	top: 69px; 
 	bottom: 3px;
 }
+
+
+
 
 // -------------------
 // mdeditor 
@@ -1166,8 +1210,8 @@ top: 4px;
 }
 
 #editorContent {
-	border: 1px solid #ccc;
-	border-radius: 5px;
+	// border: 1px solid #ccc;
+	// border-radius: 5px;
 	padding: 5px;
 	outline: none;
 	margin-top: 5px;
@@ -1191,7 +1235,6 @@ top: 4px;
 			display: block;
 		}
 	}
-
 }
 // 不显示空白
 .ace_invisible_space {
@@ -1342,4 +1385,73 @@ top: 4px;
 		}
 	}
 
+}
+
+#notebookBottom {
+  position: absolute;
+  bottom: 0px;
+  height: 30px;
+  right: 0;
+  left: 0;
+  line-height: 30px;
+  text-align: right;
+  padding-right: 5px;
+  background-color: #f5f6f7;
+  border-top: 1px solid transparent;
+  border-color: rgba(0, 0, 0, 0.05);
+  // overflow: hidden;
+}
+
+/* editor */
+#editorTool {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  // width: 200px;
+}
+#editorTool li {
+  display: inline-block;
+}
+
+#noteTitleDiv {
+	position: absolute;
+	left: 0;
+	right: 120px;
+  height: 35px;
+  line-height: 35px;
+  padding-left: 10px;
+  // border-bottom: 1px solid #ddd;
+}
+#noteTitle {
+  height: 100%;
+  // padding: 0px 3px;
+  width: 100%;
+  border: none;
+  font-size: 20px;
+}
+#noteTitle:focus {
+  // outline:thin dotted #333;outline:1px auto -webkit-focus-ring-color;outline-offset:-2px
+  outline: none !important;
+  // border: 1px solid @hColor;
+}
+
+#editorContent {
+  position: absolute; 
+  top: 30px;
+  bottom: 10px; 
+  right: 0; 
+  left: 0;
+  overflow: auto; // 不设置editor隐藏时没有scroll
+}
+
+// todo 到markdown editor上删除
+#mdEditor .layout-wrapper-l3 {
+  top: 30px;
+  margin-top: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+#noteItemList .item-conflict {
+  border: 2px solid #DBB624;
 }

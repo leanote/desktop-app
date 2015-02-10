@@ -257,21 +257,6 @@ a.raw:hover {
 	}
 }
 
-#notebookBottom {
-  position: absolute;
-  bottom: 0px;
-  height: 30px;
-  right: 0;
-  left: 0;
-  line-height: 30px;
-  text-align: right;
-  padding-right: 5px;
-  background-color: #f5f6f7;
-  border-top: 1px solid transparent;
-  border-color: rgba(0, 0, 0, 0.05);
- 
-}
-
 #noteAndEditor {
   position: absolute;
   bottom: 0;
@@ -292,7 +277,7 @@ a.raw:hover {
   top: 0;
   left: @noteListWidth;
   right: 0;
-  padding-left: 5px;
+  padding-left: 0;
   overflow-y: hidden;
   overflow-x: auto;
   background-color: @bgColor;
@@ -451,47 +436,6 @@ a.raw:hover {
 #notesAndSort {
   background-color: @bgColor;
   border-bottom: 1px solid @borderColor;
-}
-
-
-/* editor */
-#editorTool {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  // width: 200px;
-}
-#editorTool li {
-  display: inline-block;
-}
-
-#noteTitleDiv {
-  height: 30px;
-  border-bottom: 1px solid #ddd;
-}
-#noteTitle {
-  height: 100%;
-  padding: 0px 3px;
-  width: 100%;
-  border: none;
-  background-color: @bgColor;
-  min-width: 300px;
-}
-#noteTitle:focus {
-  // outline:thin dotted #333;outline:1px auto -webkit-focus-ring-color;outline-offset:-2px
-  outline: none !important;
-  // border: 1px solid @hColor;
-}
-
-#editorContent {
-  position: absolute; 
-  top: 30px;
-  bottom: 10px; 
-  right: 0; 
-  left: 0;
-  overflow: auto; // 不设置editor隐藏时没有scroll
-}
-#editorContent_ifr {
 }
 
 /* 包裹iframe */

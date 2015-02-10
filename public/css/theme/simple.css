@@ -30,6 +30,14 @@
   font-weight: normal;
   font-style: normal;
 }
+#pageInner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  overflow: hidden;
+}
 *,
 .h1,
 .h2,
@@ -86,21 +94,33 @@ h3 {
   height: 36px;
   line-height: 36px;
 }
+#tags {
+  display: block;
+  float: left;
+  line-height: 25px;
+  height: 25px;
+  margin-top: 0;
+}
+#tags .label {
+  margin-right: 2px;
+}
+#tagDropdown {
+  float: left;
+}
 #editor,
 #mdEditor {
   position: absolute;
   z-index: 2;
-  top: 66px;
-  bottom: 0px;
+  top: 36px;
+  bottom: 30px;
   right: 0;
-  left: 5px;
+  left: 0;
   padding: 0;
   display: none;
 }
 #mdEditor {
   z-index: 1;
   background-color: #fff;
-  bottom: 5px;
 }
 #mdEditor #md-section-helper,
 #mdEditor #wmd-input {
@@ -375,7 +395,8 @@ h3 {
 }
 #noteItemList .item-setting,
 #noteItemList .item-blog,
-#noteItemList .item-star {
+#noteItemList .item-star,
+#noteItemList .item-conflict-info {
   position: absolute;
   right: 1px;
   font-size: 10px;
@@ -390,12 +411,14 @@ h3 {
 }
 #noteItemList .item-setting .fa,
 #noteItemList .item-blog .fa,
-#noteItemList .item-star .fa {
+#noteItemList .item-star .fa,
+#noteItemList .item-conflict-info .fa {
   color: #fff;
 }
 #noteItemList .item-setting:hover,
 #noteItemList .item-blog:hover,
-#noteItemList .item-star:hover {
+#noteItemList .item-star:hover,
+#noteItemList .item-conflict-info:hover {
   opacity: 0.8;
 }
 #noteItemList .item-blog {
@@ -411,6 +434,14 @@ h3 {
   right: 23px;
   display: none;
 }
+#noteItemList .item-conflict-info {
+  bottom: 0;
+  right: 45px;
+  display: none;
+}
+#noteItemList .item-conflict-info .fa {
+  color: #f0ad4e !important;
+}
 #noteItemList .item-is-star .item-star .fa:before {
   content: "\f005";
 }
@@ -419,6 +450,9 @@ h3 {
 }
 #noteItemList .item:hover .item-setting,
 #noteItemList .item:hover .item-star {
+  display: block;
+}
+#noteItemList .item:hover.item-conflict .item-conflict-info {
   display: block;
 }
 .friend-header {
@@ -704,15 +738,24 @@ h3 {
 #tool {
   position: relative;
 }
+#editorBottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30px;
+  border-top: 1px solid #eee;
+}
 #tag {
   position: absolute;
-  right: 300px;
+  right: 0;
   top: 0;
   left: 5px;
   bottom: 0;
 }
 #tagColor {
   left: 10px;
+  top: -130px;
 }
 #tagColor:before {
   content: "";
@@ -1070,8 +1113,6 @@ h3 {
   cursor: pointer !important;
 }
 #editorContent {
-  border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 5px;
   outline: none;
   margin-top: 5px;
@@ -1219,6 +1260,62 @@ h3 {
 }
 #starNotes li:hover .delete-star {
   display: block;
+}
+#notebookBottom {
+  position: absolute;
+  bottom: 0px;
+  height: 30px;
+  right: 0;
+  left: 0;
+  line-height: 30px;
+  text-align: right;
+  padding-right: 5px;
+  background-color: #f5f6f7;
+  border-top: 1px solid transparent;
+  border-color: rgba(0, 0, 0, 0.05);
+}
+/* editor */
+#editorTool {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#editorTool li {
+  display: inline-block;
+}
+#noteTitleDiv {
+  position: absolute;
+  left: 0;
+  right: 120px;
+  height: 35px;
+  line-height: 35px;
+  padding-left: 10px;
+}
+#noteTitle {
+  height: 100%;
+  width: 100%;
+  border: none;
+  font-size: 20px;
+}
+#noteTitle:focus {
+  outline: none !important;
+}
+#editorContent {
+  position: absolute;
+  top: 30px;
+  bottom: 10px;
+  right: 0;
+  left: 0;
+  overflow: auto;
+}
+#mdEditor .layout-wrapper-l3 {
+  top: 30px;
+  margin-top: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+#noteItemList .item-conflict {
+  border: 2px solid #DBB624;
 }
 ::selection {
   background: #000000;
@@ -1439,19 +1536,6 @@ a.raw:hover {
 #notebookMin div.minContainer ul li a {
   cursor: pointer;
 }
-#notebookBottom {
-  position: absolute;
-  bottom: 0px;
-  height: 30px;
-  right: 0;
-  left: 0;
-  line-height: 30px;
-  text-align: right;
-  padding-right: 5px;
-  background-color: #f5f6f7;
-  border-top: 1px solid transparent;
-  border-color: rgba(0, 0, 0, 0.05);
-}
 #noteAndEditor {
   position: absolute;
   bottom: 0;
@@ -1470,7 +1554,7 @@ a.raw:hover {
   top: 0;
   left: 250px;
   right: 0;
-  padding-left: 5px;
+  padding-left: 0;
   overflow-y: hidden;
   overflow-x: auto;
   background-color: #ffffff;
@@ -1620,38 +1704,6 @@ a.raw:hover {
 #notesAndSort {
   background-color: #ffffff;
   border-bottom: 1px solid #ebeff2;
-}
-/* editor */
-#editorTool {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-#editorTool li {
-  display: inline-block;
-}
-#noteTitleDiv {
-  height: 30px;
-  border-bottom: 1px solid #ddd;
-}
-#noteTitle {
-  height: 100%;
-  padding: 0px 3px;
-  width: 100%;
-  border: none;
-  background-color: #ffffff;
-  min-width: 300px;
-}
-#noteTitle:focus {
-  outline: none !important;
-}
-#editorContent {
-  position: absolute;
-  top: 30px;
-  bottom: 10px;
-  right: 0;
-  left: 0;
-  overflow: auto;
 }
 /* 包裹iframe */
 #editor .mce-ifr {

@@ -12,7 +12,7 @@ Note.curNoteId = "";
 Note.interval = ""; // 定时器
 
 // 这里, settings, blog, star
-Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-star"><i class="fa fa-star-o" title="Star"></i></div><div class="item-setting"><i class="fa fa-cog" title="setting"></i></div>';
+Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="Conflict!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="Star"></i></div><div class="item-setting"><i class="fa fa-cog" title="Setting"></i></div>';
 
 // for render
 Note.itemTplNoImg = '<li href="#" class="item ?" noteId="?">'

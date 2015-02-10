@@ -23,13 +23,7 @@
 <!-- mdeditor -->
 <link href="public/dist/themes/default.css" rel="stylesheet" />
 <style>
-html, body {
-  border-radius: 10px;
-  border: 1px solid #000;
-}
-#noteItemList .item-conflict {
-  border: 1px solid #E4DA2D;
-}
+
 </style>
 <!-- For Develop writting mod -->
 <script>
@@ -325,50 +319,21 @@ function log(o) {
           <div id="noteTop">
             <!-- 左侧放tag, 右侧放按钮, 比如save, info, move, delete -->
             <div id="tool" class="clearfix">
-              <!-- tag可以参考 mac的文件tag, 预定义一些颜色, 用户也可以自己输入-->
               
-              <!--
-              <div class="pull-left" id="noteTitleDiv">
-                <input name="noteTitle" id="noteTitle" value="" placeholder="无标题">
+              <div id="noteTitleDiv">
+                <input name="noteTitle" id="noteTitle" value="" placeholder="UnTitled" tabindex="1" />
               </div>
-              -->
               
-              <div class="pull-left" id="tag">
-                <div id="tags" style="display: inline-block; line-height: 25px;">
-                </div>
-
-                <div class="dropdown" style="display: inline-block"
-                  id="tagDropdown">
-                  <i class="fa fa-bookmark-o"></i> 
-                  <a
-                    class="metro-a dropdown-toggle" data-toggle="dropdown"
-                    id="addTagTrigger" style="cursor: text; padding-left: 0">
-                    <span class="add-tag-text">
-                    Click to add Tag
-                    </span>
-                  </a> 
-                  <input type="text" id="addTagInput" />
-                  <ul class="dropdown-menu" role="menu" id="tagColor">
-                    <li role="presentation"><span class="label label-red">red</span>
-                    </li>
-                    <li role="presentation"><span class="label label-blue">blue</span>
-                    </li>
-                    <li role="presentation"><span class="label label-yellow">yellow</span></li>
-                    <li role="presentation"><span class="label label-green">green</span></li>
-                  </ul>
-                </div>
-              </div>
+              
               
               <ul class="pull-right" id="editorTool">
 
                 <!--
-                <li><a class="ios7-a " id="saveBtn" title="Save ctrl+s"
-                  data-toggle="dropdown">
-                  <span class="fa fa-save"></span>
+                <li>
+                  <a class="ios7-a" id="infoBtn" title="More inforamation" data-toggle="dropdown"><span class="fa fa-info"></span>
                   </a>
                 </li>
                 -->
-                  
                 <li class="dropdown" id="attachDropdown">
                   <a class="ios7-a dropdown-toggle" data-toggle="dropdown" id="showAttach" title="Attachments">
                     <span class="fa fa-paperclip"></span>
@@ -419,10 +384,6 @@ function log(o) {
                   <span class="fa fa-expand"></span>
                   </a></li>
               </ul>
-            </div>
-
-            <div id="noteTitleDiv">
-              <input name="noteTitle" id="noteTitle" value="" placeholder="UnTitled" tabindex="1" />
             </div>
           </div>
 
@@ -558,6 +519,32 @@ function log(o) {
             </div>
                       <textarea id="md-section-helper"></textarea>
                       -->
+          </div>
+
+          <div id="editorBottom">
+            <div id="tag" class="clearfix">
+              <div id="tags">
+              </div>
+              <div class="dropdown" style="" id="tagDropdown">
+                <i class="fa fa-bookmark-o"></i> 
+                <a
+                  class="metro-a dropdown-toggle" data-toggle="dropdown"
+                  id="addTagTrigger" style="cursor: text; padding-left: 0">
+                  <span class="add-tag-text">
+                  Click to add Tag
+                  </span>
+                </a> 
+                <input type="text" id="addTagInput" />
+                <ul class="dropdown-menu" role="menu" id="tagColor">
+                  <li role="presentation"><span class="label label-red">red</span>
+                  </li>
+                  <li role="presentation"><span class="label label-blue">blue</span>
+                  </li>
+                  <li role="presentation"><span class="label label-yellow">yellow</span></li>
+                  <li role="presentation"><span class="label label-green">green</span></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>  
       </div>
