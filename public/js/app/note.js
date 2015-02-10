@@ -1555,7 +1555,7 @@ Note.changeStarNoteTitle = function(note) {
 		return;
 	}
 	var target = me.starNotesO.find('li[data-id="' + note.NoteId + '"]');
-	target.find('a').text(note.Title);
+	target.find('a').html(note.Title + '<span class="delete-star" title="Remove">X</span>');
 };
 
 // 收藏或取消收藏
