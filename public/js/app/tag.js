@@ -261,7 +261,7 @@ Tag.renderTagNav = function(tags) {
 		}
 		*/
 		var classes = Tag.classes[tag] || "label label-default";
-		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? (?)</span> <span class="tag-delete">X</span></li>', tag, classes, text, noteTag.Count));
+		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em>(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
 	}
 };
 
@@ -375,17 +375,20 @@ $(function() {
 		// 也会把curNoteId清空
 		Note.clearAll();
 		
-		$("#tagSearch").html($li.html()).show();
-		$("#tagSearch .tag-delete").remove();
+		// $("#tagSearch").html($li.html()).show();
+
+		var h = $li.html();
+		Notebook.changeCurNotebookTitle(h);
+		$('#curNotebookForListNote').find('i, em').remove();
+		// $("#tagSearch .tag-delete").remove();
 		
 		showLoading();
-		ajaxGet("/note/searchNoteByTags", {tags: [tag]}, function(notes) {
+		NoteService.searchNoteByTag(tag, function(notes) {
 			hideLoading();
 			if(notes) {
 				// 和note搜索一样
 				// 设空, 防止发生上述情况
 				// Note.curNoteId = "";
-				
 				Note.renderNotes(notes);
 				if(!isEmpty(notes)) {
 					Note.changeNote(notes[0].NoteId);

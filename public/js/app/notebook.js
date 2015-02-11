@@ -689,7 +689,7 @@ Notebook.changeNotebook = function(notebookId, callback) {
 };
 
 // 改变标签, isStarred是否是星笔记本
-Notebook.changeCurNotebookTitle = function(title, isStarred) {
+Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle) {
 	var me = this;
 	$("#curNotebookForListNote").html(title);
 	me.isStarred = isStarred;

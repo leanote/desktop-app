@@ -1293,6 +1293,8 @@ Note.isSameSearch = function(key) {
 	return false;
 }
 
+// 搜索笔记
+Note.searchSeq = 0;
 Note.searchNote = function() {
 	var val = $("#searchNoteInput").val();
 	if(!val) {
@@ -1304,11 +1306,12 @@ Note.searchNote = function() {
 	if(Note.isSameSearch(val)) {
 		return;
 	}
-	
+
+
 	// 之前有, 还有结束的
-	if(Note.lastSearch) {
-		Note.lastSearch.abort();
-	}
+	// if(Note.lastSearch) {
+		// Note.lastSearch.abort();
+	// }
 	
 	// 步骤与tag的搜索一样 
 	// 1
@@ -1320,21 +1323,13 @@ Note.searchNote = function() {
 	// 发送请求之
 	// 先取消上一个
 	showLoading();
-	Note.lastSearch = ajaxPost("/note/searchNote", {key: val}, function(notes) {
+
+	Note.searchSeq++;
+	var t = Note.searchSeq;
+	NoteService.searchNote(val, function(notes) { 
 		hideLoading();
-		if(notes) {
-			// 成功后设为空
-			Note.lastSearch = null;
-			// renderNotes只是note列表加载, 右侧笔记详情还没加载
-			// 这个时候, 定位第一个, 保存之前的,
-			// 	如果: 第一次搜索, renderNotes OK, 还没等到changeNote时
-			//		第二次搜索来到, Note.curChangedSaveIt();
-			//		导致没有标题了
-			// 不是这个原因, 下面的Note.changeNote会导致保存
-			
-			// 设空, 防止发生上述情况
-			// Note.curNoteId = "";
-			
+		if(t == Note.searchSeq && notes) {
+			Notebook.changeCurNotebookTitle('Search results', false, notes.length);
 			Note.renderNotes(notes);
 			if(!isEmpty(notes)) {
 				Note.changeNote(notes[0].NoteId, false/*, true || Note.isOver2Seconds*/); // isShare, needSaveChanged?, 超过2秒就要保存
@@ -2109,11 +2104,10 @@ $(function() {
 	
 	//---------------------------
 	// 搜索, 按enter才搜索
-	/*
 	$("#searchNoteInput").on("keyup", function(e) {
 		Note.searchNote();
 	});
-	*/
+	/*
 	$("#searchNoteInput").on("keydown", function(e) {
 		var theEvent = e; // window.event || arguments.callee.caller.arguments[0];
 		if(theEvent.keyCode == 13 || theEvent.keyCode == 108) {
@@ -2122,6 +2116,7 @@ $(function() {
 			return false;
 		}
 	});
+	*/
 	
 	//--------------------
 	// Note.initContextmenu();

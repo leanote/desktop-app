@@ -1317,6 +1317,20 @@ h3 {
 #noteItemList .item-conflict {
   border: 2px solid #DBB624;
 }
+#tagNav i,
+#tagNav em {
+  font-style: normal;
+}
+#tagNav .tag-delete {
+  display: none;
+  font-size: 12px;
+}
+#tagNav li:hover .tag-delete {
+  display: inline-block;
+}
+#tagNav a:hover {
+  background: none !important;
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
