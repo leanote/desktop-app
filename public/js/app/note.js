@@ -38,7 +38,7 @@ Note.isReadOnly = false;
 Note.intervalTime = 600000; // 600s, 10mins
 Note.startInterval = function() {
 	Note.interval = setInterval(function() {
-		log("自动保存开始...")
+		log("自动保存开始...");
 		changedNote = Note.curChangedSaveIt(false);
 	}, Note.intervalTime); // 600s, 10mins
 }
@@ -259,6 +259,7 @@ Note.curHasChanged = function(force) {
 		}
 	}
 	
+	// 这里, 总为true, 那么, 总会保存的
 	// if(!arrayEqual(cacheNote.Tags, tags)) {
 	hasChanged.hasChanged = true;
 	hasChanged.Tags = tags;
@@ -443,7 +444,7 @@ Note.curChangedSaveIt = function(force, callback) {
 			}
 			showMsg(getMsg("saveSuccess"), 1000);
 
-			callback && callback();
+			callback && callback(ret);
 		});
 		
 		return hasChanged;
@@ -1016,14 +1017,74 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	
 	// 更新数量
 	Notebook.incrNotebookNumberNotes(notebookId)
-}
+};
+
+// 同步
+Note._syncRefreshE = $('#syncRefresh');
+Note._syncWarningE = $('#syncWarning');
+Note.showSpin = function() {
+	var me = this;
+	me._syncRefreshE.addClass('fa-spin');
+};
+Note.hideSpin = function() {
+	var me = this;
+	me._syncRefreshE.removeClass('fa-spin');
+};
+// nodejs调用
+Note.syncFinished = function() {
+	var me = this;
+	me.hideSpin();
+	me._syncWarningE.hide();
+};
+Note.sync = function() {
+	var me = this;
+	me.showSpin();
+	SyncService.incrSync();
+};
+
+// 断网处理
+/*
+1. sync出现感叹号
+2. 如果是需要重新登录, 则点击后出现重新登录的界面
+*/
+Note.unConnected = function() {
+	var me = this;
+	me._syncWarningE.show();
+	SyncService.setSyncFinished();
+	me.hideSpin();
+	me._syncWarningE.data('reason', 'unConnected');
+	me._syncWarningE.attr('title', 'Network error');
+};
+Note.notLogin = function() {
+	var me = this;
+	me._syncWarningE.show();
+	me.hideSpin();
+	SyncService.setSyncFinished();
+	me._syncWarningE.data('reason', 'notLogin');
+	me._syncWarningE.attr('title', 'You need sign in leanote');
+};
+// 点击感叹号, 处理错误
+Note.fixNetOrAuthError = function() {
+	var me = this;
+	var reason = me._syncWarningE.data('reason');
+	if(reason == 'unConnected') {
+		alert('Network error, please check out your network.');
+	} else if(reason == 'notLogin') {
+		// 弹出登录框登录之, 重新弹出
+		window.open('login.html?ref=needLogin');
+	}
+};
 
 // 保存note ctrl + s
 Note.saveNote = function(e) {
 	var num = e.which ? e.which : e.keyCode;
 	// 保存
     if((e.ctrlKey || e.metaKey) && num == 83 ) { // ctrl + s or command + s
-    	Note.curChangedSaveIt();
+    	Note.curChangedSaveIt(true, function(note) {
+    		console.log('after updated:');
+    		console.log(note);
+    		Note.sync();
+    	});
     	e.preventDefault();
     	return false;
     } else {
@@ -1603,6 +1664,7 @@ Note.contentSynced = function(noteId, content) {
 	}
 };
 
+
 // 这里速度不慢, 很快
 Note.getContextNotebooks = function(notebooks) {
 	var moves = [];
@@ -2168,6 +2230,15 @@ $(function() {
 	Note.starNotesO.on('click', 'a', function(e) {
 		var $li = $(this).closest('li');
 		Note.renderStarNote($li);
+	});
+
+	// sync
+	Note._syncRefreshE.click(function() {
+		Note.sync();
+	});
+
+	Note._syncWarningE.click(function() {
+		Note.fixNetOrAuthError();
 	});
 
 });

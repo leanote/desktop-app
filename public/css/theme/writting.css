@@ -198,9 +198,14 @@ h3 {
 .sync-icon {
   margin-left: 10px;
 }
+#syncWarning {
+  color: #f0ad4e;
+  display: none;
+  cursor: pointer;
+}
 #myProfile {
   position: absolute;
-  left: 30px;
+  left: 45px;
   right: 0;
   text-align: right;
 }
@@ -1330,6 +1335,10 @@ h3 {
 }
 #tagNav a:hover {
   background: none !important;
+}
+.fa-spin {
+  -webkit-animation: fa-spin 1s infinite linear !important;
+  animation: fa-spin 1s infinite linear !important;
 }
 @font-face {
   font-family: 'Open Sans';
