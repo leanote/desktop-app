@@ -228,7 +228,7 @@ LEA.cmroot = 1;
             	hideMenuPane();
             	// life
 	            $(target).removeClass("contextmenu-hover");
-            })
+            });
         }
         
         // 初始化

@@ -1646,6 +1646,11 @@ Note.star = function(noteId) {
 	});
 };
 
+// 显示
+Note.showConflictInfo = function(noteId, e) {
+	ContextTips.show('#conflictTips', e);
+};
+
 // 内容已同步成功
 Note.contentSynced = function(noteId, content) {
 	var me = this;
@@ -2106,7 +2111,7 @@ $(function() {
 		}
 	});
 	$("#noteItemList").on("click", ".item", function(event) {
-		event.stopPropagation();
+		// event.stopPropagation();
 		var noteId = $(this).attr("noteId");
 		
 		// 手机端处理
@@ -2230,6 +2235,12 @@ $(function() {
 	Note.starNotesO.on('click', 'a', function(e) {
 		var $li = $(this).closest('li');
 		Note.renderStarNote($li);
+	});
+
+	$("#noteItemList").on("click", ".item-my .item-conflict-info", function(e) {
+		var $li = $(this).closest('li');
+		var noteId = $li.attr('noteId');
+		Note.showConflictInfo(noteId, e);
 	});
 
 	// sync

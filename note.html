@@ -747,6 +747,19 @@ function log(o) {
 <!-- 为了上传图片 -->
 <input id="chooseImageInput" type="file" name="file" multiple style="display: none"/>
 
+<!-- contextTips -->
+<div class="context-tips" id="conflictTips">
+  <p>
+    This note is conflicted with:
+  </p>
+  <p>
+    <a class="conflict-note-title">
+      这是一个错误
+    </a>
+  </p>
+  Maker as resolved: <input type="checkbox" class="conflict-resolved"/>
+</div>
+
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/jquery.ztree.all-3.5.js"></script>
 <script src="public/js/i18n/msg.en.js"></script>

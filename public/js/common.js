@@ -1298,3 +1298,63 @@ function setHash(key, value) {
 	}
 	location.href = "#" + str;
 }
+
+
+// 类似于contextMenu的提示框
+var ContextTips = {
+	curShowId: '', // 当前显示的id
+	curShowIdObj: '',
+	init: function() {
+		var me = this;
+		$(function() {
+			$(document).click(function(e) {
+				if(me.curShowId) {
+					var end = (new Date()).getTime();
+					if(end - me.start > 100) {
+						if($(e.target).closest(me.curShowId).length == 0) {
+							me.curShowIdObj.hide();
+							me.curShowId = '';
+						}
+					}
+				}
+			});
+		});
+	},
+	hide: function(id) {
+		var me = this;
+		$(id).hide();
+	},
+	show: function(id, e) {
+		var me = this;
+		me.curShowId = id;
+		me.curShowIdObj = $(id);
+		// 位置
+		me.curShowIdObj.show();
+		var mwidth = me.curShowIdObj.width();
+		var mheight = me.curShowIdObj.height();
+
+		// 总体宽高
+		var bwidth = $('#body').width();
+        var bheight = document.documentElement.clientHeight-10;
+
+		var pos = {left: e.pageX, top: e.pageY};
+
+		var left = (pos.left +  mwidth > bwidth) ? (pos.left - mwidth < 0 ? 0 : pos.left) : pos.left;
+        var top = (pos.top + mheight + 10 > bheight) ? bheight - mheight - 10 : pos.top;
+
+        me.curShowIdObj.css('left', left);
+        me.curShowIdObj.css('top', top);
+
+        me.start = (new Date()).getTime();
+
+        // console.log(left, top);
+        // life , 之前是mousedown
+        /*
+        $(document).on('click', function() {
+        	me.hide(id);
+        });
+		*/
+	}
+};
+
+ContextTips.init();

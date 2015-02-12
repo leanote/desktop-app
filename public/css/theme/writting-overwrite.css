@@ -1340,6 +1340,28 @@ h3 {
   -webkit-animation: fa-spin 1s infinite linear !important;
   animation: fa-spin 1s infinite linear !important;
 }
+.context-tips {
+  position: absolute;
+  z-index: 99999;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 5px;
+  left: 0px;
+  top: 0px;
+  /* shaddow */
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+  overflow: auto;
+  width: 100px;
+  height: 100px;
+  display: none;
+}
+#conflictTips {
+  width: 230px;
+  height: 80px;
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
