@@ -1647,8 +1647,85 @@ Note.star = function(noteId) {
 };
 
 // 显示
-Note.showConflictInfo = function(noteId, e) {
-	ContextTips.show('#conflictTips', e);
+Note._curFixNoteId = ''; // 当前要处理的
+Note._curFixNoteTarget = '';
+Note._conflictTipsElem = $('#conflictTips');
+Note._showConflictInfoInited = false;
+// 初始化事件
+Note._initshowConflictInfo = function() {
+	var me = this;
+
+	// 点击与之冲突的笔记, 则将该笔记显示到它前面, 并选中
+	Note._conflictTipsElem.find('.conflict-title').click(function() {
+		var conflictNoteId = $(this).data('id');
+		var conflictNote = me.getNote(conflictNoteId);
+		if(!conflictNote) {
+			alert('The note is not exists');
+			return;
+		}
+		// 是否在该列表中?
+		var target = $(tt('[noteId="?"]', conflictNoteId)); // 
+		// 如果当前笔记在笔记列表中, 那么生成一个新笔记放在这个笔记上面
+		if(target.length > 0) {
+		} else {
+			target = me._getNoteHtmlObjct(conflictNote);
+		}
+		// console.log(">....>");
+		// console.log(me._curFixNoteTarget);
+		// console.log(target);
+
+		// target.insertBefore(me._curFixNoteTarget);
+		me._curFixNoteTarget.insertBefore(target);
+		// 选中与之冲突的笔记
+		me.changeNote(conflictNoteId);
+	});
+};
+Note.showConflictInfo = function(target, e) {
+	var me = this;
+
+	var $li = $(target).closest('li');
+	var noteId = $li.attr('noteId');
+
+	var note = me.getNote(noteId);
+	if(!note) {
+		return;
+	}
+	var conflictNoteId = note.ConflictNoteId;
+	function conflictIsFixed() {
+		// 去掉item-confict class
+		// 并且改变
+		$li.removeClass('item-conflict');
+		note.ConflictNoteId = "";
+		NoteService.conflictIsFixed(noteId);
+	}
+	if(!conflictNoteId) {
+		return conflictIsFixed();
+	}
+
+	var conflictNote = me.getNote(conflictNoteId);
+	if(!conflictNote) {
+		return conflictIsFixed();
+	}
+
+	me._curFixNoteId = noteId;
+	me._curFixNoteTarget = $li;
+
+	if(!me._showConflictInfoInited) {
+		me._showConflictInfoInited = true;
+		me._initshowConflictInfo();
+	}
+
+	// 初始化数据
+	var titleElem = Note._conflictTipsElem.find('.conflict-title');
+	titleElem.text(conflictNote.Title);
+	titleElem.data('id', conflictNoteId);
+	Note._conflictTipsElem.find('.conflict-resolved').prop('checked', false);
+
+	ContextTips.show('#conflictTips', e, function() {
+		if(Note._conflictTipsElem.find('.conflict-resolved').prop('checked')) {
+			conflictIsFixed();
+		}
+	});
 };
 
 // 内容已同步成功
@@ -2238,9 +2315,7 @@ $(function() {
 	});
 
 	$("#noteItemList").on("click", ".item-my .item-conflict-info", function(e) {
-		var $li = $(this).closest('li');
-		var noteId = $li.attr('noteId');
-		Note.showConflictInfo(noteId, e);
+		Note.showConflictInfo(this, e);
 	});
 
 	// sync

@@ -15,7 +15,7 @@ Notebook.setCache = function(notebook) {
 		Notebook.cache[notebookId] = {};
 	}
 	$.extend(Notebook.cache[notebookId], notebook);
-}
+};
 
 Notebook.getCurNotebookId = function() {
 	return Notebook.curNotebookId;

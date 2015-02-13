@@ -1304,6 +1304,7 @@ function setHash(key, value) {
 var ContextTips = {
 	curShowId: '', // 当前显示的id
 	curShowIdObj: '',
+	hideCallback: null,
 	init: function() {
 		var me = this;
 		$(function() {
@@ -1314,6 +1315,9 @@ var ContextTips = {
 						if($(e.target).closest(me.curShowId).length == 0) {
 							me.curShowIdObj.hide();
 							me.curShowId = '';
+							if(me.hideCallback) {
+								me.hideCallback();
+							}
 						}
 					}
 				}
@@ -1324,10 +1328,11 @@ var ContextTips = {
 		var me = this;
 		$(id).hide();
 	},
-	show: function(id, e) {
+	show: function(id, e, hideCallback) {
 		var me = this;
 		me.curShowId = id;
 		me.curShowIdObj = $(id);
+		me.hideCallback = hideCallback;
 		// 位置
 		me.curShowIdObj.show();
 		var mwidth = me.curShowIdObj.width();
