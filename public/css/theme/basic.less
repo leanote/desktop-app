@@ -992,7 +992,7 @@ h1, h2, h3 {
   right:0;
   bottom: 0;
   width: 100%;
-  overflow-y: hidden;
+  overflow-y: scroll;
   padding: 0 5px;
 }
 #noteItemList .item {
@@ -1512,3 +1512,35 @@ top: 4px;
 	text-decoration: underline;
 	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
 }
+
+// scrollbar style TODO
+// https://www.webkit.org/blog/363/styling-scrollbars/
+// http://trac.webkit.org/export/41842/trunk/LayoutTests/scrollbars/overflow-scrollbar-combinations.html
+
+
+/*
+ *  STYLE 2
+ */
+/*
+*::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+	position: absolute;
+	-webkit-transform: translatez(0);
+}
+
+*::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #D62929;
+}
+*/

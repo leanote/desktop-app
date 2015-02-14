@@ -913,7 +913,7 @@ h3 {
   right: 0;
   bottom: 0;
   width: 100%;
-  overflow-y: hidden;
+  overflow-y: scroll;
   padding: 0 5px;
 }
 #noteItemList .item {
@@ -1362,6 +1362,39 @@ h3 {
   width: 230px;
   height: 80px;
 }
+.conflict-title {
+  display: block;
+  text-decoration: underline;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+/*
+ *  STYLE 2
+ */
+/*
+*::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+*::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+	position: absolute;
+	-webkit-transform: translatez(0);
+}
+
+*::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #D62929;
+}
+*/
 ::selection {
   background: #000000;
   color: #ffffff;

@@ -815,7 +815,8 @@ Note.renderNotes = function(notes, forNewNote, isShared) {
 	// 手机端不用
 	// slimScroll使得手机端滚动不流畅
 	if(!LEA.isMobile && !Mobile.isMobile()) {
-		$("#noteItemList").slimScroll({ scrollTo: '0px', height: "100%", onlyScrollBar: true});
+		// $("#noteItemList").slimScroll({ scrollTo: '0px', height: "100%", onlyScrollBar: true});
+		$("#noteItemList").scrollTop(0); // ({ scrollTo: '0px', height: "100%", onlyScrollBar: true});
 	}
 	
 	if(!notes || typeof notes != "object" || notes.length <= 0) {
