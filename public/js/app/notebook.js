@@ -32,6 +32,9 @@ Notebook._updateNotebookNumberNotes = function(notebookId, n) {
 	if(!notebook) {
 		return;
 	}
+	if(!notebook.NumberNotes) {
+		notebook.NumberNotes = 0;
+	}
 	notebook.NumberNotes += n;
 	if(notebook.NumberNotes < 0) {
 		notebook.NumberNotes = 0;
@@ -645,8 +648,9 @@ Notebook.changeNotebook = function(notebookId, callback) {
 		cacheNotes = Note.getNotesByNotebookId(notebookId);
 		var notebook = Notebook.cache[notebookId];
 		var len = cacheNotes ? cacheNotes.length : 0;
-		// alert( notebook.NumberNotes + " " + len);
-		if(len == notebook.NumberNotes) { 
+
+		// 如果为0, 从服务器上拿
+		if(len != 0 && len == notebook.NumberNotes) { 
 			if(callback) {
 				callback(cacheNotes);
 			} else {

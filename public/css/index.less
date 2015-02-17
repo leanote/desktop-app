@@ -1,3 +1,4 @@
+// #65bd77
 @bgColor: #fff;
 @headerBgColor: #fff;
 @fontFamily:  'Open Sans', '微软雅黑', Arial, Tahoma, sans-serif;
@@ -18,7 +19,7 @@
   font-style: normal;
   font-weight: 300;
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/open-sans2/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff') format('woff');
-}
+} 
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -96,7 +97,7 @@ a:hover {
 	 margin-top: @headerHeight;
 }
 section {
-	background-color: #65bd77;
+	background-color: #fff;
 	color: #e2f3e5;
 	margin-top: @headerHeight;
 }
@@ -327,7 +328,7 @@ input, .form-control {
 }
 //-------------
 #boxBody {
-	background-color: #65bd77;
+	background-color: #fff;
 }
 @boxWidth: 500px;
 #box {
@@ -358,17 +359,22 @@ input, .form-control {
 	font-size: 16px;
 }
 #boxForm {
-	background-color: #fff;
+	// background-color: #fff;
 	width: @boxWidth;; 
 	margin: auto;
 	border-radius: 2px;
 	form {
-		padding: 20px 30px;
-		padding-bottom: 30px;
+		// padding: 20px 30px;
+		// padding-bottom: 30px;
 	}
-	table {
-		width: 100%;
-		td {
+	width: 200px;
+	.form-group {
+		margin: 0px;
+		width: 200px;
+	}
+	.btns {
+		a {
+			color: #666;
 		}
 	}
 }
@@ -732,7 +738,6 @@ input, .form-control {
     width: 750px;
     height: 370px;
     margin: auto;
-    
 }
 #webSliderContainer img {
     position: absolute;
@@ -755,4 +760,10 @@ input, .form-control {
 }
 .hide-img {
     opacity: 0;
+}
+.alert-danger {
+	background: none;
+}
+.alert {
+	padding: 3px;
 }

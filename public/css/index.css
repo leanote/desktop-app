@@ -81,7 +81,7 @@ a:hover {
   margin-top: 60px;
 }
 section {
-  background-color: #65bd77;
+  background-color: #fff;
   color: #e2f3e5;
   margin-top: 60px;
 }
@@ -289,7 +289,7 @@ input,
   padding: 30px;
 }
 #boxBody {
-  background-color: #65bd77;
+  background-color: #fff;
 }
 #box {
   margin: 0;
@@ -317,17 +317,17 @@ input,
   font-size: 16px;
 }
 #boxForm {
-  background-color: #fff;
   width: 500px;
   margin: auto;
   border-radius: 2px;
+  width: 200px;
 }
-#boxForm form {
-  padding: 20px 30px;
-  padding-bottom: 30px;
+#boxForm .form-group {
+  margin: 0px;
+  width: 200px;
 }
-#boxForm table {
-  width: 100%;
+#boxForm .btns a {
+  color: #666;
 }
 .back {
   position: absolute;
@@ -671,4 +671,10 @@ input,
 }
 .hide-img {
   opacity: 0;
+}
+.alert-danger {
+  background: none;
+}
+.alert {
+  padding: 3px;
 }

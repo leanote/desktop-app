@@ -61,6 +61,12 @@ $(document).on('contextmenu', function (e) {
 });
   
 var gui = require('nw.gui');
+
+// 窗口大小设置
+var win = gui.Window.get();
+win.resizeTo(1100, 600);
+win.setPosition('center');
+
 function Menu() {
 this.menu = new gui.Menu();
 this.cut = new gui.MenuItem({
