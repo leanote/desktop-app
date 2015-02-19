@@ -775,11 +775,7 @@ $(function() {
 		minLeft(false);
 	}
 	
-	// end
-	// 开始时显示loading......
-	// 隐藏mask
-	$("#mainMask").html("");
-	$("#mainMask").hide(100);
+
 	
 	// 4/25 防止dropdown太高
 	// dropdown
@@ -1352,6 +1348,12 @@ function initPage() {
 			// init notebook后才调用
 			// initSlimScroll();
 			LeaAce.handleEvent();
+
+			// end
+			// 开始时显示loading......
+			// 隐藏mask
+			$("#mainMask").html("");
+			$("#mainMask").hide(100);
 		});
 	};
 
@@ -1360,13 +1362,14 @@ function initPage() {
 		if(userInfo) {
 			UserInfo = userInfo;
 			// 之前已同步过, 就不要full sync了
-			if('LastSyncUsn' in UserInfo) {
+			if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
 				_init();
 	 		} else {
 				fullSync(function() {
 					_init();
 				});
 	 		}
+	 		$('#username').text(UserInfo.Email);
 		} else {
 			location.href = 'login.html';
 		}
