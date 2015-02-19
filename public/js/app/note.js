@@ -1076,6 +1076,11 @@ Note.fixNetOrAuthError = function() {
 	}
 };
 
+Note.syncProcess = function(msg) {
+	$('#allProcess').hide();
+	$('#syncProcess').html(msg);
+};
+
 // 保存note ctrl + s
 Note.saveNote = function(e) {
 	var num = e.which ? e.which : e.keyCode;

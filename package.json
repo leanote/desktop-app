@@ -8,6 +8,8 @@
     "frame": true,
     "min_width": 400,
     "min_height": 200,
+    // "width":  400, // 1100,
+    // "height": 300 // 600
     "width":  1100,
     "height": 600
     // "transparent": true
