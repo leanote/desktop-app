@@ -1260,7 +1260,6 @@ Note.listNoteContentHistories = function() {
 				hideDialog();
 			}
 		});
-		
 	});
 }
 
