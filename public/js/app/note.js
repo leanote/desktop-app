@@ -905,6 +905,11 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			classes += " item-active";
 		}
 		var note = notes[i];
+
+		if(!note.Desc && note.Content) {
+			note.Desc = Note.genDesc(note.Content);
+		}
+
 		var tmp;
 		if(note.ImgSrc) {
 			tmp = tt(Note.itemTpl, classes, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
