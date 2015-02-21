@@ -1208,10 +1208,16 @@ Note.listNoteContentHistories = function() {
 	options.show = true;
 	$("#leanoteDialog").modal(options);
 	
-	ajaxGet("/noteContentHistory/listHistories", {noteId: Note.curNoteId}, function(re) {
-		if(!isArray(re)) {$content.html(getMsg("noHistories")); return}
+	NoteService.getNoteHistories(Note.curNoteId, function(re) {
+		// console.log("histories.....");
+		// console.log(re);
+	// });
+	// ajaxGet("/noteContentHistory/listHistories", {noteId: Note.curNoteId}, function(re) {
+		if(!isArray(re)) {
+			$content.html(getMsg("noHistories")); return;
+		}
 		// 组装成一个tab
-		var str = "<p>" + getMsg("historiesNum") + '</p><div id="historyList"><table class="table table-hover">';
+		var str = /*"<p>" + getMsg("historiesNum") + '</p>' + */'<div id="historyList"><table class="table table-hover">';
 		note = Note.cache[Note.curNoteId];
 		var s = "div"
 		if(note.IsMarkdown) {
