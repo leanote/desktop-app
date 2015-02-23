@@ -32,7 +32,6 @@ function ani(callback) {
 	}
 }
 
-
 // 判断是否登录	
 UserService.init(function(userInfo) {
 	if(userInfo) {

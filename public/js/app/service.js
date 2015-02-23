@@ -1,5 +1,9 @@
 var Common = require('common');
 
+var Evt = require('evt');
+var basePath = require('nw.gui').App.dataPath;
+Evt.setDataBasePath(basePath);
+
 // 所有service, 与数据库打交道
 var Service = {
 	notebookService: require('notebook'),

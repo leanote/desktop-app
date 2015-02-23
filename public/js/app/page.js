@@ -1357,7 +1357,7 @@ function initPage() {
 		});
 	};
 
-	// 判断是否登录	
+	// 判断是否登录
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
