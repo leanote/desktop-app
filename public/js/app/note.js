@@ -280,8 +280,8 @@ Note.curHasChanged = function(force) {
 			hasChanged.Abstract = Note.genAbstract(c);
 		}
 	} else {
-		log("text相同");
-		log(cacheNote.Content == content);
+		console.log("text相同");
+		console.log(cacheNote.Content == content);
 	}
 	
 	hasChanged["UserId"] = cacheNote["UserId"] || "";
@@ -374,21 +374,24 @@ Note.genAbstract = function(content, len) {
 	var d = document.createElement("div");
     d.innerHTML = result
     return d.innerHTML;
-}
+};
 
 Note.getImgSrc = function(content) {
 	if(!content) {
 		return "";
 	}
-	var imgs = $(content).find("img");
-	for(var i in imgs) {
-		var src = imgs.eq(i).attr("src");
-		if(src) {
-			return src;
+	try {
+		var imgs = $(content).find("img");
+		for(var i in imgs) {
+			var src = imgs.eq(i).attr("src");
+			if(src) {
+				return src;
+			}
 		}
+	} catch(e) {
 	}
 	return "";
-}
+};
 
 // 如果当前的改变了, 就保存它
 // 以后要定时调用
@@ -432,7 +435,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		
 		me.saveInProcess[hasChanged.NoteId] = true;
 		
-		Service.noteService.updateNoteOrContent(hasChanged, function(ret) {
+		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
 			if(hasChanged.IsNew) {
 				// 缓存之, 后台得到其它信息
@@ -527,7 +530,7 @@ Note.directToNote = function(noteId) {
 		// 手机不用slimScroll
 		if(!LEA.isMobile && !Mobile.isMobile()) {
 			$("#noteItemList").scrollTop(top);
-			$("#noteItemList").slimScroll({ scrollTo: top + 'px', height: "100%", onlyScrollBar: true});
+			// $("#noteItemList").slimScroll({ scrollTo: top + 'px', height: "100%", onlyScrollBar: true});
 		} else {
 		}
 	}
@@ -672,6 +675,10 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	}
 	
 	self.showContentLoading();
+
+	console.error('chage note..........');
+	console.trace();
+
 	Service.noteService.getNoteContent(cacheNote.NoteId, setContent); // ajaxGet(url, param, setContent);
 }
 
@@ -746,6 +753,7 @@ Note.clearAll = function() {
 // render到编辑器
 // render note
 Note.renderNote = function(note) {
+
 	if(!note) {
 		return;
 	}
@@ -762,6 +770,8 @@ Note.renderNote = function(note) {
 
 // render content
 Note.renderNoteContent = function(content) {
+	console.error('---------------- note:' + note.Title);
+	console.trace();
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
 
 	// 只有在renderNoteContent时才设置curNoteId
@@ -1690,8 +1700,9 @@ Note._initshowConflictInfo = function() {
 		// console.log(me._curFixNoteTarget);
 		// console.log(target);
 
-		// target.insertBefore(me._curFixNoteTarget);
-		me._curFixNoteTarget.insertBefore(target);
+		target.insertAfter(me._curFixNoteTarget);
+		// alert(3);
+		// me._curFixNoteTarget.insertBefore(target);
 		// 选中与之冲突的笔记
 		me.changeNote(conflictNoteId);
 	});
@@ -2390,20 +2401,18 @@ Note.addSync = function(notes) {
 }
 // 更新
 Note.updateSync = function(notes) {
-	log("??")
 	if(isEmpty(notes)) { 
 		return;
 	}
-	log("what?")
 	for(var i in notes) {
 		var note = notes[i];
 		note.InitSync = true; // 需要重新获取内容
 		Note.addNoteCache(note);
 		// 如果当前修改的是本笔记, 那么重新render之
-		log('->>>')
-		log(Note.curNoteId);
+		console.log('->>>');
+		console.log(Note.curNoteId);
 		if(Note.curNoteId == note.NoteId) {
-			log('yes---');
+			console.log('yes---');
 			Note.changeNote(Note.curNoteId);
 		}
 	}

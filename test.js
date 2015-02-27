@@ -19,25 +19,30 @@ Api.addNotebook({
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
-User.userId = '54db772899c37b1a6c000135';
+User.userId = '54d7620d99c37b030600002c';
 
-/*
 User.init(function() {
-  Api.getAttach('54d8c8de99c37b02fa000002', function() {
-  });
-  Note.getNote('54e16d90c596f238dc000001', function(note) {
+  Note.getNote('54d76aeec596f27b0b000000', function(note) {
     console.log(note);
-    console.log(note.NotebookId);
+    /*
     Notebook.getNotebook(note.NotebookId, function(notebook) {
       console.log(notebook);
     });
-  })
+    */
+  });
 
-});
+/*
+  Note.getDirtyNotes(function(ret) {
+    // console.log(ret);
+  });
 */
+});
 
+
+/*
 Api.auth('e@a.com', 'abc123');
 User.getAllUsers();
+*/
 
 /*
 Note.hasNotes('54bdc65599c37b0da9000005', function(doc) {

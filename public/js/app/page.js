@@ -1303,7 +1303,7 @@ function fullSync(callback) {
 // 增量同步
 function incrSync() {
 	log('incr sync');
-	SyncService.incrSync(Notebook, Note);
+	SyncService.incrSync();
 }
 
 // note.html调用

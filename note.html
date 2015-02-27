@@ -805,22 +805,29 @@ window.require = undefined;
 initPage();
 </script>
 
-<!-- v2 use require.js, mdeditor -->
-<script>
-window.require = window.requireNode;
-/*
-window.baseDir = 'public/dist';
-window.require = {
-    baseUrl: window.baseDir,
-};
-*/
-</script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.ui.widget.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.fileupload.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.iframe-transport.js"></script>
 <!-- <script src="public/js/app/paste.js"></script> -->
 
-<!-- <script src="public/js/require.js"></script> -->
-<!-- <script src="public/js/main.js"></script> -->
+<!-- v2 use require.js, mdeditor -->
+<script>
+// window.require = undefined;
+
+window.baseDir = 'public/dist';
+window.require = {
+    baseUrl: window.baseDir,
+};
+</script>
+<script src="public/dist/require.js"></script>
+<script>
+// alert(define);
+// alert(require);
+</script>
+<script src="public/dist/main.js"></script>
+
+<script>
+window.require = window.requireNode;
+</script>
 </body>
 </html>
