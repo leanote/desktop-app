@@ -21,14 +21,18 @@ User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
 User.userId = '54d7620d99c37b030600002c';
 
+// 54d7624205fcd105da00005
+
 User.init(function() {
+
+  /*
   Note.getNote('54d76aeec596f27b0b000000', function(note) {
     console.log(note);
-    /*
-    Notebook.getNotebook(note.NotebookId, function(notebook) {
-      console.log(notebook);
-    });
-    */
+  });
+  */
+
+  Note.getNoteByServerNoteId('54d7624205fcd105da000005', function(note) {
+    console.log(note);
   });
 
 /*
