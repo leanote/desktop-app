@@ -102,7 +102,7 @@ Note.clearCacheByNotebookId = function(notebookId) {
 Note.notebookHasNotes = function(notebookId) {
 	var notes = Note.getNotesByNotebookId(notebookId);
 	return !isEmpty(notes);
-}
+};
 
 // 得到notebook下的notes, 按什么排序 updatedTime?
 Note.getNotesByNotebookId = function(notebookId, sortBy, isAsc) {
@@ -1199,6 +1199,18 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 	} else {
 		// 减少数量
 		Notebook.minusNotebookNumberNotes(note.NotebookId);
+	}
+
+	if(note.IsNew) {
+		Note.changeToNext(target);
+		$(target).remove();
+		// 删除缓存
+		if(note) {
+			Note.clearCacheByNotebookId(note.NotebookId);
+			delete Note.cache[noteId];
+		}
+		
+		return;
 	}
 
 	serverFunc.call(NoteService, noteId, function(ret) {

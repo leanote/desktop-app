@@ -39,8 +39,24 @@ Notebook._updateNotebookNumberNotes = function(notebookId, n) {
 	if(notebook.NumberNotes < 0) {
 		notebook.NumberNotes = 0;
 	}
-	$("#numberNotes_" + notebookId).html(notebook.NumberNotes);
+
+	// 得到笔记本下笔记的数量, v2, 重新统计
+	var notes = Note.getNotesByNotebookId(notebookId);
+	var cnt = notes ? notes.length : 0;
+
+	if(!cnt) {
+		$("#numberNotes_" + notebookId).html(notebook.NumberNotes);
+	} else {
+		if(n == -1) {
+			cnt += n;
+		}
+		if(cnt < 0) {
+			cnt = 0;
+		}
+		$("#numberNotes_" + notebookId).html(cnt);
+	}
 };
+
 // addNote, copyNote, moveNote
 Notebook.incrNotebookNumberNotes = function(notebookId) {
 	var self = this;
@@ -712,7 +728,7 @@ Notebook.hideNoteAndEditorLoading = function() {
 // called by Note
 Notebook.isCurNotebook = function(notebookId) {
 	return $(tt('#notebookList [notebookId="?"], #shareNotebooks [notebookId="?"]', notebookId, notebookId)).attr("class") == "active";
-}
+};
 
 // 改变nav, 为了新建note
 // called by Note
@@ -953,12 +969,12 @@ $(function() {
 	var notebookListMenu = {
 		width: 180, 
 		items: [
-			{ text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
-			{ type: "splitLine" },
-			{ text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
-			{ text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
-			{ type: "splitLine" },
-			{ text: getMsg("addChildNotebook"), faIcon: "fa-sitemap", action: Notebook.addChildNotebook },
+			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
+			// { type: "splitLine" },
+			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
+			// { text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
+			// { type: "splitLine" },
+			{ text: 'Add sub notebook', faIcon: "fa-sitemap", action: Notebook.addChildNotebook },
 			{ text: getMsg("rename"), faIcon: "fa-pencil", action: Notebook.updateNotebookTitle },
 			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
 		],
@@ -972,11 +988,11 @@ $(function() {
 	var notebookListMenu2 = {
 		width: 180, 
 		items: [
-			{ text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
-			{ type: "splitLine" },
-			{ text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
-			{ text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
-			{ type: "splitLine" },
+			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
+			// { type: "splitLine" },
+			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
+			// { text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
+			// { type: "splitLine" },
 			{ text: getMsg("rename"), icon: "", action: Notebook.updateNotebookTitle },
 			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
 		],

@@ -1328,6 +1328,7 @@ h3 {
 }
 #tagNav .tag-delete {
   display: none;
+  margin-left: 3px;
   font-size: 12px;
 }
 #tagNav li:hover .tag-delete {

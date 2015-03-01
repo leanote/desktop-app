@@ -261,7 +261,8 @@ Tag.renderTagNav = function(tags) {
 		}
 		*/
 		var classes = Tag.classes[tag] || "label label-default";
-		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em>(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
+		// 笔记数量先隐藏, 不准确
+		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em style="display: none">(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
 	}
 };
 

@@ -51,7 +51,7 @@ Service.dispatch = function(router, param, callback) {
 */
 
 // 右键菜单
-$(document).on('contextmenu', function (e) {
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
 	e.preventDefault();
 	var $target = $(e.target);
 	// var selectionType = window.getSelection().type.toUpperCase();
