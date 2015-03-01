@@ -945,13 +945,22 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			tmp = $(tmp);
 			tmp.find(".item-blog").hide();
 		}
-		// star ?
-		if(note.Star) {
-			$(tmp).addClass('item-is-star');
+
+		// 不是trash才要star, conflict fix
+		if(!note.IsTrash) {
+			// star ?
+			if(note.Star) {
+				$(tmp).addClass('item-is-star');
+			}
+
+			if(note.ConflictNoteId) {
+				$(tmp).addClass('item-conflict');
+			}
+		} else {
+			// 不准star
+			$(tmp).find('.item-star').remove();
 		}
-		if(note.ConflictNoteId) {
-			$(tmp).addClass('item-conflict');
-		}
+
 		Note.noteItemListO.append(tmp);
 		
 		/*
@@ -1173,6 +1182,10 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 	if(!noteId) {
 		return;
 	}
+
+	// 取消star
+	Note.unStar(noteId);
+
 	// 1
 	$(target).hide();
 	
@@ -1617,8 +1630,6 @@ Note.renderStars = function(notes) {
 		var t = tt(me.starItemT, note.NoteId, note.Title);
 		me.starNotesO.append(t);
 	}
-
-
 };
 
 // 点击笔记, 判断是否在star中, 如果在, 则也选中
@@ -1657,11 +1668,32 @@ Note.changeStarNoteTitle = function(note) {
 	target.find('a').html(note.Title + '<span class="delete-star" title="Remove">X</span>');
 };
 
+// 取消star, note delete/trash时取消star
+Note.unStar = function(noteId) {
+	var me = this;
+
+	// 删除该stars
+	var has = false;
+	for(var i  = 0; i < me.starNotes.length; ++i) {
+		var tNote = me.starNotes[i];
+		if(tNote.NoteId == noteId) { 
+			var has = true;
+			me.starNotes.splice(i, 1);
+			break;
+		}
+	}
+
+	if(has) {
+		// 重新渲染之
+		me.renderStars(me.starNotes);
+	}
+};
+
 // 收藏或取消收藏
 Note.star = function(noteId) {
 	var me = this;
 	var note = me.getNote(noteId);
-	if(!note) { 
+	if(!note || note.IsTrash) { 
 		return;
 	}
 	var $target = $('[noteId="' + noteId + '"]');
