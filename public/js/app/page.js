@@ -820,6 +820,12 @@ $(function() {
 	
 	// 手机端?
 	Mobile.init();
+
+	// markdown preview下的a不能点击
+	$('#preview-contents').on('click', 'a', function(e) {
+		e.preventDefault();
+		return false;
+	});
 });
 
 
