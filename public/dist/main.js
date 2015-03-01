@@ -38312,7 +38312,8 @@ define('editor',[
        
         // life 新添加函数
         // life
-        function insertLinkLife(link, text) {
+        // isImage 2015/3/1
+        function insertLinkLife(link, text, isImage) {
             inputBox.focus();
             if (undoManager) {
                 undoManager.setCommandMode();
@@ -38336,7 +38337,7 @@ define('editor',[
                 previewManager.refresh();
             };
 
-            var a = commandProto.insertLink(chunks, fixupInputArea, link, text);
+            var a = commandProto.insertLink(chunks, fixupInputArea, link, text, isImage);
             if(!a) fixupInputArea();
         }
        
@@ -38735,8 +38736,7 @@ define('editor',[
     }
 
      // life 添加
-    commandProto.insertLink = function (chunk, postProcessing, link, text) {
-        isImage = false;
+    commandProto.insertLink = function (chunk, postProcessing, link, text, isImage) {
         chunk.trimWhitespace();
         chunk.findTags(/\s*!?\[/, /\][ ]?(?:\n[ ]*)?(\[.*?\])?/);
         var background;
@@ -38746,7 +38746,6 @@ define('editor',[
             chunk.startTag = chunk.startTag.replace(/!?\[/, "");
             chunk.endTag = "";
             this.addLinkDef(chunk, null);
-
         }
         else {
             
@@ -38864,8 +38863,9 @@ define('editor',[
             background = ui.createBackground();
 
             if (isImage) {
-                if (!this.hooks.insertImageDialog(linkEnteredCallback))
-                    ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback);
+                if (!this.hooks.insertImageDialog(linkEnteredCallback)) {
+                    // ui.prompt(this.getString("imagedialog"), imageDefaultText, linkEnteredCallback);
+                }
             }
             else {
                 if (!this.hooks.insertLinkDialog(linkEnteredCallback))
@@ -39375,18 +39375,10 @@ define('core',[
 		});
 		// Custom insert image dialog
 		pagedownEditor.hooks.set("insertImageDialog", function(callback) {
-			core.insertLinkCallback = callback;
-			if(core.catchModal) {
-				return true;
-			}
-			utils.resetModalInputs();
-			var ifr = $("#leauiIfrForMD");
-			if(!ifr.attr('src')) {
-				ifr.attr('src', '/tinymce/plugins/leaui_image/index.html?md=1');
-			}
-
-			$(".modal-insert-image").modal();
-			return true;
+            // life
+            $('#chooseImageInput').click();
+            // 上传图片
+            return;
 		});
 
 		eventMgr.onPagedownConfigure(pagedownEditor);
@@ -39497,6 +39489,7 @@ define('core',[
 			}
 		});
 		// 插入图片
+        /*
 		$(".action-insert-image").click(function() {
 			// 得到图片链接或图片
 			var value = document.mdImageManager.mdGetImgSrc();
@@ -39506,6 +39499,7 @@ define('core',[
 				core.insertLinkCallback = undefined;
 			}
 		});
+        */
 
 		// Hide events on "insert link" and "insert image" dialogs
 		$(".modal-insert-link, .modal-insert-image").on('hidden.bs.modal', function() {

@@ -1387,11 +1387,12 @@ function initUploadImage() {
 		FileService.uploadImage(imagePath, function(newImage, msg) {
 			if(newImage) {
 				var note = Note.getCurNote();
+				var url = EvtService.getImageLocalUrl(newImage.FileId);
 				if(!note.IsMarkdown) {
-					var url = EvtService.getImageLocalUrl(newImage.FileId);
 					tinymce.activeEditor.insertContent('<img src="' + url + '">');
 				} else {
 					// TODO markdown insert Image
+					MD.insertLink(url, '', true);
 				}
 			} else {
 				alert(msg || "error");

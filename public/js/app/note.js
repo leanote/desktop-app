@@ -1040,8 +1040,10 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	
 	Note.selectTarget($(tt('[noteId="?"]', note.NoteId)));
 	
-	$("#noteTitle").focus();
-	
+	setTimeout(function() {
+		$("#noteTitle").focus();
+	});
+
 	Note.renderNote(note);
 	Note.renderNoteContent(note);
 	Note.curNoteId = note.NoteId;

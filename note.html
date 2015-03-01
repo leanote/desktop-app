@@ -329,8 +329,6 @@ function log(o) {
                 <input name="noteTitle" id="noteTitle" value="" placeholder="UnTitled" tabindex="1" />
               </div>
               
-              
-              
               <ul class="pull-right" id="editorTool">
 
                 <!--
@@ -477,7 +475,7 @@ function log(o) {
                     </div>
                     <div class="layout-wrapper-l3">
                       <div id="left-column">
-                          <pre id="wmd-input" class="form-control"><div class="editor-content mousetrap" contenteditable=true></div><div class="editor-margin"></div></pre>
+                          <pre id="wmd-input" class="form-control"><div id="wmd-input-sub" class="editor-content mousetrap" contenteditable=true></div><div class="editor-margin"></div></pre>
                         </div>
                         <div id="right-column">
                         <div class="preview-panel panel-open" id="preview-panel">
@@ -581,26 +579,6 @@ function log(o) {
           </div>
       </div>
       
-      <!-- 插入图片 -->
-      <div class="modal fade modal-insert-image">
-          <div class="modal-dialog"  style="width: 840px;max-width:100%;">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal"
-                          aria-hidden="true">&times;</button>
-                      <h4 class="modal-title">Image</h4>
-                  </div>
-                  <div class="modal-body" style="padding-top: 0; padding-bottom: 0">
-                    <iframe name="mdImageManager" style="width: 100%; height: 350px" scrolling="no" id="leauiIfrForMD" src="" frameborder="0"></iframe>
-                  </div>
-                  <div class="modal-footer">
-                       <a href="#" class="btn btn-default"
-                          data-dismiss="modal">Cancel</a> <a href="#"
-                          class="btn btn-primary action-insert-image" data-dismiss="modal">Insert Image</a>
-                  </div>
-              </div>
-          </div>
-      </div>
       <!-- v1 -->
       <!-- Hidden Popup Modal -->
       <div class="modal fade bs-modal-sm" id="editorDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
