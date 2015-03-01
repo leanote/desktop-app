@@ -2390,7 +2390,7 @@ Note.fixSyncConflict = function(note, newNote) {
 	if(target.length > 0) {
 		var newHtmlObject = Note._getNoteHtmlObjct(note);
 		if(newHtmlObject) {
-			newHtmlObject.insertBefore(target);
+			$(newHtmlObject).insertBefore(target);
 		}
 	}
 	// 当前这个换成新复制的
