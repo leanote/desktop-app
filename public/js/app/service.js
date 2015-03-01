@@ -88,6 +88,7 @@ this.copy = new gui.MenuItem({
 this.paste = new gui.MenuItem({
   label: '粘贴',
   click: function () {
+  	// document.execCommand("selectAll");
     document.execCommand('paste');
   }
 });

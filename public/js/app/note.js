@@ -1136,11 +1136,16 @@ Note.saveNote = function(e) {
     	return false;
     } else {
     }
+    // copy, paste
     if(e.ctrlKey || e.metaKey) {
 	    if(num == 67) { // ctrl + c
 	    	document.execCommand('copy');
 	    } else if(num == 86) { // ctrl + v
 	    	document.execCommand('paste');
+	    } else if(num == 65) { // ctrl + a
+	    	document.execCommand('selectAll');
+	    } else if(num == 88) { // ctrl + x
+	    	document.execCommand('cut');
 	    }
     }
 };
@@ -1436,7 +1441,6 @@ Note.searchNote = function() {
 		return;
 	}
 
-
 	// 之前有, 还有结束的
 	// if(Note.lastSearch) {
 		// Note.lastSearch.abort();
@@ -1460,6 +1464,10 @@ Note.searchNote = function() {
 		if(t == Note.searchSeq && notes) {
 			Notebook.changeCurNotebookTitle('Search results', false, notes.length);
 			Note.renderNotes(notes);
+			// markdown一旦setContent就focus, 导致搜索失去焦点
+			setTimeout(function() {
+				$("#searchNoteInput").focus();
+			})
 			if(!isEmpty(notes)) {
 				Note.changeNote(notes[0].NoteId, false/*, true || Note.isOver2Seconds*/); // isShare, needSaveChanged?, 超过2秒就要保存
 			}
