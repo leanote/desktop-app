@@ -5,6 +5,7 @@ var Note = require('note');
 var Api = require('api');
 var User = require('user');
 var Server = require('server');
+var Evt = require('evt');
 
 /*
 Notebook.addNotebook("1", "life");
@@ -19,9 +20,13 @@ Api.addNotebook({
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
-User.userId = '54d7620d99c37b030600002c';
+User.userId = '54f08a1699c37b877b0001ee';
 
 // 54d7624205fcd105da00005
+
+// var reg = new RegExp(Evt.localUrl + '/api/file/getImage', 'g');
+// content = content.replace(reg, Evt.leanoteUrl + '/api/file/getImage');
+
 
 User.init(function() {
 
@@ -31,15 +36,15 @@ User.init(function() {
   });
   */
 
-  Note.getNoteByServerNoteId('54d7624205fcd105da000005', function(note) {
+  
+  Note.getNoteByServerNoteId('54f1a1f899c37b4faf000001', function(note) {
     console.log(note);
   });
-
-/*
+  
   Note.getDirtyNotes(function(ret) {
-    // console.log(ret);
+    console.log('getDirtyNotes: ');
+    console.log(ret);
   });
-*/
 });
 
 
@@ -93,11 +98,19 @@ while((result = reg.exec(content)) != null) {
 console.log("??");
 */
 
+/*
 var a = '<img src="http://127.0.0.1:8008/api/file/getImage?fileId=34232323234iji3"';
 // var reg = /fileId=(.+?)"/g;
 var reg = new RegExp("http://127.0.0.1:8008/api/file/getImage\\?fileId=(.{10})", 'g');
+
+a = a.replace(reg, 'xx');
+console.log(a);
+*/
+/*
 
 console.log(reg);
 while(s = reg.exec(a)) {
   console.log(s);
 }
+
+*/

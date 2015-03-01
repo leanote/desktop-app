@@ -39,7 +39,7 @@ Note.intervalTime = 600000; // 600s, 10mins
 Note.startInterval = function() {
 	Note.interval = setInterval(function() {
 		log("自动保存开始...");
-		changedNote = Note.curChangedSaveIt(false);
+		// changedNote = Note.curChangedSaveIt(false);
 	}, Note.intervalTime); // 600s, 10mins
 }
 // 停止, 当切换note时
@@ -177,6 +177,15 @@ Note.curNoteIsDirtied = function() {
 	}
 };
 
+// 保存后不dirty
+Note.curNoteIsNotDirtied = function() {
+	var me = this;
+	var note = me.getCurNote();
+	if(note) {
+		note.isDirty = false;
+	}
+};
+
 // called by Notebook
 // render 所有notes, 和第一个note的content
 Note.renderNotesAndFirstOneContent = function(ret) {
@@ -237,17 +246,18 @@ Note.curHasChanged = function(force) {
 		IsMarkdown: cacheNote.IsMarkdown, // 是否是markdown笔记
 		FromUserId: cacheNote.FromUserId, // 是否是共享新建的
 		NoteId: cacheNote.NoteId,
-		NotebookId: cacheNote.NotebookId,
-		Version: cacheNote.Version || 0, // 版本控制
+		NotebookId: cacheNote.NotebookId
 	};
 	
 	if(hasChanged.IsNew) {
 		$.extend(hasChanged, cacheNote);
 	} else {
-		if(!cacheNote.isDirty) {
-			log("no dirty");
+		if(!cacheNote.isDirty) { // 不是dirty
+			console.log("no dirty");
 			hasChanged.hasChanged = false;
 			return hasChanged;
+		} else {
+			console.log("is dirty");
 		}
 	}
 	
@@ -287,7 +297,7 @@ Note.curHasChanged = function(force) {
 	hasChanged["UserId"] = cacheNote["UserId"] || "";
 	
 	return hasChanged;
-}
+};
 
 // 由content生成desc
 // 换行不要替换
@@ -435,12 +445,17 @@ Note.curChangedSaveIt = function(force, callback) {
 		
 		me.saveInProcess[hasChanged.NoteId] = true;
 		
+		console.error('保存当前的笔记: ' + hasChanged.NoteId);
+
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
 			if(hasChanged.IsNew) {
 				// 缓存之, 后台得到其它信息
 				ret.IsNew = false;
 				Note.setNoteCache(ret, false);
+
+				// 设置不为dirty
+				Note.curNoteIsNotDirtied(hasChanged.NoteId);
 
 				// 新建笔记也要change history
 				Pjax.changeNote(ret);
@@ -2372,7 +2387,9 @@ Note.fixSyncConflict = function(note, newNote) {
 	// 如果当前笔记在笔记列表中, 那么生成一个新笔记放在这个笔记上面
 	if(target.length > 0) {
 		var newHtmlObject = Note._getNoteHtmlObjct(note);
-		newHtmlObject.insertBefore(target);
+		if(newHtmlObject) {
+			newHtmlObject.insertBefore(target);
+		}
 	}
 	// 当前这个换成新复制的
 	target.attr('noteId', newNote.NoteId);
