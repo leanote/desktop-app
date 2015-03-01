@@ -1647,7 +1647,7 @@ Note.renderStars = function(notes) {
 	me.starNotesO.html('');
 	for(var i = 0; i < notes.length; ++i) {
 		var note = notes[i];
-		var t = tt(me.starItemT, note.NoteId, note.Title);
+		var t = tt(me.starItemT, note.NoteId, note.Title || 'Untitled');
 		me.starNotesO.append(t);
 	}
 };
@@ -1685,7 +1685,7 @@ Note.changeStarNoteTitle = function(note) {
 		return;
 	}
 	var target = me.starNotesO.find('li[data-id="' + note.NoteId + '"]');
-	target.find('a').html(note.Title + '<span class="delete-star" title="Remove">X</span>');
+	target.find('a').html((note.Title || 'Untitled') + '<span class="delete-star" title="Remove">X</span>');
 };
 
 // 取消star, note delete/trash时取消star
