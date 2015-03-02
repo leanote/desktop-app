@@ -11,8 +11,8 @@
     // "width":  400, // 1100,
     // "height": 300 // 600
     "width":  1100,
-    "height": 600
-    // "transparent": true
+    "height": 600,
+    "transparent": false
   }
 }
 

@@ -50,61 +50,120 @@ Service.dispatch = function(router, param, callback) {
 };
 */
 
-// 右键菜单
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
-	e.preventDefault();
-	var $target = $(e.target);
-	// var selectionType = window.getSelection().type.toUpperCase();
-	var selectionType = '';
-	// if ($target.is(':text')) {   // TODO url/email/... 未加入判断哦
-	  var clipData = gui.Clipboard.get().get();
-	  menu.canPaste(true || clipData.length > 0);
-	  menu.canCopy(true || selectionType === 'RANGE');
-	  menu.popup(e.originalEvent.x, e.originalEvent.y);
-	// }
-});
-  
 var gui = require('nw.gui');
+
+// 浏览器打开
+function openExternal(url) {
+    gui.Shell.openExternal(url);
+}
 
 // 窗口大小设置
 var win = gui.Window.get();
 win.resizeTo(1100, 600);
 win.setPosition('center');
+$(function() {
+	$('.tool-close').click(function() {
+		win.close();
+	});
+	$('.tool-min').click(function() {
+		win.minimize();
+	});
+	$('.tool-max').click(function() {
+		win.maximize();
 
-function Menu() {
-this.menu = new gui.Menu();
-this.cut = new gui.MenuItem({
-  label: '剪切',
-  click: function () {
-    document.execCommand('cut');
-  }
+		// win.toggleFullscreen(); // mac下是新屏幕
+		// 全屏模式
+		// win.toggleKioskMode();
+	});
 });
-this.copy = new gui.MenuItem({
-  label: '复制',
-  click: function () {
-    document.execCommand('copy');
-  }
-});
-this.paste = new gui.MenuItem({
-  label: '粘贴',
-  click: function () {
-  	// document.execCommand("selectAll");
-    document.execCommand('paste');
-  }
-});
-this.menu.append(this.cut);
-this.menu.append(this.copy);
-this.menu.append(this.paste);
+
+// bind close event
+// 保存当前打开的笔记
+// win.on('close', function() {
+	// TODO
+	// win.close(true);
+// });
+
+function isURL(str_url){
+    var re = new RegExp("^((https|http|ftp|rtsp|mms)://).+");
+    return re.test(str_url);
 }
-Menu.prototype.canCopy = function (bool) {
-this.cut.enabled = bool;
-this.copy.enabled = bool;
+
+// 右键菜单
+var winHref = '';
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
+	e.preventDefault();
+	var $target = $(e.target);
+	var text = $target.text();
+	winHref = $target.attr('href');
+	if(!winHref) {
+		winHref = text;
+	}
+	// 判断是否满足http://leanote.com
+	if(winHref) {
+		if(winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
+		} else {
+			winHref = false;
+		}
+	}
+
+	menu.canOpenInBroswer(!!winHref);
+	var selectionType = window.getSelection().type.toUpperCase();
+	var clipData = gui.Clipboard.get().get();
+	menu.canPaste(clipData.length > 0);
+	menu.canCopy(selectionType === 'RANGE');
+	menu.popup(e.originalEvent.x, e.originalEvent.y);
+});
+
+// 菜单
+// TODO, 打开链接, 打开图片, 打开附件
+function Menu() {
+    this.menu = new gui.Menu();
+    this.cut = new gui.MenuItem({
+        label: 'Cut',
+        click: function() {
+            document.execCommand('cut');
+        }
+    });
+    this.copy = new gui.MenuItem({
+        label: 'Copy',
+        click: function() {
+            document.execCommand('copy');
+        }
+    });
+    this.paste = new gui.MenuItem({
+        label: 'Paste',
+        click: function() {
+            // document.execCommand("selectAll");
+            document.execCommand('paste');
+        }
+    });
+    this.openInBrowser = new gui.MenuItem({
+        label: 'Open link in browser',
+        click: function() {
+            // document.execCommand("selectAll");
+            // document.execCommand('paste');
+            // https://github.com/nwjs/nw.js/wiki/Shell
+            openExternal(winHref);
+        }
+    });
+    this.menu.append(this.cut);
+    this.menu.append(this.copy);
+    this.menu.append(this.paste);
+    this.menu.append(this.openInBrowser);
+}
+Menu.prototype.canCopy = function(bool) {
+    this.cut.enabled = bool;
+    this.copy.enabled = bool;
 };
-Menu.prototype.canPaste = function (bool) {
-this.paste.enabled = bool;
+Menu.prototype.canPaste = function(bool) {
+    this.paste.enabled = bool;
 };
-Menu.prototype.popup = function (x, y) {
-this.menu.popup(x, y);
+Menu.prototype.canOpenInBroswer = function(bool) {
+    this.openInBrowser.enabled = bool;
+};
+Menu.prototype.popup = function(x, y) {
+    this.menu.popup(x, y);
 };
 var menu = new Menu();
 var FS = require('fs');

@@ -1545,3 +1545,85 @@ top: 4px;
 	background-color: #D62929;
 }
 */
+
+.win-tool {
+	// height: 14px;
+	padding: 5px;
+	a {
+		display: block;
+		float: left;
+		width: 14px;
+		height: 14px;
+		background-size: 14px 14px !important;
+		margin-right: 5px;
+	}
+	.tool-close {
+		background: url(../icon/traffic-close@2x.png);
+	}
+	.tool-min {
+		background: url(../icon/traffic-minimise@2x.png);
+	}
+	.tool-max {
+		background: url(../icon/traffic-fullscreen@2x.png);
+	}
+	&:hover {
+		.tool-close {
+			background: url(../icon/traffic-close-hover@2x.png);
+		}
+		.tool-min {
+			background: url(../icon/traffic-minimise-hover@2x.png);
+		}
+		.tool-max {
+			background: url(../icon/traffic-zoom-hover@2x.png);
+		}
+	}
+}
+
+html,body, #page, #pageInner {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+	border-radius: 5px;
+	overflow: hidden;
+    background: transparent;
+	// box-shadow: 0px 0px 10px #B52F2F;
+}
+body {
+// #notesAndSort {
+	// -webkit-user-select: none;
+    -webkit-app-region: drag;
+    border: 1px solid #ccc;
+}
+#leftNotebook {
+	overflow: hidden;
+	// opacity: 0.5;
+	border-radius: 5px 0 0 0;
+}
+#notebook , #winTool {
+	overflow: hidden;
+	border-radius: 5px 0 0 0;
+}
+#notebook, #notebookBottom {
+	// background-color: rgba(245, 246, 248, 0.98) !important;
+	background: url(images/mohu.png) !important;
+	background-repeat: repeat;
+}
+#notesAndSort,
+.win-tool {
+	-webkit-user-select: none;
+    // -webkit-app-region: drag;
+}
+#noteTitle, 
+#searchNoteInput, 
+#searchNotebookForList, 
+#addTagInput, 
+#wmd-input, 
+#editorContent,
+.noteSplit
+{
+	-webkit-app-region: no-drag;
+}

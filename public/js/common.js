@@ -411,10 +411,33 @@ function setEditorContent(content, isMarkdown, preview) {
 }
 
 // 复制图片
+// 在web端得到图片
 function pasteImage(e) {
-	FileService.pasteImage(e, FileReader, function(url) {
-		insertImage(url);
-	});
+	var items = (event.clipboardData  || event.originalEvent.clipboardData).items; // 可能有多个file, 找到属于图片的file
+	// find pasted image among pasted items
+	var blob;
+    for (var i = 0; i < items.length; i++) {
+    	if (items[i].type.indexOf("image") === 0) {
+    		blob = items[i].getAsFile();
+	    }
+	}
+	// console.log("paste images");
+	// console.log(blob);
+	// load image if there is a pasted image
+	if (blob) {
+		// console.log("??");
+	    var reader = new FileReader();
+	    reader.onloadend = function() { 
+	    	console.log('read end');
+	    	console.log(reader.result);
+		    if(reader.result) {
+		    	FileService.pasteImage2(reader.result, function(url) {
+					insertImage(url);
+				});
+		    }
+	    };
+	    reader.readAsDataURL(blob);
+	}
 }
 
 // 插入图片(链接)

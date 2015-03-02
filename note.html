@@ -32,8 +32,8 @@ function log(o) {
 }
 </script>
 </head>
-<body>
-  <div id="page">
+<body class="clearfix">
+  <div id="page" class="clearfix">
     <div id="pageInner">
 
       <!-- header start -->
@@ -95,6 +95,13 @@ function log(o) {
         </div>
         <div id="leftNotebook">
           <div id="notebook">
+
+            <!-- 关闭, 最小化, 最大 -->
+            <div id="winTool" class="win-tool clearfix">
+              <a class="tool-close"></a>
+              <a class="tool-min"></a>
+              <a class="tool-max"></a>
+            </div>
 
             <div class="folderNote closed" id="myShareNotebooks">
               <div class="folderHeader">
@@ -172,25 +179,6 @@ function log(o) {
   
           </div>
           
-          <!-- 缩小版 todo 不要展示, 点击展开即可 -->
-          <div id="notebookMin">
-            <!-- 这里隐藏, 不要 -->
-            <div target="#notebookList" title="Notebook" class="minContainer">
-              <i class="fa fa-book"></i>
-              <ul class="dropdown-menu" id="minNotebookList">
-              </ul>
-            </div>
-            <div target="#tagNav" title="My tag" class="minContainer">
-              <i class="fa fa-bookmark"></i>
-              <ul class="dropdown-menu" id="minTagNav">
-              </ul>
-            </div>
-            <div id="minShareNotebooks">
-              <div class="minContainer" target="#friendContainer0" title="Share">
-                <i class="fa fa-user"></i>
-              </div>
-            </div>
-          </div>
           
           <!-- 
           底下

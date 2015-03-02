@@ -1396,6 +1396,81 @@ h3 {
 	background-color: #D62929;
 }
 */
+.win-tool {
+  padding: 5px;
+}
+.win-tool a {
+  display: block;
+  float: left;
+  width: 14px;
+  height: 14px;
+  background-size: 14px 14px !important;
+  margin-right: 5px;
+}
+.win-tool .tool-close {
+  background: url(../icon/traffic-close@2x.png);
+}
+.win-tool .tool-min {
+  background: url(../icon/traffic-minimise@2x.png);
+}
+.win-tool .tool-max {
+  background: url(../icon/traffic-fullscreen@2x.png);
+}
+.win-tool:hover .tool-close {
+  background: url(../icon/traffic-close-hover@2x.png);
+}
+.win-tool:hover .tool-min {
+  background: url(../icon/traffic-minimise-hover@2x.png);
+}
+.win-tool:hover .tool-max {
+  background: url(../icon/traffic-zoom-hover@2x.png);
+}
+html,
+body,
+#page,
+#pageInner {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  bottom: 0;
+  top: 0;
+  padding: 0;
+  margin: 0;
+  border-radius: 5px;
+  overflow: hidden;
+  background: transparent;
+}
+body {
+  -webkit-app-region: drag;
+  border: 1px solid #ccc;
+}
+#leftNotebook {
+  overflow: hidden;
+  border-radius: 5px 0 0 0;
+}
+#notebook,
+#winTool {
+  overflow: hidden;
+  border-radius: 5px 0 0 0;
+}
+#notebook,
+#notebookBottom {
+  background: url(images/mohu.png) !important;
+  background-repeat: repeat;
+}
+#notesAndSort,
+.win-tool {
+  -webkit-user-select: none;
+}
+#noteTitle,
+#searchNoteInput,
+#searchNotebookForList,
+#addTagInput,
+#wmd-input,
+#editorContent,
+.noteSplit {
+  -webkit-app-region: no-drag;
+}
 ::selection {
   background: #000000;
   color: #ffffff;

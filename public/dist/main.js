@@ -26764,7 +26764,7 @@ define('text!html/umlDiagramsSettingsBlock.html',[],function () { return '<p>Cre
         bites = /([clmz]),?([^clmz]*)/gi,
         blurregexp = / progid:\S+Blur\([^\)]+\)/g,
         val = /-?[^,\s-]+/g,
-        cssDot = "position:absolute;left:0;top:0;width:1px;height:1px",
+        cssDot = "position:absolute;left:0;top:0;width:0px;height:0px",
         zoom = 21600,
         pathTypes = {path: 1, rect: 1, image: 1},
         ovalTypes = {circle: 1, ellipse: 1},
@@ -36581,8 +36581,9 @@ define('editor',[
 		});
 
 		// See https://gist.github.com/shimondoodkin/1081133
+        // life 之前插入到html中, 现在插入到body中, 且width, height = 0
 		if(/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) {
-			var $editableFix = $('<input style="width:1px;height:1px;border:none;margin:0;padding:0;" tabIndex="-1">').appendTo('html');
+			var $editableFix = $('<input style="width:0px;height:0px;border:none;margin:0;padding:0;" tabIndex="-1">').appendTo('body');
 			$contentElt.blur(function() {
 				$editableFix[0].setSelectionRange(0, 0);
 				$editableFix.blur();
@@ -39516,7 +39517,10 @@ define('core',[
 
 		// 弹框显示markdown语法
 		$('#wmd-help-button').click(function() {
-	        window.open("http://leanote.com/blog/view/531b263bdfeb2c0ea9000002");
+            // life
+            var url = 'http://leanote.com/blog/post/531b263bdfeb2c0ea9000002';
+            openExternal(url);
+	        // window.open("http://leanote.com/blog/view/531b263bdfeb2c0ea9000002");
 		});
 
 		// Load images
