@@ -826,6 +826,11 @@ $(function() {
 		e.preventDefault();
 		return false;
 	});
+
+	// markdown编辑器paste
+	$('#wmd-input-sub').on('paste', function(e) {
+		pasteImage(e);
+	});
 });
 
 

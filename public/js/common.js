@@ -441,10 +441,10 @@ function pasteImage(e) {
 }
 
 // 插入图片(链接)
-// TODO Markdown 插入图片
+// Markdown 插入图片
 function insertImage(link) {
 	if(LEA.isMarkdownEditor()) {
-		MD.insertLink(link);
+		MD.insertLink(link, '', true);
 	} else {
 		tinymce.activeEditor.insertContent('<img src="' + link + '">');
 	}

@@ -79,10 +79,10 @@ $(function() {
 
 // bind close event
 // 保存当前打开的笔记
-// win.on('close', function() {
+win.on('close', function() {
 	// TODO
-	// win.close(true);
-// });
+	win.close(true);
+});
 
 function isURL(str_url){
     var re = new RegExp("^((https|http|ftp|rtsp|mms)://).+");
@@ -109,8 +109,9 @@ $('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-inpu
 
 	menu.canOpenInBroswer(!!winHref);
 	var selectionType = window.getSelection().type.toUpperCase();
-	var clipData = gui.Clipboard.get().get();
-	menu.canPaste(clipData.length > 0);
+	// var clipData = gui.Clipboard.get().get();
+	// menu.canPaste(clipData.length > 0);
+	menu.canPaste(true);
 	menu.canCopy(selectionType === 'RANGE');
 	menu.popup(e.originalEvent.x, e.originalEvent.y);
 });
