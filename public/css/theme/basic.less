@@ -999,7 +999,7 @@ h1, h2, h3 {
   position: relative;
   height: 110px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
 	border: 1px solid @borderColor;
 	border-radius: 3px;
   margin-top: 5px;
@@ -1345,6 +1345,9 @@ top: 4px;
 	text-align: center;
 	font-style: 16px;
 	text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+	span {
+		cursor: default;
+	}
 }
 #searchNote {
 	margin-top: 2px;
@@ -1594,7 +1597,7 @@ html,body, #page, #pageInner {
 }
 body {
 // #notesAndSort {
-	// -webkit-user-select: none;
+	-webkit-user-select: none; // input, textarea还是可以选择的
     -webkit-app-region: drag;
     border: 1px solid #ccc;
     // for shadow
@@ -1607,7 +1610,6 @@ body {
 }
 #page {
 	#pageInner {
-
 	}
 }
 #leftNotebook {

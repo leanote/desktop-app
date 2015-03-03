@@ -95,7 +95,7 @@ Note.clearCacheByNotebookId = function(notebookId) {
 		Note.cacheByNotebookId["all"] = {};
 		Note.notebookIds[notebookId] = true;
 	}
-}
+};
 
 // notebook是否有notes
 // called by Notebook
@@ -1870,16 +1870,54 @@ Note.getContextNotebooks = function(notebooks) {
 		copys2.push(copy2);
 	}
 	return [moves, copys, copys2];
-}
+};
+
+Note.target = null; // 当前处理的note
+Note.menuItemsForMove = {}; // notebookId => menu
+Note.menuItemsForCopy = {}; // notebookId => menu
+Note.getContextNotebooksSys = function(notebooks) {
+	var submenuMoves = new gui.Menu();
+	var submenuCopys = new gui.Menu();
+
+	for(var i in notebooks) {
+		(function(j) {
+			var notebook = notebooks[j];
+			var move = new gui.MenuItem({label: notebook.Title, /*notebookId: notebook.NotebookId,*/ click: function() {
+				Note.moveNote(Note.target, {notebookId: notebook.NotebookId});
+			}});
+			var copy = new gui.MenuItem({label: notebook.Title, /*notebookId: notebook.NotebookId, */click: function() {
+				Note.copyNote(Note.target, {notebookId: notebook.NotebookId});
+			}});
+
+			Note.menuItemsForMove[notebook.NotebookId] = move;
+			Note.menuItemsForCopy[notebook.NotebookId] = copy;
+
+			if(!isEmpty(notebook.Subs)) {
+				var mc = Note.getContextNotebooksSys(notebook.Subs);
+				move.submenu = mc[0];
+				copy.submenu = mc[1];
+			}
+
+			submenuMoves.append(move);
+			submenuCopys.append(copy);
+
+		})(i);
+	}
+	return [submenuMoves, submenuCopys];
+};
+
 // Notebook调用
 Note.contextmenu = null;
 Note.notebooksCopy = []; // share会用到
 Note.initContextmenu = function() {
 	var self = Note;
+	var notebooks = Notebook.everNotebooks;
+
+	/*
 	if(Note.contextmenu) {
 		Note.contextmenu.destroy();
 	}
-	// 得到可移动的notebook
+	// 得到可move/copy的notebook
 	var notebooks = Notebook.everNotebooks;
 	var mc = self.getContextNotebooks(notebooks);
 	
@@ -1968,7 +2006,83 @@ Note.initContextmenu = function() {
 	
 	// 这里很慢!!
 	Note.contextmenu = $("#noteItemList .item-my").contextmenu(noteListMenu);
-}
+	*/
+
+	//-------------------
+	// 右键菜单
+	function noteMenu() {
+		var me = this;
+		// this.target = '';
+	    this.menu = new gui.Menu();
+	    this.del = new gui.MenuItem({
+	        label: getMsg("delete"),
+	        click: function(e) {
+	        	Note.deleteNote(self.target);
+	        }
+	    });
+	    this.move = new gui.MenuItem({
+	        label: getMsg("move"),
+	        click: function(e) {
+	        }
+	    });
+	    this.copy = new gui.MenuItem({
+	        label: getMsg("copy"),
+	        click: function(e) {
+	        }
+	    });
+	    
+	    var ms = Note.getContextNotebooksSys(notebooks);
+	    this.move.submenu = ms[0];
+	    this.copy.submenu = ms[1];
+
+	    this.menu.append(this.del);
+	    this.menu.append(this.move);
+	    this.menu.append(this.copy);
+
+	    // this.menu.append(ms[0]);
+	    // this.menu.append(ms[1]);
+
+		// You can have submenu!
+		// var submenu = new gui.Menu();
+		// submenu.append(new gui.MenuItem({ label: 'checkbox 啊' , type: 'checkbox'}));
+		// submenu.append(new gui.MenuItem({ label: 'Item 2', type: 'checkbox'}));
+		// submenu.append(new gui.MenuItem({ label: 'Item 3'}));
+
+	    this.enable = function(name, ok) {
+	    	this[name].enabled = ok;
+	    }
+	    this.popup = function(e, target) {
+	    	self.target = target;
+	    	var noteId = $(target).attr('noteId');
+
+	    	var note = Note.getNote(noteId);
+	    	if(!note) {
+	    		return;
+	    	}
+	    	var notebookId = note.NotebookId;
+	    	// var notebookMenuForMove = self.menuItemsForMove[notebookId];
+	    	// var notebookMenuForCopy = self.menuItemsForCopy[notebookId];
+	    	// notebookMenuForMove.enabled = false;
+	    	// notebookMenuForCopy.enabled = false;
+
+	    	if(note.IsTrash) {
+	    		this.copy.enabled = false;
+	    	} else {
+	    		this.copy.enabled = true;
+	    	}
+
+			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
+
+	    	// notebookMenuForMove.enabled = true;
+	    	// notebookMenuForCopy.enabled = true;
+
+	    }
+	}
+
+	var noteMenuSys = new noteMenu();
+
+	Note.noteMenuSys = noteMenuSys;
+};
 
 // 附件
 // 笔记的附件需要ajax获取
@@ -2385,7 +2499,12 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $p = $(this).parent();
-		Note.contextmenu.showMenu(e, $p);
+		Note.noteMenuSys.popup(e, $p);
+	});
+	$("#noteItemList").on("contextmenu", "li", function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		Note.noteMenuSys.popup(e, $(this));
 	});
 
 	// 收藏

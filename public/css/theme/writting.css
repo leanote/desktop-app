@@ -920,7 +920,7 @@ h3 {
   position: relative;
   height: 110px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: default;
   border: 1px solid #ebeff2;
   border-radius: 3px;
   margin-top: 5px;
@@ -1226,6 +1226,9 @@ h3 {
   white-space: nowrap;
   overflow: hidden;
 }
+#myNotebookNavForListNav span {
+  cursor: default;
+}
 #searchNote {
   margin-top: 2px;
 }
@@ -1441,6 +1444,7 @@ body,
   background: transparent;
 }
 body {
+  -webkit-user-select: none;
   -webkit-app-region: drag;
   border: 1px solid #ccc;
   left: 5px;

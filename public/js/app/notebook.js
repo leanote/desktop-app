@@ -290,6 +290,9 @@ Notebook.trashNotebookId = "-1";
 Notebook.curNotebookIsTrashOrAll = function() {
 	return Notebook.curNotebookId == Notebook.trashNotebookId || Notebook.curNotebookId == Notebook.allNotebookId ;
 };
+Notebook.curNotebookIsTrash = function() {
+	return Notebook.curNotebookId == Notebook.trashNotebookId;
+};
 Notebook.renderNotebooks = function(notebooks) {
 	var self = this;
 
@@ -467,7 +470,14 @@ Notebook.everNotebooks = [];
 Notebook.changeNav = function() {
 	var self = Notebook;
 	var notebooks = Notebook.tree.getNodes();
-	var pureNotebooks = notebooks.slice(1, -1); // 不含新和垃圾
+	var pureNotebooks = []; // 不含新和垃圾
+	for(var i = 0; i < notebooks.length; ++i) {
+		var notebookId = notebooks[i].NotebookId;
+		if(Notebook.isAllNotebookId(notebookId) || Notebook.isTrashNotebookId(notebookId)) {
+		} else {
+			pureNotebooks.push(notebooks[i]);
+		}
+	}
 	var html = self.getChangedNotebooks(pureNotebooks);
 	
 	self.everNavForNewNote = html;
@@ -943,6 +953,19 @@ Notebook.deleteNotebookFromTree = function(notebookId) {
 	Notebook.changeNav();	
 };
 
+// 清空垃圾
+Notebook.clearTrash = function() { 
+	var me = this;
+	if(confirm('Are you sure ?')) {
+		NoteService.clearTrash(function() {
+			if(Notebook.curNotebookId == Notebook.trashNotebookId) {
+				Note.clearAll();
+				Note.showEditorMask();
+			}
+		});
+	}
+};
+
 $(function() {
 	//-------------------
 	// 点击notebook
@@ -958,50 +981,28 @@ $(function() {
 		Notebook.changeNotebook(notebookId);
 	});
 	
-	// 修改笔记本标题, blur后修改标题之
-	/*
-	enterBlur("#notebookList", "input#editNotebookTitle");
-	$("#notebookList").on("blur", "input#editNotebookTitle", Notebook.doUpdateNotebookTitle);
-	*/
-	
 	//-------------------
 	// 右键菜单
-	var notebookListMenu = {
-		width: 180, 
-		items: [
-			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
-			// { type: "splitLine" },
-			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
-			// { text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
-			// { type: "splitLine" },
-			{ text: 'Add sub notebook', faIcon: "fa-sitemap", action: Notebook.addChildNotebook },
-			{ text: getMsg("rename"), faIcon: "fa-pencil", action: Notebook.updateNotebookTitle },
-			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
-		],
-		onShow: applyrule,
-    	onContextMenu: beforeContextMenu,
-    	parent: "#notebookList ",
-    	children: "li a"
-	};
-
 	function newNotebookListMenu() {
+		var me = this;
+		this.target = '';
 	    this.menu = new gui.Menu();
 	    this.addSub = new gui.MenuItem({
 	        label: 'Add sub notebook',
 	        click: function(e) {
-	        	Notebook.addChildNotebook();
+	        	Notebook.addChildNotebook(me.target);
 	        }
 	    });
 	    this.rename = new gui.MenuItem({
 	        label: 'Rename',
 	        click: function(e) {
-	        	Notebook.updateNotebookTitle();
+	        	Notebook.updateNotebookTitle(me.target);
 	        }
 	    });
 	    this.del = new gui.MenuItem({
 	        label: 'Delete',
 	        click: function(e) {
-	        	Notebook.deleteNotebook();
+	        	Notebook.deleteNotebook(me.target);
 	        }
 	    });
 	    
@@ -1012,61 +1013,61 @@ $(function() {
 	    this.enable = function(name, ok) {
 	    	this[name].enabled = ok;
 	    }
+	    this.popup = function(e, target, isSearch) {
+	    	me.target = target;
+	    	var notebookId = $(target).attr("notebookId");
+	    	if(Notebook.isTrashNotebookId(notebookId)) {
+	    		newClearTrashMenuSys.popup(e);
+	    		return;
+	    	}
+    		if(Notebook.isAllNotebookId(notebookId)) {
+    			return;
+    		}
+			var notebook = Notebook.cache[notebookId];
+			if(!notebook) {
+				return;
+			}
+			// 是否已公开为blog
+			/*
+			if(!notebook.IsBlog) {
+				items.push("unset2Blog");
+			} else {
+				items.push("set2Blog");
+			}
+			*/
+			// 是否还有笔记
+			if(Note.notebookHasNotes(notebookId)) {
+				this.del.enabled = false;
+			} else {
+				this.del.enabled = true;
+			}
+			if(isSearch) {
+				this.addSub.enabled = false;
+			} else {
+				this.addSub.enabled = true;
+			}
+			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
+	    }
 	}
 	var newNotebookListMenuSys = new newNotebookListMenu();
 
-	// for search
-	var notebookListMenu2 = {
-		width: 180, 
-		items: [
-			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Notebook.listNotebookShareUserInfo},
-			// { type: "splitLine" },
-			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Notebook.setNotebook2Blog },
-			// { text: getMsg("cancelPublic"), alias: 'unset2Blog',faIcon: "fa-undo", action: Notebook.setNotebook2Blog }, // Unset
-			// { type: "splitLine" },
-			{ text: getMsg("rename"), icon: "", action: Notebook.updateNotebookTitle },
-			{ text: getMsg("delete"), icon: "", alias: 'delete', faIcon: "fa-trash-o", action: Notebook.deleteNotebook }
-		],
-		onShow: applyrule,
-    	onContextMenu: beforeContextMenu,
-    	parent: "#notebookListForSearch ",
-    	children: "li a"
+	// 清空回收站
+	function newClearTrashMenu() {
+		var me = this;
+	    this.menu = new gui.Menu();
+	    this.clear = new gui.MenuItem({
+	        label: 'Clear trash',
+	        click: function(e) {
+	        	Notebook.clearTrash();
+	        }
+	    });
+	    this.menu.append(this.clear);
+	    this.popup = function(e, target) {
+			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
+	    }
 	}
-	
-	function applyrule(menu) {
-		var notebookId = $(this).attr("notebookId");
-		var notebook = Notebook.cache[notebookId];
-		if(!notebook) {
-			return;
-		}
-		// disabled的items
-		var items = [];
-		// 是否已公开为blog
-		if(!notebook.IsBlog) {
-			items.push("unset2Blog");
-		} else {
-			items.push("set2Blog");
-		}
-		// 是否还有笔记
-		if(Note.notebookHasNotes(notebookId)) {
-			items.push("delete");
-		}
-        menu.applyrule({
-        	name: "target2",
-            disable: true,
-            items: items
-        });
-	}
-	// 哪个不能
-	function beforeContextMenu() {
-		var notebookId = $(this).attr("notebookId");
-		return !Notebook.isTrashNotebookId(notebookId) && !Notebook.isAllNotebookId(notebookId);
-	}
-	
-	// Notebook.contextmenu = $("#notebookList li a").contextmenu(notebookListMenu);
-	
-	Notebook.contextmenuSearch = $("#notebookListForSearch li a").contextmenu(notebookListMenu2);
-	
+	var newClearTrashMenuSys = new newClearTrashMenu();
+
 	// 添加笔记本
 	$("#addNotebookPlus").click(function(e) {
 		e.stopPropagation();
@@ -1078,20 +1079,20 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $p = $(this).parent();
-		// Notebook.contextmenu.showMenu(e, $p);
-		// alert(newNotebookListMenuSys.popup);
-		newNotebookListMenuSys.menu.popup(e.originalEvent.x, e.originalEvent.y);
+		newNotebookListMenuSys.popup(e, $p);
+	});
+	$("#notebookList").on('contextmenu', 'li a', function(e) {
+		newNotebookListMenuSys.popup(e, $(this));
 	});
 
-	$("#notebookList ").on('contextmenu', 'li a', function(e) {
-		newNotebookListMenuSys.menu.popup(e.originalEvent.x, e.originalEvent.y);
+	$("#notebookListForSearch").on('contextmenu', 'li a', function(e) {
+		newNotebookListMenuSys.popup(e, $(this), true);
 	});
-
 	$("#notebookListForSearch").on("click", ".notebook-setting", function(e) {
 		e.preventDefault();
 		e.stopPropagation();
 		var $p = $(this).parent();
-		Notebook.contextmenuSearch.showMenu(e, $p);
+		newNotebookListMenuSys.popup(e, $p, true);
 	});
 });
 
