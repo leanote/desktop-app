@@ -90,8 +90,8 @@ win.on('blur', function() {
     console.log('not focuse ');
 });
 
-function isURL(str_url){
-    var re = new RegExp("^((https|http|ftp|rtsp|mms)://).+");
+function isURL(str_url) {
+    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
     return re.test(str_url);
 }
 
@@ -132,12 +132,15 @@ function Menu() {
     this.menu.append(this.paste);
     this.menu.append(new gui.MenuItem({ type: 'separator' }));
     this.menu.append(this.openInBrowser);
+    
     // You can have submenu!
+    /*
 	var submenu = new gui.Menu();
 	submenu.append(new gui.MenuItem({ label: 'checkbox 啊' , type: 'checkbox'}));
 	submenu.append(new gui.MenuItem({ label: 'Item 2', type: 'checkbox'}));
 	submenu.append(new gui.MenuItem({ label: 'Item 3'}));
 	this.openInBrowser.submenu = submenu;
+	*/
 }
 Menu.prototype.canCopy = function(bool) {
     this.cut.enabled = bool;

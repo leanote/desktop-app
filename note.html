@@ -16,8 +16,11 @@
 <!-- leanote css -->
 <link href="public/css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet" />
 <link href="public/css/zTreeStyle/zTreeStyle.css" rel="stylesheet" />
+
 <!-- theme -->
-<link rel="stylesheet" href="public/css/theme/simple.css" type="text/css" />
+<link rel="stylesheet" href="public/css/theme/simple.css" type="text/css"/>
+<link rel="stylesheet" href="public/css/theme/blue.css" type="text/css" id="theme"/>
+
 <!-- context-menu -->
 <link rel="stylesheet" href="public/js/contextmenu/css/contextmenu.css" type="text/css" />
 <!-- mdeditor -->
@@ -187,7 +190,7 @@ function log(o) {
           <div id="notebookBottom" class="clearfix">
             <!--  fa-spin -->
             <a class="pull-left sync-icon">
-              <i class="fa fa-refresh" id="syncRefresh"></i>
+              <i class="fa fa-refresh" id="syncRefresh" title="Sync"></i>
               <i class="fa fa-exclamation-triangle" id="syncWarning" title="Sync error!!"></i>
             </a>
             <div class="pull-right" id="myProfile">
@@ -196,12 +199,12 @@ function log(o) {
                   <span class="username" id="username">
                   </span><i class="fa fa-angle-down account-more"></i>
                 </a>
-                <ul class="dropdown-menu li-a   " role="menu">
+                <!--
+                <ul class="dropdown-menu li-a " role="menu">
                   <li role="presentation">
                     <a>Theme</a>
                   </li>
                   <li role="presentation">
-                    <!-- 400 * 300px --> 
                     <a href="login.html">Switch account</a>
                   </li>
                   <li role="presentation" class="divider"></li>
@@ -209,6 +212,7 @@ function log(o) {
                     <a>Full async force</a>
                   </li>
                 </ul>
+                -->
               </div>
             </div>
           </div>

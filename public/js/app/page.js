@@ -233,7 +233,7 @@ var Resize = {
 		var self = this;
 		if(self.lineMove || self.mdLineMove) {
 			// ajax保存
-			ajaxGet("/user/updateColumnWidth", {mdEditorWidth: UserInfo.MdEditorWidth, notebookWidth: UserInfo.NotebookWidth, noteListWidth: UserInfo.NoteListWidth}, function() {
+			UserService.updateG({MdEditorWidth: UserInfo.MdEditorWidth, NotebookWidth: UserInfo.NotebookWidth, NoteListWidth: UserInfo.NoteListWidth}, function() {
 			});
 		}
 		self.lineMove = false;
@@ -299,7 +299,7 @@ var Resize = {
 		var self = this;
 		if(mdEditorWidth > 100) {
 			UserInfo.MdEditorWidth = mdEditorWidth;
-			log(mdEditorWidth)
+			// log(mdEditorWidth)
 			self.leftColumn.width(mdEditorWidth);
 			self.rightColumn.css("left", mdEditorWidth);
 			// self.mdSplitter.css("left", mdEditorWidth);
@@ -774,8 +774,6 @@ $(function() {
 	if (UserInfo.LeftIsMin) {
 		minLeft(false);
 	}
-	
-
 	
 	// 4/25 防止dropdown太高
 	// dropdown
@@ -1410,8 +1408,106 @@ function initUploadImage() {
 			}
 		});
 	});
-
 }
+
+// 改变css
+var themes = {"Simple":'simple-no.css', 'Blue': 'blue.css', 'Black': 'black.css'};
+var themeMenus = {};
+function changeTheme(themeName) {
+	if(themeName) {
+		if(themeMenus[themeName]) {
+			themeMenus[themeName].checked = true;
+		}
+		var css = themes[themeName];
+		if(css) {
+			$('#theme').attr('href', 'public/css/theme/' + css);
+
+			// 保存
+			UserService.updateG({Theme: themeName});
+		}
+
+	} else {
+		themeMenus['Simple'].checked = true;
+	}
+}
+
+// user
+function userMenu() {
+	//-------------------
+	// 右键菜单
+	function menu() {
+		var me = this;
+		// this.target = '';
+	    this.menu = new gui.Menu();
+	    this.email = new gui.MenuItem({
+	        label: UserInfo.Email,
+	        enabled: false,
+	        click: function(e) {
+	        }
+	    });
+	    this.switchAccount = new gui.MenuItem({
+	        label: 'Switch account',
+	        click: function(e) {
+	        	location.href = 'login.html';
+	        }
+	    });
+	    this.theme = new gui.MenuItem({
+	        label: 'Change theme',
+	        click: function(e) {
+	        }
+	    });
+	    this.sync = new gui.MenuItem({
+	        label: 'Sync now',
+	        click: function(e) {
+	        	incrSync();
+	        }
+	    });
+
+	    var themeSubmenus = new gui.Menu();
+	    for(var i in themes) {
+	    	(function(t) {
+				themeMenus[t] = new gui.MenuItem({
+			        label: t,
+			        type: 'checkbox',
+			        click: function(e) {
+			        	// var themeCss = themes[t];
+			        	changeTheme(t);
+			        	// 将其它的不选中
+			        	for(var j in themes) {
+			        		if(j != t) {
+			        			themeMenus[j].checked = false;
+			        		}
+			        	}
+			        }
+			    });
+			    themeSubmenus.append(themeMenus[t]);
+	    	})(i);
+	    }
+	    this.theme.submenu = themeSubmenus;
+
+	    this.menu.append(this.email);
+	    this.menu.append(this.switchAccount);
+	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.theme);
+	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.sync);
+
+	    this.popup = function(e) {
+			this.menu.popup(10, $('body').height() - 130);
+	    }
+	}
+
+	var userMenuSys = new menu();
+
+	$('#myProfile').click(function(e) {
+		userMenuSys.popup(e);
+	});
+
+	changeTheme(UserInfo.Theme);
+}
+
 $(function() {
 	initUploadImage();
+	userMenu();
 });
+
