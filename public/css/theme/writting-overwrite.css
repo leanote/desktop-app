@@ -1443,6 +1443,10 @@ body,
 body {
   -webkit-app-region: drag;
   border: 1px solid #ccc;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
 }
 #leftNotebook {
   overflow: hidden;

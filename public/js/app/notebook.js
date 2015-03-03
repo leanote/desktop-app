@@ -982,8 +982,39 @@ $(function() {
     	onContextMenu: beforeContextMenu,
     	parent: "#notebookList ",
     	children: "li a"
+	};
+
+	function newNotebookListMenu() {
+	    this.menu = new gui.Menu();
+	    this.addSub = new gui.MenuItem({
+	        label: 'Add sub notebook',
+	        click: function(e) {
+	        	Notebook.addChildNotebook();
+	        }
+	    });
+	    this.rename = new gui.MenuItem({
+	        label: 'Rename',
+	        click: function(e) {
+	        	Notebook.updateNotebookTitle();
+	        }
+	    });
+	    this.del = new gui.MenuItem({
+	        label: 'Delete',
+	        click: function(e) {
+	        	Notebook.deleteNotebook();
+	        }
+	    });
+	    
+	    this.menu.append(this.addSub);
+	    this.menu.append(this.rename);
+	    this.menu.append(this.del);
+
+	    this.enable = function(name, ok) {
+	    	this[name].enabled = ok;
+	    }
 	}
-	
+	var newNotebookListMenuSys = new newNotebookListMenu();
+
 	// for search
 	var notebookListMenu2 = {
 		width: 180, 
@@ -1032,7 +1063,7 @@ $(function() {
 		return !Notebook.isTrashNotebookId(notebookId) && !Notebook.isAllNotebookId(notebookId);
 	}
 	
-	Notebook.contextmenu = $("#notebookList li a").contextmenu(notebookListMenu);
+	// Notebook.contextmenu = $("#notebookList li a").contextmenu(notebookListMenu);
 	
 	Notebook.contextmenuSearch = $("#notebookListForSearch li a").contextmenu(notebookListMenu2);
 	
@@ -1047,8 +1078,15 @@ $(function() {
 		e.preventDefault();
 		e.stopPropagation();
 		var $p = $(this).parent();
-		Notebook.contextmenu.showMenu(e, $p);
+		// Notebook.contextmenu.showMenu(e, $p);
+		// alert(newNotebookListMenuSys.popup);
+		newNotebookListMenuSys.menu.popup(e.originalEvent.x, e.originalEvent.y);
 	});
+
+	$("#notebookList ").on('contextmenu', 'li a', function(e) {
+		newNotebookListMenuSys.menu.popup(e.originalEvent.x, e.originalEvent.y);
+	});
+
 	$("#notebookListForSearch").on("click", ".notebook-setting", function(e) {
 		e.preventDefault();
 		e.stopPropagation();

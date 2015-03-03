@@ -83,41 +83,20 @@ win.on('close', function() {
 	// TODO
 	win.close(true);
 });
+win.on('focus', function() {
+    console.log('window is focused ');
+});
+win.on('blur', function() {
+    console.log('not focuse ');
+});
 
 function isURL(str_url){
     var re = new RegExp("^((https|http|ftp|rtsp|mms)://).+");
     return re.test(str_url);
 }
 
-// 右键菜单
-var winHref = '';
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
-	e.preventDefault();
-	var $target = $(e.target);
-	var text = $target.text();
-	winHref = $target.attr('href');
-	if(!winHref) {
-		winHref = text;
-	}
-	// 判断是否满足http://leanote.com
-	if(winHref) {
-		if(winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
-		} else {
-			winHref = false;
-		}
-	}
-
-	menu.canOpenInBroswer(!!winHref);
-	var selectionType = window.getSelection().type.toUpperCase();
-	// var clipData = gui.Clipboard.get().get();
-	// menu.canPaste(clipData.length > 0);
-	menu.canPaste(true);
-	menu.canCopy(selectionType === 'RANGE');
-	menu.popup(e.originalEvent.x, e.originalEvent.y);
-});
-
 // 菜单
-// TODO, 打开链接, 打开图片, 打开附件
+// 更多menu用法: http://www.cnblogs.com/xuanhun/p/3669216.html
 function Menu() {
     this.menu = new gui.Menu();
     this.cut = new gui.MenuItem({
@@ -151,7 +130,14 @@ function Menu() {
     this.menu.append(this.cut);
     this.menu.append(this.copy);
     this.menu.append(this.paste);
+    this.menu.append(new gui.MenuItem({ type: 'separator' }));
     this.menu.append(this.openInBrowser);
+    // You can have submenu!
+	var submenu = new gui.Menu();
+	submenu.append(new gui.MenuItem({ label: 'checkbox 啊' , type: 'checkbox'}));
+	submenu.append(new gui.MenuItem({ label: 'Item 2', type: 'checkbox'}));
+	submenu.append(new gui.MenuItem({ label: 'Item 3'}));
+	this.openInBrowser.submenu = submenu;
 }
 Menu.prototype.canCopy = function(bool) {
     this.cut.enabled = bool;
@@ -168,3 +154,30 @@ Menu.prototype.popup = function(x, y) {
 };
 var menu = new Menu();
 var FS = require('fs');
+
+// 右键菜单
+var winHref = '';
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
+	e.preventDefault();
+	var $target = $(e.target);
+	var text = $target.text();
+	winHref = $target.attr('href');
+	if(!winHref) {
+		winHref = text;
+	}
+	// 判断是否满足http://leanote.com
+	if(winHref) {
+		if(winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
+		} else {
+			winHref = false;
+		}
+	}
+
+	menu.canOpenInBroswer(!!winHref);
+	var selectionType = window.getSelection().type.toUpperCase();
+	// var clipData = gui.Clipboard.get().get();
+	// menu.canPaste(clipData.length > 0);
+	menu.canPaste(true);
+	menu.canCopy(selectionType === 'RANGE');
+	menu.popup(e.originalEvent.x, e.originalEvent.y);
+});
