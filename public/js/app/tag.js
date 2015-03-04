@@ -281,6 +281,40 @@ Tag.addTagNav = function(newTag) {
 	me.renderTagNav(me.tags);
 };
 
+Tag.searchTag = function(tag, noteId) {
+	// var $li = $(this).closest('li');
+	// var tag = $.trim($li.data("tag"));
+	// tag = Tag.mapCn2En[tag] || tag;
+	
+	// 学习changeNotebook
+	
+	// 1
+	Note.curChangedSaveIt();
+	
+	// 2 先清空所有
+	// 也会把curNoteId清空
+	Note.clearAll();
+	
+	// $("#tagSearch").html($li.html()).show();
+
+	Notebook.changeCurNotebookTitle(tag, false, '', true);
+	Tag.curTag = tag;
+	// $('#curNotebookForListNote').find('i, em').remove();
+	// $("#tagSearch .tag-delete").remove();
+	
+	NoteService.searchNoteByTag(tag, function(notes) {
+		hideLoading();
+		if(notes) {
+			// 和note搜索一样
+			// 设空, 防止发生上述情况
+			// Note.curNoteId = "";
+			Note.renderNotes(notes);
+			Note.renderNotesAndTargetNote(notes, noteId);
+		}
+	});
+};
+
+
 // 事件
 $(function() {
 	// tag
@@ -365,6 +399,10 @@ $(function() {
 	function searchTag() {
 		var $li = $(this).closest('li');
 		var tag = $.trim($li.data("tag"));
+
+		Tag.searchTag(tag);
+		/*
+
 		// tag = Tag.mapCn2En[tag] || tag;
 		
 		// 学习changeNotebook
@@ -379,7 +417,8 @@ $(function() {
 		// $("#tagSearch").html($li.html()).show();
 
 		var h = $li.html();
-		Notebook.changeCurNotebookTitle(h);
+		Notebook.changeCurNotebookTitle(h, false, '', true);
+		Tag.curTag = h;
 		$('#curNotebookForListNote').find('i, em').remove();
 		// $("#tagSearch .tag-delete").remove();
 		
@@ -396,7 +435,9 @@ $(function() {
 				}
 			}
 		});
-	}
+		*/
+	};
+
 	$("#myTag .folderBody").on("click", "li .label", searchTag);
 	// $("#minTagNav").on("click", "li", searchTag);
 	

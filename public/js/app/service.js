@@ -79,10 +79,7 @@ $(function() {
 
 // bind close event
 // 保存当前打开的笔记
-win.on('close', function() {
-	// TODO
-	win.close(true);
-});
+
 win.on('focus', function() {
     console.log('window is focused ');
 });

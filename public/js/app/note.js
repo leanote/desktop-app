@@ -201,7 +201,31 @@ Note.renderNotesAndFirstOneContent = function(ret) {
 		Note.changeNoteForPjax(ret[0].NoteId, true, false);
 	} else {
 	}
-}
+};
+
+// 渲染并定位到特定的
+Note.renderNotesAndTargetNote = function(ret, noteId) {
+	// 错误的ret是一个Object
+	if(!isArray(ret)) {
+		return;
+	}
+	
+	// note 导航
+	Note.renderNotes(ret);
+	// 渲染特定的
+	if(!isEmpty(ret[0])) {
+		if(noteId) {
+			// Note.changeNoteForPjax(noteId, true, false);
+			Note.changeNoteForPjax(noteId, true, false);
+			if(!Note.directToNote(noteId)) {
+				// 找不到啊
+				Note.changeNoteForPjax(ret[0].NoteId, true, false);
+			}
+		} else {
+			Note.changeNoteForPjax(ret[0].NoteId, true, false);
+		}
+	}
+};
 
 // 当前的note是否改变过了?
 // 返回已改变的信息
@@ -428,7 +452,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		Note.setNoteCache(hasChanged, false);
 		
 		// 设置更新时间
-		Note.setNoteCache({"NoteId": hasChanged.NoteId, "UpdatedTime": (new Date()).format("yyyy-MM-ddThh:mm:ss.S")}, false);
+		Note.setNoteCache({"NoteId": hasChanged.NoteId, "UpdatedTime": new Date()}, false);
 		
 		// 表示有未完成的保存
 		/*
@@ -445,7 +469,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		
 		me.saveInProcess[hasChanged.NoteId] = true;
 		
-		console.error('保存当前的笔记: ' + hasChanged.NoteId);
+		// console.error('保存当前的笔记: ' + hasChanged.NoteId);
 
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
@@ -524,13 +548,19 @@ Note.hideContentLoading = function() {
 	$("#noteMaskForLoading").css("z-index", -1);
 };
 
+// 定位到笔记
 Note.directToNote = function(noteId) {
 	var $p = $("#noteItemList");
 	var pHeight = $p.height();
 	// 相对于父亲的位置
-	var pTop = $("[noteId='" + noteId + "']").position().top;
+	var $t = $("[noteId='" + noteId + "']");
+	if($t.length == 0) {
+		return false;
+	}
+	// position方法返回的是元素的在页面内的绝对位置信息,top和left
+	var pTop = $t.position().top;
 	var scrollTop = $p.scrollTop();
-	pTop += scrollTop;
+	pTop += scrollTop + 66; // 66是上面的title, search
 	/*
 	log("..");
 	log(noteId);
@@ -539,16 +569,13 @@ Note.directToNote = function(noteId) {
 	
 	// 当前的可视范围的元素位置是[scrollTop, pHeight + scrollTop]
 	if(pTop >= scrollTop && pTop <= pHeight + scrollTop) {
+		// alert(pTop + ' ' + scrollTop + ' ' + pHeight)
 	} else {
 		var top = pTop;
-		log("定位到特定note, 在可视范围内");
-		// 手机不用slimScroll
-		if(!LEA.isMobile && !Mobile.isMobile()) {
-			$("#noteItemList").scrollTop(top);
-			// $("#noteItemList").slimScroll({ scrollTo: top + 'px', height: "100%", onlyScrollBar: true});
-		} else {
-		}
+		console.log("定位到特定note, 在可视范围内");
+		$("#noteItemList").scrollTop(top - 66);
 	}
+	return true;
 };
 
 // mustPush表示是否将状态push到state中, 默认为true
@@ -997,7 +1024,16 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	// 保存当前的笔记
 	Note.curChangedSaveIt();
 	
-	var note = {NoteId: getObjectId(), Title: "", Tags:[], Content:"", NotebookId: notebookId, IsNew: true, FromUserId: fromUserId, IsMarkdown: isMarkdown}; // 是新的
+	var note = {NoteId: getObjectId(), 
+		Title: "H", 
+		Tags:[], Content:"", 
+		NotebookId: notebookId, 
+		IsNew: true, 
+		FromUserId: fromUserId, 
+		IsMarkdown: isMarkdown, 
+		CreatedTime: new Date(), 
+		UpdatedTime: new Date()}; // 是新的
+
 	// 添加到缓存中
 	Note.addNoteCache(note);
 	
@@ -1429,6 +1465,29 @@ Note.isSameSearch = function(key) {
 
 // 搜索笔记
 Note.searchSeq = 0;
+
+// for recoverState
+Note.searchNoteSys = function(val, noteId) {
+	$("#searchNoteInput").val(val);
+	var me = this;
+	NoteService.searchNote(val, function(notes) { 
+		if(notes) {
+			Note.searchKey = val;
+			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
+			Note.renderNotes(notes);
+			// markdown一旦setContent就focus, 导致搜索失去焦点
+			setTimeout(function() {
+				$("#searchNoteInput").focus();
+			})
+			if(!isEmpty(notes)) {
+				Note.renderNotesAndTargetNote(notes, noteId);
+			}
+		} else {
+			// abort的
+		}
+	});
+};
+
 Note.searchNote = function() {
 	var val = $("#searchNoteInput").val();
 	if(!val) {
@@ -1462,7 +1521,8 @@ Note.searchNote = function() {
 	NoteService.searchNote(val, function(notes) { 
 		hideLoading();
 		if(t == Note.searchSeq && notes) {
-			Notebook.changeCurNotebookTitle('Search results', false, notes.length);
+			Note.searchKey = val;
+			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
 			Note.renderNotes(notes);
 			// markdown一旦setContent就focus, 导致搜索失去焦点
 			setTimeout(function() {
@@ -2158,6 +2218,8 @@ var Attach = {
 			var attachId = $(this).closest('li').data("id");
 			var attach = self.attachsMap[attachId];
 			var src = EvtService.getAttachLocalUrl(attachId); // + "/attach/download?attachId=" + attachId;
+			// http://leanote.com/attach/download?attachId=54f7481638f4112ff000170f
+			
 			if(LEA.isMarkdownEditor() && MD) {
 				MD.insertLink(src, attach.Title);
 			} else {
@@ -2167,12 +2229,15 @@ var Attach = {
 		
 		// make all link
 		self.linkAllBtnO.on("click",function(e) {
+			// 暂不支持
+			return;
 			e.stopPropagation();
 			var note = Note.getCurNote();
 			if(!note) {
 				return;
 			}
-			var src = UrlPrefix +  "/attach/downloadAll?noteId=" + Note.curNoteId
+			var src = EvtService.getAllAttachLocalUrl(note.NoteId); // UrlPrefix +  "/attach/downloadAll?noteId=" + Note.curNoteId
+			// src = 'http://leanote.com/attach/downloadAll?noteId=' + note.NoteId;
 			var title = note.Title ? note.Title + ".tar.gz" : "all.tar.gz";
 			
 			if(LEA.isMarkdownEditor() && MD) {

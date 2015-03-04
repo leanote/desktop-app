@@ -1315,12 +1315,112 @@ function incrSync() {
 	SyncService.incrSync();
 }
 
+// 历史, 恢复原貌
+var State = {
+	// 保存当前状态
+	// 什么时候调用? 关闭程序, 改变note时
+	saveCurState: function(callback) {
+		// 左侧, 开闭状态
+		var StarredOpened = false;
+		var NotebookOpened = false;
+		var TagOpened = false;
+		var $leftOpen = $('.folderNote.opened');
+		if($leftOpen.length == 1) {
+			var id = $leftOpen.attr('id');
+			if(id == 'myStarredNotes') {
+				StarredOpened = true;
+			} else if(id == 'myNotebooks') {
+				NotebookOpened = true;
+			} else if(id == 'myTag') {
+				TagOpened = true;
+			}
+		}
+		// 当前笔记
+		var CurNoteId = Note.curNoteId; // 当前打开的笔记
+		var CurIsStarred = false; // 当前是在星下
+		var CurNotebookId = ''; // 定位到某个笔记本
+		var CurTag = ''; // 搜索tag
+		if(Notebook.isSearch) {
+			var CurSearchKey = Note.searchKey;
+		}
+		if(Notebook.isStarred) {
+			CurIsStarred = true;
+		} else if(Notebook.isTag) {
+			CurTag = Tag.curTag;
+		}
+		CurNotebookId = Notebook.curNotebookId;
+
+		var state = {
+			StarredOpened: StarredOpened, 
+			NotebookOpened: NotebookOpened,
+			TagOpened: TagOpened,
+
+			CurNoteId: CurNoteId,
+			CurIsStarred: CurIsStarred,
+			CurNotebookId: CurNotebookId,
+			CurTag: CurTag,
+			CurSearchKey: CurSearchKey
+		};
+		console.log(state);
+		UserService.saveCurState(state, callback);
+	},
+
+	// 恢复状态
+	recoverState: function(state) {
+		console.log(state);
+		// 1. 左侧哪个open
+		if(!state.NotebookOpened) { 
+			$('.folderNote.opened').removeClass('opened').addClass('closed');
+			if(state.StarredOpened) {
+				$('#myStarredNotes').removeClass('closed').addClass('opened');
+			} else if(state.TagOpened) {
+				$('#myTag').removeClass('closed').addClass('opened');
+			}
+		}
+		// 2. 
+		// 当前是starred notes
+		var notebookId = state.CurNotebookId;
+		if(state.CurIsStarred) {
+			Note.renderStarNote($('#myStarredNotes li[data-id="' + state.CurNoteId + '"]'));
+		}
+		// 搜索标签
+		else if(state.CurTag) {
+			Tag.searchTag(state.CurTag, state.CurNoteId);
+		}
+		// 搜索笔记
+		else if(state.CurSearchKey) {
+			Note.searchNoteSys(state.CurSearchKey, state.CurNoteId);
+		}
+		// 笔记本了
+		else {
+			Notebook.expandNotebookTo(notebookId);
+			Notebook.changeNotebook(notebookId, false, state.CurNoteId);
+		}
+
+	}
+};
+
 // note.html调用
 // 实始化页面
 // 判断是否登录
 function initPage() {
+	win.on('close', function() {
+		State.saveCurState(function() {
+			win.close(true);
+		});
+	});
+
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
+
+	// 在显示notebooks, stars, tags后才recoverState
+	var i = 0;
+	function ok() {
+		i++;
+		if(i == 3) {
+			State.recoverState(UserInfo);
+		}
+	}
 
 	function _init() {
 		$(function() {
@@ -1328,6 +1428,7 @@ function initPage() {
 			Service.notebookService.getNotebooks(function(notebooks) {
 				log(notebooks);
 				Notebook.renderNotebooks(notebooks);
+				ok();
 			});
 
 			// 获得笔记
@@ -1340,6 +1441,7 @@ function initPage() {
 			// 获取star笔记
 			NoteService.getStarNotes(function(notes) {
 				Note.renderStars(notes);
+				ok();
 			});
 
 			// 指定笔记, 也要保存最新笔记
@@ -1352,6 +1454,7 @@ function initPage() {
 			// 标签
 			TagService.getTags(function(tags) {
 				Tag.renderTagNav(tags);
+				ok();
 			});
 
 			// init notebook后才调用
@@ -1505,6 +1608,7 @@ function userMenu() {
 
 	changeTheme(UserInfo.Theme);
 }
+
 
 $(function() {
 	initUploadImage();

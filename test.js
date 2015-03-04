@@ -6,6 +6,7 @@ var Api = require('api');
 var User = require('user');
 var Server = require('server');
 var Evt = require('evt');
+var Common = require('common');
 
 /*
 Notebook.addNotebook("1", "life");
@@ -20,7 +21,7 @@ Api.addNotebook({
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
-User.userId = '54f08a1699c37b877b0001ee';
+User.userId = '54f6e72899c37b6e20000044';
 
 // 54d7624205fcd105da00005
 
@@ -37,12 +38,11 @@ User.init(function() {
   */
 
   
-  Note.getNoteByServerNoteId('54f1a1f899c37b4faf000001', function(note) {
-    console.log(note);
-  });
+  // Note.getNoteByServerNoteId('54f1a1f899c37b4faf000001', function(note) {
+  //   console.log(note);
+  // });
   
-  Note.getDirtyNotes(function(ret) {
-    console.log('getDirtyNotes: ');
+  Note.getNotes('', function(ret) {
     console.log(ret);
   });
 });
@@ -112,5 +112,6 @@ console.log(reg);
 while(s = reg.exec(a)) {
   console.log(s);
 }
-
 */
+
+console.log(Common.goNowToDate('2014-01-06T18:29:48.802+08:00'));

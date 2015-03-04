@@ -638,7 +638,7 @@ Notebook.curActiveNotebookIsAll = function() {
 // 3. 使用Note.RederNotes()
 // callback Pjax, 当popstate时调用
 Notebook.changeNotebookSeq = 1;
-Notebook.changeNotebook = function(notebookId, callback) {
+Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 	var me = this;
 	Notebook.changeNotebookNav(notebookId);
 	
@@ -666,7 +666,7 @@ Notebook.changeNotebook = function(notebookId, callback) {
 			if(callback) {
 				callback(cacheNotes);
 			} else {
-				Note.renderNotesAndFirstOneContent(cacheNotes);
+				Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
 			}
 			return;
 		} 
@@ -680,7 +680,7 @@ Notebook.changeNotebook = function(notebookId, callback) {
 			if(callback) {
 				callback(cacheNotes);
 			} else {
-				Note.renderNotesAndFirstOneContent(cacheNotes);
+				Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
 			}
 			return;
 		} else {
@@ -705,7 +705,7 @@ Notebook.changeNotebook = function(notebookId, callback) {
 			if(callback) {
 				callback(cacheNotes);
 			} else {
-				Note.renderNotesAndFirstOneContent(cacheNotes);
+				Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
 			}
 			me.hideNoteAndEditorLoading();
 		};
@@ -719,10 +719,12 @@ Notebook.changeNotebook = function(notebookId, callback) {
 };
 
 // 改变标签, isStarred是否是星笔记本
-Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle) {
+Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle, isTag, isSearch) {
 	var me = this;
 	$("#curNotebookForListNote").html(title);
 	me.isStarred = isStarred;
+	me.isTag = isTag;
+	me.isSearch = isSearch;
 };
 
 // 笔记列表与编辑器的mask loading
