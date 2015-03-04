@@ -36,6 +36,13 @@ function log(o) {
 </script>
 </head>
 <body class="clearfix">
+  <!-- 关闭, 最小化, 最大 -->
+  <div id="winTool" class="win-tool clearfix">
+    <a class="tool-close"></a>
+    <a class="tool-min"></a>
+    <a class="tool-max"></a>
+  </div>
+  
   <div id="page" class="clearfix">
     <div id="pageInner">
 
@@ -99,12 +106,7 @@ function log(o) {
         <div id="leftNotebook">
           <div id="notebook">
 
-            <!-- 关闭, 最小化, 最大 -->
-            <div id="winTool" class="win-tool clearfix">
-              <a class="tool-close"></a>
-              <a class="tool-min"></a>
-              <a class="tool-max"></a>
-            </div>
+            
 
             <div class="folderNote closed" id="myStarredNotes">
               <div class="folderHeader">

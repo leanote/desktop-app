@@ -1552,6 +1552,10 @@ top: 4px;
 .win-tool {
 	// height: 14px;
 	padding: 5px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 99999;
 	a {
 		display: block;
 		float: left;
@@ -1621,10 +1625,17 @@ body {
 	overflow: hidden;
 	border-radius: 5px 0 0 0;
 }
-#notebook, #notebookBottom {
+#notebook {
+	top: 25px !important;
+	background: transparent !important;
+}
+#leftNotebook {
 	// background-color: rgba(245, 246, 248, 0.98) !important;
 	background: url(images/mohu.png) !important;
 	background-repeat: repeat;
+}
+#notebookBottom {
+	background: transparent !important;
 }
 #notesAndSort,
 .win-tool {
