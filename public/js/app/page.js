@@ -1551,7 +1551,9 @@ function userMenu() {
 	    this.switchAccount = new gui.MenuItem({
 	        label: 'Switch account',
 	        click: function(e) {
-	        	location.href = 'login.html';
+	        	window.open('login.html');
+	        	win.close();
+	        	// location.href = 'login.html';
 	        }
 	    });
 	    this.theme = new gui.MenuItem({

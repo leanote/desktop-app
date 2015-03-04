@@ -81,7 +81,6 @@ a:hover {
   margin-top: 60px;
 }
 section {
-  background-color: #fff;
   color: #e2f3e5;
   margin-top: 60px;
 }
@@ -234,10 +233,17 @@ section {
 #loginContainer {
   position: relative;
 }
+#formContainer {
+  border-radius: 2px !important;
+  border: 1px solid #d9d9d9;
+  overflow: hidden;
+}
+#formContainer .form-group-1 {
+  border-bottom: 1px solid #d9d9d9;
+}
 input,
 .form-control {
-  border-radius: 2px !important;
-  border-color: #d9d9d9;
+  border: none;
   height: 40px;
   padding: 10px 16px;
 }
@@ -281,25 +287,15 @@ input,
 #footer #beian a {
   font-size: 8px;
 }
-#aboutLeanote h2 {
-  margin: 20px 0;
-  text-align: center;
-}
-#aboutLeanote {
-  padding: 30px;
-}
-#boxBody {
-  background-color: #fff;
-}
 #box {
   margin: 0;
   color: #000;
-  padding-top: 30px;
+  padding-top: 40px;
 }
 #box h1 {
   margin: auto;
-  margin-bottom: 20px;
-  width: 500px;
+  margin-bottom: 30px;
+  width: 316px;
   color: #eee;
 }
 #logo {
@@ -317,7 +313,7 @@ input,
   font-size: 16px;
 }
 #boxForm {
-  width: 500px;
+  width: 316px;
   margin: auto;
   border-radius: 2px;
   width: 200px;
@@ -339,7 +335,7 @@ input,
   color: #eee;
 }
 #quickLinks {
-  width: 500px;
+  width: 316px;
   margin: auto;
   text-align: right;
 }
@@ -470,7 +466,7 @@ input,
   margin-left: 10px;
 }
 #errorBox {
-  width: 500px;
+  width: 316px;
   margin: auto;
   padding: 20px 30px;
   padding-bottom: 30px;
@@ -677,4 +673,54 @@ input,
 }
 .alert {
   padding: 3px;
+}
+html {
+  background: transparent;
+  border-radius: 5px;
+}
+body {
+  -webkit-app-region: drag;
+  position: relative;
+  background-color: transparent;
+}
+body #container {
+  position: relative;
+  margin: 5px;
+  width: 248px;
+  height: 316px;
+  background-color: rgba(247, 249, 250, 0.99);
+  border-radius: 5px;
+  border: 1px solid #eee;
+  -webkit-user-select: none;
+  box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
+}
+#box h1 {
+  width: 248px;
+}
+#box h1 img {
+  width: 100px;
+  border: 1px solid #4092C5;
+  border-radius: 50%;
+  padding: 20px;
+}
+.win-tool {
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 99999;
+}
+.win-tool a {
+  display: block;
+  float: left;
+  width: 14px;
+  height: 14px;
+  background-size: 14px 14px !important;
+  margin-right: 5px;
+}
+.win-tool .tool-close {
+  background: url(icon/traffic-close@2x.png);
+}
+.win-tool:hover .tool-close {
+  background: url(icon/traffic-close-hover@2x.png);
 }

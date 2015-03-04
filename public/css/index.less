@@ -97,7 +97,7 @@ a:hover {
 	 margin-top: @headerHeight;
 }
 section {
-	background-color: #fff;
+	// background-color: #fff;
 	color: #e2f3e5;
 	margin-top: @headerHeight;
 }
@@ -261,9 +261,17 @@ section {
 	position: relative;
 }
 
-input, .form-control {
+#formContainer {
 	border-radius: 2px !important;
-	border-color: #d9d9d9;
+	border: 1px solid #d9d9d9;
+	overflow: hidden;
+	.form-group-1 {
+		border-bottom: 1px solid #d9d9d9;
+	}
+}
+
+input, .form-control {
+	border: none;
 	height: 40px;
 	padding: 10px 16px;
 }
@@ -319,27 +327,19 @@ input, .form-control {
 		}
 	}
 }
-#aboutLeanote h2 {
-	margin: 20px 0;
-	text-align: center;
-}
-#aboutLeanote {
-	padding: 30px;
-}
+
 //-------------
-#boxBody {
-	background-color: #fff;
-}
-@boxWidth: 500px;
+
+@boxWidth: 316px;
 #box {
 	margin: 0;
 	color: #000;
-	padding-top: 30px;
+	padding-top: 40px;
 
 	h1 {
 		width: @boxWidth;; 
 		margin: auto; 
-		margin-bottom: 20px;
+		margin-bottom: 30px;
 		width: @boxWidth;; 
 		color: #eee;
 	}
@@ -766,4 +766,71 @@ input, .form-control {
 }
 .alert {
 	padding: 3px;
+}
+
+html {
+	background: transparent;
+	border-radius: 5px;
+	// width: 258px;
+	// height: 326px;
+}
+body {
+	-webkit-app-region: drag;
+	position: relative;
+	background-color: transparent;
+	// width: 248px;
+	// height: 316px;
+	#container {
+		position: relative;
+		margin: 5px;
+		// margin-top: 0;
+		// left: 5px;
+		// right: 5px;
+		// bottom: 5px;
+		// padding: 5px;
+		// padding-top: 0;
+		width: 248px;
+		height: 316px;
+		background-color: rgba(247,249,250,0.99);
+		border-radius: 5px;
+		border: 1px solid #eee;
+		-webkit-user-select: none; // input, textarea还是可以选择的
+		// box-shadow: 0 0 50px #eee;
+		// box-shadow: 0px 0px 5px #666;
+		box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
+	}
+}
+#box h1 {
+	width: 248px;
+	img {
+		width: 100px;
+		border: 1px solid #4092C5;
+		border-radius: 50%;
+		padding: 20px;
+	}
+}
+.win-tool {
+	// height: 14px;
+	padding: 5px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 99999;
+	a {
+		display: block;
+		float: left;
+		width: 14px;
+		height: 14px;
+		background-size: 14px 14px !important;
+		margin-right: 5px;
+	}
+	.tool-close {
+		background: url(icon/traffic-close@2x.png);
+	}
+	
+	&:hover {
+		.tool-close {
+			background: url(icon/traffic-close-hover@2x.png);
+		}
+	}
 }

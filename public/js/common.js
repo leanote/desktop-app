@@ -1383,4 +1383,20 @@ var ContextTips = {
 	}
 };
 
+function commonCmd(e) {
+	var num = e.which ? e.which : e.keyCode;
+    // copy, paste
+    if(e.ctrlKey || e.metaKey) {
+	    if(num == 67) { // ctrl + c
+	    	document.execCommand('copy');
+	    } else if(num == 86) { // ctrl + v
+	    	document.execCommand('paste');
+	    } else if(num == 65) { // ctrl + a
+	    	document.execCommand('selectAll');
+	    } else if(num == 88) { // ctrl + x
+	    	document.execCommand('cut');
+	    }
+    }
+};
+
 ContextTips.init();
