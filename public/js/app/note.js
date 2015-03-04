@@ -1025,7 +1025,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	Note.curChangedSaveIt();
 	
 	var note = {NoteId: getObjectId(), 
-		Title: "H", 
+		Title: "", 
 		Tags:[], Content:"", 
 		NotebookId: notebookId, 
 		IsNew: true, 
