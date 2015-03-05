@@ -87,11 +87,11 @@ $(function() {
 				return;
 			}
 		}
-		
-		$("#loginBtn").html("loading...").addClass("disabled");
+		// TODO show loading
+		// console.log(33);
+		// $("#loginBtn").html("loading...").addClass("disabled");
 		ApiService.auth(email, pwd, function(ret) {
-			$("#loginBtn").html("Sign in").removeClass("disabled");
-			// console.log(ret);
+			// $("#loginBtn").html("Sign in").removeClass("disabled");
 			if(ret.Ok) {
 				$("#loginBtn").html("Success...");
 				location.href = 'index.html';

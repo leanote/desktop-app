@@ -6,8 +6,8 @@
   "window": {
     "toolbar": true,
     
-    "frame": false,
-    "transparent": true,
+    "frame": true,
+    "transparent": false,
 
     "min_width": 400,
     "min_height": 200,

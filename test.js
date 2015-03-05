@@ -28,6 +28,7 @@ User.userId = '54f6e72899c37b6e20000044';
 // var reg = new RegExp(Evt.localUrl + '/api/file/getImage', 'g');
 // content = content.replace(reg, Evt.leanoteUrl + '/api/file/getImage');
 
+Api.auth('leanote@leanote.com', 'myleanotelife121');
 
 User.init(function() {
 
