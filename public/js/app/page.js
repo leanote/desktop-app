@@ -1410,6 +1410,13 @@ function initPage() {
 		});
 	});
 
+	win.on('focus', function() {
+		$('body').removeClass('blur');
+	});
+	win.on('blur', function() {
+		$('body').addClass('blur');
+	});
+
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
 
@@ -1465,7 +1472,8 @@ function initPage() {
 			// 开始时显示loading......
 			// 隐藏mask
 			$("#mainMask").html("");
-			$("#mainMask").hide(100);
+			$("#mainMask").hide(0);
+			$('body').show();
 		});
 	};
 

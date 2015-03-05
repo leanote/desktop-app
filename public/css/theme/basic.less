@@ -1549,43 +1549,6 @@ top: 4px;
 }
 */
 
-.win-tool {
-	// height: 14px;
-	padding: 5px;
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index: 99999;
-	a {
-		display: block;
-		float: left;
-		width: 14px;
-		height: 14px;
-		background-size: 14px 14px !important;
-		margin-right: 5px;
-	}
-	.tool-close {
-		background: url(../icon/traffic-close@2x.png);
-	}
-	.tool-min {
-		background: url(../icon/traffic-minimise@2x.png);
-	}
-	.tool-max {
-		background: url(../icon/traffic-fullscreen@2x.png);
-	}
-	&:hover {
-		.tool-close {
-			background: url(../icon/traffic-close-hover@2x.png);
-		}
-		.tool-min {
-			background: url(../icon/traffic-minimise-hover@2x.png);
-		}
-		.tool-max {
-			background: url(../icon/traffic-zoom-hover@2x.png);
-		}
-	}
-}
-
 html,body, #page, #pageInner {
 	position: absolute;
 	left: 0px;
@@ -1599,7 +1562,20 @@ html,body, #page, #pageInner {
     background: transparent;
 	// box-shadow: 0px 0px 10px #B52F2F;
 }
+.modal-backdrop {
+	right: 5px;
+	left: 5px;
+	bottom: 5px;
+	border-radius: 5px;
+}
+#mainContainer, #mainMask {
+	border-radius: 5px;
+}
+#noteAndEditor {
+	background-color: #fff;
+}
 body {
+	display: none;
 // #notesAndSort {
 	-webkit-user-select: none; // input, textarea还是可以选择的
     -webkit-app-region: drag;
@@ -1642,6 +1618,7 @@ body {
 	-webkit-user-select: none;
     // -webkit-app-region: drag;
 }
+
 #noteTitle, 
 #searchNoteInput, 
 #searchNotebookForList, 
@@ -1653,3 +1630,5 @@ body {
 {
 	-webkit-app-region: no-drag;
 }
+
+@import '../traffic.less';

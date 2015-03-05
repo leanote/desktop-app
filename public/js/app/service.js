@@ -62,15 +62,14 @@ var win = gui.Window.get();
 win.resizeTo(1100, 600);
 win.setPosition('center');
 $(function() {
-	$('.tool-close').click(function() {
+	$('.tool-close, .tool-close-blur').click(function() {
 		win.close();
 	});
-	$('.tool-min').click(function() {
+	$('.tool-min, .tool-min-blur').click(function() {
 		win.minimize();
 	});
-	$('.tool-max').click(function() {
+	$('.tool-max, .tool-max-blur').click(function() {
 		win.maximize();
-
 		// win.toggleFullscreen(); // mac下是新屏幕
 		// 全屏模式
 		// win.toggleKioskMode();
@@ -79,13 +78,6 @@ $(function() {
 
 // bind close event
 // 保存当前打开的笔记
-
-win.on('focus', function() {
-    console.log('window is focused ');
-});
-win.on('blur', function() {
-    console.log('not focuse ');
-});
 
 function isURL(str_url) {
     var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");

@@ -1153,7 +1153,9 @@ Note.fixNetOrAuthError = function() {
 	}
 };
 
+// 同步进度显示
 Note.syncProcess = function(msg) {
+	$('body').show();
 	$('#allProcess').hide();
 	$('#syncProcess').html(msg);
 };

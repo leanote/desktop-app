@@ -1397,6 +1397,16 @@ function commonCmd(e) {
 	    	document.execCommand('cut');
 	    }
     }
-};
+}
+
+function loadToolIcons() {
+	var imgs = ['traffic-close-hover@2x.png', 'traffic-minimise-hover@2x.png', 'traffic-zoom-hover@2x.png'];
+	for(var i in imgs) {
+		var imageObj = new Image(); 
+		imageObj.src = 'public/css/icon/' + imgs[i];
+	}
+}
+
+// loadToolIcons();
 
 ContextTips.init();

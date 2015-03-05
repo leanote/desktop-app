@@ -721,6 +721,41 @@ body #container {
 .win-tool .tool-close {
   background: url(icon/traffic-close@2x.png);
 }
-.win-tool:hover .tool-close {
+.win-tool .tool-close:before {
+  content: ' ';
   background: url(icon/traffic-close-hover@2x.png);
+}
+.win-tool .tool-close-blur {
+  background: url(icon/traffic-disabled@2x.png);
+}
+.win-tool .tool-close-blur:before {
+  content: ' ';
+  background: url(icon/traffic-close-hover@2x.png);
+}
+.win-tool .tool-min {
+  background: url(icon/traffic-minimise@2x.png);
+}
+.win-tool .tool-min:before {
+  content: ' ';
+  background: url(icon/traffic-minimise-hover@2x.png);
+}
+.win-tool .tool-max {
+  background: url(icon/traffic-fullscreen@2x.png);
+}
+.win-tool .tool-max:before {
+  content: ' ';
+  background: url(icon/traffic-zoom-hover@2x.png);
+}
+.win-tool:hover .tool-close,
+.win-tool:hover .tool-close-blur {
+  background: url(icon/traffic-close-hover@2x.png);
+}
+.win-tool:hover .tool-min {
+  background: url(icon/traffic-minimise-hover@2x.png);
+}
+.win-tool:hover .tool-max {
+  background: url(icon/traffic-zoom-hover@2x.png);
+}
+.blur .win-tool a {
+  background: url(icon/traffic-disabled@2x.png);
 }
