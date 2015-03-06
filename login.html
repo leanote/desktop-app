@@ -22,8 +22,8 @@
 <section id="box" class="animated fadeInUp">
 	<div>
 		<h1 id="logo">
-			<a onclick="openExternal('http://leanote.com')" title="leanote">
-			<img src="public/images/logo/leanote_icon_blue.png">
+			<a onclick="openExternal('http://leanote.com')" id="loadingLogo" title="leanote">
+				<img src="public/images/logo/leanote_icon_blue.png">
 			</a>
 		</h1>
 		<div id="boxForm">
@@ -87,10 +87,12 @@ $(function() {
 				return;
 			}
 		}
+		$('#loadingLogo').addClass('loading');
 		// TODO show loading
 		// console.log(33);
 		// $("#loginBtn").html("loading...").addClass("disabled");
 		ApiService.auth(email, pwd, function(ret) {
+			$('#loadingLogo').removeClass('loading');
 			// $("#loginBtn").html("Sign in").removeClass("disabled");
 			if(ret.Ok) {
 				$("#loginBtn").html("Success...");

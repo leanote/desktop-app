@@ -2,19 +2,18 @@
   "name": "Leanote",
   "description": "Leanote",
   "version": "0.1",
-  "main": "index.html",
+  "main": "note.html",
   "window": {
     "toolbar": true,
     
-    "frame": true,
-    "transparent": false,
+    "frame": false,
+    "transparent": true,
 
     "min_width": 400,
     "min_height": 200,
     // "width":  400, // 1100,
     // "height": 300 // 600
-    "width":  1100,
-    "height": 600
+    "width":  400,
+    "height": 300
   }
 }
-

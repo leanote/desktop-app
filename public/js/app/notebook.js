@@ -640,10 +640,16 @@ Notebook.curActiveNotebookIsAll = function() {
 Notebook.changeNotebookSeq = 1;
 Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 	var me = this;
+
+	// 如果找不到
+	if(!Notebook.cache[notebookId]) {
+		return;
+	}
+
 	Notebook.changeNotebookNav(notebookId);
 	
 	Notebook.curNotebookId = notebookId;
-		
+
 	// 1
 	Note.curChangedSaveIt();
 	
@@ -673,6 +679,9 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 	} else {
 		cacheNotes = Note.getNotesByNotebookId(notebookId);
 		var notebook = Notebook.cache[notebookId];
+		if(!notebook) {
+			return;
+		}
 		var len = cacheNotes ? cacheNotes.length : 0;
 
 		// 如果为0, 从服务器上拿

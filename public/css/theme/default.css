@@ -1428,7 +1428,6 @@ body,
   background-color: #fff;
 }
 body {
-  display: none;
   -webkit-user-select: none;
   -webkit-app-region: drag;
   border: 1px solid #ccc;
@@ -1436,6 +1435,20 @@ body {
   right: 5px;
   bottom: 5px;
   box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
+}
+body.no-drag {
+  -webkit-app-region: no-drag;
+}
+body.init #winTool {
+  display: none;
+}
+body.init #allProcess,
+body.init #syncProcess,
+body.init .loading-footer {
+  display: none;
+}
+body.init #pageInner {
+  display: none;
 }
 #leftNotebook {
   overflow: hidden;
@@ -1470,6 +1483,40 @@ body {
 .noteSplit,
 #notebook {
   -webkit-app-region: no-drag;
+}
+#mainMask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  padding-top: 10px;
+  z-index: 1000;
+}
+#mainMask table,
+#mainMask td {
+  width: 100%;
+  height: 100%;
+  border: none;
+  vertical-align: middle;
+}
+#mainMask #syncProcess {
+  margin-top: 20px;
+}
+#mainMask .loading-footer {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+}
+#mainMask .loading-footer a {
+  color: #ccc;
+}
+#presentation {
+  display: none;
 }
 .win-tool {
   padding: 5px;
@@ -1526,6 +1573,38 @@ body {
 }
 .blur .win-tool a {
   background: url(icon/traffic-disabled@2x.png);
+}
+@keyframes rond {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rond {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+#loadingLogo {
+  position: relative;
+  width: 100px;
+  display: block;
+  margin: auto;
+  border: 1px solid #4092C5;
+  border-radius: 50%;
+}
+#loadingLogo img {
+  width: 100px;
+  padding: 20px;
+}
+#loadingLogo.loading {
+  animation: rond 2s infinite;
+  -webkit-animation: rond 2s infinite;
 }
 ::selection {
   background: #000000;

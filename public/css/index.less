@@ -13,6 +13,8 @@
 @containerWidth: 945px;
 @titleColor: #5AD4A0;
 
+@import "ani.less";
+
 // font
 @font-face {
   font-family: 'Open Sans';
@@ -330,12 +332,11 @@ input, .form-control {
 
 //-------------
 
-@boxWidth: 316px;
+@boxWidth: 248px;
 #box {
 	margin: 0;
 	color: #000;
 	padding-top: 40px;
-
 	h1 {
 		width: @boxWidth;; 
 		margin: auto; 
@@ -344,9 +345,9 @@ input, .form-control {
 		color: #eee;
 	}
 }
-#logo {
-	text-align: center;
-}
+
+
+
 #boxHeader {
 	border-color: #e8e8e8;
 	color: #333;
@@ -800,14 +801,7 @@ body {
 		box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
 	}
 }
-#box h1 {
-	width: 248px;
-	img {
-		width: 100px;
-		border: 1px solid #4092C5;
-		border-radius: 50%;
-		padding: 20px;
-	}
-}
+
 
 @import "traffic.less";
+

@@ -1,5 +1,9 @@
 var Common = require('common');
 
+// 启动服务器, 图片
+var Server = require('server');
+Server.start();
+
 var Evt = require('evt');
 var basePath = require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
@@ -59,8 +63,7 @@ function openExternal(url) {
 
 // 窗口大小设置
 var win = gui.Window.get();
-win.resizeTo(1100, 600);
-win.setPosition('center');
+
 $(function() {
 	$('.tool-close, .tool-close-blur').click(function() {
 		win.close();

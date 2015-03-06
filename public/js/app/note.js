@@ -1155,9 +1155,9 @@ Note.fixNetOrAuthError = function() {
 
 // 同步进度显示
 Note.syncProcess = function(msg) {
-	$('body').show();
 	$('#allProcess').hide();
-	$('#syncProcess').html(msg);
+	$('#syncProcess').show().html(msg);
+	$('.loading-footer').show();
 };
 
 // 保存note ctrl + s
@@ -1726,6 +1726,14 @@ Note.selectStar = function(noteId) {
 Note.renderStarNote = function(target) {
 	var me = this;
 	var noteId = target.data('id');
+	// 如果没有target, 则选第一个
+	if(!noteId) {
+		target = me.starNotesO.find('li').eq(0);
+	}
+	var noteId = target.data('id');
+	if(!noteId) {
+		return;
+	}
 	me.starNotesO.find('li').removeClass('selected');
 	target.addClass('selected');
 

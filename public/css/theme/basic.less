@@ -1575,8 +1575,7 @@ html,body, #page, #pageInner {
 	background-color: #fff;
 }
 body {
-	display: none;
-// #notesAndSort {
+	// display: none;
 	-webkit-user-select: none; // input, textarea还是可以选择的
     -webkit-app-region: drag;
     border: 1px solid #ccc;
@@ -1587,6 +1586,23 @@ body {
 	// box-shadow: 0 0 50px #eee;
 	// box-shadow: 0px 0px 5px #666;
 	box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
+	&.no-drag {
+		-webkit-app-region: no-drag;
+	}
+	// 刚开始载入时, 只有loading
+	&.init {
+		#winTool {
+			display: none;
+		}
+		// border: none;
+		// box-shadow: none;
+		#allProcess, #syncProcess, .loading-footer {
+			display: none;
+		}
+		#pageInner {
+			display: none;
+		}
+	}
 }
 #page {
 	#pageInner {
@@ -1631,4 +1647,41 @@ body {
 	-webkit-app-region: no-drag;
 }
 
+#mainMask {
+	position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  padding-top: 10px;
+  z-index: 1000;
+  table, td {
+  	width: 100%;
+  	height: 100%;
+  	border: none;
+  	vertical-align: middle;
+  }
+  #syncProcess {
+  	margin-top: 20px;
+  }
+	.loading-footer {
+		text-align: center;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 10px;
+		a {
+			color: #ccc;
+		}
+	}
+}
+
+#presentation {
+	display: none;
+}
+
+
 @import '../traffic.less';
+@import '../ani.less';

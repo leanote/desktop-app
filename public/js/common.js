@@ -1383,6 +1383,11 @@ var ContextTips = {
 	}
 };
 
+function switchAccount() {
+	SyncService.stop();
+	location.href = 'login.html';
+}
+
 function commonCmd(e) {
 	var num = e.which ? e.which : e.keyCode;
     // copy, paste

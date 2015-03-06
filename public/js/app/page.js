@@ -531,7 +531,7 @@ function initEditor() {
 	// 刷新时保存 参考autosave插件
 	window.onbeforeunload = function(e) {
     	Note.curChangedSaveIt();
-	}
+	};
 	
 	// 全局ctrl + s
 	$("body").on('keydown', Note.saveNote);
@@ -942,6 +942,8 @@ LeaAce = {
 		tinymce.activeEditor.undoManager.setCanAdd(true);
 	},
 	canAce: function() {
+		return true;
+		/*
 		if(this._isInit) {
 			return this._canAce;
 		}
@@ -952,6 +954,7 @@ LeaAce = {
 		}
 		this._isInit = true;
 		return this._canAce;
+		*/
 	},
 	canAndIsAce: function() {
 		return this.canAce() && this.isAce;
@@ -1361,13 +1364,32 @@ var State = {
 			CurTag: CurTag,
 			CurSearchKey: CurSearchKey
 		};
-		console.log(state);
+		// console.log(state);
 		UserService.saveCurState(state, callback);
 	},
 
+	recoverAfter: function() {
+		// 先隐藏, 再resize, 再显示
+		$('body').hide();
+		win.resizeTo(1100, 600);
+		win.setPosition('center');
+		setTimeout(function() {
+			$('body').show();
+			$('body').removeClass('init');
+			$("#mainMask").html("");
+			$("#mainMask").hide(0);
+		}, 100);
+		// $('body').show();
+	},
+
 	// 恢复状态
-	recoverState: function(state) {
-		console.log(state);
+	recoverState: function(userInfo) {
+		var state = userInfo.State || {};
+		// 表明没有state
+		if(state.NotebookOpened === undefined) {
+			this.recoverAfter();
+			return;
+		}
 		// 1. 左侧哪个open
 		if(!state.NotebookOpened) { 
 			$('.folderNote.opened').removeClass('opened').addClass('closed');
@@ -1392,11 +1414,12 @@ var State = {
 			Note.searchNoteSys(state.CurSearchKey, state.CurNoteId);
 		}
 		// 笔记本了
-		else {
+		else if(notebookId) {
 			Notebook.expandNotebookTo(notebookId);
 			Notebook.changeNotebook(notebookId, false, state.CurNoteId);
 		}
 
+		this.recoverAfter();
 	}
 };
 
@@ -1471,9 +1494,7 @@ function initPage() {
 			// end
 			// 开始时显示loading......
 			// 隐藏mask
-			$("#mainMask").html("");
-			$("#mainMask").hide(0);
-			$('body').show();
+			
 		});
 	};
 
@@ -1539,6 +1560,25 @@ function changeTheme(themeName) {
 
 	} else {
 		themeMenus['Simple'].checked = true;
+	}
+}
+
+var _isPren = false;
+function togglePren() {
+	if(!_isPren) {
+		$('.pren-title').html($('#noteTitle').val());
+		$('.pren-content').html(getEditorContent());
+
+		$('#themePresentation').attr('disabled', false);
+
+		$('body').addClass('no-drag');
+		$('#page').hide();
+		_isPren = true;
+	} else {
+		$('#themePresentation').attr('disabled', true);
+		_isPren = false;
+		$('body').removeClass('no-drag');
+		$('#page').show();
 	}
 }
 
@@ -1618,9 +1658,74 @@ function userMenu() {
 		userMenuSys.popup(e);
 	});
 
+	// 全局菜单
+	var isSlide = false;
+	var isFullscreen = false;
+	var slide;
+	function toggleFullscreen() {
+		win.toggleFullscreen();
+		isFullscreen = !isFullscreen;
+		if(isFullscreen) {
+			slide.enabled = false;
+		} else {
+			slide.enabled = true;
+		}
+	}
+	var fullScreen = new gui.MenuItem({ label: 'Toggle Fullscreen', click: toggleFullscreen});
+
+	function toggleSlide() {
+		win.toggleKioskMode();
+		isSlide = !isSlide;
+		togglePren();
+		if(isSlide) {
+			fullScreen.enabled = false;
+		} else {
+			fullScreen.enabled = true;
+		}
+	}
+	slide = new gui.MenuItem({ label: 'Toggle Presentation', click: toggleSlide});
+	$("body").on('keydown', function(e) {
+		if(e.keyCode == 27) {
+			if(isSlide) {
+				toggleSlide();
+			} else if(isFullscreen) {
+				toggleFullscreen();
+			}
+		}
+	});
+	var mode = new gui.Menu();
+	mode.append(slide);
+	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
+	mode.append(fullScreen);
+	if(process.platform === "darwin") {
+		var nativeMenuBar = new gui.Menu({ type: "menubar" });
+		nativeMenuBar.createMacBuiltin("Leanote");
+		win.menu = nativeMenuBar;
+		win.menu.append(modes);
+	}
+	// windows
+	else {
+		win.menu.append(modes);
+	}
+
+	win.on('move', function(e) {
+		// e.preventDefault();
+		// return false;
+	});
+
+	// disable drag & drop
+	document.body.addEventListener('dragover', function(e){
+	  e.preventDefault();
+	  e.stopPropagation();
+	}, false);
+	document.body.addEventListener('drop', function(e){
+	  e.preventDefault();
+	  e.stopPropagation();
+	}, false);
+
+	// 修改主题
 	changeTheme(UserInfo.Theme);
 }
-
 
 $(function() {
 	initUploadImage();

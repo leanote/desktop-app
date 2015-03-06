@@ -1,3 +1,35 @@
+@keyframes rond {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes rond {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+#loadingLogo {
+  position: relative;
+  width: 100px;
+  display: block;
+  margin: auto;
+  border: 1px solid #4092C5;
+  border-radius: 50%;
+}
+#loadingLogo img {
+  width: 100px;
+  padding: 20px;
+}
+#loadingLogo.loading {
+  animation: rond 2s infinite;
+  -webkit-animation: rond 2s infinite;
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -295,11 +327,8 @@ input,
 #box h1 {
   margin: auto;
   margin-bottom: 30px;
-  width: 316px;
+  width: 248px;
   color: #eee;
-}
-#logo {
-  text-align: center;
 }
 #boxHeader {
   border-color: #e8e8e8;
@@ -313,7 +342,7 @@ input,
   font-size: 16px;
 }
 #boxForm {
-  width: 316px;
+  width: 248px;
   margin: auto;
   border-radius: 2px;
   width: 200px;
@@ -335,7 +364,7 @@ input,
   color: #eee;
 }
 #quickLinks {
-  width: 316px;
+  width: 248px;
   margin: auto;
   text-align: right;
 }
@@ -466,7 +495,7 @@ input,
   margin-left: 10px;
 }
 #errorBox {
-  width: 316px;
+  width: 248px;
   margin: auto;
   padding: 20px 30px;
   padding-bottom: 30px;
@@ -693,15 +722,6 @@ body #container {
   border: 1px solid #eee;
   -webkit-user-select: none;
   box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
-}
-#box h1 {
-  width: 248px;
-}
-#box h1 img {
-  width: 100px;
-  border: 1px solid #4092C5;
-  border-radius: 50%;
-  padding: 20px;
 }
 .win-tool {
   padding: 5px;

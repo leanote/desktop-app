@@ -20,6 +20,7 @@
 <!-- theme -->
 <link rel="stylesheet" href="public/css/theme/simple.css" type="text/css"/>
 <link rel="stylesheet" href="public/css/theme/blue.css" type="text/css" id="theme"/>
+<link rel="stylesheet" href="public/css/theme/presentation.css" type="text/css" disabled id="themePresentation"/>
 
 <!-- context-menu -->
 <link rel="stylesheet" href="public/js/contextmenu/css/contextmenu.css" type="text/css" />
@@ -35,15 +36,46 @@ function log(o) {
 }
 </script>
 </head>
-<body class="clearfix">
+<body class="clearfix init">
   <!-- 关闭, 最小化, 最大 -->
   <div id="winTool" class="win-tool clearfix">
     <a class="tool-close"></a>
     <a class="tool-min"></a>
     <a class="tool-max"></a>
   </div>
+
+  <!-- 演示模式 -->
+  <div id="presentation">
+    <!-- 工具 -->
+    <div class="pren-tool">
+    </div>
+    <!-- 标题 -->
+    <div class="pren-title">
+    </div>
+    <!-- 内容 -->
+    <div class="pren-content">
+    </div>
+  </div>
   
   <div id="page" class="clearfix">
+    <div id="mainMask">
+
+        <table><tr><td>
+        <div id="loadingLogo" class="loading">
+          <img src="public/images/logo/leanote_icon_blue.png">
+        </div>
+        <div id="allProcess">
+        loading...
+        </div>
+        <div id="syncProcess">
+        </div>
+      </table></tr></td>
+
+      <div class="loading-footer">
+          <a onclick="switchAccount()">Switch account</a>
+        </div>
+    </div>
+
     <div id="pageInner">
 
       <!-- header start -->
@@ -93,16 +125,10 @@ function log(o) {
       <!-- header end -->
 
       <div id="mainContainer" class="clearfix">
-        <div id="mainMask">
-          <img src="public/images/loading-30.gif" />
-          <br />
-          <br />
-          <div id="allProcess">
-          loading...
-          </div>
-          <div id="syncProcess">
-          </div>
-        </div>
+
+        
+
+
         <div id="leftNotebook">
           <div id="notebook">
 
@@ -298,11 +324,13 @@ function log(o) {
           </div>
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
+
           <div id="noteMaskForLoading" class="note-mask">
             <img src="public/images/loading-24.gif"/>
             <br />
             loading...
           </div>
+
           <div id="editorMask">
             The notebook is empty, why not...
             <br />
