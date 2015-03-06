@@ -32,11 +32,14 @@ body {
   padding: 0 150px;
 }
 .pren-content {
-  padding: 0 150px;
+  margin: 0 150px;
+  overflow: hidden;
+  word-wrap: break-word;
 }
 .pren-content * {
   font-size: 18px;
-  line-height: 1.2;
+  line-height: 1.5;
+  max-width: 100%;
 }
 .pren-content p {
   margin: 10px 0;
