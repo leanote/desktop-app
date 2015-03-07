@@ -1,138 +1,60 @@
 // 主页渲染
 //-------------
 
-//----------------------
-// 编辑器模式
-function editorMode() {
-	this.writingHash = "writing";
-	this.normalHash = "normal";
-	this.isWritingMode = location.hash.indexOf(this.writingHash) >= 0;
-	this.toggleA = null;
-}
+var Resize;
 
-editorMode.prototype.toggleAText = function(isWriting) {
-	var self = this;
-	setTimeout(function() {
-		var toggleA = $(".toggle-editor-mode a");
-		var toggleSpan = $(".toggle-editor-mode span");
-		if(isWriting) {
-			toggleA.attr("href", "#" + self.normalHash);
-			toggleSpan.text(getMsg("normalMode"));
-		} else {
-			toggleA.attr("href", "#" + self.writingHash);
-			toggleSpan.text(getMsg("writingMode"));
-		}	
-	}, 0);
-}
-editorMode.prototype.isWriting = function(hash) {
-	return hash.indexOf(this.writingHash) >= 0
-}
-editorMode.prototype.init = function() {
-	this.changeMode(this.isWritingMode);
-	var self = this;
-	$(".toggle-editor-mode").click(function(e) {
-		e.preventDefault();
-		saveBookmark();
-		var $a = $(this).find("a");
-		var isWriting = self.isWriting($a.attr("href"));
-		self.changeMode(isWriting);
-		// 
-		if(isWriting) {
-			setHash("m", self.writingHash);
-		} else {
-			setHash("m", self.normalHash);
+// 写作模式
+var Writting = {
+	_mode: 'normal', // writting
+	themeWrittingO: $('#themeWritting'),
+	writtingToggleO: $('#writtingToggle'),
+	bodyO: $('body'),
+	isWriting: function() {
+		return this._mode != 'normal';
+	},
+	init: function() {
+		var me = this;
+		me.writtingToggleO.click(function() {
+			me.toggle();
+		});
+	},
+
+	// 初始化写作
+	// 主要是markdown两列宽度问题
+	initWritting: function() {
+		var width = UserInfo.MdEditorWidthForWritting;
+		// 设中间
+		if(!width) {
+			width = this.bodyO.width() / 2;
 		}
-		
-		restoreBookmark();
-	});
-}
-// 改变模式
-editorMode.prototype.changeMode = function(isWritingMode) {
-	this.toggleAText(isWritingMode);
-	if(isWritingMode) {
-		this.writtingMode();
-	} else {
-		this.normalMode();
-	}
-	
-	$("#moreBtn i").removeClass("fa-angle-up").addClass("fa-angle-down");
-}
-
-editorMode.prototype.resizeEditor = function() {
-	// css还没渲染完
-	setTimeout(function() {
+		Resize.setMdColumnWidth(width);
+		// $("#mceToolbar").css("height", "40px");
 		resizeEditor();
-	}, 10);
-	setTimeout(function() {
+	},
+	initNormal: function() {
+		Resize.setMdColumnWidth(UserInfo.MdEditorWidth);
+		// $("#mceToolbar").css("height", "30px");
 		resizeEditor();
-	}, 20);
-	setTimeout(function() {
-		resizeEditor();
-	}, 500);
-}
-editorMode.prototype.normalMode = function() {
-	/*
-	var w = $(document).width();
-	var h = $(document).height();
-	$("#lock").css({right:0, bottom:0});
-	*/
-	
-	var $c = $("#editorContent_ifr").contents();
-	
-	$c.contents().find("#writtingMode").remove();
-	$c.contents().find('link[href$="editor-writting-mode.css"]').remove();
-			
-	$("#noteItemListWrap, #notesAndSort").show();
-	$("#noteList").unbind("mouseenter").unbind("mouseleave"); 
-	
-	var theme = UserInfo.Theme || "default";
-	theme += ".css";
-	$("#themeLink").attr("href", "/css/theme/" + theme);
-	
-	$("#mceToolbar").css("height", "30px");
-	
-//	$("#lock").animate({right:w},1000);
-	
-	this.resizeEditor();
-	
-	$("#noteList").width(UserInfo.NoteListWidth);
-	$("#note").css("left", UserInfo.NoteListWidth + 2);
-}
-editorMode.prototype.writtingMode = function() {
-	// $("#pageInner").removeClass("animated fadeInUp");
-	
-	$("#themeLink").attr("href", "/css/theme/writting-overwrite.css");
-	
-	setTimeout(function() {
-		var $c = $("#editorContent_ifr").contents();
-		$c.contents().find("head").append('<link type="text/css" rel="stylesheet" href="/css/editor/editor-writting-mode.css" id="writtingMode">');
-	}, 0);
-		
-	$("#noteItemListWrap, #notesAndSort").fadeOut();
-	$("#noteList").hover(function() {
-		$("#noteItemListWrap, #notesAndSort").fadeIn();
-	}, function() {
-		$("#noteItemListWrap, #notesAndSort").fadeOut();
-	});
-	
-	// 点击扩展会使html的height生成, 切换后会覆盖css文件的
-	$("#mceToolbar").css("height", "40px");
-	
-	//$("#pageInner").addClass("animated fadeInUp");
+	},
 
-	this.resizeEditor();
-	
-	$("#noteList").width(250);
-	$("#note").css("left", 0);
-}
+	toggle: function() {
+		var me = this;
+		me.themeWrittingO.attr('disabled', me._mode != 'normal');
+		me._mode = me._mode == 'normal' ? 'writting' : 'normal';
 
-editorMode.prototype.getWritingCss = function() {
-	if(this.isWritingMode) {
-		return ["/css/editor/editor-writting-mode.css"];
-	}
-	return [];
-}
-var em = new editorMode();
+		// 改变icon
+		if(me._mode != 'normal') {
+			$('body').addClass('writting');
+			me.writtingToggleO.find('.fa').removeClass('fa-expand').addClass('fa-compress');
+
+			me.initWritting();
+		} else {
+			$('body').removeClass('writting');
+			me.writtingToggleO.find('.fa').removeClass('fa-compress').addClass('fa-expand');
+			me.initNormal();
+		}
+	},
+};
 
 //----------------
 // 拖拉改变变宽度
@@ -233,7 +155,12 @@ var Resize = {
 		var self = this;
 		if(self.lineMove || self.mdLineMove) {
 			// ajax保存
-			UserService.updateG({MdEditorWidth: UserInfo.MdEditorWidth, NotebookWidth: UserInfo.NotebookWidth, NoteListWidth: UserInfo.NoteListWidth}, function() {
+			UserService.updateG({
+				MdEditorWidth: UserInfo.MdEditorWidth, 
+				MdEditorWidthForWritting: UserInfo.MdEditorWidthForWritting,
+				NotebookWidth: UserInfo.NotebookWidth, 
+				NoteListWidth: UserInfo.NoteListWidth
+			}, function() {
 			});
 		}
 		self.lineMove = false;
@@ -294,11 +221,17 @@ var Resize = {
 			self.setMdColumnWidth(mdEditorWidth);
 		}
 	},
+
 	// 设置宽度
 	setMdColumnWidth: function(mdEditorWidth) { 
 		var self = this;
 		if(mdEditorWidth > 100) {
-			UserInfo.MdEditorWidth = mdEditorWidth;
+			if(Writting.isWriting()) {
+				UserInfo.MdEditorWidthForWritting = mdEditorWidth;
+			} else {
+				UserInfo.MdEditorWidth = mdEditorWidth;
+			}
+
 			// log(mdEditorWidth)
 			self.leftColumn.width(mdEditorWidth);
 			self.rightColumn.css("left", mdEditorWidth);
@@ -310,7 +243,7 @@ var Resize = {
 			MD.onResize();
 		}
 	}
-}
+};
 
 //--------------------------
 // 手机端访问之
@@ -337,23 +270,6 @@ Mobile = {
 	init: function() {
 		var self = this;
 		self.isMobile();
-		// $(window).on("hashchange", self.hashChange);
-		// self.hashChange();
-		/*
-		$("#noteItemList").on("tap", ".item", function(event) {
-			$(this).click();
-		});
-		$(document).on("swipeleft",function(e){
-			e.stopPropagation();
-			e.preventDefault();
-			self.toEditor();
-		});
-		$(document).on("swiperight",function(e){
-			e.stopPropagation();
-			e.preventDefault();
-			self.toNormal();
-		});
-		*/
 	},
 	isMobile: function() {
 		var u = navigator.userAgent;
@@ -409,31 +325,10 @@ Mobile = {
 		}
 		return false;
 	}
-} 
-
+};
 
 function initSlimScroll() {
-	if(Mobile.isMobile()) {
-		return;
-	}
-	$("#notebook").slimScroll({
-	    height: "100%", // $("#leftNotebook").height()+"px"
-	});
-	$("#noteItemList").slimScroll({
-	    height: "100%", // ($("#leftNotebook").height()-42)+"px"
-	});
-	/*
-	$("#wmd-input").slimScroll({
-	    height: "100%", // $("#wmd-input").height()+"px"
-	});
-	$("#wmd-input").css("width", "100%");
-	*/
-	
-	$("#wmd-panel-preview").slimScroll({
-	    height: "100%", // $("#wmd-panel-preview").height()+"px"
-	});
-	
-	$("#wmd-panel-preview").css("width", "100%");
+	return;
 }
 
 //-----------
@@ -444,7 +339,16 @@ function initEditor() {
 	var mceToobarEverHeight = 0;
 	$("#moreBtn").click(function() {
 		saveBookmark();
-		
+		var $editor = $('#editor');
+		if($editor.hasClass('all-tool')) {
+			$editor.removeClass('all-tool');
+		} else {
+			$editor.addClass('all-tool');
+		}
+
+		restoreBookmark();
+		return;
+
 		var height = $("#mceToolbar").height();
 
 		// 现在是折叠的
@@ -473,7 +377,7 @@ function initEditor() {
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
 				    if(num == 86) { // ctrl + v
-				    	document.execCommand('paste');
+				    	// document.execCommand('paste');
 				    }
 			    };
 			});
@@ -493,8 +397,7 @@ function initEditor() {
 		selector : "#editorContent",
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
-		// content_css : ["/css/bootstrap.css", "/css/editor/editor.css"].concat(em.getWritingCss()),
-		content_css : ["public/css/editor/editor.css"].concat(em.getWritingCss()),
+		content_css : ["public/css/editor/editor.css"],
 		skin : "custom",
 		language: LEA.locale, // 语言
 		plugins : [
@@ -542,6 +445,9 @@ function initEditor() {
 var random = 1;
 function scrollTo(self, tagName, text) {
 	var iframe = $("#editorContent"); // .contents();
+	if(Writting.isWriting()) { 
+		iframe = $('#editorContentWrap');
+	}
 	var target = iframe.find(tagName + ":contains(" + text + ")");
 	random++;
 	
@@ -566,22 +472,6 @@ function scrollTo(self, tagName, text) {
 		// log(top);
 		// iframe.scrollTop(top);
 		iframe.animate({scrollTop: top}, 300); // 有问题
-		
-		/*
-		var d = 200; // 时间间隔
-		for(var i = 0; i < d; i++) {
-			setTimeout(
-			(function(top) {
-				return function() {
-					iframe.scrollTop(top);
-				}
-			})(nowTop + 1.0*i*(top-nowTop)/d), i);
-		}
-		// 最后必然执行
-		setTimeout(function() {
-			iframe.scrollTop(top);
-		}, d+5);
-		*/
 		return;
 	}
 }
@@ -629,103 +519,11 @@ $(function() {
 	function openSetInfoDialog(whichTab) {
 		showDialogRemote("/user/account", {tab: whichTab});
 	}
-	// 帐号设置
-	$("#setInfo").click(function() {
-		openSetInfoDialog(0);
-	});
-	// 邮箱验证
-	$("#wrongEmail").click(function() {
-		openSetInfoDialog(1);
-	});
-	
-	$("#setAvatarMenu").click(function() {
-		showDialog2("#avatarDialog", {title: "头像设置", postShow: function() {
-		}});
-	});
-	$("#setTheme").click(function() {
-		showDialog2("#setThemeDialog", {title: "主题设置", postShow: function() {
-			if (!UserInfo.Theme) {
-				UserInfo.Theme = "default";
-			}
-			$("#themeForm input[value='" + UserInfo.Theme + "']").attr("checked", true);
-		}});
-	});
-	
-	//---------
-	// 主题
-	$("#themeForm").on("click", "input", function(e) {
-		var val = $(this).val();
-		$("#themeLink").attr("href", "/css/theme/" + val + ".css");
-		
-		ajaxPost("/user/updateTheme", {theme: val}, function(re) {
-			if(reIsOk(re)) {
-				UserInfo.Theme = val
-			}
-		});
-	});
-	
-	//-------------
-	// 邮箱验证
-	if(!UserInfo.Verified) {
-//		$("#leanoteMsg").hide();
-//		$("#verifyMsg").show();
-	}
-	
+
 	// 禁止双击选中文字
 	$("#notebook, #newMyNote, #myProfile, #topNav, #notesAndSort", "#leanoteNavTrigger").bind("selectstart", function(e) {
 		e.preventDefault();
 		return false;
-	});
-	
-	// 左侧隐藏或展示
-	function updateLeftIsMin(is) {
-		ajaxGet("/user/updateLeftIsMin", {leftIsMin: is})
-	}
-	function minLeft(save) {
-		$("#leftNotebook").width(30);
-		$("#notebook").hide();
-		// 左侧
-		$("#noteAndEditor").css("left", 30)	
-		$("#notebookSplitter").hide();
-		
-//		$("#leftSwitcher").removeClass("fa-angle-left").addClass("fa-angle-right");
-		
-		// logo
-		$("#logo").hide();
-		$("#leftSwitcher").hide();
-		$("#leftSwitcher2").show();
-		$("#leftNotebook .slimScrollDiv").hide();
-		
-		if(save) {
-			updateLeftIsMin(true);
-		}
-	}
-	
-	function maxLeft(save) {
-		$("#noteAndEditor").css("left", UserInfo.NotebookWidth);
-		$("#leftNotebook").width(UserInfo.NotebookWidth);
-		$("#notebook").show();
-		$("#notebookSplitter").show();
-		
-//		$("#leftSwitcher").removeClass("fa-angle-right").addClass("fa-angle-left");
-		
-		$("#leftSwitcher2").hide();
-		$("#logo").show();
-		$("#leftSwitcher").show();
-		$("#leftNotebook .slimScrollDiv").show();
-		
-		if(save) {
-			updateLeftIsMin(false);
-		}
-	}
-	
-	$("#leftSwitcher2").on('click', function() {
-		maxLeft(true);
-	});
-	$("#leftSwitcher").click('click', function() {
-		if(Mobile.switchPage()) {
-			minLeft(true);
-		}
 	});
 	
 	// 得到最大dropdown高度
@@ -742,26 +540,6 @@ $(function() {
 		return preHeight < maxHeight ? preHeight : maxHeight;
 	}
 	
-	// mini版
-	// 点击展开
-	$("#notebookMin div.minContainer").click(function() {
-		var target = $(this).attr("target");
-		maxLeft(true);
-		if(target == "#notebookList") {
-			if($("#myNotebooks").hasClass("closed")) {
-				$("#myNotebooks .folderHeader").trigger("click");
-			}
-		} else if(target == "#tagNav") {
-			if($("#myTag").hasClass("closed")) {
-				$("#myTag .folderHeader").trigger("click");
-			}
-		} else {
-			if($("#myShareNotebooks").hasClass("closed")) {
-				$("#myShareNotebooks .folderHeader").trigger("click");
-			}
-		}
-	});
-	
 	//------------------------
 	// 界面设置, 左侧是否是隐藏的
 	UserInfo.NotebookWidth = UserInfo.NotebookWidth || $("#notebook").width();
@@ -771,54 +549,6 @@ $(function() {
 	Resize.set3ColumnsWidth(UserInfo.NotebookWidth, UserInfo.NoteListWidth);
 	Resize.setMdColumnWidth(UserInfo.MdEditorWidth);
 	
-	if (UserInfo.LeftIsMin) {
-		minLeft(false);
-	}
-	
-	// 4/25 防止dropdown太高
-	// dropdown
-	$('.dropdown').on('shown.bs.dropdown', function () {
-		var $ul = $(this).find("ul");
-		// $ul.css("max-height", getMaxDropdownHeight(this));
-	});
-	
-	//--------
-	// 编辑器帮助
-	$("#tipsBtn").click(function() {
-		showDialog2("#tipsDialog");
-	});
-	
-	//--------
-	// 建议
-	$("#yourSuggestions").click(function() {
-		showDialog2("#suggestionsDialog");
-	});
-	$("#suggestionBtn").click(function(e) {
-		e.preventDefault();
-		var suggestion = $.trim($("#suggestionTextarea").val());
-		if(!suggestion) {
-			$("#suggestionMsg").html("请输入您的建议, 谢谢!").show().addClass("alert-warning").removeClass("alert-success");
-			$("#suggestionTextarea").focus();
-			return;
-		}
-		$("#suggestionBtn").html("正在处理...").addClass("disabled");
-		$("#suggestionMsg").html("正在处理...");
-		$.post("/suggestion", {suggestion: suggestion}, function(ret) {
-			$("#suggestionBtn").html("提交").removeClass("disabled");
-			if(ret.Ok) {
-				$("#suggestionMsg").html("谢谢反馈, 我们会第一时间处理, 祝您愉快!").addClass("alert-success").removeClass("alert-warning").show();
-			} else {
-				$("#suggestionMsg").html("出错了").show().addClass("alert-warning").removeClass("alert-success");
-			}
-		});
-	});
-	
-	// 编辑器模式
-	em.init();
-	
-	// 手机端?
-	Mobile.init();
-
 	// markdown preview下的a不能点击
 	$('#preview-contents').on('click', 'a', function(e) {
 		e.preventDefault();
@@ -1693,7 +1423,7 @@ var Pren = {
 			if(e.keyCode == 27) {
 				if(me._isPren) {
 					me.togglePren();
-				} else if(isFullscreen) {
+				} else if(me._isFullscreen) {
 					me.toggleFullscreen();
 				}
 			}
@@ -1714,6 +1444,7 @@ var Pren = {
 		});
 	}
 };
+
 
 // user
 function userMenu() {
@@ -1830,5 +1561,6 @@ function userMenu() {
 $(function() {
 	initUploadImage();
 	userMenu();
+	Writting.init();
 });
 

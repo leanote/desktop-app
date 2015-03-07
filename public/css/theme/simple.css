@@ -1429,7 +1429,6 @@ body,
 }
 body {
   -webkit-user-select: none;
-  -webkit-app-region: drag;
   border: 1px solid #ccc;
   left: 5px;
   right: 5px;
@@ -1450,6 +1449,22 @@ body.init .loading-footer {
 body.init #pageInner {
   display: none;
 }
+#topDrag {
+  -webkit-app-region: drag;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  z-index: 1000;
+  cursor: move;
+}
+#noteList {
+  top: 5px;
+}
+#note {
+  top: 5px;
+}
 #leftNotebook {
   overflow: hidden;
   border-radius: 5px 0 0 0;
@@ -1460,8 +1475,11 @@ body.init #pageInner {
   border-radius: 5px 0 0 0;
 }
 #notebook {
-  top: 25px !important;
+  top: 40px !important;
   background: transparent !important;
+}
+#notebook #myStarredNotes .folderHeader {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 #leftNotebook {
   background: url(images/mohu.png) !important;
@@ -1473,16 +1491,6 @@ body.init #pageInner {
 #notesAndSort,
 .win-tool {
   -webkit-user-select: none;
-}
-#noteTitle,
-#searchNoteInput,
-#searchNotebookForList,
-#addTagInput,
-#wmd-input,
-#editorContent,
-.noteSplit,
-#notebook {
-  -webkit-app-region: no-drag;
 }
 #mainMask {
   position: absolute;
@@ -1517,6 +1525,21 @@ body.init #pageInner {
 }
 #presentation {
   display: none;
+}
+#editor #mceToolbar {
+  height: 30px;
+}
+#editor.all-tool #mceToolbar {
+  height: 60px;
+}
+#editor.all-tool .more-fa:before {
+  content: "\f106";
+}
+#editor.all-tool #editorContent {
+  top: 60px;
+}
+#editor .more-fa:before {
+  content: "\f107";
 }
 .win-tool {
   padding: 5px;
@@ -1820,16 +1843,15 @@ a.raw:hover {
   top: 0;
   right: 0;
   left: 170px;
+  border-left: 1px solid #ebeff2;
 }
 #noteList {
   width: 250px;
   border-right: 1px solid #ebeff2;
-  border-left: 1px solid #ebeff2;
 }
 #note {
   position: absolute;
   bottom: 0;
-  top: 0;
   left: 250px;
   right: 0;
   padding-left: 0;

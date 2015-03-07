@@ -717,25 +717,10 @@ function getObjectId() {
 
 //-----------------------------------------
 function resizeEditor(second) {
-	var ifrParent = $("#editorContent_ifr").parent();
-    ifrParent.css("overflow", "auto");
-    var height = $("#editorContent").height();
-    ifrParent.height(height);
-    // log(height + '---------------------------------------')
-    $("#editorContent_ifr").height(height);
-
-    // life 12.9
-    // inline editor
-    $("#editorContent").css("top", $("#mceToolbar").height());
-    
-    /*
-    // 第一次时可能会被改变
-    if(!second) {
-		setTimeout(function() {
-			resizeEditorHeight(true);
-		}, 1000);
-    }
-    */
+	return;
+	var h = $("#mceToolbar").height()
+    $("#editorContent").css("top", h);
+    $("#editorContentWrap").css('top', h);
 }
 
 //----------
@@ -1396,6 +1381,7 @@ function commonCmd(e) {
 	    	document.execCommand('copy');
 	    } else if(num == 86) { // ctrl + v
 	    	document.execCommand('paste');
+	    	console.log("paste--------------")
 	    } else if(num == 65) { // ctrl + a
 	    	document.execCommand('selectAll');
 	    } else if(num == 88) { // ctrl + x

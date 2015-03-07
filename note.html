@@ -21,6 +21,7 @@
 <link rel="stylesheet" href="public/css/theme/simple.css" type="text/css"/>
 <link rel="stylesheet" href="public/css/theme/blue.css" type="text/css" id="theme"/>
 <link rel="stylesheet" href="public/css/theme/presentation.css" type="text/css" disabled id="themePresentation"/>
+<link rel="stylesheet" href="public/css/theme/writting.css" type="text/css" disabled id="themeWritting"/>
 
 <!-- context-menu -->
 <link rel="stylesheet" href="public/js/contextmenu/css/contextmenu.css" type="text/css" />
@@ -37,6 +38,7 @@ function log(o) {
 </script>
 </head>
 <body class="clearfix init">
+  <div id="topDrag"></div>
   <!-- 关闭, 最小化, 最大 -->
   <div id="winTool" class="win-tool clearfix">
     <a class="tool-close"></a>
@@ -413,8 +415,8 @@ function log(o) {
                   <span class="fa fa-history"></span>
                   </a></li>
 
-                  <li><a class="ios7-a " id="expand"
-                  data-toggle="dropdown" title="Expand">
+                  <li><a class="ios7-a " id="writtingToggle"
+                  data-toggle="dropdown" title="Toggle writting mode">
                   <span class="fa fa-expand"></span>
                   </a></li>
               </ul>
@@ -428,7 +430,8 @@ function log(o) {
                 style="position: absolute; right: 30px; left: 0"></div>
               <a
                 style="dispaly: block; position: absolute; cursor: pointer; right: 10px; padding: 3px 10px"
-                id="moreBtn"> <i class="fa fa-angle-down"></i>
+                id="moreBtn"> 
+                <i class="more-fa fa fa-angle-down"></i>
               </a>
             </div>
             <div class="editorBg"></div>
@@ -443,18 +446,20 @@ function log(o) {
             
             <!-- leaui image drop image to editor-->
             <form id="upload" method="post" action="/file/uploadImageLeaui" enctype="multipart/form-data" style="margin-top: 5px;">
-                      <div id="drop">
-                             Drop images to here
-                          <input type="file" name="file" multiple style="display: none"/>
-                      </div>
-                      <ul id="uploadMsg">
-                      </ul>
-                  </form>
+                <div id="drop">
+                       Drop images to here
+                    <input type="file" name="file" multiple style="display: none"/>
+                </div>
+                <ul id="uploadMsg">
+                </ul>
+            </form>
               
             <!-- 由此可以算高度 -->
-            <div id="editorContent" name="editorContent" tabindex="2" />
-              {{.noteContent}}
-               </div>
+            <div id="editorContentWrap">
+              <div id="editorContent" name="editorContent" tabindex="2" >
+                {{.noteContent}}
+              </div>
+            </div>
           </div>
           
           <div id="mdEditor">

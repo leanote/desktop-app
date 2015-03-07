@@ -1577,7 +1577,7 @@ html,body, #page, #pageInner {
 body {
 	// display: none;
 	-webkit-user-select: none; // input, textarea还是可以选择的
-    -webkit-app-region: drag;
+    // -webkit-app-region: drag;
     border: 1px solid #ccc;
     // for shadow
     left: 5px;
@@ -1604,9 +1604,45 @@ body {
 		}
 	}
 }
+
+#topDrag {
+	-webkit-app-region: drag;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	z-index: 1000;
+	cursor: move;
+	// background-color: red;
+}
+
+#searchNoteInput, 
+#searchNotebookForList, 
+#addTagInput, 
+.noteSplit,	
+#notebook,
+#editor,
+#mdEditor,
+#right-column *
+{
+	// -webkit-app-region: no-drag;
+}
+
 #page {
 	#pageInner {
 	}
+}
+#noteList {
+	top: 5px;
+}
+#note {
+	top: 5px;
+}
+#noteAndEditor {
+	// top: 5px !important;
+	// padding-top: 50px;
+	// background-color: #fff;
 }
 #leftNotebook {
 	overflow: hidden;
@@ -1618,8 +1654,13 @@ body {
 	border-radius: 5px 0 0 0;
 }
 #notebook {
-	top: 25px !important;
+	top: 40px !important;
 	background: transparent !important;
+	#myStarredNotes {
+		.folderHeader {
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+		}
+	}
 }
 #leftNotebook {
 	// background-color: rgba(245, 246, 248, 0.98) !important;
@@ -1635,17 +1676,6 @@ body {
     // -webkit-app-region: drag;
 }
 
-#noteTitle, 
-#searchNoteInput, 
-#searchNotebookForList, 
-#addTagInput, 
-#wmd-input, 
-#editorContent,
-.noteSplit,
-#notebook
-{
-	-webkit-app-region: no-drag;
-}
 
 #mainMask {
 	position: absolute;
@@ -1680,6 +1710,27 @@ body {
 
 #presentation {
 	display: none;
+}
+
+#editor {
+	#mceToolbar {
+		height: 30px;
+	}
+	// 所有都展开
+	&.all-tool {
+		#mceToolbar {
+			height: 60px;
+		}
+		.more-fa:before {
+			content: "\f106";
+		}
+		#editorContent {
+			top: 60px;
+		}
+	}
+	.more-fa:before {
+		content: "\f107";
+	}
 }
 
 

@@ -227,6 +227,10 @@ Note.renderNotesAndTargetNote = function(ret, noteId) {
 	}
 };
 
+Note.alertWeb = function(msg) {
+	alert(msg);
+};
+
 // 当前的note是否改变过了?
 // 返回已改变的信息
 // force bool true表示content比较是比较HTML, 否则比较text, 默认为true
@@ -630,6 +634,7 @@ Note.changeNoteForPjax = function(noteId, mustPush, needTargetNotebook) {
 // 点击notebook时调用, 渲染第一个笔记
 Note.contentAjax = null;
 Note.contentAjaxSeq = 1;
+Note.inChangeNoteId = '';
 Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var self = this;
 	
@@ -651,6 +656,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	
 	// 2. 设空, 防止在内容得到之前又发生保存
 	Note.curNoteId = "";
+	Note.inChangeNoteId = selectNoteId;
 	
 	// 2 得到现在的
 	// ajax之
@@ -718,8 +724,8 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	
 	self.showContentLoading();
 
-	console.error('chage note..........');
-	console.trace();
+	// console.error('chage note..........');
+	// console.trace();
 
 	Service.noteService.getNoteContent(cacheNote.NoteId, setContent); // ajaxGet(url, param, setContent);
 }
@@ -812,8 +818,8 @@ Note.renderNote = function(note) {
 
 // render content
 Note.renderNoteContent = function(content) {
-	console.error('---------------- note:' + note.Title);
-	console.trace();
+	// console.error('---------------- note:' + note.Title);
+	// console.trace();
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
 
 	// 只有在renderNoteContent时才设置curNoteId
@@ -823,6 +829,14 @@ Note.renderNoteContent = function(content) {
 	content.Desc = Note.genDesc(content.Content);
 	content.ImgSrc = Note.getImgSrc(content.Content);
 	Note.renderChangedNote(content);
+};
+
+Note.renderNoteDesc = function(note) {
+	// life
+	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
+	note.Desc = Note.genDesc(note.Content);
+	note.ImgSrc = Note.getImgSrc(note.Content);
+	Note.renderChangedNote(note);
 };
 
 // 初始化时渲染最初的notes
@@ -917,8 +931,9 @@ Note.renderNotes = function(notes, forNewNote, isShared) {
 				}
 			})(i), i*2000);
 	}
-}
-;
+};
+
+
 Note._getNoteHtmlObjct = function(note, isShared) {
 	var baseClasses = "item-my";
 	if(isShared) {
@@ -957,6 +972,10 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			classes += " item-active";
 		}
 		var note = notes[i];
+
+		if(note.InitSync) {
+			Note.getNoteContentLazy(note.NoteId);
+		}
 
 		if(!note.Desc && note.Content) {
 			note.Desc = Note.genDesc(note.Content);
@@ -1897,19 +1916,36 @@ Note.showConflictInfo = function(target, e) {
 // 内容已同步成功
 Note.contentSynced = function(noteId, content) {
 	var me = this;
-	var note = me.getCurNote();
+	var note = me.getNote(noteId);
 	if(!note) {
+		// 可能之前还没有
+		// me.setNoteCache(noteId, {Content: content});
 		return;
 	}
 	if(note.InitSync) {
 		// 重新render内容
 		note.InitSync = false;
 		note.Content = content;
-		if(me.curNoteId == noteId) {
+		if(me.curNoteId == noteId || me.inChangeNoteId == noteId) {
+			// alert(note.Title);
 			// 重新渲染
 			Note.changeNote(noteId);
+		} else {
+			// 生成desc
+			me.renderNoteDesc(note);
 		}
 	}
+};
+
+// 延迟加载内容
+Note.getNoteContentLazy = function(noteId) {
+	setTimeout(function() {
+		NoteService.getNoteContent(noteId, function(contentO) {
+			if(typeof contentO == 'object') {
+				Note.contentSynced(noteId, contentO.Content);
+			}
+		});
+	}, 10);
 };
 
 
