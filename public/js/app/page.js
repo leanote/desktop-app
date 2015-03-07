@@ -1563,24 +1563,157 @@ function changeTheme(themeName) {
 	}
 }
 
-var _isPren = false;
-function togglePren() {
-	if(!_isPren) {
-		$('.pren-title').html($('#noteTitle').val());
-		$('.pren-content').html(getEditorContent());
+// 演示模式, 全屏模式
+var Pren = {
 
-		$('#themePresentation').attr('disabled', false);
+	_isFullscreen: false,
+	_isPren: false,
 
-		$('body').addClass('no-drag');
-		$('#page').hide();
-		_isPren = true;
-	} else {
-		$('#themePresentation').attr('disabled', true);
-		_isPren = false;
-		$('body').removeClass('no-drag');
-		$('#page').show();
+	// 全局菜单
+	pren: null,
+	fullScreen: null,
+
+	presentationO: $('#presentation'),
+
+	toggleFullscreen: function() {
+		var me = this;
+		win.toggleFullscreen();
+		me._isFullscreen = !isFullscreen;
+		if(me._isFullscreen) {
+			me.pren.enabled = false;
+		} else {
+			me.pren.enabled = true;
+		}
+	},
+	togglePren: function() {
+		var me = this;
+		try {
+			win.toggleKioskMode();
+		} catch(e) {}
+
+		if(!me._isPren) {
+			$('.pren-title').html($('#noteTitle').val());
+			var note = Note.getCurNote();
+			$('.pren-content').html('');
+			if(note) {
+				var content = getEditorContent(note.IsMarkdown);
+				var contentStr = content;
+				if(typeof content == 'object') { // markdown
+					contentStr = content[1];
+				}
+				$('.pren-content').html(contentStr);
+			}
+
+			$('#themePresentation').attr('disabled', false);
+
+			$('body').addClass('no-drag');
+			$('#page').hide();
+			me._isPren = true;
+
+			// 代码高亮
+			$(".pren-content pre").addClass("prettyprint linenums");
+			prettyPrint();
+
+		} else {
+			$('#themePresentation').attr('disabled', true);
+			me._isPren = false;
+			$('body').removeClass('no-drag');
+			$('#page').show();
+			me.restore();
+		}
+
+		if(me._isPren) {
+			me.fullScreen.enabled = false;
+		} else {
+			me.fullScreen.enabled = true;
+		}
+	},
+
+	// 恢复, 为了下次显示
+	restore: function() {
+		var me = this;
+		me.presentationO.scrollTop(0);
+
+	},
+	
+	_themeMode: 'normal', // 当前背景颜色模式, 三种, normal, writting, black
+
+	toggleThemeMode: function() {
+		var me = this;
+		if(me._themeMode == 'normal') {
+			me.presentationO.addClass('writting');
+			me._themeMode = 'writting';
+		} else if(me._themeMode == 'writting') {
+			me.presentationO.removeClass('writting').addClass('black');
+			me._themeMode = 'black';
+		} else {
+			me.presentationO.removeClass('black');
+			me._themeMode = 'normal';
+		}
+	},
+
+	_fontSizeIndex: 2, // 位置
+	_fontScales: ['text-min-2', 'text-min-1', '', 'text-max-1', 'text-max-2'],
+	toggleFontSizeMode: function(isMin) {
+		var me = this;
+		var curClass = me._fontScales[me._fontSizeIndex];
+
+		if(isMin) {
+			if(me._fontSizeIndex > 0) {
+				me._fontSizeIndex--;
+			}
+		} else {
+			if(me._fontSizeIndex < 4) {
+				me._fontSizeIndex++;
+			}
+		}
+
+		var nextClass = me._fontScales[me._fontSizeIndex];
+		if(curClass != nextClass) {
+			me.presentationO.removeClass(curClass).addClass(nextClass);
+		}
+	},
+
+	init: function() {
+		var me = this;
+		// 初始化menu
+		me.fullScreen = new gui.MenuItem(
+			{label: 'Toggle Fullscreen', click: function() {
+				me.toggleFullscreen();
+			}
+		});
+		me.pren = new gui.MenuItem(
+			{label: 'Toggle Presentation', click: function() {
+				me.togglePren();
+			}
+		});
+	
+		// Esc
+		$("body").on('keydown', function(e) {
+			if(e.keyCode == 27) {
+				if(me._isPren) {
+					me.togglePren();
+				} else if(isFullscreen) {
+					me.toggleFullscreen();
+				}
+			}
+		});
+
+		$('.pren-tool-close').click(function() {
+			me.togglePren();
+		});
+
+		$('.pren-tool-bg-color').click(function() {
+			me.toggleThemeMode();
+		});
+		$('.pren-tool-text-size-min').click(function() {
+			me.toggleFontSizeMode(true);
+		});
+		$('.pren-tool-text-size-max').click(function() {
+			me.toggleFontSizeMode(false);
+		});
 	}
-}
+};
 
 // user
 function userMenu() {
@@ -1659,44 +1792,11 @@ function userMenu() {
 	});
 
 	// 全局菜单
-	var isSlide = false;
-	var isFullscreen = false;
-	var slide;
-	function toggleFullscreen() {
-		win.toggleFullscreen();
-		isFullscreen = !isFullscreen;
-		if(isFullscreen) {
-			slide.enabled = false;
-		} else {
-			slide.enabled = true;
-		}
-	}
-	var fullScreen = new gui.MenuItem({ label: 'Toggle Fullscreen', click: toggleFullscreen});
-
-	function toggleSlide() {
-		win.toggleKioskMode();
-		isSlide = !isSlide;
-		togglePren();
-		if(isSlide) {
-			fullScreen.enabled = false;
-		} else {
-			fullScreen.enabled = true;
-		}
-	}
-	slide = new gui.MenuItem({ label: 'Toggle Presentation', click: toggleSlide});
-	$("body").on('keydown', function(e) {
-		if(e.keyCode == 27) {
-			if(isSlide) {
-				toggleSlide();
-			} else if(isFullscreen) {
-				toggleFullscreen();
-			}
-		}
-	});
+	Pren.init();
 	var mode = new gui.Menu();
-	mode.append(slide);
+	mode.append(Pren.pren);
+	mode.append(Pren.fullScreen);
 	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
-	mode.append(fullScreen);
 	if(process.platform === "darwin") {
 		var nativeMenuBar = new gui.Menu({ type: "menubar" });
 		nativeMenuBar.createMacBuiltin("Leanote");
