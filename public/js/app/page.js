@@ -1101,14 +1101,17 @@ var State = {
 	recoverAfter: function() {
 		// 先隐藏, 再resize, 再显示
 		$('body').hide();
-		win.resizeTo(1100, 600);
-		win.setPosition('center');
+		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
-			$('body').show();
-			$('body').removeClass('init');
-			$("#mainMask").html("");
-			$("#mainMask").hide(0);
-		}, 100);
+			win.resizeTo(1100, 600);
+			win.setPosition('center');
+			setTimeout(function() {
+				$('body').show();
+				$('body').removeClass('init');
+				$("#mainMask").html("");
+				$("#mainMask").hide(0);
+			}, 100);
+		})
 		// $('body').show();
 	},
 
