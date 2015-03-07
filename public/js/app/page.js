@@ -1432,6 +1432,24 @@ var Pren = {
 			}
 		});
 
+
+		function isURL(str_url) {
+		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
+		    return re.test(str_url);
+		}
+		// 浏览器打开
+		function openExternal(url) {
+		    gui.Shell.openExternal(url);
+		}
+		// 防止在本窗口打开
+		me.presentationO.on('click', 'a', function(e) {
+			e.preventDefault();
+			var href = $(this).attr('href');
+			if(href.indexOf('http://127.0.0.1') < 0 && isURL(href)) {
+				openExternal(href);
+			}
+		});
+
 		$('.pren-tool-close').click(function() {
 			me.togglePren();
 		});

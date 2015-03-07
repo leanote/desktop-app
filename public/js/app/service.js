@@ -56,6 +56,11 @@ Service.dispatch = function(router, param, callback) {
 
 var gui = require('nw.gui');
 
+function isURL(str_url) {
+    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
+    return re.test(str_url);
+}
+
 // 浏览器打开
 function openExternal(url) {
     gui.Shell.openExternal(url);
@@ -81,11 +86,6 @@ $(function() {
 
 // bind close event
 // 保存当前打开的笔记
-
-function isURL(str_url) {
-    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
-    return re.test(str_url);
-}
 
 // 菜单
 // 更多menu用法: http://www.cnblogs.com/xuanhun/p/3669216.html
