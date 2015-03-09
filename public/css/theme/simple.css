@@ -1541,6 +1541,9 @@ body.init #pageInner {
 #editor .more-fa:before {
   content: "\f107";
 }
+.opened .folderHeader span {
+  font-weight: bold;
+}
 .win-tool {
   padding: 5px;
   position: absolute;

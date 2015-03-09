@@ -723,6 +723,31 @@ body #container {
   -webkit-user-select: none;
   box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
 }
+.pwd-group {
+  position: relative;
+}
+#loginBtn {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: none;
+  right: 5px;
+  top: 5px;
+  line-height: 26px;
+  background: none;
+  text-align: center;
+  outline: none;
+}
+#loginBtn .fa {
+  font-size: 18px;
+  color: #6A7377;
+}
+#loginBtn[disabled] {
+  border: none;
+}
+#loginBtn[disabled] .fa {
+  color: #ccc;
+}
 .win-tool {
   padding: 5px;
   position: absolute;

@@ -80,6 +80,10 @@ body.writting #editor.all-tool #editorContentWrap {
   box-shadow: 0 3px 10px #eee;
   z-index: 10;
 }
+#mdEditor .navbar-default,
+#wmd-button-bar {
+  height: 40px !important;
+}
 #mdEditor .extension-preview-buttons,
 #mdEditor .layout-wrapper-l3 {
   top: 40px !important;

@@ -34,15 +34,16 @@
 					<div class="form-group form-group-1">
 						<input type="text" placeholder="Email" class="form-control" id="email" name="email" value=""> 
 					</div>
-					<div class="form-group"> 
+					<div class="form-group pwd-group"> 
 					    <input type="password" placeholder="Password" class="form-control" id="pwd" name="pwd">
+					    <button id="loginBtn" disabled><i class="fa fa-arrow-right"></i></button>
 					</div>
 				</div>
 				
 				<div class="clearfix btns">
 					<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small>Forget password?</small></a>
 					<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small>Sign up</small></a>
-					<button id="loginBtn" class="btn btn-success" style="visibility: hidden">Sign in</button>
+					
 				</div>
 			</form>	
 		</div>
@@ -95,11 +96,33 @@ $(function() {
 			$('#loadingLogo').removeClass('loading');
 			// $("#loginBtn").html("Sign in").removeClass("disabled");
 			if(ret.Ok) {
-				$("#loginBtn").html("Success...");
+				// $("#loginBtn").html("Success...");
 				location.href = 'index.html';
 			} else {
 				showMsg("Email or Password Error");
 			}
+		});
+	});
+
+	var $loginBtnO = $("#loginBtn");
+	function checkDisabled() {
+		var email = $("#email").val();
+		var pwd = $("#pwd").val();
+		if(!email || !pwd) {
+			$loginBtnO.attr('disabled', true);
+		} else {
+			$loginBtnO.attr('disabled', false);
+		}
+	}
+
+	$('body, input').on('keydown', function() {
+		setTimeout(function() {
+			checkDisabled();
+		});
+	});
+	$('body').on('click', function() {
+		setTimeout(function() {
+			checkDisabled();
 		});
 	});
 });
