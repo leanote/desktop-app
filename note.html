@@ -23,6 +23,12 @@
 <link rel="stylesheet" href="public/css/theme/presentation.css" type="text/css" disabled id="themePresentation"/>
 <link rel="stylesheet" href="public/css/theme/writting.css" type="text/css" disabled id="themeWritting"/>
 
+<script>
+// for windows
+if(process.platform != 'darwin') {
+	document.write('<link rel="stylesheet" href="public/css/theme/windows.css" type="text/css" />');
+}
+</script>
 <!-- mdeditor -->
 <link href="public/dist/themes/default.css" rel="stylesheet" />
 <style>
@@ -33,6 +39,7 @@
 function log(o) {
   console.log(o);
 }
+
 </script>
 </head>
 <body class="clearfix init">
@@ -802,7 +809,7 @@ window.requireNode = window.require;
 window.require = undefined;
 </script>
 <!-- 渲染view -->
-<script src="public/tinymce/tinymce.dev.js"></script>
+<script src="public/tinymce/tinymce.js"></script>
 <script src="public/libs/ace/ace.js"></script>
 <script src="public/js/app/page.js"></script>
 <script src="public/js/bootstrap-min.js"></script>

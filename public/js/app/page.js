@@ -1103,8 +1103,10 @@ var State = {
 		$('body').hide();
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
-			win.resizeTo(1100, 600);
-			win.setPosition('center');
+			if(isMac()) {
+				win.resizeTo(1100, 600);
+				win.setPosition('center');
+			}
 			setTimeout(function() {
 				$('body').show();
 				$('body').removeClass('init');
@@ -1244,6 +1246,7 @@ function initPage() {
 				});
 	 		}
 	 		$('#username').text(UserInfo.Email);
+	 		userMenu();
 		} else {
 			location.href = 'login.html';
 		}
@@ -1311,7 +1314,7 @@ var Pren = {
 	toggleFullscreen: function() {
 		var me = this;
 		win.toggleFullscreen();
-		me._isFullscreen = !isFullscreen;
+		me._isFullscreen = !me._isFullscreen;
 		if(me._isFullscreen) {
 			me.pren.enabled = false;
 		} else {
@@ -1445,7 +1448,7 @@ var Pren = {
 		me.presentationO.on('click', 'a', function(e) {
 			e.preventDefault();
 			var href = $(this).attr('href');
-			if(href.indexOf('http://127.0.0.1') < 0 && isURL(href)) {
+			if(href && href.indexOf('http://127.0.0.1') < 0 && isURL(href)) {
 				openExternal(href);
 			}
 		});
@@ -1469,6 +1472,26 @@ var Pren = {
 
 // user
 function userMenu() {
+	// ----------
+	// 全局菜单
+
+	Pren.init();
+	var mode = new gui.Menu();
+	mode.append(Pren.pren);
+	mode.append(Pren.fullScreen);
+	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
+	if(isMac()) {
+		var nativeMenuBar = new gui.Menu({ type: "menubar" });
+		nativeMenuBar.createMacBuiltin("Leanote");
+		win.menu = nativeMenuBar;
+		win.menu.append(modes);
+	}
+	// windows和linux下就用user's menu来代替
+	else {
+		// alert(process.platform);
+		// win.menu.append(modes);
+	}
+
 	//-------------------
 	// 右键菜单
 	function menu() {
@@ -1486,9 +1509,11 @@ function userMenu() {
 	        click: function(e) {
 	        	// window.open('login.html');
 	        	// win.close();
-	        	
+	        	// 
+	        	switchAccount();
 	        	// 这样, 不能window.open(), 不然needle有问题
-	        	location.href = 'login.html';
+	        	// 可以gui.Window.open();
+	        	// location.href = 'login.html';
 	        }
 	    });
 	    this.theme = new gui.MenuItem({
@@ -1529,11 +1554,21 @@ function userMenu() {
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.theme);
+		
+		var height = 130;
+		if(!isMac()) {
+			this.menu.append(new gui.MenuItem({ type: 'separator' }));
+			this.menu.append(Pren.pren);
+			this.menu.append(Pren.fullScreen);
+			height = 220;
+		}
+
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.sync);
-
+		
+		
 	    this.popup = function(e) {
-			this.menu.popup(10, $('body').height() - 130);
+			this.menu.popup(10, $('body').height() - height);
 	    }
 	}
 
@@ -1543,28 +1578,9 @@ function userMenu() {
 		userMenuSys.popup(e);
 	});
 
-	// 全局菜单
-	Pren.init();
-	var mode = new gui.Menu();
-	mode.append(Pren.pren);
-	mode.append(Pren.fullScreen);
-	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
-	if(process.platform === "darwin") {
-		var nativeMenuBar = new gui.Menu({ type: "menubar" });
-		nativeMenuBar.createMacBuiltin("Leanote");
-		win.menu = nativeMenuBar;
-		win.menu.append(modes);
-	}
-	// windows
-	else {
-		win.menu.append(modes);
-	}
-
-	win.on('move', function(e) {
-		// e.preventDefault();
-		// return false;
-	});
-
+	// 修改主题
+	changeTheme(UserInfo.Theme);
+	
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
 	  e.preventDefault();
@@ -1574,14 +1590,10 @@ function userMenu() {
 	  e.preventDefault();
 	  e.stopPropagation();
 	}, false);
-
-	// 修改主题
-	changeTheme(UserInfo.Theme);
 }
 
 $(function() {
 	initUploadImage();
-	userMenu();
 	Writting.init();
 });
 

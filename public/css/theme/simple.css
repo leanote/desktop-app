@@ -1373,32 +1373,6 @@ h3 {
   text-overflow: ellipsis;
   overflow: hidden;
 }
-/*
- *  STYLE 2
- */
-/*
-*::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-	background-color: #F5F5F5;
-}
-
-*::-webkit-scrollbar
-{
-	width: 10px;
-	background-color: #F5F5F5;
-	position: absolute;
-	-webkit-transform: translatez(0);
-}
-
-*::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #D62929;
-}
-*/
 html,
 body,
 #page,
@@ -1449,22 +1423,6 @@ body.init .loading-footer {
 body.init #pageInner {
   display: none;
 }
-#topDrag {
-  -webkit-app-region: drag;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 10px;
-  z-index: 1000;
-  cursor: move;
-}
-#noteList {
-  top: 5px;
-}
-#note {
-  top: 5px;
-}
 #leftNotebook {
   overflow: hidden;
   border-radius: 5px 0 0 0;
@@ -1475,11 +1433,7 @@ body.init #pageInner {
   border-radius: 5px 0 0 0;
 }
 #notebook {
-  top: 40px !important;
   background: transparent !important;
-}
-#notebook #myStarredNotes .folderHeader {
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 #leftNotebook {
   background: url(images/mohu.png) !important;
@@ -1543,6 +1497,42 @@ body.init #pageInner {
 }
 .opened .folderHeader span {
   font-weight: bold;
+}
+#noteList,
+#note {
+  top: 5px;
+}
+#noteList {
+  top: 0;
+  padding-top: 5px;
+}
+#notebook {
+  top: 40px !important;
+}
+#noteItemListWrap {
+  top: 75px;
+}
+#myNotebookNavForListNav {
+  line-height: 35px;
+}
+#notebook #myStarredNotes .folderHeader {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+#sortType {
+  display: none;
+}
+#myNotebookNavForListNav span {
+  font-size: 16px;
+}
+#topDrag {
+  -webkit-app-region: drag;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  z-index: 1000;
+  cursor: move;
 }
 .win-tool {
   padding: 5px;
@@ -1868,6 +1858,7 @@ a.raw:hover {
   cursor: pointer;
   border-bottom: 1px solid transparent;
   border-color: rgba(0, 0, 0, 0.05);
+  height: 36px;
 }
 .folderHeader span {
   display: inline-block;
@@ -2298,417 +2289,4 @@ background-position:-1px -670px
 }
 #notebookList {
   border-top: 1px dashed #eee;
-}
-@media screen and (max-width: 700px) {
-  #toggleEditorMode,
-  #lea,
-  #myBlog,
-  #demoRegister,
-  .noteSplit,
-  #logo,
-  #tipsBtn,
-  #contentHistory,
-  #curNotebookForNewNote,
-  #curNotebookForNewSharedNote,
-  .for-split,
-  #listNotebookDropdownMenu,
-  #listShareNotebookDropdownMenu,
-  .new-markdown-text,
-  .new-note-text,
-  .username,
-  #notebookMin,
-  .ui-loader,
-  #md-section-helper,
-  #right-column,
-  .writing-mobile-hide {
-    display: none !important;
-  }
-  *,
-  .ztree li a.level0 span,
-  .ztree li a.level1 span,
-  .label {
-    font-size: 16px;
-  }
-  .label i {
-    opacity: 1;
-    width: 20px;
-  }
-  .label i:hover,
-  .label i:focus {
-    color: #65bd77 !important;
-  }
-  a:focus,
-  a:hover,
-  a:active {
-    color: #65bd77 !important;
-  }
-  #noteItemList .item {
-    height: 120px;
-  }
-  #leftNotebook {
-    width: 140px !important;
-    max-width: 140px;
-  }
-  #notebook {
-    display: block !important;
-  }
-  #leftNotebook .slimScrollDiv {
-    display: block !important;
-  }
-  #switcher {
-    padding-top: 0;
-    padding-right: 0;
-  }
-  #switcher i {
-    padding: 20px 0;
-    font-size: 20px;
-  }
-  #newNoteMarkdownBtn {
-    width: 10px;
-    overflow: hidden;
-  }
-  #noteAndEditor {
-    left: 140px !important;
-  }
-  #noteList {
-    display: block;
-    width: 100% !important;
-  }
-  #note {
-    visibility: hidden;
-    z-index: -1;
-    overflow-x: hidden;
-    left: 0 !important;
-  }
-  #note #editor {
-    visibility: hidden;
-  }
-  #note .mce-tinymce {
-    visibility: hidden !important;
-  }
-  #note.editor-show {
-    visibility: visible;
-    z-index: initial;
-  }
-  #note.editor-show #editor {
-    visibility: visible;
-  }
-  #note.editor-show .mce-tinymce {
-    visibility: visible !important;
-  }
-  #leftSwitcher {
-    display: block !important;
-  }
-  #leftSwitcher2 {
-    display: none !important;
-  }
-  .full-editor #leftNotebook {
-    display: none;
-  }
-  .full-editor #noteAndEditor {
-    left: 0 !important;
-  }
-  .full-editor #noteList {
-    display: none;
-  }
-  #searchWrap {
-    margin-left: 3px;
-  }
-  #searchNote {
-    border-top: none;
-    border-bottom: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    padding-right: 10px;
-  }
-  #searchNote input {
-    width: 55px;
-    padding-left: 5px;
-    padding-right: 2px;
-    margin-top: 3px;
-    -webkit-transform: translate3d(0, 0, 0);
-    -webkit-transition: 0.3s ease;
-    -moz-transition: 0.3s ease;
-    transition: 0.3s ease;
-  }
-  #searchNote input:focus {
-    width: 100px;
-  }
-  #tool {
-    position: relative;
-  }
-  #tag {
-    position: absolute;
-    right: 140px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
-  #tag #tags {
-    left: 50px;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    position: absolute;
-    line-height: 40px;
-    line-height: inherit !important;
-  }
-  #tag #tagDropdown {
-    float: left;
-    width: 50px;
-    line-height: 40px;
-    overflow: hidden;
-    padding-left: 3px;
-  }
-  #tag .add-tag-text {
-    display: none;
-  }
-  #tag #addTagInput {
-    width: 30px;
-    display: inline-block;
-  }
-  #tag #tagColor {
-    display: none !important;
-  }
-  #left-column {
-    width: 100% !important;
-  }
-  #mdEditor #wmd-input {
-    font-size: 16px;
-  }
-  .new-markdown-text-abbr,
-  .new-note-text-abbr {
-    display: inline;
-  }
-  .my-link {
-    display: block;
-  }
-  #themeForm img {
-    height: 70px !important;
-  }
-  .slimScrollBar,
-  .slimScrollRail {
-    display: none !important;
-  }
-  #noteItemList,
-  #notebook,
-  #leftNotebook,
-  .slimScrollDiv,
-  #editorContent_ifr,
-  .mce-edit-area,
-  .mce-container-body,
-  .mce-tinymce,
-  #editor .mce-ifr,
-  .wmd-input,
-  #noteReadContent,
-  #attachList,
-  #tags {
-    -webkit-overflow-scrolling: touch !important;
-    overflow: auto !important;
-  }
-  #attachMenu {
-    width: 320px;
-  }
-  #attachList {
-    max-height: 200px;
-  }
-  #attachList li .attach-title {
-    width: 170px;
-  }
-  #dropAttach .btn {
-    padding: 5px 3px;
-    margin-top: 3px;
-    display: block;
-  }
-  #myTag .folderBody li {
-    margin: 5px;
-  }
-  #myTag .folderBody li a:hover span {
-    color: #65bd77;
-  }
-  #noteItemList .item-thumb {
-    width: 80px;
-    height: 80px;
-    margin-top: 15px;
-  }
-  #noteItemList .item {
-    height: 118px;
-  }
-  #noteItemList .item-setting,
-  #noteItemList .item-blog {
-    font-size: 16px;
-    width: 30px;
-    display: inline-block;
-  }
-  #noteMaskForLoading {
-    opacity: 0.8;
-  }
-  #editorContent .ace-tomorrow {
-    padding: 0;
-  }
-}
-@media screen and (max-width: 1024px) {
-  #noteItemList,
-  #notebook,
-  #leftNotebook,
-  .slimScrollDiv,
-  #editorContent_ifr,
-  .mce-edit-area,
-  .mce-container-body,
-  .mce-tinymce,
-  #editor .mce-ifr,
-  .wmd-input,
-  #noteReadContent,
-  #attachList,
-  #tags {
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  #tag {
-    position: absolute;
-    right: 310px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
-  #tag #tags {
-    left: 50px;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    position: absolute;
-    line-height: 40px;
-    line-height: inherit !important;
-  }
-  #tag #tagDropdown {
-    float: left;
-    width: 50px;
-    line-height: 40px;
-    overflow: hidden;
-    padding-left: 3px;
-  }
-  #tag .add-tag-text {
-    display: none;
-  }
-  #tag #addTagInput {
-    width: 30px;
-    display: inline-block;
-  }
-  #tag #tagColor {
-    display: none !important;
-  }
-}
-@media screen and (max-width: 800px) {
-  #noteItemList,
-  #notebook,
-  #leftNotebook,
-  .slimScrollDiv,
-  #editorContent_ifr,
-  .mce-edit-area,
-  .mce-container-body,
-  .mce-tinymce,
-  #editor .mce-ifr,
-  .wmd-input,
-  #noteReadContent,
-  #attachList,
-  #tags {
-    overflow: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  #lea,
-  .lea-blog,
-  #myBlog,
-  #demoRegister,
-  .noteSplit,
-  #tipsBtn,
-  #contentHistory,
-  #curNotebookForNewNote,
-  #curNotebookForNewSharedNote,
-  .for-split,
-  #listNotebookDropdownMenu,
-  #listShareNotebookDropdownMenu,
-  .username,
-  .ui-loader,
-  #md-section-helper,
-  #right-column {
-    display: none !important;
-  }
-  #tag {
-    position: absolute;
-    right: 160px;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
-  #tag #tags {
-    left: 50px;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    position: absolute;
-    line-height: 40px;
-    line-height: inherit !important;
-  }
-  #tag #tagDropdown {
-    float: left;
-    width: 50px;
-    line-height: 40px;
-    overflow: hidden;
-    padding-left: 3px;
-  }
-  #tag .add-tag-text {
-    display: none;
-  }
-  #tag #addTagInput {
-    width: 30px;
-    display: inline-block;
-  }
-  #tag #tagColor {
-    display: none !important;
-  }
-  .my-link {
-    display: block;
-  }
-  #attachMenu {
-    width: 320px;
-  }
-  #attachList {
-    max-height: 200px;
-  }
-  #attachList li .attach-title {
-    width: 170px;
-  }
-  #dropAttach .btn {
-    padding: 5px 3px;
-    margin-top: 3px;
-    display: block;
-  }
-  #myTag .folderBody li {
-    margin: 5px;
-  }
-  #myTag .folderBody li a:hover span {
-    color: #65bd77;
-  }
-  #left-column {
-    width: 100% !important;
-  }
-  #mdEditor #wmd-input {
-    font-size: 16px;
-  }
-  .my-link {
-    display: block;
-  }
-  #themeForm img {
-    height: 70px !important;
-  }
 }

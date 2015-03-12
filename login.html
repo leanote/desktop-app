@@ -12,6 +12,12 @@
 <link href="public/css/bootstrap.css" rel="stylesheet">
 <link href="public/css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 <link href="public/css/index.css" rel="stylesheet">
+<script>
+// for windows
+if(process.platform != 'darwin') {
+	document.write('<link rel="stylesheet" href="public/css/windows.css" type="text/css" />');
+}
+</script>
 </head>
 <body id="boxBody">
 	<div id="container">
@@ -20,6 +26,7 @@
 <a class="tool-close-blur"></a>
 </div>
 <section id="box" class="animated fadeInUp">
+	<div class="drag"></div>
 	<div>
 		<h1 id="logo">
 			<a onclick="openExternal('http://leanote.com')" id="loadingLogo" title="leanote">
@@ -56,6 +63,11 @@
 <script src="public/js/common.js"></script>
 
 <script>
+var gui = require('nw.gui');
+var win = gui.Window.get();
+// win.focus();
+// gui.Window.focus();
+
 $(function() {
 	$("#email").focus();
 	if($("#email").val()) {
@@ -97,7 +109,10 @@ $(function() {
 			// $("#loginBtn").html("Sign in").removeClass("disabled");
 			if(ret.Ok) {
 				// $("#loginBtn").html("Success...");
-				location.href = 'index.html';
+				// location.href = 'index.html';
+
+				gui.Window.open('note.html', getMainWinParams());
+				win.close();
 			} else {
 				showMsg("Email or Password Error");
 			}
@@ -127,8 +142,6 @@ $(function() {
 	});
 });
 
-var gui = require('nw.gui');
-var win = gui.Window.get();
 win.resizeTo(258, 326);
 win.setPosition('center');
 

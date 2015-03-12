@@ -1370,7 +1370,11 @@ var ContextTips = {
 
 function switchAccount() {
 	SyncService.stop();
-	location.href = 'login.html';
+	// location.href = 'login.html';
+	var w = gui.Window.open('login.html', {frame: false, toolbar: false, resizable: false, transparent: true, width: 258, max_width: 258});
+	// w.focus();
+	// gui.Window.close();
+	win.close();
 }
 
 function commonCmd(e) {
@@ -1396,6 +1400,31 @@ function loadToolIcons() {
 		var imageObj = new Image(); 
 		imageObj.src = 'public/css/icon/' + imgs[i];
 	}
+}
+
+function isMac() {
+	return process.platform == 'darwin';
+}
+
+function getMainWinParams() {
+	if(isMac()) {
+		return {
+			frame: false,
+			transparent: true,
+			width: 258,
+			height: 326,
+			toolbar: false,
+			"chromium-args": "--enable-smooth-scrolling"
+		};
+	}
+	return {
+		frame: true,
+		transparent: false,
+		width: 1100,
+		height: 600,
+		toolbar: false,
+		"chromium-args": "--enable-smooth-scrolling"
+	};
 }
 
 // loadToolIcons();

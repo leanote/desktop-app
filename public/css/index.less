@@ -776,14 +776,15 @@ html {
 	// height: 326px;
 }
 body {
-	-webkit-app-region: drag;
+	// -webkit-app-region: drag;
 	position: relative;
 	background-color: transparent;
 	// width: 248px;
 	// height: 316px;
 	#container {
 		position: relative;
-		margin: 5px;
+		// margin: 5px;
+		margin: 5px auto;
 		// margin-top: 0;
 		// left: 5px;
 		// right: 5px;
@@ -795,11 +796,22 @@ body {
 		background-color: rgba(247,249,250,0.99);
 		border-radius: 5px;
 		border: 1px solid #eee;
-		-webkit-user-select: none; // input, textarea还是可以选择的
+		// -webkit-user-select: none; // input, textarea还是可以选择的
 		// box-shadow: 0 0 50px #eee;
 		// box-shadow: 0px 0px 5px #666;
 		box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
 	}
+}
+#logo, btns {
+	-webkit-user-select: none;
+}
+.drag {
+	-webkit-app-region: drag;
+	height: 30px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
 }
 .pwd-group {
 	position: relative;

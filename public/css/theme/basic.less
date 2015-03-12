@@ -1,3 +1,5 @@
+@fontFamily: 'Open Sans', 'Helvetica Neue',Arial,'Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei',sans-serif;
+
 // font
 @font-face {
   font-family: 'Open Sans';
@@ -1517,38 +1519,6 @@ top: 4px;
 	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
 }
 
-// scrollbar style TODO
-// https://www.webkit.org/blog/363/styling-scrollbars/
-// http://trac.webkit.org/export/41842/trunk/LayoutTests/scrollbars/overflow-scrollbar-combinations.html
-
-
-/*
- *  STYLE 2
- */
-/*
-*::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 10px;
-	background-color: #F5F5F5;
-}
-
-*::-webkit-scrollbar
-{
-	width: 10px;
-	background-color: #F5F5F5;
-	position: absolute;
-	-webkit-transform: translatez(0);
-}
-
-*::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #D62929;
-}
-*/
-
 html,body, #page, #pageInner {
 	position: absolute;
 	left: 0px;
@@ -1605,17 +1575,6 @@ body {
 	}
 }
 
-#topDrag {
-	-webkit-app-region: drag;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 10px;
-	z-index: 1000;
-	cursor: move;
-	// background-color: red;
-}
 
 #searchNoteInput, 
 #searchNotebookForList, 
@@ -1633,12 +1592,8 @@ body {
 	#pageInner {
 	}
 }
-#noteList {
-	top: 5px;
-}
-#note {
-	top: 5px;
-}
+
+
 #noteAndEditor {
 	// top: 5px !important;
 	// padding-top: 50px;
@@ -1654,11 +1609,10 @@ body {
 	border-radius: 5px 0 0 0;
 }
 #notebook {
-	top: 40px !important;
 	background: transparent !important;
 	#myStarredNotes {
 		.folderHeader {
-			border-top: 1px solid rgba(0, 0, 0, 0.05);
+			// border-top: 1px solid rgba(0, 0, 0, 0.05);
 		}
 	}
 }
@@ -1736,6 +1690,58 @@ body {
 	font-weight: bold;
 }
 
+//----------- start
+// top topDrag
+#noteList, #note {
+	// top: 15px;
+	top: 5px;
+	// padding-top: 5px;
+}
+#noteList {
+	top: 0;
+	padding-top: 5px;
+}
+#notebook {
+	top: 40px !important;
+}
+#noteItemListWrap {
+	top: 75px;
+}
+#myNotebookNavForListNav {
+  line-height: 35px;
+}
+#notebook {
+	#myStarredNotes {
+		.folderHeader {
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+		}
+	}
+}
+#sortType {
+	display: none;
+}
+#myNotebookNavForListNav span {
+	font-size: 16px;
+}
+#notesAndSort, #tool {
+	// top: -5px;
+	// height: 41px;
+}
+#editor, #mdEditor {
+	// top: 51px;
+}
+#topDrag {
+	-webkit-app-region: drag;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+	z-index: 1000;
+	cursor: move;
+	// background-color: red;
+}
+//--------- end
 
 @import '../traffic.less';
 @import '../ani.less';
