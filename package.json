@@ -4,6 +4,7 @@
   "version": "0.1",
   "main": "note.html",
   "window": {
+    "icon": "public/images/logo/leanote_icon_blue.png",
     "toolbar": false,
     
     "frame": false,

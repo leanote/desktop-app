@@ -1193,12 +1193,15 @@ Note.saveNote = function(e) {
     	return false;
     } else {
     }
+
+
     // copy, paste
     if(e.ctrlKey || e.metaKey) {
 	    if(num == 67) { // ctrl + c
 	    	document.execCommand('copy');
 	    } else if(num == 86) { // ctrl + v
-	    	document.execCommand('paste');
+	    	// 不能要, 要的话会有两次paste
+	    	// document.execCommand('paste');
 	    } else if(num == 65) { // ctrl + a
 	    	document.execCommand('selectAll');
 	    } else if(num == 88) { // ctrl + x

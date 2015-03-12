@@ -1377,6 +1377,7 @@ function switchAccount() {
 	win.close();
 }
 
+// 没有一处调用
 function commonCmd(e) {
 	var num = e.which ? e.which : e.keyCode;
     // copy, paste
@@ -1385,7 +1386,7 @@ function commonCmd(e) {
 	    	document.execCommand('copy');
 	    } else if(num == 86) { // ctrl + v
 	    	document.execCommand('paste');
-	    	console.log("paste--------------")
+	    	// console.log("paste--------------");
 	    } else if(num == 65) { // ctrl + a
 	    	document.execCommand('selectAll');
 	    } else if(num == 88) { // ctrl + x

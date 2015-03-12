@@ -65,6 +65,8 @@ if(process.platform != 'darwin') {
 <script>
 var gui = require('nw.gui');
 var win = gui.Window.get();
+win.setAlwaysOnTop(true);
+// alert(win);
 // win.focus();
 // gui.Window.focus();
 

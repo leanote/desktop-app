@@ -161,6 +161,7 @@ var Resize = {
 				NotebookWidth: UserInfo.NotebookWidth, 
 				NoteListWidth: UserInfo.NoteListWidth
 			}, function() {
+				// alert(UserInfo.NotebookWidth);
 			});
 		}
 		self.lineMove = false;
@@ -476,6 +477,19 @@ function scrollTo(self, tagName, text) {
 	}
 }
 
+// 设置宽度， 三栏
+function setLayoutWidth() {
+	//------------------------
+	// 界面设置, 左侧是否是隐藏的
+	UserInfo.NotebookWidth = UserInfo.NotebookWidth || $("#notebook").width();
+	UserInfo.NoteListWidth = UserInfo.NoteListWidth || $("#noteList").width();
+	
+	Resize.init();
+	// alert(UserInfo.NotebookWidth);
+	Resize.set3ColumnsWidth(UserInfo.NotebookWidth, UserInfo.NoteListWidth);
+	Resize.setMdColumnWidth(UserInfo.MdEditorWidth);
+}
+
 //--------------
 // 调用之
 $(function() {
@@ -539,15 +553,6 @@ $(function() {
 		var preHeight = $(obj).find("ul").height();
 		return preHeight < maxHeight ? preHeight : maxHeight;
 	}
-	
-	//------------------------
-	// 界面设置, 左侧是否是隐藏的
-	UserInfo.NotebookWidth = UserInfo.NotebookWidth || $("#notebook").width();
-	UserInfo.NoteListWidth = UserInfo.NoteListWidth || $("#noteList").width();
-	
-	Resize.init();
-	Resize.set3ColumnsWidth(UserInfo.NotebookWidth, UserInfo.NoteListWidth);
-	Resize.setMdColumnWidth(UserInfo.MdEditorWidth);
 	
 	// markdown preview下的a不能点击
 	$('#preview-contents').on('click', 'a', function(e) {
@@ -1045,6 +1050,7 @@ function fullSync(callback) {
 // 增量同步
 function incrSync() {
 	log('incr sync');
+	Note.showSpin();
 	SyncService.incrSync();
 }
 
@@ -1113,7 +1119,13 @@ var State = {
 				$("#mainMask").html("");
 				$("#mainMask").hide(0);
 			}, 100);
-		})
+		});
+
+		// end
+		// 打开时，同步一下
+		setTimeout(function() {
+			incrSync();
+		}, 500);
 		// $('body').show();
 	},
 
@@ -1155,6 +1167,7 @@ var State = {
 		}
 
 		this.recoverAfter();
+
 	}
 };
 
@@ -1225,11 +1238,6 @@ function initPage() {
 			// init notebook后才调用
 			// initSlimScroll();
 			LeaAce.handleEvent();
-
-			// end
-			// 开始时显示loading......
-			// 隐藏mask
-			
 		});
 	};
 
@@ -1247,8 +1255,10 @@ function initPage() {
 	 		}
 	 		$('#username').text(UserInfo.Email);
 	 		userMenu();
+	 		setLayoutWidth();
 		} else {
-			location.href = 'login.html';
+			switchAccount();
+			// location.href = 'login.html';
 		}
 	});
 }

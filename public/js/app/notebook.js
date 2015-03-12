@@ -487,11 +487,11 @@ Notebook.changeNav = function() {
 	
 	// 移动, 复制重新来, 因为nav变了, 移动至-----的notebook导航也变了
 	// 这里速度很慢
-	var t1 = (new Date()).getTime();
+	// var t1 = (new Date()).getTime();
 	Note.initContextmenu();
-	Share.initContextmenu(Note.notebooksCopy);
-	var t2 = (new Date()).getTime();
-	log(t2-t1);
+	// Share.initContextmenu(Note.notebooksCopy);
+	// var t2 = (new Date()).getTime();
+	// log(t2-t1);
 }
 
 /**
