@@ -21,14 +21,14 @@ Api.addNotebook({
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
-User.userId = '54f6e72899c37b6e20000044';
+User.userId = '545b26ad38f4116d08000029';
 
 // 54d7624205fcd105da00005
 
 // var reg = new RegExp(Evt.localUrl + '/api/file/getImage', 'g');
 // content = content.replace(reg, Evt.leanoteUrl + '/api/file/getImage');
 
-Api.auth('leanote@leanote.com', 'myleanotelife121');
+// Api.auth('leanote@leanote.com', 'myleanotelife121');
 
 User.init(function() {
 
@@ -37,15 +37,19 @@ User.init(function() {
     console.log(note);
   });
   */
+ 
+   Notebook.getDirtyNotebooks(function(notebooks) {
+    console.log(notebooks);
+   })
 
   
   // Note.getNoteByServerNoteId('54f1a1f899c37b4faf000001', function(note) {
   //   console.log(note);
   // });
   
-  Note.getNotes('', function(ret) {
-    console.log(ret);
-  });
+  // Note.getNotes('', function(ret) {
+    // console.log(ret);
+  // });
 });
 
 
@@ -115,4 +119,34 @@ while(s = reg.exec(a)) {
 }
 */
 
-console.log(Common.goNowToDate('2014-01-06T18:29:48.802+08:00'));
+// console.log(Common.goNowToDate('2014-01-06T18:29:48.802+08:00'));
+
+var A = {
+  _deepTraversal: [],
+  _visited: {},
+  deep: function(T) {
+    var me = this;
+    if(!T || !T.Subs || T.Subs.length == 0) {
+      return;
+    }
+    for(var i = 0; i < T.Subs.length; ++i) {
+      var node = T.Subs[i];
+      if(!me._visited[node.NotebookId]) {
+        me._visited[node.NotebookId] = true;
+        me._deepTraversal.push(T.Subs[i]);
+        me.deep(T.Subs[i]);
+      }
+    }
+  },
+
+  init: function() {
+    var nodes = [
+      {NotebookId: 1, Subs: [{NotebookId: 2, Subs: [{NotebookId: 9}]}, {NotebookId: 3, Subs: [{NotebookId: 4}, {NotebookId: 5}]}]},
+      {NotebookId: 6},
+      {NotebookId: 7}
+    ]
+    this.deep({Subs: nodes});
+    console.log(this._deepTraversal);
+  }
+};
+// A.init();
