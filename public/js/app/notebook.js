@@ -25,6 +25,17 @@ Notebook.getCurNotebook = function() {
 	return Notebook.cache[Notebook.curNotebookId];
 };
 
+// 为了server Web调用
+Notebook.updateNotebookNumberNotes = function(notebookId, count) {
+	var self = this;
+	var notebook = self.getNotebook(notebookId);
+	if(!notebook) {
+		return;
+	}
+	notebook.NumberNotes = count;
+	$("#numberNotes_" + notebookId).html(count);
+};
+
 // 笔记本的笔记数量更新
 Notebook._updateNotebookNumberNotes = function(notebookId, n) {
 	var self = this;
@@ -1188,4 +1199,4 @@ Notebook.deleteSync = function(notebooks) {
 		// 删除
 		me.deleteNotebookFromTree(notebookId);
 	}
-}
+};

@@ -8,7 +8,7 @@
     "toolbar": true,
     
     "frame": true,
-    "transparent": true,
+    "transparent": false,
 
     "min_width": 258,
     "min_height": 326,

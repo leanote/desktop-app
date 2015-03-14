@@ -459,6 +459,7 @@ function previewIsEmpty(preview) {
 }
 
 // 有tinymce得到的content有<html>包围
+// false表示编辑器未初始化
 function getEditorContent(isMarkdown) {
 	if(!isMarkdown) {
 		var editor = tinymce.activeEditor;
@@ -513,11 +514,15 @@ function getEditorContent(isMarkdown) {
 				}
 			}
 			return content;
+		} else {
+			return false;
 		}
 	} else {
 		// return [$("#wmd-input").val(), $("#wmd-preview").html()]
 		if(MD) {
 			return [MD.getContent(), '<div>' + $("#preview-contents").html() + '</div>']
+		} else {
+			return false;
 		}
 	}
 }

@@ -21,7 +21,7 @@ Api.addNotebook({
 // Api.uploadImage();
 User.userId = '54bdc65599c37b0da9000002';
 User.userId = '54d7620d99c37b030600002c';
-User.userId = '545b26ad38f4116d08000029';
+User.userId = '5503c84c99c37b22a4000003';
 
 // 54d7624205fcd105da00005
 
@@ -38,18 +38,22 @@ User.init(function() {
   });
   */
  
+ /*
    Notebook.getDirtyNotebooks(function(notebooks) {
     console.log(notebooks);
-   })
+   });
 
+*/
   
   // Note.getNoteByServerNoteId('54f1a1f899c37b4faf000001', function(note) {
   //   console.log(note);
   // });
   
-  // Note.getNotes('', function(ret) {
-    // console.log(ret);
-  // });
+  Note.getTrashNotes(function(ret) {
+    console.log(ret);
+    console.log(ret.length);
+
+  });
 });
 
 

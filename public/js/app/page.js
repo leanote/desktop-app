@@ -1183,6 +1183,9 @@ var State = {
 // 判断是否登录
 function initPage() {
 	win.on('close', function() {
+		// 先保存之前改变的
+		Note.curChangedSaveIt();
+		// 保存状态
 		State.saveCurState(function() {
 			win.close(true);
 		});

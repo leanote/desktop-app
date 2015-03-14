@@ -35,22 +35,31 @@ Note.notebookIds = {}; // notebookId => true
 
 Note.isReadOnly = false;
 // 定时保存信息
-Note.intervalTime = 600000; // 600s, 10mins
+Note.intervalTime = 10 * 1000; // 600s, 10mins
 Note.startInterval = function() {
+	console.error("??");
+	if(Note.interval) {
+		clearInterval(Note.interval);
+	}
 	Note.interval = setInterval(function() {
-		log("自动保存开始...");
-		// changedNote = Note.curChangedSaveIt(false);
+		console.log("start save interval...");
+		changedNote = Note.curChangedSaveIt(false);
+
 	}, Note.intervalTime); // 600s, 10mins
-}
+};
+
 // 停止, 当切换note时
 // 但过5000后自动启动
-Note.stopInterval = function() {
+Note.stopInterval = function(notStartAuto) {
 	clearInterval(Note.interval);
 	
-	setTimeout(function() {
-		Note.startInterval();
-	}, Note.intervalTime);
-}
+	// 是否自动启动, 默认是自动启动
+	if(!notStartAuto) {
+		setTimeout(function() {
+			Note.startInterval();
+		}, Note.intervalTime);
+	}
+};
 
 // note = {NoteId, Desc, UserId,...}
 Note.addNoteCache = function(note) {
@@ -246,6 +255,10 @@ Note.curHasChanged = function(force) {
 	
 	// 如果是markdown返回[content, preview]
 	var contents = getEditorContent(cacheNote.IsMarkdown);
+	if(contents === false) {
+		// 表示编辑器未初始化, 此时肯定不能保存
+		return false;
+	}
 	var content, preview;
 	var contentText;
 	if (isArray(contents)) {
@@ -324,6 +337,10 @@ Note.curHasChanged = function(force) {
 		console.log("text相同");
 		console.log(cacheNote.Content == content);
 	}
+
+	console.error('hasChanged');
+	console.log(Note.curNoteId);
+	console.log(hasChanged);
 	
 	hasChanged["UserId"] = cacheNote["UserId"] || "";
 	
@@ -446,10 +463,12 @@ Note.curChangedSaveIt = function(force, callback) {
 	if(!Note.curNoteId || Note.isReadOnly) {
 		return;
 	}
+
+	console.error(">>");
 	
 	var hasChanged = Note.curHasChanged(force);
 	
-	if(hasChanged.hasChanged || hasChanged.IsNew) {
+	if(hasChanged && (hasChanged.hasChanged || hasChanged.IsNew)) {
 		// 把已改变的渲染到左边 item-list
 		Note.renderChangedNote(hasChanged);
 	
@@ -479,8 +498,8 @@ Note.curChangedSaveIt = function(force, callback) {
 		// console.error('保存当前的笔记: ' + hasChanged.NoteId);
 		// 
 		
-		console.error("why====================");
-		console.trace("why");
+		// console.error("why====================");
+		// console.trace("why");
 
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
@@ -656,15 +675,20 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var target = $(tt('[noteId="?"]', selectNoteId))
 	Note.selectTarget(target);
 	
-	// 1 之前的note, 判断是否已改变, 改变了就要保存之
-	// 这里, 在搜索的时候总是保存, 搜索的话, 比较快, 肯定没有变化, 就不要执行该操作
-	if(needSaveChanged == undefined) {
-		needSaveChanged  = true;
-	}
-	if(needSaveChanged) {
-		var changedNote = Note.curChangedSaveIt();
-	}
-	
+
+	// 如果 inChangeNoteId == selectNoteId, 表示之前的note的content还在加载中, 此时保存笔记肯定出错
+	// if(Note.inChangeNoteId != Note.curNoteId) {
+
+		// 1 之前的note, 判断是否已改变, 改变了就要保存之
+		// 这里, 在搜索的时候总是保存, 搜索的话, 比较快, 肯定没有变化, 就不要执行该操作
+		if(needSaveChanged == undefined) {
+			needSaveChanged  = true;
+		}
+		if(needSaveChanged) {
+			var changedNote = Note.curChangedSaveIt();
+		}
+	// }
+
 	// 2. 设空, 防止在内容得到之前又发生保存
 	Note.curNoteId = "";
 	Note.inChangeNoteId = selectNoteId;
@@ -679,7 +703,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 			isShare = true;
 		}
 	}
-	var hasPerm = !isShare || Share.hasUpdatePerm(selectNoteId); // 不是共享, 或者是共享但有权限
+	var hasPerm = true; // !isShare || Share.hasUpdatePerm(selectNoteId); // 不是共享, 或者是共享但有权限
 	
 	// 有权限
 	if(hasPerm) {
@@ -687,7 +711,8 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		Note.renderNote(cacheNote);
 		
 		// 这里要切换编辑器
-		switchEditor(cacheNote.IsMarkdown)
+		switchEditor(cacheNote.IsMarkdown);
+		Note.hideEditorMask();
 	} else {
 		Note.renderNoteReadOnly(cacheNote);
 	}
@@ -850,7 +875,10 @@ Note.renderNote = function(note) {
 Note.renderNoteContent = function(content) {
 	// console.error('---------------- note:' + note.Title);
 	// console.trace();
+
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
+
+	// console.log(content.NoteId + " => " + content.Content);
 
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.setCurNoteId(content.NoteId);
@@ -1153,10 +1181,22 @@ Note._syncWarningE = $('#syncWarning');
 Note.showSpin = function() {
 	var me = this;
 	me._syncRefreshE.addClass('fa-spin');
+
+	// 如果超过30秒还在转, 证明有问题了
+	setTimeout(function() {
+		if(me._syncRefreshE.hasClass('fa-spin')) {
+			me._syncRefreshE.removeClass('fa-spin');
+		}
+	}, 30 * 1000);
+
+	// 禁止自动保存
+	me.stopInterval(true);
 };
 Note.hideSpin = function() {
 	var me = this;
 	me._syncRefreshE.removeClass('fa-spin');
+	// 开始自动保存
+	me.startInterval();
 };
 // nodejs调用
 Note.syncFinished = function() {
@@ -2533,22 +2573,13 @@ var Attach = {
 $(function() {
 	// 附件初始化
 	Attach.init();
-	
-	//-----------------
-	// 点击笔记展示之
-	// 避免iphone, ipad两次点击
-	// http://stackoverflow.com/questions/3038898/ipad-iphone-hover-problem-causes-the-user-to-double-click-a-link
-	$("#noteItemList").on("mouseenter", ".item", function(event) {
-		if(LEA.isIpad || LEA.isIphone) {
-			$(this).trigger("click");
-		}
-	});
+
 	$("#noteItemList").on("click", ".item", function(event) {
 		// event.stopPropagation();
 		var noteId = $(this).attr("noteId");
 		
 		// 手机端处理
-		Mobile.changeNote(noteId);
+		// Mobile.changeNote(noteId);
 		
 		if(!noteId) {
 			return;
@@ -2740,19 +2771,33 @@ Note.updateSync = function(notes) {
 	if(isEmpty(notes)) { 
 		return;
 	}
+
+	var curNotebookIsTrash = Notebook.curNotebookIsTrash();
+
 	for(var i in notes) {
 		var note = notes[i];
 		note.InitSync = true; // 需要重新获取内容
 		Note.addNoteCache(note);
 		// 如果当前修改的是本笔记, 那么重新render之
-		console.log('->>>');
-		console.log(Note.curNoteId);
+		// console.log('->>>');
+		// console.log(Note.curNoteId);
 		if(Note.curNoteId == note.NoteId) {
 			// 这里, 如果当前就是更新的, 则重新render, 有个问题, server新内容已经在服务器上了
 			Note.reRenderNote(Note.curNoteId);
 		}
+
+		// 如果是trash, 且当前不在trash目录下, 且有该笔记, 则删除之
+		if(!curNotebookIsTrash && note.IsTrash) {
+			var target = $(tt('[noteId="?"]', note.NoteId));
+			if(target.length) {
+				if(Note.curNoteId == note.NoteId) {
+					Note.changeToNext(target);
+				}
+				target.remove();
+			}
+		}
 	}
-}
+};
 
 // 删除
 Note.deleteSync = function(notes) {
