@@ -642,6 +642,10 @@ Note.changeNoteForPjax = function(noteId, mustPush, needTargetNotebook) {
 Note.contentAjax = null;
 Note.contentAjaxSeq = 1;
 Note.inChangeNoteId = '';
+Note.setCurNoteId = function(noteId) {
+	Note.curNoteId = noteId;
+	Note.inChangeNoteId = '';
+};
 Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var self = this;
 	
@@ -740,6 +744,9 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 // 重新渲染笔记, 因为sync更新了
 Note.reRenderNote = function(noteId) {
 	var me = this;
+
+	console.error("???")
+
 	me.showContentLoading();
 	var note = Note.getNote(noteId);
 	Note.renderNote(note);
@@ -846,7 +853,8 @@ Note.renderNoteContent = function(content) {
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
 
 	// 只有在renderNoteContent时才设置curNoteId
-	Note.curNoteId = content.NoteId;
+	Note.setCurNoteId(content.NoteId);
+
 	// life
 	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
 	content.Desc = Note.genDesc(content.Content);
@@ -1133,7 +1141,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 
 	Note.renderNote(note);
 	Note.renderNoteContent(note);
-	Note.curNoteId = note.NoteId;
+	Note.setCurNoteId(note.NoteId);
 	
 	// 更新数量
 	Notebook.incrNotebookNumberNotes(notebookId)
@@ -1954,6 +1962,8 @@ Note.contentSynced = function(noteId, content) {
 		if(me.curNoteId == noteId || me.inChangeNoteId == noteId) {
 			// alert(note.Title);
 			// 重新渲染
+			// alert(me.curNoteId == noteId); false
+			// alert(me.inChangeNoteId == noteId); true
 			Note.reRenderNote(noteId);
 		} else {
 			// 生成desc
@@ -2707,7 +2717,7 @@ Note.fixSyncConflict = function(note, newNote) {
 
 	// 如果当前编辑的是这个笔记, 那切换到newNote上来
 	if(Note.curNoteId == note.NoteId) {
-		Note.curNoteId = newNote.NoteId;
+		Note.setCurNoteId(newNote.NoteId);
 	}
 };
 
