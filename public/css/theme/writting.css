@@ -27,11 +27,11 @@ body.writting #note #mdEditor {
   bottom: 0;
 }
 body.writting #note #editor {
-  background-color: #fbfcf7;
+  background-color: #f2f2f2;
 }
 body.writting #note #editorContentWrap {
   position: absolute;
-  padding: 5px 0;
+  padding: 10px 0;
   top: 40px;
   left: 0;
   right: 0;
@@ -44,10 +44,11 @@ body.writting #note #editorContent {
   margin: auto;
   background-color: #fff;
   top: 0 !important;
-  border-radius: 5px;
+  border-radius: 0px;
   min-height: 100%;
   box-shadow: 0 1px 10px #ccc;
   font-size: 16px;
+  padding: 50px;
 }
 body.writting #note #editorContent p {
   margin: 10px 0;
@@ -101,6 +102,10 @@ body.writting #editor.all-tool #editorContentWrap {
 }
 .mce-btn {
   background-color: #fbfcf7 !important;
+  overflow: hidden;
+}
+.mce-btn button span {
+  overflow: hidden;
 }
 .mce-menubtn.mce-btn-small span {
   line-height: 20px !important;
@@ -139,4 +144,7 @@ body.writting #editor.all-tool #editorContentWrap {
 .preview-container {
   font-size: 16px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.pren-tool {
+  right: 6px;
 }

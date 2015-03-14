@@ -280,13 +280,16 @@ Note.curHasChanged = function(force) {
 	if(hasChanged.IsNew) {
 		$.extend(hasChanged, cacheNote);
 	} else {
+		/*
 		if(!cacheNote.isDirty) { // 不是dirty
+			// dirty操作在后台控制吧, 因为有些命令如添加链接不会触发keydown的
 			console.log("no dirty");
 			hasChanged.hasChanged = false;
 			return hasChanged;
 		} else {
-			console.log("is dirty");
+			// console.log("is dirty");
 		}
+		*/
 	}
 	
 	if(cacheNote.Title != title) {
@@ -474,6 +477,10 @@ Note.curChangedSaveIt = function(force, callback) {
 		me.saveInProcess[hasChanged.NoteId] = true;
 		
 		// console.error('保存当前的笔记: ' + hasChanged.NoteId);
+		// 
+		
+		console.error("why====================");
+		console.trace("why");
 
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
@@ -728,7 +735,23 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// console.trace();
 
 	Service.noteService.getNoteContent(cacheNote.NoteId, setContent); // ajaxGet(url, param, setContent);
-}
+};
+
+// 重新渲染笔记, 因为sync更新了
+Note.reRenderNote = function(noteId) {
+	var me = this;
+	me.showContentLoading();
+	var note = Note.getNote(noteId);
+	Note.renderNote(note);
+	NoteService.getNoteContent(noteId, function(noteContent) {
+		if(noteContent) {
+			Note.setNoteCache(noteContent, false);
+			Attach.renderNoteAttachNum(noteId, true);
+			Note.renderNoteContent(noteContent);
+		}
+		me.hideContentLoading();
+	});
+};
 
 // 渲染
 
@@ -1193,7 +1216,6 @@ Note.saveNote = function(e) {
     	return false;
     } else {
     }
-
 
     // copy, paste
     if(e.ctrlKey || e.metaKey) {
@@ -1932,7 +1954,7 @@ Note.contentSynced = function(noteId, content) {
 		if(me.curNoteId == noteId || me.inChangeNoteId == noteId) {
 			// alert(note.Title);
 			// 重新渲染
-			Note.changeNote(noteId);
+			Note.reRenderNote(noteId);
 		} else {
 			// 生成desc
 			me.renderNoteDesc(note);
@@ -2716,8 +2738,8 @@ Note.updateSync = function(notes) {
 		console.log('->>>');
 		console.log(Note.curNoteId);
 		if(Note.curNoteId == note.NoteId) {
-			console.log('yes---');
-			Note.changeNote(Note.curNoteId);
+			// 这里, 如果当前就是更新的, 则重新render, 有个问题, server新内容已经在服务器上了
+			Note.reRenderNote(Note.curNoteId);
 		}
 	}
 }

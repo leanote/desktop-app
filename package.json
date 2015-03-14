@@ -5,9 +5,9 @@
   "main": "note.html",
   "window": {
     "icon": "public/images/logo/leanote_icon_blue.png",
-    "toolbar": false,
+    "toolbar": true,
     
-    "frame": false,
+    "frame": true,
     "transparent": true,
 
     "min_width": 258,

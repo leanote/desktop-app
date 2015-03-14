@@ -1,6 +1,6 @@
 #leftNotebook {
   background: none !important;
-  background-color: rgba(37, 49, 62, 0.9) !important;
+  background-color: rgba(37, 49, 62, 0.96) !important;
 }
 .folderHeader .fa-left,
 .folderHeader span {
@@ -11,6 +11,10 @@
 }
 #notebookList {
   border-top: none;
+}
+#notebookList input {
+  background: transparent;
+  color: #fff;
 }
 .folderBody a:hover {
   background-color: transparent !important;

@@ -43,11 +43,12 @@ body.writting {
     }
 
     #editor {
-      background-color: @bgColor;
+      // background-color: @bgColor;
+      background-color: rgba(242,242,242,1);
     }
     #editorContentWrap {
       position: absolute;
-      padding: 5px 0;
+      padding: 10px 0;
       top: 40px;
       left: 0;
       right: 0;
@@ -61,10 +62,11 @@ body.writting {
       background-color: #fff;
       top: 0 !important;
       // margin-top: 5px;
-      border-radius: 5px;
+      border-radius: 0px;
       min-height: 100%;
       box-shadow: 0 1px 10px #ccc;
       font-size: 16px;
+      padding: 50px;
       p {
         margin: 10px 0;
       }
@@ -129,7 +131,15 @@ body.writting {
 }
 .mce-btn {
   background-color: @bgColor !important;
+  overflow: hidden;
+  button {
+    span {
+      // windows, linux下有滚动
+      overflow: hidden;
+    }
+  }
 }
+
 .mce-menubtn.mce-btn-small span {
   line-height: 20px !important;
 }
@@ -165,4 +175,9 @@ body.writting {
 #wmd-input > .editor-content, .preview-container {
   font-size: 16px;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+// 为了滚动条能拖动
+.pren-tool {
+  right: 6px;
 }

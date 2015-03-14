@@ -29,6 +29,9 @@ body {
 #presentation svg {
   border-radius: 5px;
 }
+#presentation a {
+  color: #2a6496;
+}
 #presentation.writting,
 #presentation.black {
   background-color: #F9F9F5;

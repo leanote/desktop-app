@@ -1622,6 +1622,10 @@ body.init #pageInner {
   animation: rond 2s infinite;
   -webkit-animation: rond 2s infinite;
 }
+.loading-spin {
+  animation: rond 2s infinite;
+  -webkit-animation: rond 2s infinite;
+}
 ::selection {
   background: #000000;
   color: #ffffff;

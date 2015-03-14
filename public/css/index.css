@@ -30,6 +30,10 @@
   animation: rond 2s infinite;
   -webkit-animation: rond 2s infinite;
 }
+.loading-spin {
+  animation: rond 2s infinite;
+  -webkit-animation: rond 2s infinite;
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;

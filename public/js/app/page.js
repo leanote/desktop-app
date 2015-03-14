@@ -699,65 +699,72 @@ LeaAce = {
 		return "leanote_ace_" + (new Date()).getTime() + "_" + this._aceId;
 	},
 	initAce: function(id, val, force) {
-		var me = this;
-		if(!force && !me.canAndIsAce()) {
-			return;
+		try {
+			var me = this;
+			if(!force && !me.canAndIsAce()) {
+				return;
+			}
+			me.disableAddHistory();
+			var $pre = $('#' + id);
+			if($pre.length == 0) {
+				return;
+			}
+			$pre.find('.toggle-raw').remove();
+			var preHtml = $pre.html();
+
+			$pre.removeClass('ace-to-pre');
+			$pre.attr("contenteditable", false); // ? 避免tinymce编辑
+			var aceEditor = ace.edit(id);
+			aceEditor.setTheme("ace/theme/tomorrow");
+
+			var brush = me.getPreBrush($pre);
+			var b = "";
+			if(brush) {
+				try {
+					b = brush.split(':')[1];
+				} catch(e) {}
+			}
+			b = b || "javascript";
+			aceEditor.session.setMode("ace/mode/" + b);
+			aceEditor.getSession().setUseWorker(false); // 不用语法检查
+			aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
+			aceEditor.setOption("wrap", "free");
+			aceEditor.setShowInvisibles(false);
+			aceEditor.setAutoScrollEditorIntoView(true);
+			aceEditor.setOption("maxLines", 100);
+			aceEditor.commands.addCommand({
+			    name: "undo",
+			    bindKey: {win: "Ctrl-z", mac: "Command-z"},
+			    exec: function(editor) {
+			    	var undoManager = editor.getSession().getUndoManager();
+			    	if(undoManager.hasUndo()){ 
+			    		undoManager.undo();
+			    	} else {
+			    		undoManager.reset();
+			    		tinymce.activeEditor.undoManager.undo();
+			    	}
+			    }
+			});
+			this._aceEditors[id] = aceEditor;
+			if(val) {
+				aceEditor.setValue(val);
+				// 不要选择代码
+				// TODO
+			} else {
+				// 防止 <pre><div>xx</div></pre> 这里的<div>消失
+				// preHtml = preHtml.replace('/&nbsp;/g', ' '); // 以前是把' ' 全换成了&nbsp;
+				// aceEditor.setValue(preHtml);
+				// 全不选
+				// aceEditor.selection.clearSelection();
+			}
+
+			// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+			me.resetAddHistory();
+			return aceEditor;
+		} catch(e) {
+
 		}
-		me.disableAddHistory();
-		var $pre = $('#' + id);
-		$pre.find('.toggle-raw').remove();
-		var preHtml = $pre.html();
-
-		$pre.removeClass('ace-to-pre');
-		$pre.attr("contenteditable", false); // ? 避免tinymce编辑
-		var aceEditor = ace.edit(id);
-		aceEditor.setTheme("ace/theme/tomorrow");
-
-		var brush = me.getPreBrush($pre);
-		var b = "";
-		if(brush) {
-			try {
-				b = brush.split(':')[1];
-			} catch(e) {}
-		}
-		b = b || "javascript";
-		aceEditor.session.setMode("ace/mode/" + b);
-		aceEditor.getSession().setUseWorker(false); // 不用语法检查
-		aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
-		aceEditor.setOption("wrap", "free");
-		aceEditor.setShowInvisibles(false);
-		aceEditor.setAutoScrollEditorIntoView(true);
-		aceEditor.setOption("maxLines", 100);
-		aceEditor.commands.addCommand({
-		    name: "undo",
-		    bindKey: {win: "Ctrl-z", mac: "Command-z"},
-		    exec: function(editor) {
-		    	var undoManager = editor.getSession().getUndoManager();
-		    	if(undoManager.hasUndo()){ 
-		    		undoManager.undo();
-		    	} else {
-		    		undoManager.reset();
-		    		tinymce.activeEditor.undoManager.undo();
-		    	}
-		    }
-		});
-		this._aceEditors[id] = aceEditor;
-		if(val) {
-			aceEditor.setValue(val);
-			// 不要选择代码
-			// TODO
-		} else {
-			// 防止 <pre><div>xx</div></pre> 这里的<div>消失
-			// preHtml = preHtml.replace('/&nbsp;/g', ' '); // 以前是把' ' 全换成了&nbsp;
-			// aceEditor.setValue(preHtml);
-			// 全不选
-			// aceEditor.selection.clearSelection();
-		}
-
-		// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-		me.resetAddHistory();
-		return aceEditor;
 	},
 	clearIntervalForInitAce: null,
 	initAceFromContent: function(editor) {
@@ -1485,8 +1492,10 @@ function userMenu() {
 	// ----------
 	// 全局菜单
 
-	Pren.init();
 	var mode = new gui.Menu();
+
+	Pren.init();
+	
 	mode.append(Pren.pren);
 	mode.append(Pren.fullScreen);
 	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
@@ -1568,8 +1577,16 @@ function userMenu() {
 		var height = 130;
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
+
 			this.menu.append(Pren.pren);
 			this.menu.append(Pren.fullScreen);
+			/*
+			this.menu.append(new gui.MenuItem(
+			{label: 'Toggle Presentation', click: function() {
+				// me.togglePren();
+			}
+			}));
+			*/
 			height = 220;
 		}
 
