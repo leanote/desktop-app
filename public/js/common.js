@@ -417,26 +417,32 @@ function pasteImage(e) {
 	// find pasted image among pasted items
 	var blob;
     for (var i = 0; i < items.length; i++) {
-    	if (items[i].type.indexOf("image") === 0) {
-    		blob = items[i].getAsFile();
-	    }
-	}
-	// console.log("paste images");
-	// console.log(blob);
-	// load image if there is a pasted image
-	if (blob) {
-		// console.log("??");
-	    var reader = new FileReader();
-	    reader.onloadend = function() { 
-	    	console.log('read end');
-	    	console.log(reader.result);
-		    if(reader.result) {
-		    	FileService.pasteImage2(reader.result, function(url) {
-					insertImage(url);
-				});
-		    }
-	    };
-	    reader.readAsDataURL(blob);
+    	// if (items[i].type.indexOf("image") === 0) {
+    	blob = items[i].getAsFile();
+		console.log("paste images");
+		console.log(blob);
+		// load image if there is a pasted image
+		if (blob) {
+			// console.log("??");
+		    var reader = new FileReader();
+		    reader.onloadend = function() { 
+		    	console.log('read end');
+		    	console.log(reader);
+		    	console.log(reader.result);
+			    if(reader.result) {
+			    	if(blob.type.indexOf('image/') === 0) { // image类型
+				    	FileService.pasteImage2(reader.result, function(url) {
+							insertImage(url);
+						});
+			    	} else {
+			    		// 作为附件上传
+			    		// mac下还是图片
+
+			    	}
+			    }
+		    };
+		    reader.readAsDataURL(blob);
+		}
 	}
 }
 
@@ -1376,7 +1382,11 @@ var ContextTips = {
 function switchAccount() {
 	SyncService.stop();
 	// location.href = 'login.html';
-	var w = gui.Window.open('login.html', {frame: false, toolbar: false, resizable: false, transparent: true, width: 258, max_width: 258});
+	var w = gui.Window.open('login.html', {
+		frame: false, toolbar: false, resizable: false, 
+		transparent: true, 
+		width: 278, 
+		max_width: 278});
 	// w.focus();
 	// gui.Window.close();
 	win.close();

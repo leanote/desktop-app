@@ -117,12 +117,14 @@ define("tinymce/pasteplugin/Plugin", [
 			active: self.clipboard.pasteFormat == "text"
 		});
 		
+		/*
 		editor.addButton('pasteCopyImage', {
 			icon: 'copy',
 			tooltip: "When Paste other site's image, copy it into my album as public image",
 			onclick: togglePasteCopyImage,
 			active: self.clipboard.copyImage === true
 		});
+		*/
 
 		editor.addMenuItem('pastetext', {
 			text: 'Paste as text',

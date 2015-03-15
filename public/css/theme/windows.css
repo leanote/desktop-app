@@ -35,6 +35,9 @@
 #editorContent:hover ::-webkit-scrollbar-thumb {
   visibility: visible;
 }
+* {
+  font-family: 'Microsoft YaHei', '微软雅黑', ' WenQuanYi Micro Hei', 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', sans-serif;
+}
 body {
   border: none;
   border-shadow: none;
@@ -42,10 +45,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  font-family: '微软雅黑';
 }
-* {
-  font-family: '微软雅黑';
+#newMyNote * {
+  font-family: 'Arial';
 }
 html,
 body,

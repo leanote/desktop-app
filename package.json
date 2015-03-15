@@ -10,12 +10,15 @@
     "frame": true,
     "transparent": false,
 
-    "min_width": 258,
-    "min_height": 326,
+    "min_width": 268,
+    "min_height": 346,
     // "width":  400, // 1100,
     // "height": 300 // 600
-    "width":  258,
-    "height": 326
+    "width":  278,
+    "height": 356
+
+    // width: 268px;
+    // height: 346px;
   },
   "chromium-args": "--enable-smooth-scrolling"
 }

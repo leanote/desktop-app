@@ -1118,7 +1118,7 @@ h3 {
   cursor: pointer !important;
 }
 #editorContent {
-  padding: 5px;
+  padding: 5px 10px;
   outline: none;
   margin-top: 5px;
   bottom: 5px !important;
@@ -1533,6 +1533,11 @@ body.init #pageInner {
   height: 10px;
   z-index: 1000;
   cursor: move;
+}
+.no-info {
+  text-align: center;
+  margin: 10px 0;
+  opacity: 0.8;
 }
 .win-tool {
   padding: 5px;

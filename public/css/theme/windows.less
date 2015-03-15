@@ -52,6 +52,11 @@
 		}
 	}
 }
+@fontFamily: 'Microsoft YaHei', '微软雅黑',' WenQuanYi Micro Hei','Open Sans', 'Helvetica Neue',Arial,'Hiragino Sans GB',sans-serif;
+
+* {
+	font-family: @fontFamily;
+}
 
 body {
 	border: none;
@@ -60,11 +65,13 @@ body {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	font-family: '微软雅黑';
+	// font-family: '微软雅黑';
 }
-* {
-	font-family: '微软雅黑';
+
+#newMyNote * {
+	font-family: 'Arial';
 }
+
 html, body, #page, #pageInner, #noteList, #notebook, #leftNotebook {
 	border-radius: 0;
 }

@@ -398,7 +398,7 @@ function initEditor() {
 		selector : "#editorContent",
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
-		content_css : ["public/css/editor/editor.css"],
+		// content_css : ["public/css/editor/editor.css"],
 		skin : "custom",
 		language: LEA.locale, // 语言
 		plugins : [
@@ -1519,9 +1519,17 @@ function userMenu() {
 	function menu() {
 		var me = this;
 		// this.target = '';
+		var shortHost = UserInfo.Host;
+		if(shortHost) {
+			var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(shortHost);
+			if(ret && ret.length == 3) {
+				shortHost = ret[2];
+			}
+		}
+
 	    this.menu = new gui.Menu();
 	    this.email = new gui.MenuItem({
-	        label: UserInfo.Email,
+	        label: UserInfo.Email + ' (' + shortHost + ')',
 	        enabled: false,
 	        click: function(e) {
 	        }

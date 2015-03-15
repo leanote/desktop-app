@@ -264,6 +264,10 @@ Tag.renderTagNav = function(tags) {
 		// 笔记数量先隐藏, 不准确
 		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em style="display: none">(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
 	}
+
+	if(tags.length == 0) {
+		$("#tagNav").html('<p class="no-info">No tag</p>');
+	}
 };
 
 // 添加的标签重新render到左边, 放在第一个位置

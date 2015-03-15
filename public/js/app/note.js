@@ -1804,6 +1804,10 @@ Note.renderStars = function(notes) {
 		var t = tt(me.starItemT, note.NoteId, note.Title || 'Untitled');
 		me.starNotesO.append(t);
 	}
+
+	if(notes.length == 0) {
+		me.starNotesO.html('<p class="no-info">No Starred Note</p>');
+	}
 };
 
 // 点击笔记, 判断是否在star中, 如果在, 则也选中

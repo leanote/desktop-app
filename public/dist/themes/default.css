@@ -1469,13 +1469,14 @@ a.input-group-addon {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 3px;
+  padding: 10px;
 }
 #mdEditor .preview-panel {
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
+  padding: 10px;
 }
 #mdEditor .wmd-button,
 #mdEditor .preview-button {
