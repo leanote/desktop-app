@@ -427,7 +427,8 @@ h3 {
   opacity: 0.8;
 }
 #noteItemList .item-blog {
-  top: 1px;
+  bottom: 0;
+  right: 45px;
   display: none;
 }
 #noteItemList .item-setting {
@@ -454,7 +455,8 @@ h3 {
   color: yellow !important;
 }
 #noteItemList .item:hover .item-setting,
-#noteItemList .item:hover .item-star {
+#noteItemList .item:hover .item-star,
+#noteItemList .item:hover .item-blog {
   display: block;
 }
 #noteItemList .item:hover.item-conflict .item-conflict-info {

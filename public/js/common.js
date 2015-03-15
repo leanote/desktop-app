@@ -1443,6 +1443,11 @@ function getMainWinParams() {
 	};
 }
 
+// 浏览器打开
+function openExternal(url) {
+    gui.Shell.openExternal(url);
+}
+
 // loadToolIcons();
 
 ContextTips.init();

@@ -1460,10 +1460,7 @@ var Pren = {
 		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
 		    return re.test(str_url);
 		}
-		// 浏览器打开
-		function openExternal(url) {
-		    gui.Shell.openExternal(url);
-		}
+		
 		// 防止在本窗口打开
 		me.presentationO.on('click', 'a', function(e) {
 			e.preventDefault();
@@ -1519,12 +1516,11 @@ function userMenu() {
 	function menu() {
 		var me = this;
 		// this.target = '';
+		UserInfo.Host = UserInfo.Host || 'http://leanote.com';
 		var shortHost = UserInfo.Host;
-		if(shortHost) {
-			var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(shortHost);
-			if(ret && ret.length == 3) {
-				shortHost = ret[2];
-			}
+		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(shortHost);
+		if(ret && ret.length == 3) {
+			shortHost = ret[2];
 		}
 
 	    this.menu = new gui.Menu();
@@ -1532,6 +1528,12 @@ function userMenu() {
 	        label: UserInfo.Email + ' (' + shortHost + ')',
 	        enabled: false,
 	        click: function(e) {
+	        }
+	    });
+	    this.blog = new gui.MenuItem({
+	        label: 'My blog',
+	        click: function(e) {
+	        	openExternal(UserInfo.Host + '/blog/' + UserInfo.UserId);
 	        }
 	    });
 	    this.switchAccount = new gui.MenuItem({
@@ -1581,11 +1583,12 @@ function userMenu() {
 	    this.theme.submenu = themeSubmenus;
 
 	    this.menu.append(this.email);
+	    this.menu.append(this.blog);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.theme);
 		
-		var height = 130;
+		var height = 150;
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -1598,12 +1601,11 @@ function userMenu() {
 			}
 			}));
 			*/
-			height = 220;
+			height = 240;
 		}
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.sync);
-		
 		
 	    this.popup = function(e) {
 			this.menu.popup(10, $('body').height() - height);

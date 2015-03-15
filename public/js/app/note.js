@@ -1136,10 +1136,10 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	}
 	
 	// notebook是否是Blog
-	if(!notebook.IsBlog) {
-		newItem = $(newItem);
-		newItem.find(".item-blog").hide();
-	}
+	// if(!notebook.IsBlog) {
+	newItem = $(newItem);
+	newItem.find(".item-blog").hide();
+	// }
 	
 	// 是否在当前notebook下, 不是则切换过去, 并得到该notebook下所有的notes, 追加到后面!
 	if(!Notebook.isCurNotebook(notebookId)) {
@@ -1462,44 +1462,6 @@ Note.exportPDF = function(target) {
 	});
 };
 
-// 长微博
-Note.html2Image = function(target) {
-	var noteId = $(target).attr("noteId");
-	showDialog("html2ImageDialog", {title: "分享到社区", postShow: function() {
-		ajaxGet("/note/html2Image", {noteId: noteId}, function(ret) {
-			if (typeof ret == "object" && ret.Ok) {
-				$("#leanoteDialog .weibo span").html("生成成功, 右键图片保存到本地.")
-				$("#leanoteDialog .weibo img").attr("src", ret.Id + "?" + ((new Date()).getTime()));
-				$("#leanoteDialog .btn-share").removeClass("disabled");
-				var note = Note.cache[noteId];
-				var pic = UrlPrefix + ret.Id;
-				var title = encodeURI(note.Title + " (" + UserInfo.Username + "分享. 来自leanote.com)");
-				var windowParam = 'width=700, height=580, top=180, left=320, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no';
-				$("#leanoteDialog .sendWeiboBtn").click(function() {
-					var url = "http://service.weibo.com/share/share.php?title=" + title;
-					url += "&pic=" + pic;
-					window.open(url, '分享到新浪微博', windowParam);
-				});
-				$("#leanoteDialog .sendTxWeiboBtn").click(function() {
-					var _appkey = '801542571';
-					var url = "http://share.v.t.qq.com/index.php?c=share&a=index&appkey=" + _appkey +"&title=" + title +"&url=&pic=" + pic
-					window.open(url, '分享到腾讯微博', windowParam);
-				});
-				$("#leanoteDialog .sendQQBtn").click(function() {
-					var url = 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + UrlPrefix + '&title=' + title + '&pics=' + pic;
-					window.open(url, '分享QQ空间', windowParam);
-				});
-				$("#leanoteDialog .sendRRBtn").click(function() {
-					var url = 'http://widget.renren.com/dialog/share?resourceUrl=' + UrlPrefix +  '&srcUrl=' + UrlPrefix + '&title=' + title + '&pic=' + pic;
-					window.open(url, '分享人人网', windowParam);
-				});
-			} else {
-				$("#leanoteDialog .weibo").html("对不起, 我们出错了!")
-			}
-		});
-	}});
-}
-
 //--------------
 // read only
 
@@ -1641,18 +1603,37 @@ Note.setNote2Blog = function(target) {
 	if(note.IsBlog != undefined) {
 		isBlog = !note.IsBlog;
 	}
+
 	// 标志添加/去掉
-	if(isBlog) {
-		$(target).find(".item-blog").show();
-	} else {
-		$(target).find(".item-blog").hide();
+	function setBlog() {
+		// alert(noteId + " => " + isBlog);
+		NoteService.setNote2Blog(noteId, isBlog, function(ret) {
+			if(ret) {
+				// 触发同步
+				incrSync();
+
+				// Note.setNoteCache({NoteId: noteId, IsBlog: isBlog}, false); // 不清空NotesByNotebookId缓存
+				
+				// 同步后会设置
+				/*
+				if(isBlog) {
+					$(target).find(".item-blog").removeAttr('style');
+				} else {
+					$(target).find(".item-blog").hide();
+				}
+				*/
+			}
+		});
 	}
-	ajaxPost("/note/setNote2Blog", {noteId: noteId, isBlog: isBlog}, function(ret) {
-		if(ret) {
-			Note.setNoteCache({NoteId: noteId, IsBlog: isBlog}, false); // 不清空NotesByNotebookId缓存
-		}
-	});
-}
+	// 是新笔记 或 当前笔记就是它的, 则先保存之
+	if(note.IsNew || note.curNoteId == noteId) {
+		Note.curChangedSaveIt(true, function(note) {
+			setBlog();
+    	});
+	} else {
+		setBlog();
+	}
+};
 
 // 设置notebook的blog状态
 // 当修改notebook是否是blog时调用
@@ -1676,7 +1657,7 @@ Note.setAllNoteBlogStatus = function(notebookId, isBlog) {
 			notes[i].IsBlog = isBlog;
 		}
 	}
-}
+};
 
 // 移动
 Note.moveNote = function(target, data) {
@@ -1726,7 +1707,7 @@ Note.moveNote = function(target, data) {
 			Note.setNoteCache(ret)
 		}
 	});
-}
+};
 
 // 复制
 // data是自动传来的, 是contextmenu数据 
@@ -2205,6 +2186,13 @@ Note.initContextmenu = function() {
 	        	Note.deleteNote(self.target);
 	        }
 	    });
+	    this.publicBlog = new gui.MenuItem({
+	        label: getMsg("Public as blog"),
+	        click: function(e) {
+	        	Note.setNote2Blog(self.target);
+	        }
+	    });
+
 	    this.move = new gui.MenuItem({
 	        label: getMsg("move"),
 	        click: function(e) {
@@ -2220,6 +2208,7 @@ Note.initContextmenu = function() {
 	    this.move.submenu = ms[0];
 	    this.copy.submenu = ms[1];
 
+	    this.menu.append(this.publicBlog);
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
@@ -2254,6 +2243,12 @@ Note.initContextmenu = function() {
 	    		this.copy.enabled = false;
 	    	} else {
 	    		this.copy.enabled = true;
+	    	}
+
+	    	if(note.IsBlog) {
+	    		this.publicBlog['label'] = 'Cancel public';
+	    	} else {
+	    		this.publicBlog['label'] = 'Public as blog';
 	    	}
 
 			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
@@ -2672,7 +2667,10 @@ $(function() {
 		e.stopPropagation();
 		// 得到ID
 		var noteId = $(this).parent().attr('noteId');
-		window.open("/blog/view/" + noteId);
+		var note = Note.getNote(noteId);
+		if(note.ServerNoteId) {
+			openExternal(UserInfo.Host + '/blog/post/' + note.ServerNoteId);
+		}
 	});
 	
 	// note setting
@@ -2756,21 +2754,37 @@ Note.fixSyncConflict = function(note, newNote) {
 	}
 };
 
-// 添加同步的notes
-Note.addSync = function(notes) {
+// 设置博客是否可以见
+Note.setNoteBlogVisible = function(noteId, isBlog) {
+	var target = $(tt('[noteId="?"]', noteId));
+	if(target.length) {
+		if(isBlog) {
+			target.find(".item-blog").removeAttr('style');
+		} else {
+			target.find(".item-blog").hide();
+		}
+	}
+};
+
+// --> adds
+// changeAdds 有了serverId
+Note.updateNoteCacheForServer = function(notes) {
 	if(isEmpty(notes)) { 
 		return;
 	}
 	for(var i in notes) {
 		var note = notes[i];
-		Note.addNoteCache(note);
-		// 添加到当前的笔记列表中
-		var newHtmlObject = Note._getNoteHtmlObjct(note);
-		log(newHtmlObject);
-		$('#noteItemList').prepend(newHtmlObject);
+		// alert(note.NoteId + " " + note.IsBlog);
+		Note.addNoteCache({NoteId: note.NoteId, 
+			ServerNoteId: note.ServerNoteId,
+			IsBlog: note.IsBlog,
+		});
+		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
 	}
-}
+};
+
 // 更新
+// --> send changes 
 Note.updateSync = function(notes) {
 	if(isEmpty(notes)) { 
 		return;
@@ -2790,6 +2804,10 @@ Note.updateSync = function(notes) {
 			Note.reRenderNote(Note.curNoteId);
 		}
 
+		// 设置当前是否是博客
+		// alert(note.NoteId + " " + note.IsBlog);
+		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
+
 		// 如果是trash, 且当前不在trash目录下, 且有该笔记, 则删除之
 		if(!curNotebookIsTrash && note.IsTrash) {
 			var target = $(tt('[noteId="?"]', note.NoteId));
@@ -2800,6 +2818,25 @@ Note.updateSync = function(notes) {
 				target.remove();
 			}
 		}
+	}
+};
+
+
+// 添加同步的notes
+// <-- server
+Note.addSync = function(notes) {
+	if(isEmpty(notes)) { 
+		return;
+	}
+	for(var i in notes) {
+		var note = notes[i];
+		Note.addNoteCache(note);
+		// alert(note.ServerNoteId);
+		// 添加到当前的笔记列表中
+		var newHtmlObject = Note._getNoteHtmlObjct(note);
+		$('#noteItemList').prepend(newHtmlObject);
+
+		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
 	}
 };
 
