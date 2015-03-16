@@ -66,14 +66,28 @@ function isURL(str_url) {
 function openExternal(url) {
     gui.Shell.openExternal(url);
 }
+function isMac() {
+	return process.platform === 'darwin';
+}
 
 // 窗口大小设置
 var win = gui.Window.get();
 
 $(function() {
+	var isMacP = isMac();
 	$('.tool-close, .tool-close-blur').click(function() {
-		win.close();
+		// mac下关闭才是隐藏
+		if(isMacP) {
+			win.hide();
+		} else {
+			win.close();
+		}
 	});
+	gui.App.on('reopen', function() {
+	    win.show();
+	    win.focus();
+	});
+
 	$('.tool-min, .tool-min-blur').click(function() {
 		win.minimize();
 	});

@@ -37,6 +37,9 @@ Note.isReadOnly = false;
 // 定时保存信息
 Note.intervalTime = 10 * 1000; // 600s, 10mins
 Note.startInterval = function() {
+	// 不要自动保存
+	return;
+
 	console.error("??");
 	if(Note.interval) {
 		clearInterval(Note.interval);
@@ -799,6 +802,8 @@ Note.renderChangedNote = function(changedNote) {
 	var $leftNoteNav = $(tt('[noteId="?"]', changedNote.NoteId));
 	if(changedNote.Title) {
 		$leftNoteNav.find(".item-title").html(changedNote.Title);
+		// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
+		Note.changeStarNoteTitle(changedNote.NoteId, changedNote.Title);
 	}
 	if(changedNote.Desc) {
 		$leftNoteNav.find(".desc").html(changedNote.Desc);
@@ -818,8 +823,7 @@ Note.renderChangedNote = function(changedNote) {
 		$leftNoteNav.removeClass("item-image");
 	}
 
-	// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
-	Note.changeStarNoteTitle(changedNote);
+	
 }
 
 // 清空右侧note信息, 可能是共享的, 
@@ -1824,15 +1828,20 @@ Note.renderStarNote = function(target) {
 	Notebook.changeCurNotebookTitle('Starred', true);
 };
 
-// 笔记标签改了后, 如果在star中, 则也要改标题
-Note.changeStarNoteTitle = function(note) {
+// 笔记标题改了后, 如果在star中, 则也要改标题
+Note.changeStarNoteTitle = function(noteId, title) {
 	var me = this;
-	var cacheNote = me.getNote(note.NoteId);
+	var cacheNote = me.getNote(noteId);
+	/*
 	if(!cacheNote.Star) {
 		return;
 	}
-	var target = me.starNotesO.find('li[data-id="' + note.NoteId + '"]');
-	target.find('a').html((note.Title || 'Untitled') + '<span class="delete-star" title="Remove">X</span>');
+	*/
+
+	var target = me.starNotesO.find('li[data-id="' + noteId + '"]');
+	if(target.length == 1) { 
+		target.find('a').html((title || 'Untitled') + '<span class="delete-star" title="Remove">X</span>');
+	}
 };
 
 // 取消star, note delete/trash时取消star
@@ -2594,6 +2603,7 @@ $(function() {
 	$('#editorContent, #wmd-input, #noteTitle').keyup(function() {
 		Note.curNoteIsDirtied();
 	});
+
 	/*
 	$('#addTagInput').click(function() {
 		Note.curNoteIsDirtied();

@@ -93,7 +93,7 @@ h1, h2, h3 {
 #tool {
   border-bottom: 1px solid #ddd;
   height: 36px;
-  margin-left: -5px; // 为了和左边的底部线连接起来
+  // margin-left: -5px; // 为了和左边的底部线连接起来
 }
 #tag {
   height: 36px;
@@ -1726,9 +1726,8 @@ body {
 #myNotebookNavForListNav span {
 	font-size: 16px;
 }
-#notesAndSort, #tool {
-	// top: -5px;
-	// height: 41px;
+#newMyNote, #tool {
+	z-index: 1001; // 比topDrag大些
 }
 #editor, #mdEditor {
 	// top: 51px;
@@ -1739,7 +1738,7 @@ body {
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 10px;
+	height: 40px;
 	z-index: 1000;
 	cursor: move;
 	// background-color: red;

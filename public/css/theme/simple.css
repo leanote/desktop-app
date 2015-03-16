@@ -88,7 +88,6 @@ h3 {
 #tool {
   border-bottom: 1px solid #ddd;
   height: 36px;
-  margin-left: -5px;
 }
 #tag {
   height: 36px;
@@ -1526,13 +1525,17 @@ body.init #pageInner {
 #myNotebookNavForListNav span {
   font-size: 16px;
 }
+#newMyNote,
+#tool {
+  z-index: 1001;
+}
 #topDrag {
   -webkit-app-region: drag;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 10px;
+  height: 40px;
   z-index: 1000;
   cursor: move;
 }
