@@ -715,6 +715,7 @@ LeaAce = {
 			$pre.removeClass('ace-to-pre');
 			$pre.attr("contenteditable", false); // ? 避免tinymce编辑
 			var aceEditor = ace.edit(id);
+			aceEditor.setShowInvisibles(false);
 			aceEditor.setTheme("ace/theme/tomorrow");
 
 			var brush = me.getPreBrush($pre);
@@ -726,12 +727,14 @@ LeaAce = {
 			}
 			b = b || "javascript";
 			aceEditor.session.setMode("ace/mode/" + b);
+			aceEditor.session.setOption("useWorker", false); // 不用语法检查
 			aceEditor.getSession().setUseWorker(false); // 不用语法检查
 			aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
+			aceEditor.setShowInvisibles(false); // OK 不显示空格
 			aceEditor.setOption("wrap", "free");
 			aceEditor.setShowInvisibles(false);
 			aceEditor.setAutoScrollEditorIntoView(true);
-			aceEditor.setOption("maxLines", 100);
+			aceEditor.setOption("maxLines", 10000);
 			aceEditor.commands.addCommand({
 			    name: "undo",
 			    bindKey: {win: "Ctrl-z", mac: "Command-z"},
