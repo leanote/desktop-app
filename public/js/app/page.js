@@ -1283,21 +1283,29 @@ function initUploadImage() {
 		var $this = $(this);
 		var imagePath = $this.val();
 		$this.val('');
-		// 上传之
-		FileService.uploadImage(imagePath, function(newImage, msg) {
-			if(newImage) {
-				var note = Note.getCurNote();
-				var url = EvtService.getImageLocalUrl(newImage.FileId);
-				if(!note.IsMarkdown) {
-					tinymce.activeEditor.insertContent('<img src="' + url + '">');
-				} else {
-					// TODO markdown insert Image
-					MD.insertLink(url, '', true);
-				}
-			} else {
-				alert(msg || "error");
-			}
-		});
+
+		var imagePaths = imagePath.split(';'); // 一次性可上传多张图片
+		for(var i = 0; i < imagePaths.length; ++i) {
+			(function(k) {
+				var imagePath = imagePaths[k];
+				// 上传之
+				FileService.uploadImage(imagePath, function(newImage, msg) {
+					if(newImage) {
+						var note = Note.getCurNote();
+						var url = EvtService.getImageLocalUrl(newImage.FileId);
+						if(!note.IsMarkdown) {
+							tinymce.activeEditor.insertContent('<img src="' + url + '">');
+						} else {
+							// TODO markdown insert Image
+							MD.insertLink(url, '', true);
+						}
+					} else {
+						alert(msg || "error");
+					}
+				});
+			})(i);
+		}
+
 	});
 }
 

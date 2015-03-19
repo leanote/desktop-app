@@ -192,6 +192,8 @@ Tag.appendTag = function(tag, save) {
 // nodejs端调用
 Tag.addTagsNav = function(tags) {
 	tags = tags || [];
+	console.error('add tags --------');
+	console.error(tags);
 	for(var i = 0; i <  tags.length; ++i) {
 		Tag.addTagNav(tags[i]);
 	}

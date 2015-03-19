@@ -2785,7 +2785,7 @@ Note.updateNoteCacheForServer = function(notes) {
 	for(var i in notes) {
 		var note = notes[i];
 		// alert(note.NoteId + " " + note.IsBlog);
-		Note.addNoteCache({NoteId: note.NoteId, 
+		Note.setNoteCache({NoteId: note.NoteId, 
 			ServerNoteId: note.ServerNoteId,
 			IsBlog: note.IsBlog,
 		});
