@@ -2644,10 +2644,11 @@ $(function() {
 	
 	//---------------------------
 	// 搜索, 按enter才搜索
+	/*
 	$("#searchNoteInput").on("keyup", function(e) {
 		Note.searchNote();
 	});
-	/*
+	*/
 	$("#searchNoteInput").on("keydown", function(e) {
 		var theEvent = e; // window.event || arguments.callee.caller.arguments[0];
 		if(theEvent.keyCode == 13 || theEvent.keyCode == 108) {
@@ -2656,7 +2657,6 @@ $(function() {
 			return false;
 		}
 	});
-	*/
 	
 	//--------------------
 	// Note.initContextmenu();
