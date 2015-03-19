@@ -1578,6 +1578,9 @@ body {
 	}
 }
 
+#preview-contents {
+	-webkit-user-select: text; 
+}
 
 #searchNoteInput, 
 #searchNotebookForList, 
@@ -1748,6 +1751,11 @@ body {
 // 没有starred, 没有tag
 .no-info {
 	text-align: center; margin: 10px 0; opacity: 0.8;
+}
+
+img::selection {
+  background: transparent;
+  color: #ffffff;
 }
 
 @import '../traffic.less';

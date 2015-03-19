@@ -73,6 +73,7 @@ function isMac() {
 // 窗口大小设置
 var win = gui.Window.get();
 
+var downloadImgPath;
 $(function() {
 	var isMacP = isMac();
 	$('.tool-close, .tool-close-blur').click(function() {
@@ -96,6 +97,26 @@ $(function() {
 		// win.toggleFullscreen(); // mac下是新屏幕
 		// 全屏模式
 		// win.toggleKioskMode();
+	});
+
+	// 下载图片输入框
+	$('#downloadImgInput').change(function() {
+		var name = $(this).val();
+		$(this).val(''); // 为防止重名不触发
+		if(downloadImgPath) {
+			FileService.download(downloadImgPath, name, function(ok, msg) {
+				// console.log(ok + ' -=-');
+				if(ok) {
+					new window.Notification('Info', {
+				        body: 'Image saved successful!',
+				    });
+				} else {
+					new window.Notification('Warning', {
+				        body: msg || 'Image saved failure!',
+				    });
+				}
+			});
+		}
 	});
 });
 
@@ -125,6 +146,38 @@ function Menu() {
             document.execCommand('paste');
         }
     });
+
+    this.saveAs = new gui.MenuItem({
+        label: 'Save as',
+        click: function() {
+            // document.execCommand("selectAll");
+            // document.execCommand('paste');
+            var src = $curTarget.attr('src');
+            if(!src) {
+            	alert('error');
+            }
+            // 得到图片, 打开dialog
+            FileService.downloadImg(src, function(curPath) {
+            	if(curPath) {
+            		var paths = curPath.split(/\/|\\/);
+            		var name = paths[paths.length-1];
+            		downloadImgPath = curPath;
+            		$('#downloadImgInput').attr('nwsaveas', name);
+            		$('#downloadImgInput').click();
+            		
+            	} else {
+            		// alert会死?
+            		// alert('File not exists');
+            		// https://github.com/nwjs/nw.js/wiki/Notification
+            		var notification = new window.Notification('Warning', {
+				        body: 'File not exists',
+				        // icon: appIcon
+				    });
+            	}
+            });
+        }
+    });
+
     this.openInBrowser = new gui.MenuItem({
         label: 'Open link in browser',
         click: function() {
@@ -137,6 +190,8 @@ function Menu() {
     this.menu.append(this.cut);
     this.menu.append(this.copy);
     this.menu.append(this.paste);
+    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+    this.menu.append(this.saveAs);
     this.menu.append(new gui.MenuItem({ type: 'separator' }));
     this.menu.append(this.openInBrowser);
     
@@ -156,6 +211,9 @@ Menu.prototype.canCopy = function(bool) {
 Menu.prototype.canPaste = function(bool) {
     this.paste.enabled = bool;
 };
+Menu.prototype.canSaveAs = function(bool) {
+    this.saveAs.enabled = bool;
+};
 Menu.prototype.canOpenInBroswer = function(bool) {
     this.openInBrowser.enabled = bool;
 };
@@ -167,9 +225,11 @@ var FS = require('fs');
 
 // 右键菜单
 var winHref = '';
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #editorContent').on('contextmenu', function (e) {
+var $curTarget;
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent').on('contextmenu', function (e) {
 	e.preventDefault();
 	var $target = $(e.target);
+	$curTarget = $target;
 	var text = $target.text();
 	winHref = $target.attr('href');
 	if(!winHref) {
@@ -184,6 +244,7 @@ $('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-inpu
 	}
 
 	menu.canOpenInBroswer(!!winHref);
+	menu.canSaveAs($target.is('img') && $target.attr('src'));
 	var selectionType = window.getSelection().type.toUpperCase();
 	// var clipData = gui.Clipboard.get().get();
 	// menu.canPaste(clipData.length > 0);
