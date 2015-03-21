@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var rename = require("gulp-rename");
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
+var zip = require('gulp-zip');
+
 
 //-----------
 // mac
@@ -24,6 +26,12 @@ gulp.task('cpMacSrc', function () {
 	gulp.src(['src/note.html', 'src/login.html']).pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/'));
 });
 
+gulp.task('zipMac', function () {
+    return gulp.src('dist/mac/*')
+        .pipe(zip('leanote-mac.zip'))
+        .pipe(gulp.dest('dist'));
+});	
+
 //------------
 // windows
 //------------
@@ -43,6 +51,12 @@ gulp.task('cpWindowsSrc', function () {
 	gulp.src(['src/note.html', 'src/login.html']).pipe(gulp.dest('dist/windows/'));
 });
 
+gulp.task('zipWindows', function () {
+    return gulp.src('dist/windows/*')
+        .pipe(zip('leanote-windows.zip'))
+        .pipe(gulp.dest('dist'));
+});
+
 // mac & windows
 gulp.task('mac', function(cb) {
 	runSequence('clMac', 'cpMacNw', 'cpMacSrc', cb);
@@ -51,6 +65,7 @@ gulp.task('mac', function(cb) {
 gulp.task('windows', function(cb) {
 	runSequence('clWindows', 'cpWindowsNw', 'cpWindowsSrc', cb);
 });
+
 
 gulp.task('default', function(cb) {
 	runSequence('mac', 'windows', cb);
