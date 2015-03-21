@@ -1,24 +1,36 @@
 {
-  "name": "Leanote",
-  "description": "Leanote",
-  "version": "0.1",
-  "main": "note.html",
-  "window": {
-    "icon": "public/images/logo/leanote_icon_blue.png",
-    "toolbar": true,
-    
-    "frame": true,
-    "transparent": false,
-
-    "min_width": 268,
-    "min_height": 346,
-    // "width":  400, // 1100,
-    // "height": 300 // 600
-    "width":  278,
-    "height": 356
-
-    // width: 268px;
-    // height: 346px;
+  "name": "leanote-desktop",
+  "title": "leanote-desktop",
+  "description": "leanote desktop app",
+  "homepage": "http://leanote.com",
+  "author": {
+    "name": "life@leanote.com",
+    "url": "http://life.leanote.com"
   },
-  "chromium-args": "--enable-smooth-scrolling"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leanote/leanote-desktop.git"
+  },
+  "keywords": [
+    "leanote",
+    "desktop",
+    "node-webkit"
+  ],
+  "bugs": {
+    "url": "https://github.com/leanote/leanote-desktop/issues"
+  },
+  "licenses": [
+    {
+      "type": "GPLV2"
+    }
+  ],
+  "dependencies": {
+    "del": "^1.1.1"
+  },
+  "devDependencies": {
+    "gulp": "~3.8.10",
+    "gulp-clean": "^0.3.1",
+    "gulp-rename": "^1.2.0",
+    "run-sequence": "^1.0.2"
+  }
 }
