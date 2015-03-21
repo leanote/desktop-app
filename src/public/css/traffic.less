@@ -1,0 +1,63 @@
+.win-tool {
+	// height: 14px;
+	padding: 5px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 99999;
+	a {
+		display: block;
+		float: left;
+		width: 14px;
+		height: 14px;
+		background-size: 14px 14px !important;
+		margin-right: 5px;
+	}
+	.tool-close {
+		background: url(icon/traffic-close@2x.png);
+		// 为了预加载之
+		&:before {
+			content: ' ';
+			background: url(icon/traffic-close-hover@2x.png);
+		}
+	}
+	.tool-close-blur {
+		background: url(icon/traffic-disabled@2x.png);
+		// 为了预加载之
+		&:before {
+			content: ' ';
+			background: url(icon/traffic-close-hover@2x.png);
+		}
+	}
+	.tool-min {
+		background: url(icon/traffic-minimise@2x.png);
+		&:before {
+			content: ' ';
+			background: url(icon/traffic-minimise-hover@2x.png);
+		}
+	}
+	.tool-max {
+		background: url(icon/traffic-fullscreen@2x.png);
+		&:before {
+			content: ' ';
+			background: url(icon/traffic-zoom-hover@2x.png);
+		}
+	}
+	&:hover {
+		.tool-close, .tool-close-blur {
+			background: url(icon/traffic-close-hover@2x.png);
+		}
+		.tool-min {
+			background: url(icon/traffic-minimise-hover@2x.png);
+		}
+		.tool-max {
+			background: url(icon/traffic-zoom-hover@2x.png);
+		}
+	}
+}
+
+.blur .win-tool {
+	a {
+		background: url(icon/traffic-disabled@2x.png);
+	}
+}

@@ -1,0 +1,37 @@
+
+@bgColor: #fff;
+@headerBgColor: #fff;
+@fontFamily: 'Open Sans','Helvetica Neue',Arial,'Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei',sans-serif;
+@aWhiteColor: #fff;
+@aBlackColor: #000;
+@borderColor: #EBEFF2;
+@headerHeight: 60px;
+@hColor: #5AD4A0;
+@titleColor: @hColor;
+@fontSize: 14px;
+
+html {
+	margin-top: 3px;
+	padding: 3px;
+	border: 1px solid @borderColor;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-width: 1px;
+	box-shadow: none;
+}
+* {
+	font-family: @fontFamily;
+}
+
+.mce-item-table, .mce-item-table td, .mce-item-table th, .mce-item-table caption {
+	border: 1px solid #9B9898;
+	border-collapse: collapse;
+}
+img {
+	max-width: 100% !important;
+}
+@media screen and (max-width:500px) {
+	* {
+		font-size: 16px;
+	}
+}
