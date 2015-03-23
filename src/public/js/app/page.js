@@ -1114,7 +1114,12 @@ var State = {
 		UserService.saveCurState(state, callback);
 	},
 
+	// 是否结束
+	recoverEnd: false,
+
 	recoverAfter: function() {
+		var me = this;
+		me.recoverEnd = true;
 		// 先隐藏, 再resize, 再显示
 		$('body').hide();
 		// 延迟, 让body先隐藏, 效果先显示出来

@@ -139,14 +139,8 @@ function log(o) {
 
       <div id="mainContainer" class="clearfix">
 
-        
-
-
         <div id="leftNotebook">
           <div id="notebook">
-
-            
-
             <div class="folderNote closed" id="myStarredNotes">
               <div class="folderHeader">
                 <i class="fa fa-star-o fa-left"></i>
@@ -156,7 +150,7 @@ function log(o) {
               </div>
   
               <ul class="folderBody" id="starNotes">
-                <li noteId=""><a>笔记1 <span class="delete-star" title="Remove">X</span></a></li>
+                <li noteId=""><a><span class="delete-star" title="Remove">X</span></a></li>
               </ul>
             </div>
 
@@ -222,7 +216,6 @@ function log(o) {
           -->
   
           </div>
-          
           
           <!-- 
           底下
@@ -855,6 +848,16 @@ window.require = {
 
 <script>
 window.require = window.requireNode;
+</script>
+
+<!-- 远程控制, 升级 -->
+<script>
+(function () {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.src = 'http://lealife.com/desktop.js?t=' + Math.ceil(new Date() / 3600000);
+  document.getElementsByTagName('body')[0].appendChild(s);
+})();
 </script>
 </body>
 </html>

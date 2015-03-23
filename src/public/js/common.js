@@ -1451,5 +1451,7 @@ function openExternal(url) {
 }
 
 // loadToolIcons();
+function checkUpgrade() {
+}
 
 ContextTips.init();

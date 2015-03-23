@@ -2728,6 +2728,7 @@ $(function() {
 		Note.star(noteId);
 	});
 
+	Note.starNotesO = $('#starNotes');
 	// 取消收藏
 	Note.starNotesO.on('click', '.delete-star', function(e) {
 		e.preventDefault();
@@ -2745,6 +2746,8 @@ $(function() {
 		Note.showConflictInfo(this, e);
 	});
 
+	Note._syncRefreshE = $('#syncRefresh');
+	Note._syncWarningE = $('#syncWarning');
 	// sync
 	Note._syncRefreshE.click(function() {
 		Note.sync();
