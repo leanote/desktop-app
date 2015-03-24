@@ -1,4 +1,4 @@
-# leanote desktop app
+# Leanote Desktop App
 
 Use node-webkit to create leanote desktop app.
 
