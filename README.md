@@ -18,7 +18,7 @@ $> cd PATH-TO-LEANOTE-DESKTOP-APP/src
 $> PATH-TO-NODE-WEBKIT/nw .
 ```
 
-### how to build it
+### How to build it
 ```
 cd PATH-TO-LEANOTE-DESKTOP-APP
 $> npm install
