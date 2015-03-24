@@ -22,6 +22,7 @@ gulp.task('cpMacSrc', function () {
 	// mac
 	gulp.src('src/public/**/*').pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/public'));
 	gulp.src('src/node_modules/**/*').pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/node_modules'));
+	gulp.src('LICENSE').pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/'));
 	gulp.src('src/data/version').pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/data/'));
 	gulp.src('src/package_mac.json').pipe(rename("package.json")).pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/'));
 	gulp.src(['src/note.html', 'src/login.html']).pipe(gulp.dest('dist/mac/leanote.app/Contents/Resources/app.nw/'));
@@ -48,6 +49,7 @@ gulp.task('cpWindowsSrc', function () {
 	// windows
 	gulp.src('src/public/**/*').pipe(gulp.dest('dist/windows/public'));
 	gulp.src('src/node_modules/**/*').pipe(gulp.dest('dist/windows/node_modules'));
+	gulp.src('LICENSE').pipe(gulp.dest('dist/windows/'));
 	gulp.src('src/data/version').pipe(gulp.dest('dist/windows/data/'));
 	gulp.src('src/package_windows.json').pipe(rename("package.json")).pipe(gulp.dest('dist/windows/'));
 	gulp.src(['src/note.html', 'src/login.html']).pipe(gulp.dest('dist/windows/'));
