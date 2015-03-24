@@ -1,21 +1,75 @@
 var fs = require('fs');
-var path = require('path');
+var Path = require('path');
 var needle = require('needle');
 var AdmZip = require('adm-zip');
 var async = require('async');
 
 // 可以用全局变量
 // console.log(NoteService);
+// console.log(process.cwd());
 
-console.log(process.cwd());
-
-var Upgrade = {
+Upgrade = {
 	basePath: process.cwd(),
 	dataBasePath: process.cwd() + '/data',
 	vFile: process.cwd() + '/data/version',
+	infoUrl: 'http://app.leanote.com/getUpgradeInfo',
+	packgeUrl: 'http://app.leanote.com/getUpgradePackage',
+
+	e: function() {
+		$('#upgradeDialogBody').html('Upgrade error!');
+		console.error('upgrade error!');
+		setTimeout(function() {
+			$('.upgrade-cancel-btn').attr('disabled', false);
+			$('#upgradeDialog').modal('hide');
+		}, 2000);
+	},
+
 	updateVersion: function(v) {
 		var me = this;
 		fs.writeFileSync(me.vFile, JSON.stringify(v));
+	},
+
+	initModal: function() {
+		var me = this;
+		$('.next-version-info').hide();
+		$('.upgrade-progress').hide();
+		$('.upgrade-cancel-btn').attr('disabled', false);
+		$('.upgrade-btn').attr('disabled', true);
+		$('.get-next-version-info-loading').show();
+	},
+
+	checkForUpdates: function() {
+		var me = this;
+		me.getCurVersion(function(v) {
+			if(!v) {
+				return;
+			}
+			me.initModal();
+			$('.cur-version').text(v.version);
+			$('#upgradeDialog').modal({backdrop: 'static', keyboard: false});
+
+			me.checkUpgrade(v.version, function(nextV) {
+				var nextVersion = nextV.nextVersion;
+				$('.get-next-version-info-loading').hide();
+				if(!v || !v.version || v.version == nextVersion) {
+					$('.next-version-info').html("No updates available.").show();
+					return;
+				}
+				$('.next-version-info').html(`
+					The latest version <b>` + nextVersion + `</b> is available! <br />
+		              Updates:
+		              <div>
+		              	` + (nextV.desc || '') + `
+		              </div>
+		              Size: ` + nextV.size).show();
+				$('.upgrade-btn').attr('disabled', false);
+				$('.upgrade-btn').unbind('click').click(function() {
+					$('.upgrade-cancel-btn').attr('disabled', true);
+					$('.upgrade-btn').attr('disabled', true);
+					me.upgrade(v.version, nextV);
+				});
+			});
+		});
 	},
 
 	// 得到当前版本
@@ -24,105 +78,92 @@ var Upgrade = {
 		// fs.writeFileSync('./output.json',JSON.stringify({a:1,b:2}));
 		try {
 			var v = JSON.parse(fs.readFileSync(me.vFile));
-			console.log(v);
 			callback(v);
 		} catch(e) {
-			console.log(e);
 			callback(false);
 		}
 	},
 
 	// 检查是否可升级, 覆盖common.js的
-	checkUpgrade: function (isForce) {
+	checkUpgrade: function (curVersion, callback) {
 		var me = this;
-		function e() {
-			if(isForce) {
-				alert('Check upgrade error!')
+		needle.get(me.infoUrl + '?version=' + curVersion, function(err, resp) {
+			if(err) {
+				return me.e();
 			}
-			console.trace('error');
-		}
-
-		console.log('checkUpgrade');
+			var ret = resp.body;
+			if(typeof ret != 'object') {
+				return me.e();
+			}
+			callback(ret);
+		});
+	},
 		
-		me.getCurVersion(function(v) {
-			if(!v) {
-				return e();
+	upgrade: function(curVersion, ret) {
+		var me = this;
+		var $progress = $('.upgrade-progress');
+		$progress.show();
+		$progress.html('Download upgrade pacakge...');
+
+		// 升级之
+		// 下载最新的版本
+		needle.get(me.packgeUrl + '?version=' + ret.nextVersion, function(err, resp) {
+			if(err || resp.statusCode == 404) {
+				return me.e();
 			}
 
-			var curVersion = v.version;
+			var typeStr = resp.headers['content-type'];
+			if(typeStr != 'application/zip') {
+				return me.e();
+			}
 
-			var url = 'http://d.leanote.com/getUpgradeInfo';
+			// 1. 下载到data目录, 解压之, 得到所有文件
+			var filename = ret.nextVersion + '.zip';
+			var filePath = me.dataBasePath + '/' + filename;
+			var err = fs.writeFileSync(filePath, resp.body);
+			if(err) {
+				return me.e();
+			}
 
-			var infoUrl = 'http://localhost:3001/getUpgradeInfo';
-			var packgeUrl = 'http://localhost:3001/getUpgradePackage';
+			$progress.html('Installing...');
 
-			needle.get(infoUrl + '?version=' + curVersion, function(err, resp) {
-				if(err) {
-					return e();
-				}
-				var ret = resp.body;
-				if(typeof ret != 'object') {
-					return e();
-				}
+			// https://github.com/cthackers/adm-zip
+			try {
+				me.rmdir(me.dataBasePath + '/' + ret.nextVersion);
+			} catch(e) {
+				console.error(e);
+			}
+			var zip = new AdmZip(filePath);
+			zip.extractAllTo(me.dataBasePath + '/' + ret.nextVersion, true);
+			try {
+				fs.unlinkSync(filePath);
+			} catch(e) {
+			}
 
-				if(ret.nextVersion == curVersion) {
-					if(isForce) {
-						alert("Not need to upgrade.");
-						return;
+			// 2. 先保存之前的文件作备份
+			me.backup(me.dataBasePath + '/' + ret.nextVersion, ret.nextVersion, curVersion, function(fileList) {
+				// 3. 覆盖
+				me.overWrite(fileList, ret.nextVersion, function(ok) {
+					if(!ok) {
+						return me.e();
 					}
-				}
+					var lastVersionFilePath = curVersion;
+					// 4. 更新v
+					me.updateVersion(
+						{
+							version: ret.nextVersion, // 当前版本
+							lastVersion: curVersion, // 上一版本
+							lastVersionFilePath: lastVersionFilePath, // 备份的文件夹名称
+							updatedTime: new Date() // 更新日期
+						}
+					);
 
-				// 升级之
-				// 下载最新的版本
-				needle.get(packgeUrl + '?version=' + ret.nextVersion, function(err, resp) {
-					if(err || resp.statusCode == 404) {
-						return e();
-					}
-
-					var typeStr = resp.headers['content-type'];
-					if(typeStr != 'application/zip') {
-						return e();
-					}
-
-					// 1. 下载到data目录, 解压之, 得到所有文件
-					var filename = ret.nextVersion + '.zip';
-					var filePath = me.dataBasePath + '/' + filename;
-					var err = fs.writeFileSync(filePath, resp.body);
-					if(err) {
-						return e();
-					}
-					// https://github.com/cthackers/adm-zip
-					try {
-						me.rmdir(me.dataBasePath + '/' + ret.nextVersion);
-					} catch(e) {
-						console.error(e);
-					}
-					var zip = new AdmZip(filePath);
-					zip.extractAllTo(me.dataBasePath + '/' + ret.nextVersion, true);
-					try {
-						fs.unlinkSync(filePath);
-					} catch(e) {
-					}
-
-					// 2. 先保存之前的文件作备份
-					me.backup(me.dataBasePath + '/' + ret.nextVersion, ret.nextVersion, curVersion, function(fileList) {
-						// 3. 覆盖
-						me.overWrite(fileList, ret.nextVersion, function(ok) {
-							if(!ok) {
-								return e();
-							}
-							var lastVersionFilePath = curVersion;
-							// 4. 更新v
-							me.updateVersion(
-								{
-									version: ret.nextVersion, // 当前版本
-									lastVersion: curVersion, // 上一版本
-									lastVersionFilePath: lastVersionFilePath, // 备份的文件夹名称
-									updatedTime: new Date() // 更新日期
-								}
-							);
-						});
-					});
+					$progress.html('Upgrade to ' + ret.nextVersion + ' successful!');
+					$('.cur-version').text(ret.nextVersion);
+					$('.upgrade-cancel-btn').attr('disabled', false);
+					setTimeout(function() {
+						$('#upgradeDialog').modal('hide');
+					}, 3000);
 				});
 			});
 		});
@@ -151,13 +192,15 @@ var Upgrade = {
         }
 	},
 
-	scanFolder: function (path) {
+	scanFolder: function (p) {
+		var me = this;
 	    var fileList = [];
 	    var folderList = [];
-	    var walk = function(path, fileList, folderList) {
-            files = fs.readdirSync(path);
+	   
+	    var walk = function(p, fileList, folderList) {
+            files = fs.readdirSync(p);
             files.forEach(function(item) {  
-                var tmpPath = path + '/' + item;
+                var tmpPath = p + '/' + item;
                 var stats = fs.statSync(tmpPath);
 
                 if (stats.isDirectory() && item.indexOf('_') == -1) {  
@@ -170,18 +213,19 @@ var Upgrade = {
             });  
         };  
 
-	    walk(path, fileList, folderList);
+
+	    walk(p, fileList, folderList);
 
 	    return fileList;
 	},
 
 	mkdirsSync: function(dirpath) {
 		var me = this;
-	    if(path.existsSync(dirpath)) {
+	    if(fs.existsSync(dirpath)) {
 	    	return;
 	    }
         // 尝试创建父目录，然后再创建当前目录
-        me.mkdirsSync(path.dirname(dirpath));
+        me.mkdirsSync(Path.dirname(dirpath));
         fs.mkdirSync(dirpath);
 	},
 
@@ -199,7 +243,7 @@ var Upgrade = {
 		me.mkdirsSync(filePath);
 
 		// 如果src存在
-		if(path.existsSync(src)) {
+		if(fs.existsSync(src)) {
 			var readStream = fs.createReadStream(src);
 			var writeStream = fs.createWriteStream(dist);
 			readStream.pipe(writeStream);
@@ -226,6 +270,8 @@ var Upgrade = {
 		} catch(e) {}
 
 		var fileList = me.scanFolder(nextVersionFilePath); // 每一个文件都包含路径, /a/data/1.0/src/note.html
+		console.log(nextVersionFilePath);
+		console.log(fileList);
 		
 		async.eachSeries(fileList, function(filePathName, cb) {
 			// /a/data/1.0/src/a.html <=> /a/data/1.1/src/a.html
@@ -290,6 +336,7 @@ var rollabackUpgrade = function() {
 	Upgrade.rollabackUpgrade();
 };
 
+/*
 (function() {
 	function _check() {
 		setTimeout(function() {
@@ -302,20 +349,6 @@ var rollabackUpgrade = function() {
 	}
 	// _check();
 })();
-
-checkUpgrade(true);
-
-/*
-var fs = require('fs');
-
-fs.readdir('/', function(err, files) {
-	console.log(files);
-});
-
-var Note = require('note');
-/*
-Note.getTrashNotes(function(notes) {
-	console.error('trash--------------')
-	console.log(notes);
-});
 */
+
+// checkUpgrade(true);

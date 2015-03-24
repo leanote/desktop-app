@@ -9,7 +9,7 @@ var LEA = {};
 // 命名空间
 var Notebook = {
 	cache: {}, // notebookId => {Title, Seq}
-}
+};
 var Note = {
 	cache: {}, // noteId => {Title, Tags, Content, Desc}
 };
@@ -19,6 +19,7 @@ var Notebook = {};
 var Share = {};
 var Mobile = {}; // 手机端处理
 var LeaAce = {};
+var Upgrade = {};
 
 // markdown
 var Converter;

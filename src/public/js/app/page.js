@@ -1502,6 +1502,13 @@ var Pren = {
 	}
 };
 
+// 升级
+function checkForUpdates() {
+	if(Upgrade.checkForUpdates) {
+		Upgrade.checkForUpdates();
+	}
+};
+
 
 // user
 function userMenu() {
@@ -1575,6 +1582,12 @@ function userMenu() {
 	        	incrSync();
 	        }
 	    });
+	    this.checkForUpdates = new gui.MenuItem({
+	        label: 'Check for updates',
+	        click: function(e) {
+	        	checkForUpdates();
+	        }
+	    });
 
 	    var themeSubmenus = new gui.Menu();
 	    for(var i in themes) {
@@ -1604,7 +1617,7 @@ function userMenu() {
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.theme);
 		
-		var height = 150;
+		var height = 180;
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -1617,8 +1630,11 @@ function userMenu() {
 			}
 			}));
 			*/
-			height = 240;
+			height = 270;
 		}
+
+	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.checkForUpdates);
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.sync);

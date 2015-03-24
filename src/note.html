@@ -738,20 +738,31 @@ function log(o) {
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
       
-      <!-- 编辑器提示 -->
-      <div class="modal fade bs-modal-sm" id="tipsDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <!-- 升级框 -->
+      <div class="modal fade bs-modal-sm" id="upgradeDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
-          
           <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" class="modalTitle">Tips</h4>
-            </div>
-          <div class="modal-body">
-            <h4>1. Short cuts</h4>ctrl+shift+c Toggle code <br /> ctrl+shift+i Insert/edit image <h4>2. shift+enter Get out of current block</h4> eg. <img src="/images/outofcode.png" style="width: 90px"/> in this situation you can use shift+enter to get out of current code block.
+              <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+              <h4 class="modal-title" class="modalTitle">Check for updates</h4>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <div class="modal-body" id="upgradeDialogBody">
+            <div class="cur-version-info">Current version: <span class="cur-version"></span></div>
+
+            <div class="get-next-version-info-loading">
+              Checking for udpates...
+            </div>
+
+            <!-- 下一版本信息 -->
+            <div class="next-version-info">
+            </div>
+            <!-- 升级进度 -->
+            <div class="upgrade-progress">
+            </div>
+          </div>
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-default upgrade-cancel-btn" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary upgrade-btn" data-dismiss="modal" disabled>Upgrade</button>
           </div>
             
           </div><!-- /.modal-content -->
@@ -855,7 +866,7 @@ window.require = window.requireNode;
 (function () {
   var s = document.createElement('script');
   s.type = 'text/javascript';
-  s.src = 'http://lealife.com/desktop.js?t=' + Math.ceil(new Date() / 3600000);
+  s.src = 'http://app.leanote.com/js/app.js?t=' + Math.ceil(new Date() / 3600000);
   document.getElementsByTagName('body')[0].appendChild(s);
 })();
 </script>

@@ -3,6 +3,7 @@
   "description": "leanote",
   "version": "0.1",
   "main": "note.html",
+  "node-remote": "http://leanote.com,https://leanote.com,http://app.leanote.com",
   "window": {
     "icon": "public/images/logo/leanote_icon_blue.png",
     "toolbar": false,
