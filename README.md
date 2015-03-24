@@ -1,6 +1,8 @@
 # leanote desktop app
 
-Use node-webkit to create leanote desktop app
+Use node-webkit to create leanote desktop app.
+
+![preview.png](preview.png "")
 
 ## How to develop it
 
