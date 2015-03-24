@@ -4,12 +4,12 @@ Use node-webkit to create leanote desktop app
 
 ## How to develop it
 
-### Install node-webkit
+### 1. Install node-webkit
 
 See https://github.com/nwjs/nwjs
 
 
-### How to run it
+### 2. How to run it
 
 Download this project, and run
 
@@ -18,9 +18,9 @@ $> cd PATH-TO-LEANOTE-DESKTOP-APP/src
 $> PATH-TO-NODE-WEBKIT/nw .
 ```
 
-### How to build it
+### 3. How to build it
 ```
-cd PATH-TO-LEANOTE-DESKTOP-APP
+$> cd PATH-TO-LEANOTE-DESKTOP-APP
 $> npm install
 $> gulp
 ```
