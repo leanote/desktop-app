@@ -14,6 +14,13 @@ See https://github.com/nwjs/nwjs
 Download this project, and run
 
 ````
-cd PATH-TO-LEANOTE-DESKTOP-APP/src
-PATH-TO-NODE-WEBKIT/nw .
+$> cd PATH-TO-LEANOTE-DESKTOP-APP/src
+$> PATH-TO-NODE-WEBKIT/nw .
+```
+
+### how to build it
+```
+cd PATH-TO-LEANOTE-DESKTOP-APP
+$> npm install
+$> gulp
 ```
