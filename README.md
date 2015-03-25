@@ -8,7 +8,7 @@ Use node-webkit to create leanote desktop app.
 
 ### 1. Install node-webkit
 
-See https://github.com/nwjs/nwjs
+See https://github.com/nwjs/nw.js
 
 
 ### 2. How to run it
