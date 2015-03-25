@@ -1383,11 +1383,24 @@ var ContextTips = {
 function switchAccount() {
 	SyncService.stop();
 	// location.href = 'login.html';
-	var w = gui.Window.open('login.html', {
-		frame: false, toolbar: false, resizable: false, 
-		transparent: true, 
-		width: 278, 
-		max_width: 278});
+	if(isMac()) {
+		gui.Window.open('login.html', {
+			"icon": "public/images/logo/leanote_icon_blue.png",
+			frame: false, toolbar: false, resizable: false, 
+			transparent: true, 
+			width: 278, 
+			max_width: 278
+		});
+	} else {
+		gui.Window.open('login.html', {
+			"icon": "public/images/logo/leanote_icon_blue.png",
+			frame: true, toolbar: false, resizable: false, 
+			transparent: false, 
+			width: 278,
+			height: 346, 
+			max_width: 278
+		});
+	}
 	// w.focus();
 	// gui.Window.close();
 	win.close();
