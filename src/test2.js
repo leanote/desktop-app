@@ -39,4 +39,5 @@ var scanFolder = function (path) {
     return fileList;
 };
 
-scanFolder('/Users/life/Documents/kuaipan/leanote/desktop-app/src/data/1.1');
+// scanFolder('/Users/life/Documents/kuaipan/leanote/desktop-app/src/data/1.1');
+console.log(process.platform.toLowerCase().indexOf('window'));
