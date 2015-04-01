@@ -21,18 +21,25 @@ $(function() {
 	var isMacP = isMac();
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
-		/*
 		if(isMacP && location.href.indexOf('login.html') == -1 ) {
 			win.hide();
 		} else {
+			win.close();
 		}
-		*/
-		win.close();
 	});
-	gui.App.on('reopen', function() {
-	    win.show();
-	    win.focus();
-	});
+	// 从login.html -> note.html过来就没有reopen事件了?
+	// note.html -> login.html -> note.html, 使得两次bind
+	if(gui.App._events) {
+		gui.App._events.reopen = function() {
+		    win.show();
+		    win.focus();
+		}
+	} else {
+		gui.App.on('reopen', function() {
+		    win.show();
+		    win.focus();
+		});
+	}
 
 	$('.tool-min, .tool-min-blur').click(function() {
 		win.minimize();

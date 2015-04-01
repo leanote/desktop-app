@@ -66,7 +66,7 @@ if(process.platform != 'darwin') {
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/bootstrap.js"></script>
 <script src="public/js/app/service.js"></script>
-<script src="public/js/app/native.js"></script>
+<!-- <script src="public/js/app/native.js"></script> -->
 <script src="public/js/common.js"></script>
 
 <script>
@@ -78,6 +78,11 @@ win.setAlwaysOnTop(true);
 // gui.Window.focus();
 
 $(function() {
+	$('.tool-close, .tool-close-blur').click(function() {
+		// mac下关闭才是隐藏
+		win.close();
+	});
+
 	var $hostGroup = $('#hostGroup');
 	var hasHost = false;
 
@@ -136,7 +141,6 @@ $(function() {
 			if(ret.Ok) {
 				// $("#loginBtn").html("Success...");
 				// location.href = 'index.html';
-
 				gui.Window.open('note.html', getMainWinParams());
 				win.close();
 			} else {
