@@ -21,7 +21,7 @@ $(function() {
 	var isMacP = isMac();
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
-		if(isMacP && location.href.indexOf('login.html') == -1 ) {
+		if(isMacP) {
 			win.hide();
 		} else {
 			win.close();

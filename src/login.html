@@ -72,10 +72,14 @@ if(process.platform != 'darwin') {
 <script>
 var gui = require('nw.gui');
 var win = gui.Window.get();
-win.setAlwaysOnTop(true);
-// alert(win);
+// win.setAlwaysOnTop(true);
 // win.focus();
-// gui.Window.focus();
+try {
+// win.focus();
+	window.focus();
+} catch(e) {
+	console.log(e);
+}
 
 $(function() {
 	$('.tool-close, .tool-close-blur').click(function() {

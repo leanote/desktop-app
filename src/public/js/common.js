@@ -1384,7 +1384,7 @@ function switchAccount() {
 	SyncService.stop();
 	// location.href = 'login.html';
 	if(isMac()) {
-		gui.Window.open('login.html', {
+		var win2 = gui.Window.open('login.html', {
 			"icon": "public/images/logo/leanote_icon_blue.png",
 			frame: false, toolbar: false, resizable: false, 
 			transparent: true, 
@@ -1392,7 +1392,7 @@ function switchAccount() {
 			max_width: 278
 		});
 	} else {
-		gui.Window.open('login.html', {
+		var win2 = gui.Window.open('login.html', {
 			"icon": "public/images/logo/leanote_icon_blue.png",
 			frame: true, toolbar: false, resizable: false, 
 			transparent: false, 
@@ -1401,6 +1401,7 @@ function switchAccount() {
 			max_width: 278
 		});
 	}
+	// win2.focus();
 	// w.focus();
 	// gui.Window.close();
 	win.close();
