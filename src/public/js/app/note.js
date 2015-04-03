@@ -2263,7 +2263,7 @@ Note.initContextmenu = function() {
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
-	    this.menu.append(this.exports);
+	    // this.menu.append(this.exports);
 
 	    // this.menu.append(ms[0]);
 	    // this.menu.append(ms[1]);
