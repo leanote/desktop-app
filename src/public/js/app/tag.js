@@ -145,6 +145,9 @@ Tag.appendTag = function(tag, save) {
 		text = Tag.mapEn2Cn[text] || text;
 		rawText = Tag.mapCn2En[rawText] || rawText;
 	}
+
+	text = trimTitle(text);
+
 	tag = tt('<span class="?" data-tag="?">?<i title="' + getMsg("delete") + '">X</i></span>', classes, text, text);
 
 	// 避免重复
@@ -262,6 +265,7 @@ Tag.renderTagNav = function(tags) {
 			var text = Tag.mapEn2Cn[tag] || text;
 		}
 		*/
+		text = trimTitle(text);
 		var classes = Tag.classes[tag] || "label label-default";
 		// 笔记数量先隐藏, 不准确
 		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em style="display: none">(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));

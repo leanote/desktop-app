@@ -88,9 +88,9 @@ Notebook.getNotebook = function(notebookId) {
 Notebook.getNotebookTitle = function(notebookId) {
 	var notebook = Notebook.cache[notebookId];
 	if(notebook) {
-		return notebook.Title;
+		return trimTitle(notebook.Title);
 	} else {
-		return "未知";
+		return "UnTitled";
 	}
 }
 
@@ -309,6 +309,12 @@ Notebook.renderNotebooks = function(notebooks) {
 
 	if(!notebooks || typeof notebooks != "object" || notebooks.length < 0) {
 		notebooks = [];
+	}
+
+	// title可能有<script>
+	for(var i = 0, len = notebooks.length; i < len; ++i) {
+		var notebook = notebooks[i];
+		notebook.Title = trimTitle(notebook.Title);
 	}
 	
 	notebooks = [{NotebookId: Notebook.allNotebookId, Title: getMsg("all"), drop:false, drag: false}].concat(notebooks);
@@ -690,6 +696,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 	} else {
 		cacheNotes = Note.getNotesByNotebookId(notebookId);
 		var notebook = Notebook.cache[notebookId];
+		notebook.Title = trimTitle(notebook.Title);
 		if(!notebook) {
 			return;
 		}
@@ -741,7 +748,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 // 改变标签, isStarred是否是星笔记本
 Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle, isTag, isSearch) {
 	var me = this;
-	$("#curNotebookForListNote").html(title);
+	$("#curNotebookForListNote").html(trimTitle(title));
 	me.isStarred = isStarred;
 	me.isTag = isTag;
 	me.isSearch = isSearch;
@@ -852,6 +859,7 @@ Notebook.updateNotebookTitle = function(target) {
 };
 Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 	var self = Notebook;
+	newTitle = trimTitle(newTitle);
 	NotebookService.updateNotebookTitle(notebookId, newTitle, function() {
 		// 修改缓存
 		Notebook.cache[notebookId].Title = newTitle;
@@ -874,7 +882,7 @@ Notebook.renderUpdateNoteTitle = function(notebookId, newTitle) {
 	if(!Notebook.cache[notebookId]) {
 		return;
 	}
-	Notebook.cache[notebookId].Title = newTitle;
+	Notebook.cache[notebookId].Title = trimTitle(newTitle);
 	// 改变nav
 	Notebook.changeNav();
 	

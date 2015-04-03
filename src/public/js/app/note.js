@@ -801,9 +801,9 @@ Note.renderChangedNote = function(changedNote) {
 	// 找到左侧相应的note
 	var $leftNoteNav = $(tt('[noteId="?"]', changedNote.NoteId));
 	if(changedNote.Title) {
-		$leftNoteNav.find(".item-title").html(changedNote.Title);
+		$leftNoteNav.find(".item-title").html(trimTitle(changedNote.Title));
 		// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
-		Note.changeStarNoteTitle(changedNote.NoteId, changedNote.Title);
+		Note.changeStarNoteTitle(changedNote.NoteId, trimTitle(changedNote.Title));
 	}
 	if(changedNote.Desc) {
 		$leftNoteNav.find(".desc").html(changedNote.Desc);
@@ -865,8 +865,8 @@ Note.renderNote = function(note) {
 		return;
 	}
 	// title
-	$("#noteTitle").val(note.Title);
-	
+	$("#noteTitle").val(trimTitle(note.Title));
+			
 	// 当前正在编辑的
 	// tags
 	Tag.renderTags(note.Tags);
@@ -1035,6 +1035,7 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			classes += " item-active";
 		}
 		var note = notes[i];
+		note.Title = trimTitle(note.Title);
 
 		if(note.InitSync) {
 			Note.getNoteContentLazy(note.NoteId);
@@ -2231,7 +2232,29 @@ Note.initContextmenu = function() {
 	        click: function(e) {
 	        }
 	    });
-	    
+
+	    // 导出
+	    this.exports = new gui.MenuItem({
+	        label: "Export",
+	        click: function(e) {
+	        }
+	    });
+	    var exportsSubMenus = new gui.Menu();
+	    this.exportHtml = new gui.MenuItem({
+	        label: "Html",
+	        click: function(e) {
+	        }
+	    });
+	    this.exportPdf = new gui.MenuItem({
+	        label: "Pdf",
+	        enabled: false,
+	        click: function(e) {
+	        }
+	    });
+	    exportsSubMenus.append(this.exportHtml);
+	    exportsSubMenus.append(this.exportPdf);
+	    this.exports.submenu = exportsSubMenus;
+
 	    var ms = Note.getContextNotebooksSys(notebooks);
 	    this.move.submenu = ms[0];
 	    this.copy.submenu = ms[1];
@@ -2240,6 +2263,7 @@ Note.initContextmenu = function() {
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
+	    this.menu.append(this.exports);
 
 	    // this.menu.append(ms[0]);
 	    // this.menu.append(ms[1]);

@@ -1469,4 +1469,9 @@ function openExternal(url) {
 function checkUpgrade() {
 }
 
+var trimTitle = function(title) {
+	return title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
+
 ContextTips.init();
