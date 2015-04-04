@@ -1770,5 +1770,24 @@ img::selection {
   color: #ffffff;
 }
 
+// dialog loading
+#loadingDialog {
+	.modal-dialog {
+		width: 200px !important;
+		position: absolute;
+		top: 50%;
+		margin-top: -100px;
+		left: 50%;
+		margin-left: -100px;
+	}
+	.modal-body {
+		text-align: center;
+		border-radius: 5px;
+	}
+	#loadingDialogBodyMsg {
+		font-size: 16px;
+	}
+}
+
 @import '../traffic.less';
 @import '../ani.less';

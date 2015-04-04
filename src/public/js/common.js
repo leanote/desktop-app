@@ -1473,5 +1473,16 @@ var trimTitle = function(title) {
 	return title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
 
+var Loading = {
+	show: function(msg) {
+		msg || (msg = "loading...");
+		$('#loadingDialogBodyMsg').html(msg);
+		$('#loadingDialog').modal({backdrop: 'static', keyboard: false});
+	},
+	hide: function() {
+		$('#loadingDialog').modal('hide');
+	}
+};
+
 
 ContextTips.init();

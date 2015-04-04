@@ -1391,8 +1391,75 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 			showMsg("删除失败!", 2000);
 		}
 	});
-	
-}
+};
+
+// 导出pdf
+Note._initExportPdf = false;
+Note.exportPdf = function(target, contextmenuItem, isShared) {
+	var noteId = $(target).attr("noteId");
+	if(!noteId) {
+		return;
+	}
+
+	var note = Note.getNote(noteId);
+	var name = note.Title ? note.Title + '.pdf' : 'Untitled.pdf';
+
+	window.downloadPdfPath = false;
+	if(!Note._initExportPdf) {
+		// 下载pdf输入框
+		$('#exportPdf').change(function() {
+			var name = $(this).val();
+			$(this).val(''); // 为防止重名不触发
+			console.log(window.downloadPdfPath);
+			if(window.downloadPdfPath) {
+				FileService.download(window.downloadPdfPath, name, function(ok, msg) {
+					// console.log(ok + ' -=-');
+					if(ok) {
+						new window.Notification('Info', {
+					        body: 'PDF saved successful!'
+					    });
+					} else {
+						new window.Notification('Warning', {
+					        body: msg || 'PDF saved failure!'
+					    });
+					}
+				});
+			}
+		});
+	}
+
+	Note._initExportPdf = true;
+
+
+	Loading.show();
+
+	// 保存
+    NoteService.exportPdf(noteId, function(curPath, filename, msg) {
+    	Loading.hide();
+
+    	setTimeout(function() {
+	    	if(curPath) {
+	    		window.downloadPdfPath = curPath;
+	    		$('#exportPdf').attr('nwsaveas', name);
+	    		$('#exportPdf').click();
+	    	} else {
+	    		var m = "";
+	    		if(msg == "noteNotExists") {
+	    			m = "Please sync your note to ther server firslty."
+	    		}
+
+	    		// alert会死?
+	    		// alert('File not exists');
+	    		// https://github.com/nwjs/nw.js/wiki/Notification
+	    		var notification = new window.Notification('Warning', {
+			        body: 'Export PDF error! ' + m
+			        // icon: appIcon
+			    });
+	    	}
+    	}, 100);
+    });
+};
+
 
 // 显示共享信息
 Note.listNoteShareUserInfo = function(target) {
@@ -1476,13 +1543,6 @@ Note.listNoteContentHistories = function() {
 				hideDialog();
 			}
 		});
-	});
-}
-
-// 导出成PDF
-Note.exportPDF = function(target) {
-	var noteId = $(target).attr("noteId");
-	ajaxGet("/note/exportPdf", {noteId: noteId}, function(ret) {
 	});
 };
 
@@ -2241,17 +2301,18 @@ Note.initContextmenu = function() {
 	    });
 	    var exportsSubMenus = new gui.Menu();
 	    this.exportHtml = new gui.MenuItem({
-	        label: "Html",
+	        label: "HTML",
 	        click: function(e) {
 	        }
 	    });
 	    this.exportPdf = new gui.MenuItem({
-	        label: "Pdf",
-	        enabled: false,
+	        label: "PDF",
+	        enabled: true,
 	        click: function(e) {
+	        	Note.exportPdf(self.target);
 	        }
 	    });
-	    exportsSubMenus.append(this.exportHtml);
+	    // exportsSubMenus.append(this.exportHtml);
 	    exportsSubMenus.append(this.exportPdf);
 	    this.exports.submenu = exportsSubMenus;
 
@@ -2263,7 +2324,7 @@ Note.initContextmenu = function() {
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
-	    // this.menu.append(this.exports);
+	    this.menu.append(this.exports);
 
 	    // this.menu.append(ms[0]);
 	    // this.menu.append(ms[1]);

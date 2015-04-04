@@ -1566,11 +1566,6 @@ img::selection {
 }
 #loadingDialog .modal-dialog {
   width: 200px !important;
-  position: absolute;
-  top: 50%;
-  margin-top: -100px;
-  left: 50%;
-  margin-left: -100px;
 }
 #loadingDialog .modal-body {
   text-align: center;

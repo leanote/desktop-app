@@ -768,6 +768,18 @@ function log(o) {
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
+
+      <!-- loading -->
+      <div class="modal fade bs-modal-sm" id="loadingDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+          <div class="modal-body" id="loadingDialogBody">
+            <img src="public/images/loading-24.gif"/>
+            <p id="loadingDialogBodyMsg"></p>
+          </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
       
       <!-- modal 静态区域 -->
       <div class="display: hidden">
@@ -776,6 +788,8 @@ function log(o) {
         <!-- 为了上传图片 -->
         <input id="chooseImageInput" type="file" name="file" multiple style="display: none"/>
         <input id="downloadImgInput" type="file" nwsaveas="" style=""/>
+        <!-- // export -->
+        <input id="exportPdf" type="file" nwsaveas="" style=""/>
 
       </div>
     
