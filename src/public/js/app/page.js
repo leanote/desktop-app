@@ -733,7 +733,12 @@ LeaAce = {
 			b = b || "javascript";
 			aceEditor.session.setMode("ace/mode/" + b);
 			aceEditor.session.setOption("useWorker", false); // 不用语法检查
-			aceEditor.setFontSize("14px");
+			// retina
+			if(window.devicePixelRatio == 2) {
+				aceEditor.setFontSize("12px");
+			} else {
+				aceEditor.setFontSize("14px");
+			}
 			aceEditor.getSession().setUseWorker(false); // 不用语法检查
 			aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
 			aceEditor.setShowInvisibles(false); // OK 不显示空格
@@ -1646,7 +1651,14 @@ function userMenu() {
 	    this.menu.append(this.sync);
 		
 	    this.popup = function(e) {
-			this.menu.popup(10, $('body').height() - height);
+	    	var y = $(window).height() - height;
+	    	if(isMac()) { 
+				this.menu.popup(10, y);
+	    	} else {
+	    		// windows下不能用y
+	    		var winY = e.clientY - height;
+				this.menu.popup(10, winY);
+	    	}
 	    }
 	}
 
