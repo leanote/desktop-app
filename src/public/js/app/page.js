@@ -709,6 +709,11 @@ LeaAce = {
 			if($pre.length == 0) {
 				return;
 			}
+			// 本身就有格式的, 防止之前有格式的显示为<span>(ace下)
+			if($pre.attr('style') || $pre.html().indexOf('style') != -1) {
+				$pre.html($pre.text());
+				// return;
+			}
 			$pre.find('.toggle-raw').remove();
 			var preHtml = $pre.html();
 
@@ -728,6 +733,7 @@ LeaAce = {
 			b = b || "javascript";
 			aceEditor.session.setMode("ace/mode/" + b);
 			aceEditor.session.setOption("useWorker", false); // 不用语法检查
+			aceEditor.setFontSize("14px");
 			aceEditor.getSession().setUseWorker(false); // 不用语法检查
 			aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
 			aceEditor.setShowInvisibles(false); // OK 不显示空格

@@ -1035,10 +1035,21 @@ $(function() {
 	        	Notebook.deleteNotebook(me.target);
 	        }
 	    });
+
+	    this.imports = new gui.MenuItem({
+	        label: 'Import',
+	        click: function(e) {
+	        	
+	        	var notebookId = $(me.target).attr("notebookId");
+	        	var notebook = Notebook.getNotebook(notebookId);
+	        	Import.open(notebook);
+	        }
+	    });
 	    
 	    this.menu.append(this.addSub);
 	    this.menu.append(this.rename);
 	    this.menu.append(this.del);
+	    this.menu.append(this.imports);
 
 	    this.enable = function(name, ok) {
 	    	this[name].enabled = ok;

@@ -1143,10 +1143,10 @@ top: 4px;
 }
 
 // ace 重置css, 必须
-.ace_eidtor, .ace_editor * {
-	font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+.ace_editor, .ace_editor * {
+	// font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
 }
-
 
 /* leanote nav */
 
@@ -1786,6 +1786,19 @@ img::selection {
 	}
 	#loadingDialogBodyMsg {
 		font-size: 16px;
+	}
+}
+
+#importDialog {
+	.tab-pane {
+		text-align: center;
+		padding: 10px;
+		padding-top: 20px;
+	}
+	.alert {
+		margin-top: 10px;
+		padding: 0;
+		border: none;
 	}
 }
 

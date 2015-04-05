@@ -30,6 +30,7 @@ var WebService = require('web');
 var ServerService = require('server');
 var FileService = require('file');
 var EvtService = require('evt');
+var ImportService = require('import');
 
 // 分发服务
 // route = /note/notebook

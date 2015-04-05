@@ -13,6 +13,7 @@ var Notebook = {
 var Note = {
 	cache: {}, // noteId => {Title, Tags, Content, Desc}
 };
+var Import = {}; // 导入
 // var UserInfo = {}; // 博客有问题, 会覆盖
 var Tag = {};
 var Notebook = {};

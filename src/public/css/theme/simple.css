@@ -1060,9 +1060,9 @@ h3 {
 .dropdown-menu .divider {
   margin: 3px 0;
 }
-.ace_eidtor,
+.ace_editor,
 .ace_editor * {
-  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
 }
 /* leanote nav */
 .leanoteNav {
@@ -1578,6 +1578,16 @@ img::selection {
 }
 #loadingDialog #loadingDialogBodyMsg {
   font-size: 16px;
+}
+#importDialog .tab-pane {
+  text-align: center;
+  padding: 10px;
+  padding-top: 20px;
+}
+#importDialog .alert {
+  margin-top: 10px;
+  padding: 0;
+  border: none;
 }
 .win-tool {
   padding: 5px;

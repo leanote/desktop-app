@@ -1,0 +1,9 @@
+<config>
+    <db>
+        <server>LP1721</server>
+        <database>DB1</database>
+        <user>cam</user>
+        <password>password</password>
+        <port>1433</port>
+    </db>
+</config>
