@@ -30,7 +30,10 @@ var WebService = require('web');
 var ServerService = require('server');
 var FileService = require('file');
 var EvtService = require('evt');
-var ImportService = require('import');
+var CommonService = require('common');
+
+// NodeJs
+var NodeFs = require('fs');
 
 // 分发服务
 // route = /note/notebook

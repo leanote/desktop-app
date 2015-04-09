@@ -43140,10 +43140,11 @@ requirejs.config({
 
 window.viewerMode = false;
 // Keep the theme in a global variable
-window.theme = 'default';
-var themeModule = "less!themes/" + window.theme;
+window.__theme = 'default';
+window.baseDir = ''; // life
+var themeModule = "less!themes/" + window.__theme;
 if(window.baseDir.indexOf('-min') !== -1) {
-	themeModule = "css!themes/" + window.theme;
+	themeModule = "css!themes/" + window.__theme;
 }
 
 // RequireJS entry point. By requiring synchronizer, publisher, sharing and

@@ -1,0 +1,158 @@
+/**
+ * 写作模式
+ */
+body.writting.init #pageInner {
+  display: block;
+}
+body.writting #mainMask,
+body.writting #leftNotebook,
+body.writting .noteSplit,
+body.writting #noteList {
+  display: none;
+}
+body.writting #noteAndEditor {
+  left: 0 !important;
+}
+body.writting #note {
+  left: 0 !important;
+}
+body.writting #note #tool {
+  z-index: initial;
+}
+body.writting #note #noteTitleDiv {
+  left: 100px;
+  z-index: 1001;
+}
+body.writting #note #noteTitle {
+  text-align: center;
+}
+body.writting #note #editorTool {
+  position: relative;
+  z-index: 1001;
+}
+body.writting #note #editor,
+body.writting #note #mdEditor {
+  bottom: 0;
+}
+body.writting #note #editor {
+  background-color: #f2f2f2;
+}
+body.writting #note #editorContentWrap {
+  position: absolute;
+  padding: 10px 0;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+body.writting #note #editorContent {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+  background-color: #fff;
+  top: 0 !important;
+  border-radius: 0px;
+  min-height: 100%;
+  box-shadow: 0 1px 10px #ccc;
+  font-size: 16px;
+  padding: 50px;
+}
+body.writting #note #editorContent p {
+  margin: 10px 0;
+}
+body.writting #note #editorBottom {
+  display: none;
+}
+body.writting #editor #mceToolbar {
+  height: 40px;
+}
+body.writting #editor.all-tool #mceToolbar {
+  height: 70px;
+}
+body.writting #editor.all-tool #editorContentWrap {
+  top: 70px;
+}
+#editor .mce-tinymce {
+  border: none;
+}
+/*编辑器按钮*/
+#mceToolbar,
+#mdEditor .navbar-default,
+#wmd-button-bar {
+  position: relative;
+  height: 40px;
+  padding: 5px 0;
+  overflow: hidden;
+  background-color: #fbfcf7;
+  border: none;
+  box-shadow: 0 3px 10px #eee;
+  z-index: 10;
+}
+#mdEditor .navbar-default,
+#wmd-button-bar {
+  height: 40px !important;
+}
+#mdEditor .extension-preview-buttons,
+#mdEditor .layout-wrapper-l3 {
+  top: 40px !important;
+}
+#left-column,
+#right-column,
+#mdSplitter {
+  top: 3px;
+}
+/* 编辑器工具 需要important, 因为mce还要有js加载css, 肯定在此之后 */
+/*加高, 之前显得拥挤*/
+.mce-btn-small button {
+  padding: 5px 5px !important;
+  line-height: 20px !important;
+}
+.mce-btn {
+  background-color: #fbfcf7 !important;
+  overflow: hidden;
+}
+.mce-btn button span {
+  overflow: hidden;
+}
+.mce-menubtn.mce-btn-small span {
+  line-height: 20px !important;
+}
+.mce-btn span {
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif !important;
+}
+.mce-primary button,
+.mce-primary button i {
+  text-shadow: none;
+}
+.mce-primary {
+  background-color: #47a447 !important;
+  border-color: #398439 !important;
+}
+.mce-menu-item:hover,
+.mce-menu-item.mce-selected,
+.mce-menu-item:focus {
+  background-color: #ebeff2;
+}
+.mce-menu-item:hover span,
+.mce-menu-item.mce-selected span,
+.mce-menu-item:focus span {
+  color: #000 !important;
+}
+.mce-menu-item-normal.mce-active {
+  background-color: #ebeff2;
+}
+.mce-menubtn.mce-fixed-width.mce-btn-small span {
+  width: 80px;
+}
+.mce-menubtn.mce-btn-small span {
+  font-size: 16px;
+}
+#wmd-input > .editor-content,
+.preview-container {
+  font-size: 16px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.pren-tool {
+  right: 6px;
+}

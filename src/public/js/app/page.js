@@ -1128,7 +1128,7 @@ var State = {
 	// 是否结束
 	recoverEnd: false,
 
-	recoverAfter: function() {
+	recoverAfter: function(initedCallback) {
 		var me = this;
 		me.recoverEnd = true;
 		// 先隐藏, 再resize, 再显示
@@ -1152,15 +1152,17 @@ var State = {
 		setTimeout(function() {
 			incrSync();
 		}, 500);
+
+		initedCallback && initedCallback();
 		// $('body').show();
 	},
 
 	// 恢复状态
-	recoverState: function(userInfo) {
+	recoverState: function(userInfo, initedCallback) {
 		var state = userInfo.State || {};
 		// 表明没有state
 		if(state.NotebookOpened === undefined) {
-			this.recoverAfter();
+			this.recoverAfter(initedCallback);
 			return;
 		}
 		// 1. 左侧哪个open
@@ -1192,7 +1194,7 @@ var State = {
 			Notebook.changeNotebook(notebookId, false, state.CurNoteId);
 		}
 
-		this.recoverAfter();
+		this.recoverAfter(initedCallback);
 
 	}
 };
@@ -1200,7 +1202,11 @@ var State = {
 // note.html调用
 // 实始化页面
 // 判断是否登录
-function initPage() {
+function initPage(initedCallback) {
+	// 笔记本, 事件, menu初始化
+	Notebook.init();
+	// 笔记
+
 	win.on('close', function() {
 		// 先保存之前改变的
 		Note.curChangedSaveIt();
@@ -1225,7 +1231,7 @@ function initPage() {
 	function ok() {
 		i++;
 		if(i == 3) {
-			State.recoverState(UserInfo);
+			State.recoverState(UserInfo, initedCallback);
 		}
 	}
 
@@ -1323,27 +1329,6 @@ function initUploadImage() {
 		}
 
 	});
-}
-
-// 改变css
-var themes = {"Simple":'simple-no.css', 'Blue': 'blue.css', 'Black': 'black.css'};
-var themeMenus = {};
-function changeTheme(themeName) {
-	if(themeName) {
-		if(themeMenus[themeName]) {
-			themeMenus[themeName].checked = true;
-		}
-		var css = themes[themeName];
-		if(css) {
-			$('#theme').attr('href', 'public/css/theme/' + css);
-
-			// 保存
-			UserService.updateG({Theme: themeName});
-		}
-
-	} else {
-		themeMenus['Simple'].checked = true;
-	}
 }
 
 // 演示模式, 全屏模式
@@ -1482,7 +1467,6 @@ var Pren = {
 			}
 		});
 
-
 		function isURL(str_url) {
 		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
 		    return re.test(str_url);
@@ -1520,7 +1504,6 @@ function checkForUpdates() {
 	}
 };
 
-
 // user
 function userMenu() {
 	// ----------
@@ -1538,11 +1521,6 @@ function userMenu() {
 		nativeMenuBar.createMacBuiltin("Leanote");
 		win.menu = nativeMenuBar;
 		win.menu.append(modes);
-	}
-	// windows和linux下就用user's menu来代替
-	else {
-		// alert(process.platform);
-		// win.menu.append(modes);
 	}
 
 	//-------------------
@@ -1582,11 +1560,7 @@ function userMenu() {
 	        	// location.href = 'login.html';
 	        }
 	    });
-	    this.theme = new gui.MenuItem({
-	        label: 'Change theme',
-	        click: function(e) {
-	        }
-	    });
+	    
 	    this.sync = new gui.MenuItem({
 	        label: 'Sync now',
 	        click: function(e) {
@@ -1600,33 +1574,16 @@ function userMenu() {
 	        }
 	    });
 
-	    var themeSubmenus = new gui.Menu();
-	    for(var i in themes) {
-	    	(function(t) {
-				themeMenus[t] = new gui.MenuItem({
-			        label: t,
-			        type: 'checkbox',
-			        click: function(e) {
-			        	// var themeCss = themes[t];
-			        	changeTheme(t);
-			        	// 将其它的不选中
-			        	for(var j in themes) {
-			        		if(j != t) {
-			        			themeMenus[j].checked = false;
-			        		}
-			        	}
-			        }
-			    });
-			    themeSubmenus.append(themeMenus[t]);
-	    	})(i);
-	    }
-	    this.theme.submenu = themeSubmenus;
-
 	    this.menu.append(this.email);
 	    this.menu.append(this.blog);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
-	    this.menu.append(this.theme);
+
+	    // themeMenu
+	    var themeMenu = Api.getThemeMenu();
+	    if(themeMenu) {
+		    this.menu.append(themeMenu);
+	    }
 		
 		var height = 180;
 		if(!isMac()) {
@@ -1668,9 +1625,6 @@ function userMenu() {
 		userMenuSys.popup(e);
 	});
 
-	// 修改主题
-	changeTheme(UserInfo.Theme);
-	
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
 	  e.preventDefault();

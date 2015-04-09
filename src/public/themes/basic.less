@@ -1,0 +1,1795 @@
+@fontFamily: 'Open Sans', 'Helvetica Neue',Arial,'Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei',sans-serif;
+
+// font
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/open-sans2/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('../fonts/open-sans2/cJZKeOuBrn4kERxqtaUH3T8E0i7KZn-EPnyo3HZu7kw.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url('../fonts/open-sans2/k3k702ZOKiLJc3WVjuplzHhCUOGz7vYGh680lGh-uXM.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url('../fonts/open-sans2/xjAJXh38I15wypJXxuGMBobN6UDyHWBl620a-IRfuBk.woff') format('woff');
+}
+
+/* leanote */
+@font-face {
+    font-family: 'leanoteregular';
+    src: url('../fonts/leanote/leanote-regular-webfont.eot');
+    src: url('../fonts/leanote/leanote-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/leanote/leanote-regular-webfont.woff') format('woff'),
+         url('../fonts/leanote/leanote-regular-webfont.ttf') format('truetype'),
+         url('../fonts/leanote/leanote-regular-webfont.svg#leanoteregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+html,body {
+}
+#pageInner {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	overflow: hidden;
+}
+*,.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6  {
+  font-family: @fontFamily;
+}
+body {
+  font-family: @fontFamily;
+  font-weight: 300;
+  font-size: @fontSize;
+}
+h1, h2, h3 {
+  font-family: @fontFamily;
+  font-weight: 300 !important;
+}
+/*"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue", Helvetica, "Microsoft Yahei", Verdana, Simsun, "Segoe UI", "Segoe UI Web Regular", "Segoe UI Symbol",  "BBAlpha Sans", "S60 Sans", Arial, sans-serif;*/
+
+#noteItemList, #notebook, #leftNotebook, 
+.slimScrollDiv,
+#editorContent,
+#editorContent_ifr,
+.mce-edit-area,.mce-container-body,.mce-tinymce,
+#editor .mce-ifr,
+.wmd-input,
+#noteReadContent,
+#attachList,
+#tags,
+.editor-content,
+.preview-container
+{
+	-webkit-overflow-scrolling: touch !important; // for iphone
+}
+
+.ios7-a {
+  display: inline-block;
+  padding: 0 10px 0 5px;
+  height: 36px;
+  vertical-align: middle;
+  line-height: 36px;
+  cursor: pointer; 
+}
+#tool {
+  border-bottom: 1px solid #ddd;
+  height: 36px;
+  // margin-left: -5px; // 为了和左边的底部线连接起来
+}
+#tag {
+  height: 36px;
+  line-height: 36px;
+}
+#tags {
+	display: block; float: left;line-height: 25px;height: 25px;margin-top: 0;
+	.label {
+		margin-right: 2px;
+	}
+}
+#tagDropdown {
+	float: left;
+}
+
+#editor, #mdEditor{
+  position: absolute; 
+  z-index: 2;
+  top: 36px; 
+  bottom: 30px; 
+  right: 0; 
+  // left: 5px;  
+  left: 0;
+  padding: 0; // 0px 0px 0px 0px;
+  display: none;
+}
+#mdEditor {
+	z-index: 1;
+	background-color: #fff;
+    // bottom: 5px; 
+    #md-section-helper, #wmd-input {
+		font-size: 14px;
+		line-height: 22px;			
+    }
+}
+// 前面的38影响了dropdown
+#tag .dropdown {
+  line-height: 30px;
+}
+.btn {
+	border-radius: 2px;
+}
+.alert {
+	margin-bottom: 10px;
+}
+
+#logo {
+	font-family: "leanoteregular";
+	font-size: 36px;
+}
+#logo:before {
+	content: "a";
+}
+#switcher span {
+	font-family: "leanoteregular";
+	border-radius: 5px;
+	display: inline-block;
+	cursor: pointer;
+	font-size: 18px;
+	height: 34px;
+	line-height: 34px;
+	margin-top: 8px;
+	padding: 0 5px;
+}
+#switcher span:before {
+	content: "b";
+}
+.noteSplit {
+  position: absolute;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  overflow: hidden;
+  z-index: 5;
+  cursor: col-resize;
+}
+.dropdown-menu {
+  border-radius: 3px;
+  margin:0;
+  // border: 1px solid @hColor;
+  // border: 1px solid #e6eaed;
+  /*overflow-x: hidden; */
+  /*overflow-y: scroll;*/
+  box-shadow: rgba(0, 0, 0, 0.172549) 0px 6px 12px 0px;
+  &:before {
+		content: "";
+		width: 20px;
+		height: 12px;
+		position: absolute;
+		top: -12px;
+		right: 20px;
+		background-image: url("../../images/triangle_2x.png");
+		background-size: 20px 12px;
+	}
+}
+
+.dropdown-submenu .dropdown-menu:before {
+	background: none;
+}
+#searchNotebookForAddDropdownList, #searchNotebookForAddShareDropdownList {
+	left: -200px;
+	&:before {
+		left: 190px;
+		right: inherit;
+	}
+}
+
+.sync-icon {
+	margin-left: 10px;
+}
+#syncWarning {
+	color: #f0ad4e;
+	display: none;
+	cursor: pointer;
+}
+#myProfile {
+	.dropdown-menu {
+		top: -110px;
+		&:before {
+			top: auto;
+			bottom: -12px;
+			transform: rotate(180deg);
+		}
+	}
+	position: absolute;
+	left: 45px;
+	right: 0;
+	text-align: right;
+	.dropdown-toggle {
+		position: relative;
+		width: 100%;
+		display: block;
+		.username {
+			position: absolute;
+			display: block;
+			left: 0;
+			right: 18px;
+			line-height: 30px;
+			white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+		}
+		.account-more  {
+			position: absolute;
+			right: 3px;
+			line-height: 30px;
+		}
+	}
+}
+
+.sync-progress {
+	height: 2px;
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	background: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+
+.dropdown-menu li {
+	list-style: none;
+  padding-left: 10px;
+  width: 100%;
+  height: 30px; // 父设置了line-height, 子下拉也受影响, "新建笔记"
+  line-height: 30px;
+}
+.dropdown-menu li > a {
+  color: @aBlackColor;
+  display: block;
+  padding-right: 20px;
+}
+.dropdown-menu > li > a {
+  padding: 3px 20px 3px 0;
+}
+#notebookNavForNewNote li:hover {
+	background: none;
+}
+
+#noteList {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  /*
+  overflow-x: hidden;
+  overflow-y: hidden;
+  */
+  background: #fcfcfc;
+}
+// 笔记列表与editor的遮罩
+#noteAndEditorMask {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background: #fff;
+	text-align: center;
+	padding-top: 60px;
+	opacity: .3;
+	z-index: 20;
+	display: none;
+}
+
+//-----------------
+// 下拉菜单
+.dropdown-submenu {
+    position: relative;
+}
+.dropdown-submenu > ul.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-left: -3px !important;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding-top: 10px !important;
+}
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+// 箭头
+.dropdown-submenu:after {
+    display: block;
+    content: " ";
+    position: absolute;
+    right: 0;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #666;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #fff;
+}
+.dropdown-submenu.pull-left {
+    float: none;
+}
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+// 动画
+.open > .dropdown-menu, .dropdown-submenu:hover > .dropdown-menu {
+  opacity: 1;
+  transform: scale(1, 1); 
+  -webkit-transform: scale(1, 1);
+  -moz-transform: scale(1, 1);
+  -o-transform: scale(1, 1);
+}
+.dropdown-menu {
+  opacity: 0;
+  display: block;
+  
+  -webkit-transform: scale(0, 0);
+  -webkit-transform-origin: top;
+  -webkit-animation-fill-mode: forwards;  
+  -webkit-transition: all 0.2s cubic-bezier(0.34, 1.21, 0.4, 1);
+  
+  -o-transform: scale(0, 0);
+  -o-transform-origin: top;
+  -o-animation-fill-mode: forwards;  
+  -o-transition: all 0.2s cubic-bezier(0.34, 1.21, 0.4, 1);
+  
+  -moz-transform: scale(0, 0);
+  -moz-transform-origin: top;
+  -moz-animation-fill-mode: forwards;  
+  -moz-transition: all 0.2s cubic-bezier(0.34, 1.21, 0.4, 1);
+  
+  transform: scale(0, 0);
+  transform-origin: top;
+  animation-fill-mode: forwards; 
+  transition: all 0.2s cubic-bezier(0.34, 1.21, 0.4, 1);
+  
+}
+
+.dropdown-list {
+	width: 530px;
+	border-radius: 3px;
+  ul {
+  	margin: 0;
+  	padding: 0;
+  	li {
+  		float: left;
+  		width: 120px;
+  		margin-left: 10px;
+  		margin-bottom: 10px;
+  		border: 1px dashed #ccc;
+  	}
+  }
+}
+
+.new-note-right {
+	padding: 0 5px;
+	padding-left: 3px
+}
+#leanoteMsg {
+	line-height: 40px; margin-top: 10px; margin-left: 10px;
+}
+#newNoteWrap {
+	line-height: 40px; margin-top: 10px;
+}
+
+
+
+#searchNotebookForAdd {
+	line-height: normal;
+	width: 200px;
+	margin: 0 10px;
+	margin-bottom: 10px;
+	height: 30px;
+	border-color: #ebeff2;
+	box-shadow: none;
+}
+#myNotebooks .folderBody {
+	padding-top: 3px;
+}
+// 防止左侧笔记本名称太长
+.folderBody {
+	overflow-x: hidden;
+}
+#searchNotebookForList {
+	height: 30px;
+	width: 90%;
+	margin: 3px auto;
+	margin-top: 0;
+	border-color: #ebeff2;
+	box-shadow: none;
+}
+
+// blog
+#noteItemList {
+	.item-setting, .item-blog, .item-star, .item-conflict-info {
+	  position: absolute; 
+	  right: 1px;
+	  font-size: 10px;
+	  z-index: 2;
+	  padding: 3px;
+	  border-radius: 5px;
+	  cursor: pointer;
+	  .fa {
+		  color: #fff;
+	  }
+	  width: 20px;
+	  text-align: center;
+	  opacity: 0.5;
+	  &:hover {
+		  opacity: 0.8;
+	  }
+	  background-color: #464C5E;
+	 }
+	  
+	 .item-blog {
+	 	// top: 1px;
+	 	bottom: 0;
+	 	right: 45px;
+	 	// 暂不支持
+	 	display: none;
+	 }
+	  
+	 .item-setting {
+	 	bottom: 0;
+	 	display: none;
+	 }
+	 .item-star {
+	 	bottom: 0;
+	 	right: 23px;
+	 	display: none;
+	}
+	.item-conflict-info {
+		bottom: 0;
+		right: 45px;
+		.fa {
+			color: #f0ad4e !important;
+		}
+		display: none;
+	}
+	
+	// 是star的
+	.item-is-star {
+		.item-star {
+			// display: block;
+			.fa:before {
+	 			content: "\f005";
+	 		}
+	 		.fa {
+		 		color: yellow !important;
+	 		}
+		}
+
+	}
+}
+#noteItemList .item:hover  {
+	 .item-setting, .item-star, .item-blog {
+	 	display: block;
+	 }
+	 &.item-conflict {
+		.item-conflict-info {
+			display: block;
+		}
+	}
+}
+
+// share
+.friend-header {
+	position: relative;
+	.notebook-setting {
+		display: none;
+	}
+	&:hover {
+		.notebook-setting {
+			display: block;
+		}
+	}
+}
+
+.each-user {
+	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 3px;
+	border: 1px solid #eee;
+	border-radius: 3px;
+}
+
+//
+.notebook-number-notes {
+	position: absolute;
+	right: 10px;
+	top: 0;
+	bottom: 0;
+	z-index: 1;
+	display: inline-block;
+	//border: 1px solid #ccc;
+	//border-radius: 1px;
+	line-height: 20px !important;
+	height: 20px;
+	margin-top: 5px;
+	padding: 0 3px;
+}
+// 设置
+.notebook-setting {
+	display: none;
+	position: absolute;
+	right: 1px;
+	top: 0;
+	bottom: 0;
+	z-index: 2;
+	line-height: 30px;
+}
+.notebook-setting:before {
+	content: "\f013";
+}
+.ztree li a:hover .notebook-setting {
+	display: block;
+}
+
+#myTag .folderBody {
+	padding: 0 3px;
+	padding-bottom: 3px;
+	padding-left: 5px;
+}
+#myTag .folderBody li {
+	// float: left;
+	padding: 3px;
+	line-height: normal;
+}
+#notebookList {
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.ztree {
+	padding: 0px;
+}
+
+// leaui image drop drag
+#upload {
+	position: absolute;
+	z-index: 0;
+	bottom: 0;
+	right: 0;
+	left: 0px;
+	padding: 0;
+	background-color: #fff;
+	text-align: center;
+	display: none;
+}
+#upload #drop {
+	width: 100%;
+	height: 100%;
+	padding-top: 100px;
+}
+#drop.in {
+    border: 1px solid #000000;
+}
+#drop.hover {
+    border: 2px solid #000000;
+}
+#uploadMsg {
+	position: absolute;
+	top: 3px;
+	right: 3px;
+	bottom: 10px;
+	overflow: scroll;
+	list-style: none;
+}
+
+// upload attach
+#uploadAttach {
+	position: relative;
+	margin-top: 5px;
+}
+.dropzone {
+	text-align: center;
+	input {
+		display: none;
+	}
+}
+.dropzone.in {
+    border: 1px solid #000000;
+}
+.dropzone.hover {
+    border: 2px solid #000000;
+}
+
+#attachUploadMsg, #avatarUploadMsg{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+    max-height: 240px;
+    z-index: 3;
+    .alert {
+    	margin: 0;
+    	padding: 0 3px;
+    	margin-top: 10px;
+    }
+}
+#attachMenu {
+	width: 450px;
+	padding: 10px 5px;
+}
+#attachList {
+	margin: 0;
+	padding: 0;
+	max-height: 450px;
+	overflow-y: auto;
+	li {
+		display: block;
+		margin: 0;
+		padding: 0 3px;
+		border-radius: 3px;
+		border-bottom: 1px dashed #eee;
+		height: 45px;
+		line-height: 45px;
+		div {
+			float: left;
+		}
+		.attach-title {
+			width: 290px;
+			white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+		}
+		.attach-process {
+			float: right;
+		}
+	}
+	li.loading {
+		text-align: center;
+	}
+}
+
+//--------
+.animated {
+	-webkit-animation-fill-mode: both;
+	-moz-animation-fill-mode: both;
+	-ms-animation-fill-mode: both;
+	-o-animation-fill-mode: both;
+	animation-fill-mode: both;
+	-webkit-animation-duration: 0.5s;
+	-moz-animation-duration: 0.5s;
+	-ms-animation-duration: 0.5s;
+	-o-animation-duration: 0.5s;
+	animation-duration: 0.5s;
+}
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@-o-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.fadeIn {
+	-webkit-animation-name: fadeIn;
+	-moz-animation-name: fadeIn;
+	-o-animation-name: fadeIn;
+	animation-name: fadeIn;
+}
+
+@-webkit-keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		-webkit-transform: translateY(20px);
+	}
+
+	100% {
+		opacity: 1;
+		-webkit-transform: translateY(0);
+	}
+}
+
+@-moz-keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		-moz-transform: translateY(20px);
+	}
+
+	100% {
+		opacity: 1;
+		-moz-transform: translateY(0);
+	}
+}
+
+@-o-keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		-o-transform: translateY(20px);
+	}
+
+	100% {
+		opacity: 1;
+		-o-transform: translateY(0);
+	}
+}
+
+@keyframes fadeInUp {
+	0% {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.fadeInUp {
+	-webkit-animation-name: fadeInUp;
+	-moz-animation-name: fadeInUp;
+	-o-animation-name: fadeInUp;
+	animation-name: fadeInUp;
+}
+
+#historyList {
+	img {
+		max-width: 100%;
+	}
+}
+#avatar {
+	height: 60px; max-width: 200px; display: inline-block; margin: 10px;
+}
+#noteReadTitle {
+	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+}
+#noteReadInfo {
+	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+	color: #666;
+}
+.my-link, .new-markdown-text-abbr, .new-note-text-abbr {
+	display: none;
+}
+#myAvatar {
+	height: 30px; 
+	max-width: 30px;
+	overflow: hidden;
+	// border: 1px solid #ccc;
+	border-radius: 50%;
+}
+#tool {
+	position: relative;
+}
+#editorBottom {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 30px;
+	border-top: 1px solid #eee;
+}
+#tag {
+	position: absolute;
+	right: 0;
+	top: 0;
+	left: 5px;
+	bottom: 0;
+}
+#tagColor {
+	left: 10px;
+	top: -130px;
+	&:before {
+		content: "";
+		background-image: none;
+	}
+}
+#addTagInput {
+	width: 100px;
+}
+#notesAndSort {
+	height: 36px;
+}
+#noteItemListWrap {
+	position: absolute; left: 0; right: 0; 
+	top: 69px; 
+	bottom: 3px;
+}
+
+
+
+
+// -------------------
+// mdeditor 
+
+#mdEditorPreview {
+	position: absolute;	
+	top: 35px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#left-column, #right-column, #mdSplitter{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+}
+#mdSplitter {
+	width: 5px;
+	height: 100%;
+	overflow: hidden;
+	z-index: 5;
+	cursor: col-resize;
+	left: 450px;
+	background: none;
+}
+#left-column {
+	left: 0;
+	width: 450px;
+}
+#right-column {
+	left: 450px;
+	right: 0;
+	overflow: hidden;
+}
+
+.wmd-panel-editor, .preview-container, #wmd-input {
+	height: 100%;
+}
+
+.wmd-panel-editor, .wmd-panel-preview {
+}
+
+.wmd-input, .wmd-input:focus, #md-section-helper /* helper必须在这里 */
+{
+	width: 100%;
+	border: 1px #eee solid;
+	border-radius: 5px;
+	outline: none;
+    font-size: 14px;
+    resize: none;
+    overflow-x: hidden;
+}
+
+/* 不能为display: none */
+#md-section-helper {
+	position: absolute;
+    height: 0;
+    overflow-y: scroll;
+    padding: 0 6px;
+    top:10px; /*一条横线....*/
+    z-index: -1;
+    opacity: none;
+}
+
+#right-column {
+}
+.preview-container {
+    overflow: auto;
+}
+
+.wmd-preview { 
+	width: 100%;
+    font-size: 14px;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.wmd-button-row, .preview-button-row
+{
+	padding: 0px;  
+	height: auto;
+	margin: 0;
+}
+
+.wmd-spacer
+{
+	width: 0px; 
+	height: 20px; 
+	margin-left: 10px;
+
+	background-color: Silver;
+	display: inline-block; 
+	list-style: none;
+}
+.wmd-button, .preview-button {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+    font-size: 17px;
+}
+.wmd-button {
+    margin-left: 10px;
+}
+.preview-button {
+    margin-right: 10px;
+}
+.wmd-button > span, .preview-button > span {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+	font-size: 14px;
+}
+
+// 顶部导航, 博客
+.top-nav {
+	margin: 0 10px;
+	display: inline-block;
+	line-height: 60px;
+}
+
+// context-menu
+// 防止换行
+.cm-item {
+	position: relative;
+	.cm-text {
+		position: absolute;
+		left: 23px;
+		right: 10px;
+		white-space: nowrap;text-overflow:ellipsis;
+		overflow: hidden;
+		.c-text {
+			display: initial;
+		}
+	}
+}
+.b-m-mpanel {
+	border-radius: 3px;
+}
+
+//-------------
+// 
+
+/* item list */
+#noteItemList {
+  position: absolute;
+  top: 0;
+  left:0;
+  right:0;
+  bottom: 0;
+  width: 100%;
+  overflow-y: scroll;
+  padding: 0 5px;
+}
+#noteItemList .item {
+  position: relative;
+  height: 110px;
+  overflow: hidden;
+  cursor: default;
+	border: 1px solid @borderColor;
+	border-radius: 3px;
+  margin-top: 5px;
+  background-color: #fff;
+}
+
+#noteItemList .item:hover, 
+#noteItemList .contextmenu-hover {
+  background-color: #ddd !important;
+  //color: @aBlackColor;
+  .item-title {
+    //color: @aBlackColor;
+    //font-weight: 800;
+  }
+}
+
+.item-active, #noteItemList .item-active:hover {
+  background-color: #65bd77 !important; // #eee;/*@bgColor*/;
+  color: #fff;
+  .fa {
+	 color: #eee;
+  }
+  .item-info .fa {
+	 color: #eee !important;
+	}
+  .item-title {
+    color: #fff;
+    // font-weight: 800;
+  }
+}#noteItemList .item-thumb  {
+  width: 100px; 
+  height: 100px; 
+  overflow: hidden;
+  position: absolute; 
+  z-index: 1;
+  right: 0px;
+top: 4px;
+  height: 100px;
+  background-color: #fff;
+  margin-right: 5px;
+  line-height: 100px;
+  text-align: center;
+}
+  .item-thumb img {
+     max-width: 100px;
+  }
+
+.item-title {
+    /*font-weight: 400;*/
+    font-size: 16px;
+    height: 22px;
+    line-height: 20px;
+    overflow: hidden;
+    margin-bottom: 0px;
+    color: @aBlackColor;
+    border-bottom: dashed 1px @borderColor;
+  }
+
+#noteItemList .item-desc {
+  position: absolute; 
+  left: 0;
+  top: 4px;
+	right: 0px;
+  margin-left: 4px;
+  .fa { // folder, calender 颜色暗些
+  	color: #666;
+  }
+}
+#noteItemList .item-image .item-desc {
+  right: 100px;
+}
+
+.item-info {
+	margin: 0;
+	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+}
+.desc {
+	margin: 0;
+	word-wrap: break-word;
+}
+
+//--------
+// 右部edtior
+// 为splitter使用
+#editorMask {
+	position: absolute; top: 0px; bottom: 0px; right: 0; left: 0; 
+	background-color: #fff;
+	display: none;
+	z-index: -10;
+	.fa, a {
+		font-size: 24px;
+	}
+	padding-top: 50px;
+	text-align: center;
+	a {
+		display: inline-block;
+		border-radius: 3px;
+		border: 1px solid @borderColor;
+		padding: 10px;
+		&:hover {
+			background-color: @noteActiveBg;
+			color: #fff;
+		}
+	}
+}
+.note-mask {
+	position: absolute; top: 0px; bottom: 0px; right: 0; left: 3px; z-index: -1;
+}
+#noteMaskForLoading {
+	padding-top: 60px;
+	background: #fff;
+	text-align: center;
+	opacity: .3;
+}
+#themeForm td {
+	padding: 5px;
+	text-align: center;
+}
+#themeForm img {
+	border: 1px solid #eee;
+	padding: 2px;
+}
+
+.dropdown-menu .divider {
+	margin: 3px 0;
+}
+
+// ace 重置css, 必须
+.ace_editor, .ace_editor * {
+	// font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
+}
+
+/* leanote nav */
+
+.leanoteNavTrigger {
+}
+
+.leanoteNav {
+  position: absolute; 
+  right: 0px;
+  border: 1px solid #ccc; 
+  border-radius: 3px;
+  background-color: #fff;
+  opacity: 0.5;
+  // display: none;
+  z-index: 11;
+  margin-top: 4px;
+  h1 {
+	margin: 0;
+	font-size: 16px;
+	padding: 3px; 
+	cursor: pointer;
+	// padding-top: 3px;
+  }
+  i {
+    padding: 3px;
+  }
+  span {
+  	display: none;
+  }
+  .leanoteNavContent {
+  	display: none;
+	overflow: auto;
+  } 
+}
+
+.leanoteNav.unfolder {
+  min-width: 200px;
+  max-width: 300px;
+  // bottom: 1px;
+  opacity: 0.8;
+  h1 {
+  	border-bottom: 1px dashed @borderColor;
+  }
+  span {
+	  display: inline;
+  }
+  
+  .leanoteNavContent {
+  	display: block;
+	min-height: 30px;
+  }
+}
+
+.leanoteNav ul {
+  margin:0;
+  padding-left: 23px;
+  li {
+  	list-style-type: disc;
+  	a {
+  		&:hover {
+  			color: @hColor;
+  		}	
+  	}
+  }
+}
+.leanoteNav ul .nav-h1 {
+}
+.leanoteNav ul .nav-h2 {
+  margin-left: 20px;
+}
+.leanoteNav ul .nav-h3 {
+  margin-left: 30px;
+}
+.leanoteNav ul .nav-h4 {
+  margin-left: 40px;
+}
+.leanoteNav ul .nav-h5 {
+  margin-left: 50px;
+}
+.scrollTo-a {
+  cursor: pointer !important;
+}
+
+#editorContent {
+	// border: 1px solid #ccc;
+	// border-radius: 5px;
+	padding: 5px 10px;
+	outline: none;
+	margin-top: 5px;
+	bottom: 5px !important;
+	pre {
+		position: relative;
+		// overflow: visible;
+		-mo-height: auto !important; // 防止ace设置了高度	
+		.toggle-raw {
+			position: absolute;
+			left: 2px;
+			top: -2px;
+			z-index: 100;
+			display: none;
+			// cursor: default;
+			input {
+			}
+		}
+		&:hover .toggle-raw {
+			// cursor: default;
+			display: block;
+		}
+	}
+	// 字体设置不起作用
+	* {font-family: inherit; }
+}
+// 不显示空白
+.ace_invisible_space {
+	visibility: hidden !important;
+}
+.mce-tinymce-inline {
+	// visibility: hidden !important;
+	// border-width: 0px !important;
+	// z-index: -1 !important;
+	border-width: 0 !important;
+}
+#editorContent {
+	a {
+		color: #2a6496;
+		text-decoration: underline;
+	}
+	pre {
+		font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+		// background-color: #FFFFFF;
+		color: #4D4D4C;
+		// padding: 5px;
+	}
+	.ace-tomorrow  {
+		padding: 0;
+		padding-left: 44px;
+	}
+	.ace-to-pre {
+		padding: 0;
+		padding-left: 5px;
+		// border-left: 10px solid #ccc;
+	}
+	
+	// 垂直滚动条, 在windows下会显示的问题
+	.ace_scrollbar-v {
+		overflow-y: hidden;
+	}
+
+	.leanote-image-container {
+		display: inline-block;
+		width: 100px;
+		.loader {
+			display: inline-block;
+			vertical-align: top;
+			margin-right: 3px;
+			margin-top: 5px;
+		}
+		.progress {
+			display: inline-block;
+			margin: 0;
+			width: 80px;
+		}
+	}
+}
+
+.close:focus {
+	outline: none;
+}
+
+
+// 
+
+#newMyNote {
+	position: absolute;
+	right: 3px;
+	top: 0;
+	bottom: 0;
+	line-height: 30px;
+	width: 50px;
+	* {
+		font-size: 14px;
+	}
+	.new-split {
+		// font-size: 12px;
+		color: #ccc;
+		display: none;
+	}
+	#newNoteBtn {
+		display: inline-block;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		text-align: center;
+		height: 25px;
+		width: 20px;
+		line-height: initial;
+	}
+	#newNoteMarkdownBtn	{
+		display: inline-block;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		/* width: 100px; */
+		margin-left: 1px;
+		padding: 0 1px;
+		height: 25px;
+		line-height: initial;
+		text-align: center;
+	}
+}
+#myNotebookNavForListNav {
+	position: absolute;
+	line-height: 30px;
+	left: 55px;
+	right: 55px;
+	text-align: center;
+	font-style: 16px;
+	text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+	span {
+		cursor: default;
+	}
+}
+#searchNote {
+	margin-top: 2px;
+}
+
+#sortType {
+  position: absolute;
+  left: 4px;
+  line-height: 36px;
+  color: #ccc;
+}
+
+#starNotes {
+	li {
+		position: relative;
+		margin: 0;
+		height: 30px;
+		border-bottom: 1px dashed #eee;
+		&.selected {
+			background: #eee;
+		}
+		a {
+			padding-left: 20px;
+			line-height: 30px;
+			display: block;
+			text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+		}
+		.delete-star {
+			position: absolute;
+			right: 10px;
+			bottom: 0;
+			color: #ccc;
+			display: none;
+			cursor: pointer;
+			&:hover {
+				color: #000;
+			}
+		}
+		&:hover {
+			.delete-star {
+				display: block;
+			}
+		}
+	}
+
+}
+
+#notebookBottom {
+  position: absolute;
+  bottom: 0px;
+  height: 30px;
+  right: 0;
+  left: 0;
+  line-height: 30px;
+  text-align: right;
+  padding-right: 5px;
+  background-color: #f5f6f7;
+  border-top: 1px solid transparent;
+  border-color: rgba(0, 0, 0, 0.05);
+  // overflow: hidden;
+}
+
+/* editor */
+#editorTool {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  // width: 200px;
+}
+#editorTool li {
+  display: inline-block;
+}
+
+#noteTitleDiv {
+	position: absolute;
+	left: 0;
+	right: 120px;
+  height: 35px;
+  line-height: 35px;
+  padding-left: 10px;
+  // border-bottom: 1px solid #ddd;
+}
+#noteTitle {
+  height: 100%;
+  // padding: 0px 3px;
+  width: 100%;
+  border: none;
+  font-size: 20px;
+}
+#noteTitle:focus {
+  // outline:thin dotted #333;outline:1px auto -webkit-focus-ring-color;outline-offset:-2px
+  outline: none !important;
+  // border: 1px solid @hColor;
+}
+
+#editorContent {
+  position: absolute; 
+  top: 30px;
+  bottom: 10px; 
+  right: 0; 
+  left: 0;
+  overflow: auto; // 不设置editor隐藏时没有scroll
+}
+
+// todo 到markdown editor上删除
+#mdEditor .layout-wrapper-l3 {
+  top: 30px;
+  margin-top: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+#noteItemList .item-conflict {
+  border: 2px solid #DBB624;
+}
+
+#tagNav {
+	i, em {
+		font-style: normal;
+	}
+	.tag-delete {
+		display: none;
+		margin-left: 3px;
+		font-size: 12px;
+	}
+	li:hover {
+		.tag-delete {
+			display: inline-block;
+		}
+	}
+	a:hover {
+		background: none !important;
+	}
+}
+
+.fa-spin {
+	-webkit-animation: fa-spin 1s infinite linear !important;
+	animation: fa-spin 1s infinite linear !important;
+}
+
+//----------
+.context-tips {
+	position: absolute;
+	z-index: 99999;
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 5px;
+	border-radius: 5px;
+	left: 0px;
+	top: 0px;
+	/* shaddow */
+	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	box-shadow: 0 6px 12px rgba(0,0,0,.175);
+	background-clip: padding-box;
+	overflow: auto;
+	width: 100px;
+	height: 100px;
+	display: none;
+}
+#conflictTips {
+	width: 230px;
+	height: 80px;
+}
+.conflict-title {
+	display: block;
+	text-decoration: underline;
+	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+}
+
+html,body, #page, #pageInner {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0;
+	top: 0;
+	padding: 0;
+	margin: 0;
+	border-radius: 5px;
+	overflow: hidden;
+    background: transparent;
+	// box-shadow: 0px 0px 10px #B52F2F;
+}
+.modal-backdrop {
+	right: 5px;
+	left: 5px;
+	bottom: 5px;
+	border-radius: 5px;
+}
+#mainContainer, #mainMask {
+	border-radius: 5px;
+}
+#noteAndEditor {
+	background-color: #fff;
+}
+
+body {
+	// display: none;
+	-webkit-user-select: none; // input, textarea还是可以选择的
+    // -webkit-app-region: drag;
+    border: 1px solid #ccc;
+    // for shadow
+    left: 5px;
+	right: 5px;
+	bottom: 5px;
+	// box-shadow: 0 0 50px #eee;
+	// box-shadow: 0px 0px 5px #666;
+	box-shadow: 0px 0px 5px rgba(66, 66, 66, 0.5);
+	&.no-drag {
+		-webkit-app-region: no-drag;
+	}
+	// 刚开始载入时, 只有loading
+	&.init {
+		#winTool {
+			display: none;
+		}
+		// border: none;
+		// box-shadow: none;
+		#allProcess, #syncProcess, .loading-footer {
+			display: none;
+		}
+		#pageInner {
+			display: none;
+		}
+	}
+}
+
+#preview-contents {
+	-webkit-user-select: text; 
+}
+
+#searchNoteInput, 
+#searchNotebookForList, 
+#addTagInput, 
+.noteSplit,	
+#notebook,
+#editor,
+#mdEditor,
+#right-column *
+{
+	// -webkit-app-region: no-drag;
+}
+
+#page {
+	#pageInner {
+	}
+}
+
+
+#noteAndEditor {
+	// top: 5px !important;
+	// padding-top: 50px;
+	// background-color: #fff;
+}
+#leftNotebook {
+	overflow: hidden;
+	// opacity: 0.5;
+	border-radius: 5px 0 0 0;
+}
+#notebook , #winTool {
+	overflow: hidden;
+	border-radius: 5px 0 0 0;
+}
+#notebook {
+	background: transparent !important;
+	#myStarredNotes {
+		.folderHeader {
+			// border-top: 1px solid rgba(0, 0, 0, 0.05);
+		}
+	}
+}
+#leftNotebook {
+	// background-color: rgba(245, 246, 248, 0.98) !important;
+	background: url(images/mohu.png) !important;
+	background-repeat: repeat;
+}
+#notebookBottom {
+	background: transparent !important;
+}
+#notesAndSort,
+.win-tool {
+	-webkit-user-select: none;
+    // -webkit-app-region: drag;
+}
+
+
+#mainMask {
+	position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  padding-top: 10px;
+  z-index: 1000;
+  table, td {
+  	width: 100%;
+  	height: 100%;
+  	border: none;
+  	vertical-align: middle;
+  }
+  #syncProcess {
+  	margin-top: 20px;
+  }
+	.loading-footer {
+		text-align: center;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 10px;
+		a {
+			color: #ccc;
+		}
+	}
+}
+
+#presentation {
+	display: none;
+}
+
+#editor {
+	#mceToolbar {
+		height: 30px;
+	}
+	// 所有都展开
+	&.all-tool {
+		#mceToolbar {
+			height: 60px;
+		}
+		.more-fa:before {
+			content: "\f106";
+		}
+		#editorContent {
+			top: 60px;
+		}
+	}
+	.more-fa:before {
+		content: "\f107";
+	}
+}
+.opened .folderHeader span {
+	font-weight: bold;
+}
+
+//----------- start
+// top topDrag
+#noteList, #note {
+	// top: 15px;
+	top: 5px;
+	// padding-top: 5px;
+}
+#noteList {
+	top: 0;
+	padding-top: 5px;
+}
+#notebook {
+	top: 40px !important;
+}
+#noteItemListWrap {
+	top: 75px;
+}
+#myNotebookNavForListNav {
+  line-height: 35px;
+}
+#notebook {
+	#myStarredNotes {
+		.folderHeader {
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+		}
+	}
+}
+#sortType {
+	display: none;
+}
+#myNotebookNavForListNav span {
+	font-size: 16px;
+}
+#newMyNote, #tool {
+	z-index: 1001; // 比topDrag大些
+}
+#editor, #mdEditor {
+	// top: 51px;
+}
+#topDrag {
+	-webkit-app-region: drag;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 40px;
+	z-index: 1000;
+	cursor: move;
+	// background-color: red;
+}
+//--------- end
+
+// 没有starred, 没有tag
+.no-info {
+	text-align: center; margin: 10px 0; opacity: 0.8;
+}
+
+img::selection {
+  background: transparent;
+  color: #ffffff;
+}
+
+// dialog loading
+#loadingDialog {
+	.modal-dialog {
+		width: 200px !important;
+		position: absolute;
+		top: 50%;
+		margin-top: -100px;
+		left: 50%;
+		margin-left: -100px;
+	}
+	.modal-body {
+		text-align: center;
+		border-radius: 5px;
+	}
+	#loadingDialogBodyMsg {
+		font-size: 16px;
+	}
+}
+
+@import '../css/traffic.less';
+@import '../css/ani.less';

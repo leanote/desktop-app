@@ -1,0 +1,97 @@
+// scrollbar style TODO
+// https://www.webkit.org/blog/363/styling-scrollbars/
+// http://trac.webkit.org/export/41842/trunk/LayoutTests/scrollbars/overflow-scrollbar-combinations.html
+
+
+/*
+ *  STYLE 2
+ */
+*::-webkit-scrollbar-track
+{
+	// -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 3px;
+	// background-color: #F5F5F5;
+	background-color: transparent;
+}
+
+*::-webkit-scrollbar
+{
+	width: 6px;
+	height: 6px;
+	// background-color: #F5F5F5;
+	background-color: transparent;
+	position: absolute;
+	-webkit-transform: translatez(0);
+}
+
+*::-webkit-scrollbar-thumb
+{
+	border-radius: 5px;
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.3);
+	background-color: rgba(127,127,127, .9);
+	
+	&:hover {
+		background-color: rgba(127,127,127, 1);;
+	}
+	&:active {
+		background-color: rgba(127,127,127, 1);;
+	}
+}
+
+#leftNotebook,
+#noteList,
+#editorContentWrap,
+#editorContent
+{
+	::-webkit-scrollbar-thumb {
+		visibility: hidden;
+	}
+	&:hover {
+		::-webkit-scrollbar-thumb {
+			visibility: visible;
+		}
+	}
+}
+@fontFamily: 'Microsoft YaHei', '微软雅黑',' WenQuanYi Micro Hei','Open Sans', 'Helvetica Neue',Arial,'Hiragino Sans GB',sans-serif;
+
+* {
+	font-family: @fontFamily;
+}
+
+body {
+	border: none;
+	border-shadow: none;
+	border-radius: none;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	// font-family: '微软雅黑';
+}
+
+#newMyNote * {
+	font-family: 'Arial';
+}
+
+html, body, #page, #pageInner, #noteList, #notebook, #leftNotebook {
+	border-radius: 0;
+}
+#winTool {
+	display: none;
+}
+#topDrag {
+	display: none;
+}
+#notebook {
+	top: 0 !important;
+}
+#noteList, #note {
+	top: 0;
+	padding-top: 0;
+}
+
+.modal-backdrop {
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	border-radius: 0px;
+}
