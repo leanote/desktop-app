@@ -8,7 +8,7 @@
 <meta name=”apple-mobile-web-app-capable” content=”yes” />
 <meta name="keywords" content="leanote,leanote.com">
 <meta name="description" content="leanote, Not Just A Notebook">
-<title>Leanote, Not Just A Notebook</title>
+<title class="lang">Leanote, Not Just A Notebook</title>
 
 <link href="public/css/bootstrap.css" rel="stylesheet" />
 <!-- 先加载, 没有样式, 宽度不定 -->
@@ -30,19 +30,11 @@
 <script>
 // for windows
 if(process.platform != 'darwin') {
-	document.write('<link rel="stylesheet" href="public/css/theme/windows.css" type="text/css" />');
+  document.write('<link rel="stylesheet" href="public/css/theme/windows.css" type="text/css" />');
 }
-</script>
-
-<style>
-
-</style>
-<!-- For Develop writting mod -->
-<script>
 function log(o) {
   console.log(o);
 }
-
 </script>
 </head>
 <body class="clearfix init">
@@ -73,12 +65,11 @@ function log(o) {
   
   <div id="page" class="clearfix">
     <div id="mainMask">
-
         <table><tr><td>
         <div id="loadingLogo" class="loading">
           <img src="public/images/logo/leanote_icon_blue.png">
         </div>
-        <div id="allProcess">
+        <div id="allProcess" class="lang">
         loading...
         </div>
         <div id="syncProcess">
@@ -86,8 +77,8 @@ function log(o) {
       </table></tr></td>
 
       <div class="loading-footer">
-          <a onclick="switchAccount()">Switch account</a>
-        </div>
+        <a onclick="switchAccount()" class="lang">Switch account</a>
+      </div>
     </div>
 
     <div id="pageInner">
@@ -101,8 +92,8 @@ function log(o) {
           <div id="newSharedNote" style="display: none">
             <a id="newSharedNoteBtn">
               <i class="fa fa-file-o"></i>
-              <span class="new-note-text">New note</span>
-              <span class="new-note-text-abbr">New</span>
+              <span class="new-note-text lang">New note</span>
+              <span class="new-note-text-abbr lang">New</span>
             </a>
             <span class="new-split">|</span>
             <a id="newShareNoteMarkdownBtn" title="New markdown note">
@@ -129,7 +120,7 @@ function log(o) {
         </div>
           
         <div class="pull-right top-nav writting-hide" id="myBlog">
-          <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}"> 
+          <a target="_blank" href="{{$.blogUrl}}/{{.userInfo.Username}}" class="lang"> 
             Blog
           </a>
         </div>
@@ -145,7 +136,7 @@ function log(o) {
             <div class="folderNote closed" id="myStarredNotes">
               <div class="folderHeader">
                 <i class="fa fa-star-o fa-left"></i>
-                <span>
+                <span class="lang">
                   Starred
                 </span>
               </div>
@@ -158,7 +149,7 @@ function log(o) {
             <div class="folderNote opened" id="myNotebooks">
               <div class="folderHeader clearfix">
                 <i class="fa fa-book pull-left fa-left"></i> 
-                <span class="pull-left">
+                <span class="pull-left lang">
                   Notebook
                 </span>
                 <div class="pull-right" id="addNotebookPlus" title="Add notebook">
@@ -167,7 +158,7 @@ function log(o) {
               </div>
               
               <div class="folderBody">
-                <input type="text" class="form-control" id="searchNotebookForList" placeholder="Search notebook"/>              
+                <input type="text" class="form-control lang-placeholder" id="searchNotebookForList" placeholder="Search notebook"/>              
                 <ul class="ztree" id="notebookList"></ul>
                 <ul class="ztree" id="notebookListForSearch"></ul>
               </div>
@@ -176,7 +167,7 @@ function log(o) {
             <div class="folderNote closed" id="myTag">
               <div class="folderHeader">
                 <i class="fa fa-bookmark fa-left"></i>
-                <span>
+                <span class="lang">
                   Tag
                 </span>
               </div>
@@ -189,33 +180,6 @@ function log(o) {
               </ul>
             </div>
 
-            <!-- Trash -->
-            <!--
-            <div class="folderTrash closed" id="">
-              <div class="folderHeader">
-                <i class="fa fa-trash fa-left"></i>
-                <span>
-                  Trash
-                </span>
-              </div>
-            </div>
-            -->
-            
-            <!--
-            <div class="folderNote closed" id="myShareNotebooks">
-              <div class="folderHeader">
-                <i class="fa fa-user fa-left"></i>
-                <span>
-                  Share
-                </span>
-              </div>
-  
-              <ul class="folderBody" id="shareNotebooks">
-                
-              </ul>
-            </div>
-          -->
-  
           </div>
           
           <!-- 
@@ -238,20 +202,7 @@ function log(o) {
                   <span class="username" id="username">
                   </span><i class="fa fa-angle-down account-more"></i>
                 </a>
-                <!--
-                <ul class="dropdown-menu li-a " role="menu">
-                  <li role="presentation">
-                    <a>Theme</a>
-                  </li>
-                  <li role="presentation">
-                    <a href="login.html">Switch account</a>
-                  </li>
-                  <li role="presentation" class="divider"></li>
-                  <li role="presentation">
-                    <a>Full async force</a>
-                  </li>
-                </ul>
-                -->
+                
               </div>
             </div>
           </div>
@@ -263,40 +214,40 @@ function log(o) {
           <div id="noteAndEditorMask">
             <img src="public/images/loading-24.gif"/>
             <br />
-            loading...
+            <span class="lang">loading</span>...
           </div>
 
           <div id="noteList">
-          <div class="clearfix" id="notesAndSort" style="position: relative">
+            <div class="clearfix" id="notesAndSort" style="position: relative">
 
-            <a id="sortType">
-                <i class="fa fa-sort-amount-desc"></i>
-            </a>
-
-            <!-- 我的笔记本 -->
-            <div id="myNotebookNavForListNav">
-                <span id="curNotebookForListNote">Newest</span>
-            </div>
-
-            <div class="pull-left" id="tagSearch" style="line-height: 38px">
-            </div>
-
-            <div id="newMyNote">
-              <a id="newNoteBtn" title="New note">
-                <span class="new-note-text"  title="New note">+</span>
+              <a id="sortType">
+                  <i class="fa fa-sort-amount-desc"></i>
               </a>
-              <span class="new-split">|</span>
-              <a id="newNoteMarkdownBtn" title="New markdown note">
-                <span class="new-markdown-text" title="New markdown note">+M</span>
-              </a>
-              <span id="curNotebookForNewNote" notebookId="" style="display: none"></span>
-            </div>
-           
+
+              <!-- 我的笔记本 -->
+              <div id="myNotebookNavForListNav">
+                  <span id="curNotebookForListNote" class="lang">Newest</span>
+              </div>
+
+              <div class="pull-left" id="tagSearch" style="line-height: 38px">
+              </div>
+
+              <div id="newMyNote">
+                <a id="newNoteBtn" title="New note">
+                  <span class="new-note-text"  title="New note">+</span>
+                </a>
+                <span class="new-split">|</span>
+                <a id="newNoteMarkdownBtn" title="New markdown note">
+                  <span class="new-markdown-text" title="New markdown note">+M</span>
+                </a>
+                <span id="curNotebookForNewNote" notebookId="" style="display: none"></span>
+              </div>
+             
           </div>
 
           <!-- 搜索 -->
           <form class="navbar-form form-inline" id="searchNote" onsubmit="return false;">
-            <input class="form-control" placeholder="Search note" type="text" id="searchNoteInput">
+            <input class="form-control lang-placeholder" placeholder="Search note" type="text" id="searchNoteInput">
           </form>
 
           <!-- 笔记列表 -->
@@ -307,52 +258,28 @@ function log(o) {
           </div>
         </div>
         
-          <div class="noteSplit" id="noteSplitter"></div>
+        <div class="noteSplit" id="noteSplitter"></div>
           
-          <div id="note">
-          <!-- 只读模式 -->
-          <div id="noteRead">
-            <div id="noteReadContainer">
-              <div id="noteReadTop">
-                <h2 id="noteReadTitle"></h2>
-                <div class="clearfix" id="noteReadInfo">
-                  <i class="fa fa-bookmark-o"></i>                        
-                  <span id="noteReadTags"></span>
-                  
-                  <!-- 修改时间 -->
-                  <i class="fa fa-clock-o"></i>Update 
-                  <span id="noteReadUpdatedTime"></span>  
-                  
-                  <!-- 修改时间 -->
-                  <i class="fa fa-clock-o"></i>Create                     
-                  <span id="noteReadCreatedTime"></span>
-                </div>
-              </div>
-              
-              <div id="noteReadContent">
-              </div>
-            </div>
-          </div>
+        <div id="note">
+          
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
 
           <div id="noteMaskForLoading" class="note-mask">
             <img src="public/images/loading-24.gif"/>
             <br />
-            loading...
+            <span class="lang">loading</span>...
           </div>
 
           <div id="editorMask">
-            The notebook is empty, why not...
+            <span class="lang">noNoteNewNoteTips</span>
             <br />
             <br />
             <div id="editorMaskBtns">
-              <a class="note">New note</a>
-              <a class="markdown">New Markdown Note</a>
+              <a class="note lang">newNote</a>
+              <a class="markdown lang">newMarkdownNote</a>
             </div>
-            <div id="editorMaskBtnsEmpty">
-              Sorry, cannot new note in here, please choose a notebook at first.
-            </div>
+            <div id="editorMaskBtnsEmpty" class="lang">canntNewNoteTips</div>
           </div>
           <div id="noteTop">
             <!-- 左侧放tag, 右侧放按钮, 比如save, info, move, delete -->
@@ -364,12 +291,6 @@ function log(o) {
               
               <ul class="pull-right" id="editorTool">
 
-                <!--
-                <li>
-                  <a class="ios7-a" id="infoBtn" title="More inforamation" data-toggle="dropdown"><span class="fa fa-info"></span>
-                  </a>
-                </li>
-                -->
                 <li class="dropdown" id="attachDropdown">
                   <a class="ios7-a dropdown-toggle" data-toggle="dropdown" id="showAttach" title="Attachments">
                     <span class="fa fa-paperclip"></span>
@@ -385,35 +306,15 @@ function log(o) {
 
                             <a id="chooseFile" class="btn btn-success btn-choose-file">
                               <i class="fa fa-upload"></i>
-                              <span>Choose Files</span>
+                              <span class="lang">Choose Files</span>
                             </a>
-                            <!--
-                            <a class="btn btn-default" id="downloadAllBtn">
-                              <i class="fa fa-download"></i>
-                              <span>Download All</span>
-                            </a>
-                            -->
-                            <!--
-                            因为noteId与serverNoteId的原因, 暂不支持
-                            <a class="btn btn-default" id="linkAllBtn">
-                              <i class="fa fa-link"></i>
-                              <span>Link All</span>
-                            </a>
-                            -->
+                            
                         </div>
                         <div id="attachUploadMsg">
                         </div>
                     </form>
                   </div>
                 </li>
-                
-                <!--
-                <li><a class="ios7-a " id="tipsBtn"
-                  data-toggle="dropdown" title="Tips">
-                  <span class="fa fa-question"></span>
-                  </a>
-                </li>
-                -->
 
                 <li><a class="ios7-a " id="contentHistory"
                   data-toggle="dropdown" title="Histories">
@@ -443,7 +344,7 @@ function log(o) {
             <div id="leanoteNav" class="leanoteNav">
               <h1>
                 <i class="fa fa-align-justify" title="Note nav"></i>
-                <span>Note nav</span>
+                <span class="lang">newNote</span>
               </h1>
               <div id="leanoteNavContent" class="leanoteNavContent">
               </div>
@@ -469,7 +370,6 @@ function log(o) {
           
           <div id="mdEditor">
           
-                      
             <div class="layout-wrapper-l1">
                 <div class="layout-wrapper-l2">
                     <div class="navbar navbar-default">
@@ -491,26 +391,7 @@ function log(o) {
                                 <li class="wmd-button-group6 btn-group">
                                   <li class="wmd-button btn btn-success" id="wmd-help-button" title="Markdown syntax" style="left: 0px; display: none;"><span style="display: none; background-position: 0px 0px;"></span><i class="fa fa-question-circle"></i></li>
                                 </li>
-                            </ul>
-                           
-                           <!--
-                            <ul class="nav pull-right right-buttons">
-                                <li class="offline-status hide">
-                                    <div class="text-danger">
-                                        <i class="icon-attention-circled"></i>offline
-                                    </div>
-                                </li>
-                                <li class="extension-buttons"></li>
-                            </ul>
-                            <ul class="nav pull-right title-container">
-                                <li><div class="working-indicator"></div></li>
-                                <li><a class="btn btn-success file-title-navbar" href="#"
-                                    title="Rename document"> </a></li>
-                                <li><div class="input-file-title-container"><input type="text"
-                                    class="col-sm-4 form-control hide input-file-title"
-                                    placeholder="Document title" /></div></li>
-                            </ul>
-                            -->
+                            </ul> 
                         </div>
                         <div class="editorBg"></div>
                     </div>
@@ -544,25 +425,6 @@ function log(o) {
                 <div id="wmd-button-bar" class="hide"></div>
             </div>  
           
-            <!--
-            <div id="wmd-button-bar" id="mdBar"></div>
-            <div class="editorBg"></div>
-                      
-            <div class="clearfix" id="mdEditorPreview">
-              <div id="left-column">
-                        <div id="wmd-panel-editor" class="wmd-panel-editor">
-                            <textarea class="wmd-input theme" id="wmd-input" spellcheck="false" tabindex="3"></textarea>
-                        </div>
-                    </div>
-                    <div id="mdSplitter"></div>
-                    <div id="right-column">
-                        <div id="wmd-panel-preview" class="wmd-panel-preview preview-container">
-                            <div id="wmd-preview" class="wmd-preview"></div>
-                        </div>
-                    </div>
-            </div>
-                      <textarea id="md-section-helper"></textarea>
-                      -->
           </div>
 
           <div id="editorBottom">
@@ -574,18 +436,18 @@ function log(o) {
                 <a
                   class="metro-a dropdown-toggle" data-toggle="dropdown"
                   id="addTagTrigger" style="cursor: text; padding-left: 0">
-                  <span class="add-tag-text">
-                  Click to add Tag
+                  <span class="add-tag-text lang">
+                    clickAddTag
                   </span>
                 </a> 
                 <input type="text" id="addTagInput" />
                 <ul class="dropdown-menu" role="menu" id="tagColor">
-                  <li role="presentation"><span class="label label-red">red</span>
+                  <li role="presentation"><span class="label label-red lang">red</span>
                   </li>
-                  <li role="presentation"><span class="label label-blue">blue</span>
+                  <li role="presentation"><span class="label label-blue lang">blue</span>
                   </li>
-                  <li role="presentation"><span class="label label-yellow">yellow</span></li>
-                  <li role="presentation"><span class="label label-green">green</span></li>
+                  <li role="presentation"><span class="label label-yellow lang">yellow</span></li>
+                  <li role="presentation"><span class="label label-green lang">green</span></li>
                 </ul>
               </div>
             </div>
@@ -663,7 +525,7 @@ function log(o) {
             </div>
             
             <div class="modal-body">
-          内容区
+            内容区
             </div>
             
             <div class="modal-footer">
@@ -674,83 +536,19 @@ function log(o) {
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
-      
-      <div class="modal fade bs-modal-sm" id="sendRegisterEmailDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-      
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" class="modalTitle">邀请好友</h4>
-            </div>
-            
-           <div class="modal-body">
-            <form role="form">
-              <div class="form-group">
-                <div id="registerEmailMsg" class="alert alert-warning" style="display: none">
-                </div>
-                <input type="hidden" id="toEmail"/>
-                <label for="emailContent">邮件内容</label>
-                <textarea class="form-control" id="emailContent">Hi, 我是life, leanote非常好用, 快来注册吧.</textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-success" id="registerEmailBtn">发送</button>
-          </div>
-            
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-      
-      <!-- theme -->
-      <div class="modal fade bs-modal-sm" id="setThemeDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-          <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title" class="modalTitle">theme</h4>
-            </div>
-          <div class="modal-body">
-              <table id="themeForm">
-                <tr>
-                  <td>
-                    <label>
-                    <img src="public/images/slider/all.gif" height="100px"> 
-                    <br />
-                    <input type="radio" name="theme" value="default"> Default
-                    </label>
-                  </td>
-                  <td>
-                    <label> 
-                    <img src="public/images/slider/all-simple.gif" height="100px"> 
-                    <br />
-                    <input type="radio" name="theme" value="simple"> Simple
-                    </label>
-                  </td>
-                </tr>
-              </table>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-      
+     
       <!-- 升级框 -->
       <div class="modal fade bs-modal-sm" id="upgradeDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
           <div class="modal-header">
               <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
-              <h4 class="modal-title" class="modalTitle">Check for updates</h4>
+              <h4 class="modal-title modalTitle lang">Check for updates</h4>
           </div>
           <div class="modal-body" id="upgradeDialogBody">
             <div class="cur-version-info">Current version: <span class="cur-version"></span></div>
 
-            <div class="get-next-version-info-loading">
+            <div class="get-next-version-info-loading lang">
               Checking for udpates...
             </div>
 
@@ -762,8 +560,8 @@ function log(o) {
             </div>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-default upgrade-cancel-btn" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary upgrade-btn" data-dismiss="modal" disabled>Upgrade</button>
+            <button type="button" class="btn btn-default upgrade-cancel-btn lang" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary upgrade-btn lang" data-dismiss="modal" disabled>Upgrade</button>
           </div>
             
           </div><!-- /.modal-content -->
@@ -782,58 +580,39 @@ function log(o) {
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
       
-      <!-- modal 静态区域 -->
-      <div class="display: hidden">
+      <!-- modal 静态区域, 隐藏区域 -->
+      <div class="display: hidden" id="hiddenZone">
         <div class="hide" id="copyDiv"></div>
-
         <!-- 为了上传图片 -->
         <input id="chooseImageInput" type="file" name="file" multiple style="display: none"/>
         <input id="downloadImgInput" type="file" nwsaveas="" style=""/>
-        <!-- // export -->
-        <input id="exportPdf" type="file" nwsaveas="" style=""/>
-        
       </div>
-    
   </div>
 </div>
 
 <!-- contextTips -->
 <div class="context-tips" id="conflictTips">
-  <p>
+  <p class="lang">
     This note is conflicted with:
   </p>
   <p>
     <a class="conflict-title">
     </a>
   </p>
-  Maker as resolved: <input type="checkbox" class="conflict-resolved"/>
+  <span class="lang">Maker as resolved</span>: <input type="checkbox" class="conflict-resolved"/>
 </div>
 
+<script src="public/config.js"></script>
 <script src="public/js/jquery-1.9.0.min.js"></script>
+<script src="public/js/lang.js"></script>
 <script src="public/js/jquery.ztree.all-3.5.js"></script>
-<script src="public/js/i18n/msg.en.js"></script>
+<!-- <script src="public/js/i18n/msg.en.js"></script> -->
 <script src="public/js/app/service.js"></script>
 <script src="public/js/app/native.js"></script>
 <script src="public/js/common.js"></script>
 <script>
 var UrlPrefix = 'app://leanote';
 var UserInfo = {};
-var notebooks = [{NotebookId: "123232323", Title: "Default"}];
-var shareNotebooks = [];
-var sharedUserInfos = [];
-var curNoteId = '';
-var curNotebookId = '';
-var curSharedNoteNotebookId = '';
-var curSharedUserId = '';
-var notes = [];
-var latestNotes = [];
-var noteContentJson = {};
-var tagsJson = {};
-LEA.locale = "en";
-var GlobalConfigs = {}; // 2014/11/9 beta2
-</script>
-
-<script>
 window.requireNode = window.require;
 window.nodeRequire = window.require;
 window.require = undefined;
@@ -849,7 +628,6 @@ window.require = undefined;
 <script src="public/js/app/notebook.js"></script>
 <script src="public/js/app/share.js"></script>
 <script src="public/js/object_id.js"></script>
-<script src="public/config.js"></script>
 
 <!-- plugin js start -->
   <!-- default plugin -->
@@ -866,10 +644,6 @@ window.require = undefined;
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.iframe-transport.js"></script>
 <!-- <script src="public/js/app/paste.js"></script> -->
 
-<script>
-// alert(define);
-// alert(require);
-</script>
 <script src="public/md/main.js"></script>
 <script>
 window.require = window.requireNode;

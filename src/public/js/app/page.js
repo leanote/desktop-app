@@ -1247,9 +1247,7 @@ function initPage(initedCallback) {
 			// 获得笔记
 			Service.noteService.getNotes('', function(notes) {
 				Note.renderNotesAndFirstOneContent(notes);
-				if(!curNotebookId) {
-					Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
-				}
+				Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
 			});
 			// 获取star笔记
 			NoteService.getStarNotes(function(notes) {
@@ -1257,13 +1255,6 @@ function initPage(initedCallback) {
 				ok();
 			});
 
-			// 指定笔记, 也要保存最新笔记
-			if(latestNotes.length > 0) {
-				for(var i = 0; i < latestNotes.length; ++i) {
-					Note.addNoteCache(latestNotes[i]);
-				}
-			}
-			
 			// 标签
 			TagService.getTags(function(tags) {
 				Tag.renderTagNav(tags);
@@ -1543,13 +1534,13 @@ function userMenu() {
 	        }
 	    });
 	    this.blog = new gui.MenuItem({
-	        label: 'My blog',
+	        label: getMsg('My blog'),
 	        click: function(e) {
 	        	openExternal(UserInfo.Host + '/blog/' + UserInfo.UserId);
 	        }
 	    });
 	    this.switchAccount = new gui.MenuItem({
-	        label: 'Switch account',
+	        label: getMsg('Switch account'),
 	        click: function(e) {
 	        	// window.open('login.html');
 	        	// win.close();
@@ -1562,13 +1553,13 @@ function userMenu() {
 	    });
 	    
 	    this.sync = new gui.MenuItem({
-	        label: 'Sync now',
+	        label: getMsg('Sync now'),
 	        click: function(e) {
 	        	incrSync();
 	        }
 	    });
 	    this.checkForUpdates = new gui.MenuItem({
-	        label: 'Check for updates',
+	        label: getMsg('Check for updates'),
 	        click: function(e) {
 	        	checkForUpdates();
 	        }

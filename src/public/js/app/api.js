@@ -3,10 +3,13 @@ var Api = {
 	notebook: Notebook,
 	note: Note,
 	tag: Tag,
+	loading: Loading,
 	gui: gui,
 	nodeFs: NodeFs,
 	evtService: EvtService,
 	commonService: CommonService,
+	fileService: FileService,
+	noteService: NoteService,
 
 	// data = {'en-us': {}, 'zh-cn' {}};
 	// prefix = 'plugin.theme'
@@ -18,7 +21,7 @@ var Api = {
 			'default': '默认',
 		}
 	},
-	curLang: 'en-us',
+	curLang: curLang,
 	defaultLang: 'en-us',
 	// 添加语言包
 	addLangMsgs: function(data, prefix) {
@@ -47,6 +50,17 @@ var Api = {
 			key = prefix + '.' + key;
 		}
 		return me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || key;
+	},
+
+	// 与之前lang.js取出的数据合并
+	_init: function() {
+		var me = this;
+		$.extend(me._langs[me.curLang], window.langData);
+
+		// extend
+		window.getMsg = function(key, prefix) { 
+			return me.getMsg(key, prefix);
+		};
 	},
 
 	_callOpenAfter: function() {
@@ -82,5 +96,17 @@ var Api = {
 	},
 	addTrashMenu: function(menu, pos) {
 
+	},
+
+	_exportMenus: [],
+	addExportMenu: function(menu) {
+		var me = this;
+		me._exportMenus.push(menu);
+	},
+	getExportMenus: function() {
+		var me = this;
+		return me._exportMenus;
 	}
 };
+
+Api._init();

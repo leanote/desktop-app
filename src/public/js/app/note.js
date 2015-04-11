@@ -1393,73 +1393,6 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 	});
 };
 
-// 导出pdf
-Note._initExportPdf = false;
-Note.exportPdf = function(target, contextmenuItem, isShared) {
-	var noteId = $(target).attr("noteId");
-	if(!noteId) {
-		return;
-	}
-
-	var note = Note.getNote(noteId);
-	var name = note.Title ? note.Title + '.pdf' : 'Untitled.pdf';
-
-	window.downloadPdfPath = false;
-	if(!Note._initExportPdf) {
-		// 下载pdf输入框
-		$('#exportPdf').change(function() {
-			var name = $(this).val();
-			$(this).val(''); // 为防止重名不触发
-			console.log(window.downloadPdfPath);
-			if(window.downloadPdfPath) {
-				FileService.download(window.downloadPdfPath, name, function(ok, msg) {
-					// console.log(ok + ' -=-');
-					if(ok) {
-						new window.Notification('Info', {
-					        body: 'PDF saved successful!'
-					    });
-					} else {
-						new window.Notification('Warning', {
-					        body: msg || 'PDF saved failure!'
-					    });
-					}
-				});
-			}
-		});
-	}
-
-	Note._initExportPdf = true;
-
-
-	Loading.show();
-
-	// 保存
-    NoteService.exportPdf(noteId, function(curPath, filename, msg) {
-    	Loading.hide();
-
-    	setTimeout(function() {
-	    	if(curPath) {
-	    		window.downloadPdfPath = curPath;
-	    		$('#exportPdf').attr('nwsaveas', name);
-	    		$('#exportPdf').click();
-	    	} else {
-	    		var m = "";
-	    		if(msg == "noteNotExists") {
-	    			m = "Please sync your note to ther server firslty."
-	    		}
-
-	    		// alert会死?
-	    		// alert('File not exists');
-	    		// https://github.com/nwjs/nw.js/wiki/Notification
-	    		var notification = new window.Notification('Warning', {
-			        body: 'Export PDF error! ' + m
-			        // icon: appIcon
-			    });
-	    	}
-    	}, 100);
-    });
-};
-
 
 // 显示共享信息
 Note.listNoteShareUserInfo = function(target) {
@@ -2270,7 +2203,7 @@ Note.initContextmenu = function() {
 		// this.target = '';
 	    this.menu = new gui.Menu();
 	    this.del = new gui.MenuItem({
-	        label: getMsg("delete"),
+	        label: getMsg("Delete"),
 	        click: function(e) {
 	        	Note.deleteNote(self.target);
 	        }
@@ -2283,39 +2216,37 @@ Note.initContextmenu = function() {
 	    });
 
 	    this.move = new gui.MenuItem({
-	        label: getMsg("move"),
+	        label: getMsg("Move"),
 	        click: function(e) {
 	        }
 	    });
 	    this.copy = new gui.MenuItem({
-	        label: getMsg("copy"),
+	        label: getMsg("Copy"),
 	        click: function(e) {
 	        }
 	    });
 
 	    // 导出
 	    this.exports = new gui.MenuItem({
-	        label: "Export",
+	        label: getMsg('Export'),
 	        click: function(e) {
 	        }
 	    });
 	    var exportsSubMenus = new gui.Menu();
-	    this.exportHtml = new gui.MenuItem({
-	        label: "HTML",
-	        click: function(e) {
-	        }
-	    });
-	    this.exportPdf = new gui.MenuItem({
-	        label: "PDF",
-	        enabled: true,
-	        click: function(e) {
-	        	Note.exportPdf(self.target);
-	        }
-	    });
-	    // exportsSubMenus.append(this.exportHtml);
-	    exportsSubMenus.append(this.exportPdf);
-	    this.exports.submenu = exportsSubMenus;
-
+	    var exportMenus = Api.getExportMenus() || [];
+	    for(var i = 0; i < exportMenus.length; ++i) {
+	    	var menu = exportMenus[i];
+	    	var clickBac = menu.click;
+	    	var menuItem = new gui.MenuItem({
+		        label: menu.label,
+		        click: function(e) {
+		        	var note = Note.getNote($(self.target).attr('noteId'));
+		        	clickBac && clickBac(note);
+		        }
+		    });
+		    exportsSubMenus.append(menuItem);
+	    }
+	    
 	    var ms = Note.getContextNotebooksSys(notebooks);
 	    this.move.submenu = ms[0];
 	    this.copy.submenu = ms[1];
@@ -2324,7 +2255,10 @@ Note.initContextmenu = function() {
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
-	    this.menu.append(this.exports);
+	    if(exportMenus.length > 0) { 
+		    this.exports.submenu = exportsSubMenus;
+		    this.menu.append(this.exports);
+	    }
 
 	    // this.menu.append(ms[0]);
 	    // this.menu.append(ms[1]);
@@ -2359,9 +2293,9 @@ Note.initContextmenu = function() {
 	    	}
 
 	    	if(note.IsBlog) {
-	    		this.publicBlog['label'] = 'Cancel public';
+	    		this.publicBlog['label'] = getMsg('Cancel public');
 	    	} else {
-	    		this.publicBlog['label'] = 'Public as blog';
+	    		this.publicBlog['label'] = getMsg('Public as blog');
 	    	}
 
 			this.menu.popup(e.originalEvent.x, e.originalEvent.y);

@@ -25,7 +25,7 @@ if(process.platform != 'darwin') {
 <div id="winTool" class="win-tool clearfix">
 <a class="tool-close-blur"></a>
 </div>
-<div class="server"><a id="customServer">Custom server</a></div>
+<div class="server"><a id="customServer" class="lang">Custom server</a></div>
 <section id="box" class="animated fadeInUp">
 	<div class="drag"></div>
 	<div>
@@ -40,30 +40,31 @@ if(process.platform != 'darwin') {
 
 				<div id="formContainer">
 					<div class="form-group form-group-1 hide" id="hostGroup"> 
-					    <input type="text" placeholder="Host, http://leanote.com" class="form-control" id="host" name="host">
+					    <input type="text" placeholder="Host, http://leanote.com" class="form-control lang-placeholder" id="host" name="host">
 					</div>
 
 					<div class="form-group form-group-1">
-						<input type="text" placeholder="Username or Email" class="form-control" id="email" name="email" value=""> 
+						<input type="text" placeholder="Username or Email" class="form-control lang-placeholder" id="email" name="email" value=""> 
 					</div>
 
 					<div class="form-group pwd-group"> 
-					    <input type="password" placeholder="Password" class="form-control" id="pwd" name="pwd">
+					    <input type="password" placeholder="Password" class="form-control lang-placeholder" id="pwd" name="pwd">
 					    <button id="loginBtn" disabled><i class="fa fa-arrow-right"></i></button>
 					</div>
 				</div>
 				
 				<div class="clearfix btns">
-					<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small>Forget password?</small></a>
-					<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small>Sign up</small></a>
+					<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small class="lang">Forget password?</small></a>
+					<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small class="lang">Sign up</small></a>
 					
 				</div>
 			</form>	
 		</div>
     </div>
 </section>
-
+<script src="public/config.js"></script>
 <script src="public/js/jquery-1.9.0.min.js"></script>
+<script src="public/js/lang.js"></script>
 <script src="public/js/bootstrap.js"></script>
 <script src="public/js/app/service.js"></script>
 <!-- <script src="public/js/app/native.js"></script> -->

@@ -1471,6 +1471,13 @@ function checkUpgrade() {
 }
 
 var trimTitle = function(title) {
+	// title不是string, 奇怪, mu
+	/*
+	删了一下子笔记本，然后子笔记本下的笔记删了之后，子笔记本还是删不掉，再然后我强制退出。。。再然后我怎么打不开了啊，一直转转转
+	*/
+	if(!title || typeof title != 'string') {
+		return '';
+	}
 	return title.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
 

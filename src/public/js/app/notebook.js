@@ -1102,25 +1102,24 @@ Notebook.init = function() {
 		this.target = '';
 	    this.menu = new gui.Menu();
 	    this.addSub = new gui.MenuItem({
-	        label: 'Add sub notebook',
+	        label: getMsg('Add sub notebook'),
 	        click: function(e) {
 	        	Notebook.addChildNotebook(me.target);
 	        }
 	    });
 	    this.rename = new gui.MenuItem({
-	        label: 'Rename',
+	        label: getMsg('Rename'),
 	        click: function(e) {
 	        	Notebook.updateNotebookTitle(me.target);
 	        }
 	    });
 	    this.del = new gui.MenuItem({
-	        label: 'Delete',
+	        label: getMsg('Delete'),
 	        click: function(e) {
 	        	Notebook.deleteNotebook(me.target);
 	        }
 	    });
 
-	   
 	    this.menu.append(this.addSub);
 	    this.menu.append(this.rename);
 	    this.menu.append(this.del);
@@ -1141,7 +1140,7 @@ Notebook.init = function() {
 		    	importSubmenus.append(new gui.MenuItem(importMenus[i]));
 		    }
 		    this.imports = new gui.MenuItem({
-		        label: 'Import notes'
+		        label: getMsg('Import notes')
 		    });
 		    this.imports.submenu = importSubmenus;
 		    this.menu.append(this.imports);
