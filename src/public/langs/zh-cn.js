@@ -229,6 +229,8 @@
 	"Insert link into content": "插件附件链接到笔记中",
 	"Save as": "保存为",
 
+	"Search results": "搜索结果",
+
 	"Image saved successful!": "图片保存成功!",
 	"Image saved failure!": "图片保存失败!",
 	"File saved failure!": "文件保存失败!",

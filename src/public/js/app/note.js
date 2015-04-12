@@ -1442,7 +1442,7 @@ Note.listNoteContentHistories = function() {
 		for (i in re) {
 			var content = re[i]
 			content.Ab = Note.genAbstract(content.Content, 200);
-			str += tt('<tr><td seq="?">#?<? class="each-content">?</?> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">?</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>', i, (+i+1), s, content.Ab, s, content.UpdatedTime)
+			str += tt('<tr><td seq="?">#?<? class="each-content">?</?> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">?</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>', i, (+i+1), s, content.Ab, s, goNowToDatetime(content.UpdatedTime))
 		}
 		str += "</table></div>";
 		$content.html(str);
@@ -1546,7 +1546,7 @@ Note.searchNoteSys = function(val, noteId) {
 	NoteService.searchNote(val, function(notes) { 
 		if(notes) {
 			Note.searchKey = val;
-			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
+			Notebook.changeCurNotebookTitle(getMsg('Search results'), false, notes.length, false, true);
 			Note.renderNotes(notes);
 			// markdown一旦setContent就focus, 导致搜索失去焦点
 			setTimeout(function() {
