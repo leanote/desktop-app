@@ -20,6 +20,7 @@
 
     // width: 268px;
     // height: 346px;
-  },
-  "chromium-args": "--enable-smooth-scrolling"
+  }
+  // ,
+  // "chromium-args": "--enable-smooth-scrolling"
 }

@@ -341,9 +341,9 @@ Note.curHasChanged = function(force) {
 		console.log(cacheNote.Content == content);
 	}
 
-	console.error('hasChanged');
-	console.log(Note.curNoteId);
-	console.log(hasChanged);
+	// console.error('hasChanged');
+	// console.log(Note.curNoteId);
+	// console.log(hasChanged);
 	
 	hasChanged["UserId"] = cacheNote["UserId"] || "";
 	
@@ -467,7 +467,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		return;
 	}
 
-	console.error(">>");
+	// console.error(">>");
 	
 	var hasChanged = Note.curHasChanged(force);
 	
@@ -583,30 +583,25 @@ Note.hideContentLoading = function() {
 
 // 定位到笔记
 Note.directToNote = function(noteId) {
-	var $p = $("#noteItemList");
-	var pHeight = $p.height();
-	// 相对于父亲的位置
+	// alert(noteId);
 	var $t = $("[noteId='" + noteId + "']");
 	if($t.length == 0) {
 		return false;
 	}
-	// position方法返回的是元素的在页面内的绝对位置信息,top和left
-	var pTop = $t.position().top;
+
+	var $p = $("#noteItemList");
+	var pHeight = $p.height();
+
 	var scrollTop = $p.scrollTop();
-	pTop += scrollTop + 66; // 66是上面的title, search
-	/*
-	log("..");
-	log(noteId);
-	log(pTop + ' ' + pHeight + ' ' + scrollTop);
-	*/
-	
-	// 当前的可视范围的元素位置是[scrollTop, pHeight + scrollTop]
-	if(pTop >= scrollTop && pTop <= pHeight + scrollTop) {
+	var pTop = $t.position().top; // 相对于noteItemList的位置
+
+	// 当前的可视范围的元素位置是[0, pHeight]
+	if(pTop >= 0 && pTop <= pHeight) {
 		// alert(pTop + ' ' + scrollTop + ' ' + pHeight)
 	} else {
-		var top = pTop;
-		console.log("定位到特定note, 在可视范围内");
-		$("#noteItemList").scrollTop(top - 66);
+		// var top = pTop;
+		// console.log("定位到特定note, 在可视范围内");
+		$("#noteItemList").scrollTop(pTop + scrollTop);
 	}
 	return true;
 };
@@ -677,7 +672,6 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// 0
 	var target = $(tt('[noteId="?"]', selectNoteId))
 	Note.selectTarget(target);
-	
 
 	// 如果 inChangeNoteId == selectNoteId, 表示之前的note的content还在加载中, 此时保存笔记肯定出错
 	// if(Note.inChangeNoteId != Note.curNoteId) {
@@ -700,31 +694,24 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// ajax之
 	var cacheNote = Note.cache[selectNoteId];
 	
-	// 判断是否是共享notes
-	if(!isShare) {
-		if(cacheNote.Perm != undefined) {
-			isShare = true;
-		}
-	}
 	var hasPerm = true; // !isShare || Share.hasUpdatePerm(selectNoteId); // 不是共享, 或者是共享但有权限
 	
 	// 有权限
-	if(hasPerm) {
-		Note.hideReadOnly();
-		Note.renderNote(cacheNote);
-		
-		// 这里要切换编辑器
-		switchEditor(cacheNote.IsMarkdown);
-		Note.hideEditorMask();
-	} else {
-		Note.renderNoteReadOnly(cacheNote);
-	}
+	Note.renderNote(cacheNote);
 	
-	Attach.renderNoteAttachNum(selectNoteId, true);
+	// 这里要切换编辑器
+	switchEditor(cacheNote.IsMarkdown);
+	Note.hideEditorMask();
+
+	setTimeout(function() {
+		Attach.renderNoteAttachNum(selectNoteId, true);
+	});
+
+	// 下面很慢
 	
 	Note.contentAjaxSeq++;
 	var seq = Note.contentAjaxSeq;
-	function setContent(ret) {
+	function setContent(ret, fromCache) {
 		if(ret) {
 			cacheNote.InitSync = false;
 		}
@@ -735,14 +722,13 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		if(seq != Note.contentAjaxSeq) {
 			return;
 		}
-		Note.setNoteCache(ret, false);
+		if(!fromCache) {
+			Note.setNoteCache(ret, false);
+		}
 		// 把其它信息也带上
 		ret = Note.cache[selectNoteId]
-		if(hasPerm) {
-			Note.renderNoteContent(ret);
-		} else {
-			Note.renderNoteContentReadOnly(ret);
-		}
+		Note.renderNoteContent(ret, false);
+
 		self.hideContentLoading();
 		
 		callback && callback(ret);
@@ -750,7 +736,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	
 	// 不是刚同步过来的, 且有内容
 	if(!cacheNote.InitSync && cacheNote.Content) {
-		setContent(cacheNote);
+		setContent(cacheNote, true);
 		return;
 	}
 	
@@ -876,22 +862,34 @@ Note.renderNote = function(note) {
 };
 
 // render content
-Note.renderNoteContent = function(content) {
+// 这一步很慢
+Note.renderNoteContent = function(content, needRenderToLeft) {
 	// console.error('---------------- note:' + note.Title);
 	// console.trace();
 
+	var s = (new Date()).getTime();
+
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
+
+	var e = (new Date()).getTime();
+
+	console.log(e-s);
 
 	// console.log(content.NoteId + " => " + content.Content);
 
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.setCurNoteId(content.NoteId);
 
-	// life
-	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
-	content.Desc = Note.genDesc(content.Content);
-	content.ImgSrc = Note.getImgSrc(content.Content);
-	Note.renderChangedNote(content);
+	if(needRenderToLeft == undefined) {
+		needRenderToLeft = true;
+	}
+	if(needRenderToLeft) {
+		// life
+		// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
+		content.Desc = Note.genDesc(content.Content);
+		content.ImgSrc = Note.getImgSrc(content.Content);
+		Note.renderChangedNote(content);
+	}
 };
 
 Note.renderNoteDesc = function(note) {
@@ -1595,7 +1593,7 @@ Note.searchNote = function() {
 		hideLoading();
 		if(t == Note.searchSeq && notes) {
 			Note.searchKey = val;
-			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
+			Notebook.changeCurNotebookTitle(getMsg('Search results'), false, notes.length, false, true);
 			Note.renderNotes(notes);
 			// markdown一旦setContent就focus, 导致搜索失去焦点
 			setTimeout(function() {
@@ -2338,7 +2336,7 @@ var Attach = {
 			e.stopPropagation();
 			var attachId = $(this).closest('li').data("id");
 			var t = this;
-			if(confirm("Are you sure to delete it ?")) {
+			if(confirm(getMsg("Are you sure to delete it ?"))) {
 				// $(t).button("loading");
 				self.deleteAttach(attachId);
 				// $(t).button("reset");

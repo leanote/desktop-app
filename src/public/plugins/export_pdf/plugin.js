@@ -6,12 +6,21 @@ define(function() {
 		langs: {
 			'en-us': {
 				'export': 'Export PDF',
+				'exportSuccess': 'PDF saved successful!',
+				'exportFailure': 'PDF saved failure!',
+				'notExists': 'Please sync your note to ther server firslty.'
 			},
 			'zh-cn': {
 				'export': '导出PDF',
+				'exportSuccess': 'PDF导出成功!',
+				'exportFailure': 'PDF导出失败!',
+				'notExists': '请先同步该笔记!'
 			},
 			'zh-hk': {
 				'export': '導出PDF',
+				'exportSuccess': 'PDF導出成功!',
+				'exportFailure': 'PDF導出失敗!',
+				'notExists': '請先同步該筆記!'
 			}
 		},
 
@@ -32,12 +41,12 @@ define(function() {
 					Api.fileService.download(me.downloadPdfPath, name, function(ok, msg) {
 						// console.log(ok + ' -=-');
 						if(ok) {
-							new window.Notification('Info', {
-						        body: 'PDF saved successful!'
+							new window.Notification(getMsg('Info'), {
+						        body: getMsg('plugin.export_pdf.exportSuccess')
 						    });
 						} else {
-							new window.Notification('Warning', {
-						        body: msg || 'PDF saved failure!'
+							new window.Notification(getMsg('Warning'), {
+						        body: getMsg('plugin.export_pdf.exportFailure')
 						    });
 						}
 					});
@@ -53,7 +62,7 @@ define(function() {
 				return;
 			}
 
-			var name = note.Title ? note.Title + '.pdf' : 'Untitled.pdf';
+			var name = note.Title ? note.Title + '.pdf' : getMsg('Untitled') + '.pdf';
 
 			window.downloadPdfPath = false;
 			if(!me._inited) {
@@ -74,14 +83,14 @@ define(function() {
 			    	} else {
 			    		var m = "";
 			    		if(msg == "noteNotExists") {
-			    			m = "Please sync your note to ther server firslty."
+			    			m = getMsg('plugin.export_pdf.notExists');
 			    		}
 
 			    		// alert会死?
 			    		// alert('File not exists');
 			    		// https://github.com/nwjs/nw.js/wiki/Notification
-			    		var notification = new window.Notification('Warning', {
-					        body: 'Export PDF error! ' + m
+			    		var notification = new window.Notification(getMsg('Warning'), {
+					        body: getMsg('plugin.export_pdf.exportFailure') + m
 					        // icon: appIcon
 					    });
 			    	}

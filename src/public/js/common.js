@@ -1483,7 +1483,7 @@ var trimTitle = function(title) {
 
 var Loading = {
 	show: function(msg) {
-		msg || (msg = "loading...");
+		msg || (msg = getMsg("loading..."));
 		$('#loadingDialogBodyMsg').html(msg);
 		$('#loadingDialog').modal({backdrop: 'static', keyboard: false});
 	},

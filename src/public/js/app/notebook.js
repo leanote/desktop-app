@@ -987,7 +987,7 @@ Notebook.deleteNotebookFromTree = function(notebookId) {
 // 清空垃圾
 Notebook.clearTrash = function() { 
 	var me = this;
-	if(confirm('Are you sure ?')) {
+	if(confirm(getMsg('Are you sure ?'))) {
 		NoteService.clearTrash(function() {
 			if(Notebook.curNotebookId == Notebook.trashNotebookId) {
 				Note.clearAll();

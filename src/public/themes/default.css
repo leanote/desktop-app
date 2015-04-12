@@ -179,7 +179,6 @@ h3 {
   position: absolute;
   top: -12px;
   right: 20px;
-  background-image: url("../../images/triangle_2x.png");
   background-size: 20px 12px;
 }
 .dropdown-submenu .dropdown-menu:before {
@@ -1522,6 +1521,9 @@ body.init #pageInner {
 #noteList,
 #note {
   top: 5px;
+}
+#note {
+  border-radius: 0 0 5px 0;
 }
 #noteList {
   top: 0;

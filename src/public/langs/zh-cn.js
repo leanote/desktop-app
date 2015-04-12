@@ -187,6 +187,9 @@
 	"Switch account": "切换帐户",
 	"Sync": "同步",
 	"Loading": "正在加载",
+	"Loading...": "正在加载",
+	"loading...": "正在加载",
+	"loading": "正在加载",
 	"Choose Files": "选择文件",
 	"Check for updates": "检查更新",
 	"Checking for udpates...": "正在检查是否有可用更新...",
@@ -252,6 +255,15 @@
 
 	"More...": "更多",
 	"Force full sync": "强制全量同步",
-	"ForceFullSyncMsg": "强制全量同步会从服务器上同步所有数据, 可能耗时比较久, 你确定?"
+	"ForceFullSyncMsg": "强制全量同步会从服务器上同步所有数据, 可能耗时比较久, 你确定?",
+
+	"Are you sure to delete it ?": "确定删除?",
+	"Are you sure ?": "你确定执行该操作?",
+
+	"Email or Password Error": "用户名或密码错误",
+    "Invalid host": "服务地址错误",
+    "Leanote login": "登录",
+    "Email is required": "请输入用户名或邮箱",
+    "Password is required": "请输入密码"
 
 }

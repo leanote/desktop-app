@@ -8,7 +8,7 @@
 <meta name="keywords" content="leanote,leanote.com">
 <meta name="description" content="leanote, Not Just A Notebook!">
 <meta name="author" content="leanote">
-<title>Leanote login</title>
+<title class="lang">Leanote login</title>
 <link href="public/css/bootstrap.css" rel="stylesheet">
 <link href="public/css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 <link href="public/css/index.css" rel="stylesheet">
@@ -82,6 +82,10 @@ try {
 	console.log(e);
 }
 
+function getMsg(key) {
+	return langData[key] || key;
+}
+
 $(function() {
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
@@ -116,20 +120,20 @@ $(function() {
 		var host = $('#host').val();
 
 		if(!email) {
-			showMsg("Email is required", "email");
+			showMsg(getMsg("Email is required"), "email");
 			return;
 		}
 		if(!pwd) {
-			showMsg("Password is required", "pwd");
+			showMsg(getMsg("Password is required"), "pwd");
 			return;
 		} else {
 			if(pwd.length < 6) {
-				showMsg("Email or Password Error", "pwd");
+				showMsg(getMsg("Email or Password Error"), "pwd");
 				return;
 			}
 		}
 		if(hasHost && (!host || !isValidUrl(host))) {
-			showMsg('Invalid host', 'host');
+			showMsg(getMsg('Invalid host'), 'host');
 			return;
 		}
 		$('#loadingLogo').addClass('loading');
@@ -149,7 +153,7 @@ $(function() {
 				gui.Window.open('note.html', getMainWinParams());
 				win.close();
 			} else {
-				showMsg("Email or Password Error");
+				showMsg(getMsg("Email or Password Error"));
 			}
 		});
 	});

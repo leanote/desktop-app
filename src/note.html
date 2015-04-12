@@ -33,7 +33,7 @@ if(process.platform != 'darwin') {
   document.write('<link rel="stylesheet" href="public/css/theme/windows.css" type="text/css" />');
 }
 function log(o) {
-  console.log(o);
+  // console.trace(o);
 }
 </script>
 </head>
@@ -268,7 +268,7 @@ function log(o) {
           <div id="noteMaskForLoading" class="note-mask">
             <img src="public/images/loading-24.gif"/>
             <br />
-            <span class="lang">loading</span>...
+            <span class="lang">loading...</span>
           </div>
 
           <div id="editorMask">
@@ -344,7 +344,7 @@ function log(o) {
             <div id="leanoteNav" class="leanoteNav">
               <h1>
                 <i class="fa fa-align-justify" title="Note nav"></i>
-                <span class="lang">newNote</span>
+                <span class="lang">nav</span>
               </h1>
               <div id="leanoteNavContent" class="leanoteNavContent">
               </div>

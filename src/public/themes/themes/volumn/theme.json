@@ -1,0 +1,17 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "书卷",
+    "released": false,
+    "langs": {
+        "en-us": {
+            "name": "Volumn"
+        },
+        "zh-cn": {
+            "name": "书卷"
+        },
+        "zh-hk": {
+            "name": "書卷"
+        }
+    }
+}

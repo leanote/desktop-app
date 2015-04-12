@@ -19,5 +19,6 @@ var Config = {
             "name": "繁体中文"
         }
     ],
-    "lang": "zh-hk"
+    "lang": "zh-hk",
+    "theme": ""
 };

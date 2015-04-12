@@ -377,11 +377,11 @@ $(function() {
 		Tag.removeTag($(this).parent());
 	});
 	//----------
-	//
+	// 
 	function deleteTag() {
 		$li = $(this).closest('li');
 		var tag = $.trim($li.data("tag"));
-		if(confirm("Are you sure ?")) {
+		if(confirm(getMsg("Are you sure ?"))) {
 			TagService.deleteTag(tag, function(re) {
 				// re = {NoteId => note}
 				if(typeof re == "object" && re.Ok !== false) {
