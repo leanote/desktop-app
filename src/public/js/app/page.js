@@ -400,7 +400,7 @@ function initEditor() {
 		// parentHeight: $("#content").height(),
 		// content_css : ["public/css/editor/editor.css"],
 		skin : "custom",
-		language: LEA.locale, // 语言
+		language: Api.curLang == 'zh-cn' ? 'zh' : 'en', // 语言
 		plugins : [
 				"autolink link image lists charmap hr", "paste",
 				"searchreplace leanote_nav leanote_code tabfocus",
