@@ -12,7 +12,7 @@ Note.curNoteId = "";
 Note.interval = ""; // 定时器
 
 // 这里, settings, blog, star
-Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="Conflict!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="Star"></i></div><div class="item-setting"><i class="fa fa-cog" title="Setting"></i></div>';
+Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
 
 // for render
 Note.itemTplNoImg = '<li href="#" class="item ?" noteId="?">'
@@ -341,9 +341,9 @@ Note.curHasChanged = function(force) {
 		console.log(cacheNote.Content == content);
 	}
 
-	console.error('hasChanged');
-	console.log(Note.curNoteId);
-	console.log(hasChanged);
+	// console.error('hasChanged');
+	// console.log(Note.curNoteId);
+	// console.log(hasChanged);
 	
 	hasChanged["UserId"] = cacheNote["UserId"] || "";
 	
@@ -467,7 +467,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		return;
 	}
 
-	console.error(">>");
+	// console.error(">>");
 	
 	var hasChanged = Note.curHasChanged(force);
 	
@@ -583,30 +583,25 @@ Note.hideContentLoading = function() {
 
 // 定位到笔记
 Note.directToNote = function(noteId) {
-	var $p = $("#noteItemList");
-	var pHeight = $p.height();
-	// 相对于父亲的位置
+	// alert(noteId);
 	var $t = $("[noteId='" + noteId + "']");
 	if($t.length == 0) {
 		return false;
 	}
-	// position方法返回的是元素的在页面内的绝对位置信息,top和left
-	var pTop = $t.position().top;
+
+	var $p = $("#noteItemList");
+	var pHeight = $p.height();
+
 	var scrollTop = $p.scrollTop();
-	pTop += scrollTop + 66; // 66是上面的title, search
-	/*
-	log("..");
-	log(noteId);
-	log(pTop + ' ' + pHeight + ' ' + scrollTop);
-	*/
-	
-	// 当前的可视范围的元素位置是[scrollTop, pHeight + scrollTop]
-	if(pTop >= scrollTop && pTop <= pHeight + scrollTop) {
+	var pTop = $t.position().top; // 相对于noteItemList的位置
+
+	// 当前的可视范围的元素位置是[0, pHeight]
+	if(pTop >= 0 && pTop <= pHeight) {
 		// alert(pTop + ' ' + scrollTop + ' ' + pHeight)
 	} else {
-		var top = pTop;
-		console.log("定位到特定note, 在可视范围内");
-		$("#noteItemList").scrollTop(top - 66);
+		// var top = pTop;
+		// console.log("定位到特定note, 在可视范围内");
+		$("#noteItemList").scrollTop(pTop + scrollTop);
 	}
 	return true;
 };
@@ -677,7 +672,6 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// 0
 	var target = $(tt('[noteId="?"]', selectNoteId))
 	Note.selectTarget(target);
-	
 
 	// 如果 inChangeNoteId == selectNoteId, 表示之前的note的content还在加载中, 此时保存笔记肯定出错
 	// if(Note.inChangeNoteId != Note.curNoteId) {
@@ -700,31 +694,24 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// ajax之
 	var cacheNote = Note.cache[selectNoteId];
 	
-	// 判断是否是共享notes
-	if(!isShare) {
-		if(cacheNote.Perm != undefined) {
-			isShare = true;
-		}
-	}
 	var hasPerm = true; // !isShare || Share.hasUpdatePerm(selectNoteId); // 不是共享, 或者是共享但有权限
 	
 	// 有权限
-	if(hasPerm) {
-		Note.hideReadOnly();
-		Note.renderNote(cacheNote);
-		
-		// 这里要切换编辑器
-		switchEditor(cacheNote.IsMarkdown);
-		Note.hideEditorMask();
-	} else {
-		Note.renderNoteReadOnly(cacheNote);
-	}
+	Note.renderNote(cacheNote);
 	
-	Attach.renderNoteAttachNum(selectNoteId, true);
+	// 这里要切换编辑器
+	switchEditor(cacheNote.IsMarkdown);
+	Note.hideEditorMask();
+
+	setTimeout(function() {
+		Attach.renderNoteAttachNum(selectNoteId, true);
+	});
+
+	// 下面很慢
 	
 	Note.contentAjaxSeq++;
 	var seq = Note.contentAjaxSeq;
-	function setContent(ret) {
+	function setContent(ret, fromCache) {
 		if(ret) {
 			cacheNote.InitSync = false;
 		}
@@ -735,14 +722,13 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		if(seq != Note.contentAjaxSeq) {
 			return;
 		}
-		Note.setNoteCache(ret, false);
+		if(!fromCache) {
+			Note.setNoteCache(ret, false);
+		}
 		// 把其它信息也带上
 		ret = Note.cache[selectNoteId]
-		if(hasPerm) {
-			Note.renderNoteContent(ret);
-		} else {
-			Note.renderNoteContentReadOnly(ret);
-		}
+		Note.renderNoteContent(ret, false);
+
 		self.hideContentLoading();
 		
 		callback && callback(ret);
@@ -750,7 +736,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	
 	// 不是刚同步过来的, 且有内容
 	if(!cacheNote.InitSync && cacheNote.Content) {
-		setContent(cacheNote);
+		setContent(cacheNote, true);
 		return;
 	}
 	
@@ -876,22 +862,23 @@ Note.renderNote = function(note) {
 };
 
 // render content
-Note.renderNoteContent = function(content) {
+// 这一步很慢
+Note.renderNoteContent = function(content, needRenderToLeft) {
 	// console.error('---------------- note:' + note.Title);
 	// console.trace();
 
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
 
-	// console.log(content.NoteId + " => " + content.Content);
+	var e = (new Date()).getTime();
 
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.setCurNoteId(content.NoteId);
 
-	// life
 	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
-	content.Desc = Note.genDesc(content.Content);
-	content.ImgSrc = Note.getImgSrc(content.Content);
-	Note.renderChangedNote(content);
+	var $leftNoteNav = $(tt('[noteId="?"]', content.NoteId));
+	if($leftNoteNav.find(".desc").text() == "") {
+		Note.renderNoteDesc(content);
+	}
 };
 
 Note.renderNoteDesc = function(note) {
@@ -1393,73 +1380,6 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 	});
 };
 
-// 导出pdf
-Note._initExportPdf = false;
-Note.exportPdf = function(target, contextmenuItem, isShared) {
-	var noteId = $(target).attr("noteId");
-	if(!noteId) {
-		return;
-	}
-
-	var note = Note.getNote(noteId);
-	var name = note.Title ? note.Title + '.pdf' : 'Untitled.pdf';
-
-	window.downloadPdfPath = false;
-	if(!Note._initExportPdf) {
-		// 下载pdf输入框
-		$('#exportPdf').change(function() {
-			var name = $(this).val();
-			$(this).val(''); // 为防止重名不触发
-			console.log(window.downloadPdfPath);
-			if(window.downloadPdfPath) {
-				FileService.download(window.downloadPdfPath, name, function(ok, msg) {
-					// console.log(ok + ' -=-');
-					if(ok) {
-						new window.Notification('Info', {
-					        body: 'PDF saved successful!'
-					    });
-					} else {
-						new window.Notification('Warning', {
-					        body: msg || 'PDF saved failure!'
-					    });
-					}
-				});
-			}
-		});
-	}
-
-	Note._initExportPdf = true;
-
-
-	Loading.show();
-
-	// 保存
-    NoteService.exportPdf(noteId, function(curPath, filename, msg) {
-    	Loading.hide();
-
-    	setTimeout(function() {
-	    	if(curPath) {
-	    		window.downloadPdfPath = curPath;
-	    		$('#exportPdf').attr('nwsaveas', name);
-	    		$('#exportPdf').click();
-	    	} else {
-	    		var m = "";
-	    		if(msg == "noteNotExists") {
-	    			m = "Please sync your note to ther server firslty."
-	    		}
-
-	    		// alert会死?
-	    		// alert('File not exists');
-	    		// https://github.com/nwjs/nw.js/wiki/Notification
-	    		var notification = new window.Notification('Warning', {
-			        body: 'Export PDF error! ' + m
-			        // icon: appIcon
-			    });
-	    	}
-    	}, 100);
-    });
-};
-
 
 // 显示共享信息
 Note.listNoteShareUserInfo = function(target) {
@@ -1613,7 +1533,7 @@ Note.searchNoteSys = function(val, noteId) {
 	NoteService.searchNote(val, function(notes) { 
 		if(notes) {
 			Note.searchKey = val;
-			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
+			Notebook.changeCurNotebookTitle(getMsg('Search results'), false, notes.length, false, true);
 			Note.renderNotes(notes);
 			// markdown一旦setContent就focus, 导致搜索失去焦点
 			setTimeout(function() {
@@ -1662,7 +1582,7 @@ Note.searchNote = function() {
 		hideLoading();
 		if(t == Note.searchSeq && notes) {
 			Note.searchKey = val;
-			Notebook.changeCurNotebookTitle('Search results', false, notes.length, false, true);
+			Notebook.changeCurNotebookTitle(getMsg('Search results'), false, notes.length, false, true);
 			Note.renderNotes(notes);
 			// markdown一旦setContent就focus, 导致搜索失去焦点
 			setTimeout(function() {
@@ -1857,7 +1777,7 @@ Note.deleteNoteTag = function(item, tag) {
 
 // 渲染列表
 Note.starNotes = [];
-Note.starItemT = '<li data-id="?"><a>?<span class="delete-star" title="Remove">X</span></a></li>';
+Note.starItemT = '<li data-id="?"><a>?<span class="delete-star" title="' + getMsg('Remove') + '">X</span></a></li>';
 Note.starNotesO = $('#starNotes');
 Note.renderStars = function(notes) {
 	var me = this;
@@ -1866,12 +1786,12 @@ Note.renderStars = function(notes) {
 	me.starNotesO.html('');
 	for(var i = 0; i < notes.length; ++i) {
 		var note = notes[i];
-		var t = tt(me.starItemT, note.NoteId, note.Title || 'Untitled');
+		var t = tt(me.starItemT, note.NoteId, note.Title || getMsg('Untitled'));
 		me.starNotesO.append(t);
 	}
 
 	if(notes.length == 0) {
-		me.starNotesO.html('<p class="no-info">No Starred Note</p>');
+		me.starNotesO.html('<p class="no-info">' + getMsg('No Starred Note') + '</p>');
 	}
 };
 
@@ -1905,7 +1825,7 @@ Note.renderStarNote = function(target) {
 	me.directToNote(noteId);
 
 	// $('#curNotebookForLisNote').text("Starred");
-	Notebook.changeCurNotebookTitle('Starred', true);
+	Notebook.changeCurNotebookTitle(getMsg('Starred'), true);
 };
 
 // 笔记标题改了后, 如果在star中, 则也要改标题
@@ -1920,7 +1840,7 @@ Note.changeStarNoteTitle = function(noteId, title) {
 
 	var target = me.starNotesO.find('li[data-id="' + noteId + '"]');
 	if(target.length == 1) { 
-		target.find('a').html((title || 'Untitled') + '<span class="delete-star" title="Remove">X</span>');
+		target.find('a').html((title || 'Untitled') + '<span class="delete-star" title="'  + getMsg('Remove') + '">X</span>');
 	}
 };
 
@@ -2270,7 +2190,7 @@ Note.initContextmenu = function() {
 		// this.target = '';
 	    this.menu = new gui.Menu();
 	    this.del = new gui.MenuItem({
-	        label: getMsg("delete"),
+	        label: getMsg("Delete"),
 	        click: function(e) {
 	        	Note.deleteNote(self.target);
 	        }
@@ -2283,39 +2203,37 @@ Note.initContextmenu = function() {
 	    });
 
 	    this.move = new gui.MenuItem({
-	        label: getMsg("move"),
+	        label: getMsg("Move"),
 	        click: function(e) {
 	        }
 	    });
 	    this.copy = new gui.MenuItem({
-	        label: getMsg("copy"),
+	        label: getMsg("Copy"),
 	        click: function(e) {
 	        }
 	    });
 
 	    // 导出
 	    this.exports = new gui.MenuItem({
-	        label: "Export",
+	        label: getMsg('Export'),
 	        click: function(e) {
 	        }
 	    });
 	    var exportsSubMenus = new gui.Menu();
-	    this.exportHtml = new gui.MenuItem({
-	        label: "HTML",
-	        click: function(e) {
-	        }
-	    });
-	    this.exportPdf = new gui.MenuItem({
-	        label: "PDF",
-	        enabled: true,
-	        click: function(e) {
-	        	Note.exportPdf(self.target);
-	        }
-	    });
-	    // exportsSubMenus.append(this.exportHtml);
-	    exportsSubMenus.append(this.exportPdf);
-	    this.exports.submenu = exportsSubMenus;
-
+	    var exportMenus = Api.getExportMenus() || [];
+	    for(var i = 0; i < exportMenus.length; ++i) {
+	    	var menu = exportMenus[i];
+	    	var clickBac = menu.click;
+	    	var menuItem = new gui.MenuItem({
+		        label: menu.label,
+		        click: function(e) {
+		        	var note = Note.getNote($(self.target).attr('noteId'));
+		        	clickBac && clickBac(note);
+		        }
+		    });
+		    exportsSubMenus.append(menuItem);
+	    }
+	    
 	    var ms = Note.getContextNotebooksSys(notebooks);
 	    this.move.submenu = ms[0];
 	    this.copy.submenu = ms[1];
@@ -2324,7 +2242,10 @@ Note.initContextmenu = function() {
 	    this.menu.append(this.del);
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
-	    this.menu.append(this.exports);
+	    if(exportMenus.length > 0) { 
+		    this.exports.submenu = exportsSubMenus;
+		    this.menu.append(this.exports);
+	    }
 
 	    // this.menu.append(ms[0]);
 	    // this.menu.append(ms[1]);
@@ -2359,9 +2280,9 @@ Note.initContextmenu = function() {
 	    	}
 
 	    	if(note.IsBlog) {
-	    		this.publicBlog['label'] = 'Cancel public';
+	    		this.publicBlog['label'] = getMsg('Cancel public');
 	    	} else {
-	    		this.publicBlog['label'] = 'Public as blog';
+	    		this.publicBlog['label'] = getMsg('Public as blog');
 	    	}
 
 			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
@@ -2404,7 +2325,7 @@ var Attach = {
 			e.stopPropagation();
 			var attachId = $(this).closest('li').data("id");
 			var t = this;
-			if(confirm("Are you sure to delete it ?")) {
+			if(confirm(getMsg("Are you sure to delete it ?"))) {
 				// $(t).button("loading");
 				self.deleteAttach(attachId);
 				// $(t).button("reset");
@@ -2432,14 +2353,14 @@ var Attach = {
 				FileService.download(curAttach.Path, value, function(ok, msg) {
 					if(!ok) {
 						// TODO 提示下载成功
-						var notification = new window.Notification('Warning', {
-					        body: 'File saved failure!',
+						var notification = new window.Notification(getMsg('Warning'), {
+					        body: getMsg('File saved failure!'),
 					        // icon: appIcon
 					    });
 					} else {
 						// TODO 提示下载成功
-						var notification = new window.Notification('Info', {
-					        body: 'File saved successful!',
+						var notification = new window.Notification(getMsg('Info'), {
+					        body: getMsg('File saved successful!'),
 					        // icon: appIcon
 					    });
 					}
@@ -2567,9 +2488,9 @@ var Attach = {
 			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
-						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
-						'	  <button type="button" class="btn btn-sm btn-primary download-attach" ' + disabled + '>' + d + '</button> ' +
-						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
+						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..." title="' + getMsg('Delete') + '"><i class="fa fa-trash-o"></i></button> ' + 
+						'	  <button type="button" class="btn btn-sm btn-primary download-attach" ' + disabled + ' title="' + getMsg('Save as') + '">' + d + '</button> ' +
+						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="' + getMsg('Insert link into content') + '"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 
 					'</li>';
 			self.attachsMap[each.FileId] = each;

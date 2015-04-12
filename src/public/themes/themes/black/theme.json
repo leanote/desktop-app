@@ -1,0 +1,16 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "you know",
+    "langs": {
+        "en-us": {
+            "name": "Dark"
+        },
+        "zh-cn": {
+            "name": "暗"
+        },
+        "zh-hk": {
+            "name": "暗"
+        }
+    }
+}

@@ -59,12 +59,12 @@ $(function() {
 			FileService.download(downloadImgPath, name, function(ok, msg) {
 				// console.log(ok + ' -=-');
 				if(ok) {
-					new window.Notification('Info', {
-				        body: 'Image saved successful!',
+					new window.Notification(getMsg('Info'), {
+				        body: getMsg('Image saved successful!'),
 				    });
 				} else {
-					new window.Notification('Warning', {
-				        body: msg || 'Image saved failure!',
+					new window.Notification(getMsg('Warning'), {
+				        body: getMsg(msg || 'Image saved failure!'),
 				    });
 				}
 			});
@@ -80,19 +80,19 @@ $(function() {
 function Menu() {
     this.menu = new gui.Menu();
     this.cut = new gui.MenuItem({
-        label: 'Cut',
+        label: getMsg('Cut'),
         click: function() {
             document.execCommand('cut');
         }
     });
     this.copy = new gui.MenuItem({
-        label: 'Copy',
+        label: getMsg('Copy'),
         click: function() {
             document.execCommand('copy');
         }
     });
     this.paste = new gui.MenuItem({
-        label: 'Paste',
+        label: getMsg('Paste'),
         click: function() {
             // document.execCommand("selectAll");
             document.execCommand('paste');
@@ -100,13 +100,13 @@ function Menu() {
     });
 
     this.saveAs = new gui.MenuItem({
-        label: 'Save as',
+        label: getMsg('Save as'),
         click: function() {
             // document.execCommand("selectAll");
             // document.execCommand('paste');
             var src = $curTarget.attr('src');
             if(!src) {
-            	alert('error');
+            	alert(getMsg('Error'));
             }
             // 得到图片, 打开dialog
             FileService.downloadImg(src, function(curPath) {
@@ -122,7 +122,7 @@ function Menu() {
             		// alert('File not exists');
             		// https://github.com/nwjs/nw.js/wiki/Notification
             		var notification = new window.Notification('Warning', {
-				        body: 'File not exists',
+				        body: getMsg('File not exists'),
 				        // icon: appIcon
 				    });
             	}
@@ -131,7 +131,7 @@ function Menu() {
     });
 
     this.openInBrowser = new gui.MenuItem({
-        label: 'Open link in browser',
+        label: getMsg('Open link in browser'),
         click: function() {
             // document.execCommand("selectAll");
             // document.execCommand('paste');
@@ -173,7 +173,6 @@ Menu.prototype.popup = function(x, y) {
     this.menu.popup(x, y);
 };
 var menu = new Menu();
-var FS = require('fs');
 
 // 右键菜单
 var winHref = '';

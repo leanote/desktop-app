@@ -26,6 +26,9 @@ Tag.mapEn2Cn = {
 	"green": "绿色",
 	"yellow": "黄色",
 }
+Tag.isColorTag = function(tag) {
+	return tag == 'blue' || tag == 'red' || tag == 'green' || tag == 'yellow';
+}
 
 Tag.t = $("#tags");
 
@@ -141,14 +144,13 @@ Tag.appendTag = function(tag, save) {
 		}
 	}
 	var rawText = text;
-	if(LEA.locale == "zh") {
-		text = Tag.mapEn2Cn[text] || text;
-		rawText = Tag.mapCn2En[rawText] || rawText;
+	if(Tag.isColorTag(text)) {
+		text = getMsg(text);
 	}
 
 	text = trimTitle(text);
 
-	tag = tt('<span class="?" data-tag="?">?<i title="' + getMsg("delete") + '">X</i></span>', classes, text, text);
+	tag = tt('<span class="?" data-tag="?">?<i title="' + getMsg("delete") + '">X</i></span>', classes, rawText, text);
 
 	// 避免重复
 	var isExists = false;
@@ -181,8 +183,6 @@ Tag.appendTag = function(tag, save) {
 		if(!isExists) {
 			Note.curChangedSaveIt(true, function() {
 				TagService.addOrUpdateTag(rawText, function(ret) {
-					console.log("---")
-					console.log(ret);
 					if(typeof ret == 'object' && ret.Ok !== false) {
 						Tag.addTagNav(ret);
 					}
@@ -195,8 +195,6 @@ Tag.appendTag = function(tag, save) {
 // nodejs端调用
 Tag.addTagsNav = function(tags) {
 	tags = tags || [];
-	console.error('add tags --------');
-	console.error(tags);
 	for(var i = 0; i <  tags.length; ++i) {
 		Tag.addTagNav(tags[i]);
 	}
@@ -232,15 +230,8 @@ Tag.removeTag = function($target) {
 	var tag = $target.data('tag');
 	$target.remove();
 	reRenderTags();
-	/*
-	if(LEA.locale == "zh") {
-		tag = Tag.mapCn2En[tag] || tag;
-	}
-	*/
 	Note.curChangedSaveIt(true, function() {
 		TagService.addOrUpdateTag(tag, function(ret) {
-			console.log("..");
-			console.log(ret);
 			if(typeof ret == 'object' && ret.Ok !== false) {
 				Tag.addTagNav(ret);
 			}
@@ -260,11 +251,11 @@ Tag.renderTagNav = function(tags) {
 		var noteTag = tags[i];
 		var tag = noteTag.Tag;
 		var text = tag;
-		/*
-		if(LEA.locale == "zh") {
-			var text = Tag.mapEn2Cn[tag] || text;
+
+		if(Tag.isColorTag(text)) {
+			text = getMsg(text);
 		}
-		*/
+		
 		text = trimTitle(text);
 		var classes = Tag.classes[tag] || "label label-default";
 		// 笔记数量先隐藏, 不准确
@@ -272,7 +263,7 @@ Tag.renderTagNav = function(tags) {
 	}
 
 	if(tags.length == 0) {
-		$("#tagNav").html('<p class="no-info">No tag</p>');
+		$("#tagNav").html('<p class="no-info">' + getMsg('No tag') + '</p>');
 	}
 };
 
@@ -292,12 +283,6 @@ Tag.addTagNav = function(newTag) {
 };
 
 Tag.searchTag = function(tag, noteId) {
-	// var $li = $(this).closest('li');
-	// var tag = $.trim($li.data("tag"));
-	// tag = Tag.mapCn2En[tag] || tag;
-	
-	// 学习changeNotebook
-	
 	// 1
 	Note.curChangedSaveIt();
 	
@@ -305,12 +290,15 @@ Tag.searchTag = function(tag, noteId) {
 	// 也会把curNoteId清空
 	Note.clearAll();
 	
-	// $("#tagSearch").html($li.html()).show();
+	var tagCn = tag;
+	if(Tag.isColorTag(tag)) {
+		tagCn = getMsg(tag);
+	}
 
-	Notebook.changeCurNotebookTitle(tag, false, '', true);
+	var tagTitle = '<span class="' + (Tag.classes[tag] || 'label label-default') + '">' + trimTitle(tagCn) + '</span>';
+
+	Notebook.changeCurNotebookTitle(tagTitle, false, '', true);
 	Tag.curTag = tag;
-	// $('#curNotebookForListNote').find('i, em').remove();
-	// $("#tagSearch .tag-delete").remove();
 	
 	NoteService.searchNoteByTag(tag, function(notes) {
 		hideLoading();
@@ -389,11 +377,11 @@ $(function() {
 		Tag.removeTag($(this).parent());
 	});
 	//----------
-	//
+	// 
 	function deleteTag() {
 		$li = $(this).closest('li');
 		var tag = $.trim($li.data("tag"));
-		if(confirm("Are you sure ?")) {
+		if(confirm(getMsg("Are you sure ?"))) {
 			TagService.deleteTag(tag, function(re) {
 				// re = {NoteId => note}
 				if(typeof re == "object" && re.Ok !== false) {

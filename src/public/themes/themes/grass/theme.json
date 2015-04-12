@@ -1,0 +1,16 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "",
+    "langs": {
+        "en-us": {
+            "name": "Grass"
+        },
+        "zh-cn": {
+            "name": "绿草"
+        },
+        "zh-hk": {
+            "name": "綠草"
+        }
+    }
+}

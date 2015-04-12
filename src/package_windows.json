@@ -15,6 +15,7 @@
     "min_height": 326,
     "width":  1100,
     "height": 600
-  },
-  "chromium-args": "--enable-smooth-scrolling"
+  }
+  // ,
+  // "chromium-args": "--enable-smooth-scrolling"
 }

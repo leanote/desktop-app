@@ -1,0 +1,13 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "导入evernote",
+    "langs": {
+        "en-us": {
+            "name": "Import Evernote",
+        },
+        "zh-cn": {
+            "name": "导入Evernote"
+        }
+    }
+}

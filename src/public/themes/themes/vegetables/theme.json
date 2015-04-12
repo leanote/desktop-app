@@ -1,0 +1,16 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "",
+    "langs": {
+        "en-us": {
+            "name": "Vegetables"
+        },
+        "zh-cn": {
+            "name": "蔬菜"
+        },
+        "zh-hk": {
+            "name": "蔬菜"
+        }
+    }
+}

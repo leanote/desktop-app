@@ -1,0 +1,16 @@
+{
+    "name": "theme",
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "主题配置",
+    "langs": {
+        "en-us": {
+            "pluginName": "Dark",
+            "pluginDesc": ""
+        },
+        "zh-cn": {
+            "pluginName": "暗",
+            "pluginDesc": ""
+        }
+    }
+}

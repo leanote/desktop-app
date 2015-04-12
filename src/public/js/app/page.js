@@ -400,7 +400,7 @@ function initEditor() {
 		// parentHeight: $("#content").height(),
 		// content_css : ["public/css/editor/editor.css"],
 		skin : "custom",
-		language: LEA.locale, // 语言
+		language: Api.curLang == 'zh-cn' ? 'zh' : 'en', // 语言
 		plugins : [
 				"autolink link image lists charmap hr", "paste",
 				"searchreplace leanote_nav leanote_code tabfocus",
@@ -1068,6 +1068,17 @@ function fullSync(callback) {
 	});
 }
 
+// 强制全量同步, 将Usn设为空, 刷新之
+function fullSyncForce() {
+	var ok = confirm(getMsg('ForceFullSyncMsg'));
+	if(ok) {
+		Note.curChangedSaveIt();
+		UserService.fullSyncForce(function() {
+			location.reload();
+		});
+	}
+}
+
 // 增量同步
 function incrSync() {
 	log('incr sync');
@@ -1128,7 +1139,7 @@ var State = {
 	// 是否结束
 	recoverEnd: false,
 
-	recoverAfter: function() {
+	recoverAfter: function(initedCallback) {
 		var me = this;
 		me.recoverEnd = true;
 		// 先隐藏, 再resize, 再显示
@@ -1152,15 +1163,17 @@ var State = {
 		setTimeout(function() {
 			incrSync();
 		}, 500);
+
+		initedCallback && initedCallback();
 		// $('body').show();
 	},
 
 	// 恢复状态
-	recoverState: function(userInfo) {
+	recoverState: function(userInfo, initedCallback) {
 		var state = userInfo.State || {};
 		// 表明没有state
 		if(state.NotebookOpened === undefined) {
-			this.recoverAfter();
+			this.recoverAfter(initedCallback);
 			return;
 		}
 		// 1. 左侧哪个open
@@ -1192,7 +1205,7 @@ var State = {
 			Notebook.changeNotebook(notebookId, false, state.CurNoteId);
 		}
 
-		this.recoverAfter();
+		this.recoverAfter(initedCallback);
 
 	}
 };
@@ -1200,7 +1213,11 @@ var State = {
 // note.html调用
 // 实始化页面
 // 判断是否登录
-function initPage() {
+function initPage(initedCallback) {
+	// 笔记本, 事件, menu初始化
+	Notebook.init();
+	// 笔记
+
 	win.on('close', function() {
 		// 先保存之前改变的
 		Note.curChangedSaveIt();
@@ -1225,7 +1242,7 @@ function initPage() {
 	function ok() {
 		i++;
 		if(i == 3) {
-			State.recoverState(UserInfo);
+			State.recoverState(UserInfo, initedCallback);
 		}
 	}
 
@@ -1241,9 +1258,7 @@ function initPage() {
 			// 获得笔记
 			Service.noteService.getNotes('', function(notes) {
 				Note.renderNotesAndFirstOneContent(notes);
-				if(!curNotebookId) {
-					Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
-				}
+				Notebook.selectNotebook($(tt('#notebook [notebookId="?"]', Notebook.allNotebookId)));
 			});
 			// 获取star笔记
 			NoteService.getStarNotes(function(notes) {
@@ -1251,13 +1266,6 @@ function initPage() {
 				ok();
 			});
 
-			// 指定笔记, 也要保存最新笔记
-			if(latestNotes.length > 0) {
-				for(var i = 0; i < latestNotes.length; ++i) {
-					Note.addNoteCache(latestNotes[i]);
-				}
-			}
-			
 			// 标签
 			TagService.getTags(function(tags) {
 				Tag.renderTagNav(tags);
@@ -1323,27 +1331,6 @@ function initUploadImage() {
 		}
 
 	});
-}
-
-// 改变css
-var themes = {"Simple":'simple-no.css', 'Blue': 'blue.css', 'Black': 'black.css'};
-var themeMenus = {};
-function changeTheme(themeName) {
-	if(themeName) {
-		if(themeMenus[themeName]) {
-			themeMenus[themeName].checked = true;
-		}
-		var css = themes[themeName];
-		if(css) {
-			$('#theme').attr('href', 'public/css/theme/' + css);
-
-			// 保存
-			UserService.updateG({Theme: themeName});
-		}
-
-	} else {
-		themeMenus['Simple'].checked = true;
-	}
 }
 
 // 演示模式, 全屏模式
@@ -1461,12 +1448,12 @@ var Pren = {
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-			{label: 'Toggle Fullscreen', click: function() {
+			{label: getMsg('Toggle Fullscreen'), click: function() {
 				me.toggleFullscreen();
 			}
 		});
 		me.pren = new gui.MenuItem(
-			{label: 'Toggle Presentation', click: function() {
+			{label: getMsg('Toggle Presentation'), click: function() {
 				me.togglePren();
 			}
 		});
@@ -1481,7 +1468,6 @@ var Pren = {
 				}
 			}
 		});
-
 
 		function isURL(str_url) {
 		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
@@ -1520,7 +1506,6 @@ function checkForUpdates() {
 	}
 };
 
-
 // user
 function userMenu() {
 	// ----------
@@ -1532,17 +1517,12 @@ function userMenu() {
 	
 	mode.append(Pren.pren);
 	mode.append(Pren.fullScreen);
-	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
+	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
 	if(isMac()) {
 		var nativeMenuBar = new gui.Menu({ type: "menubar" });
 		nativeMenuBar.createMacBuiltin("Leanote");
 		win.menu = nativeMenuBar;
 		win.menu.append(modes);
-	}
-	// windows和linux下就用user's menu来代替
-	else {
-		// alert(process.platform);
-		// win.menu.append(modes);
 	}
 
 	//-------------------
@@ -1565,13 +1545,13 @@ function userMenu() {
 	        }
 	    });
 	    this.blog = new gui.MenuItem({
-	        label: 'My blog',
+	        label: getMsg('My blog'),
 	        click: function(e) {
 	        	openExternal(UserInfo.Host + '/blog/' + UserInfo.UserId);
 	        }
 	    });
 	    this.switchAccount = new gui.MenuItem({
-	        label: 'Switch account',
+	        label: getMsg('Switch account'),
 	        click: function(e) {
 	        	// window.open('login.html');
 	        	// win.close();
@@ -1582,51 +1562,25 @@ function userMenu() {
 	        	// location.href = 'login.html';
 	        }
 	    });
-	    this.theme = new gui.MenuItem({
-	        label: 'Change theme',
-	        click: function(e) {
-	        }
-	    });
-	    this.sync = new gui.MenuItem({
-	        label: 'Sync now',
-	        click: function(e) {
-	        	incrSync();
-	        }
-	    });
+	    
+	    
 	    this.checkForUpdates = new gui.MenuItem({
-	        label: 'Check for updates',
+	        label: getMsg('Check for updates'),
 	        click: function(e) {
 	        	checkForUpdates();
 	        }
 	    });
 
-	    var themeSubmenus = new gui.Menu();
-	    for(var i in themes) {
-	    	(function(t) {
-				themeMenus[t] = new gui.MenuItem({
-			        label: t,
-			        type: 'checkbox',
-			        click: function(e) {
-			        	// var themeCss = themes[t];
-			        	changeTheme(t);
-			        	// 将其它的不选中
-			        	for(var j in themes) {
-			        		if(j != t) {
-			        			themeMenus[j].checked = false;
-			        		}
-			        	}
-			        }
-			    });
-			    themeSubmenus.append(themeMenus[t]);
-	    	})(i);
-	    }
-	    this.theme.submenu = themeSubmenus;
-
 	    this.menu.append(this.email);
 	    this.menu.append(this.blog);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
-	    this.menu.append(this.theme);
+
+	    // themeMenu
+	    var themeMenu = Api.getThemeMenu();
+	    if(themeMenu) {
+		    this.menu.append(themeMenu);
+	    }
 		
 		var height = 180;
 		if(!isMac()) {
@@ -1634,13 +1588,7 @@ function userMenu() {
 
 			this.menu.append(Pren.pren);
 			this.menu.append(Pren.fullScreen);
-			/*
-			this.menu.append(new gui.MenuItem(
-			{label: 'Toggle Presentation', click: function() {
-				// me.togglePren();
-			}
-			}));
-			*/
+		
 			height = 270;
 		}
 
@@ -1648,7 +1596,40 @@ function userMenu() {
 	    this.menu.append(this.checkForUpdates);
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
-	    this.menu.append(this.sync);
+
+	    this.more = new gui.MenuItem({
+	        label: getMsg('More...'),
+	        click: function(e) {
+	        }
+	    });
+	    var mores = new gui.Menu();
+	    this.sync = new gui.MenuItem({
+	        label: getMsg('Sync now'),
+	        click: function(e) {
+	        	incrSync();
+	        }
+	    });
+	    this.fullSync = new gui.MenuItem({
+	        label: getMsg('Force full sync'),
+	        click: function(e) {
+	        	fullSyncForce();
+	        }
+	    });
+
+	    mores.append(this.sync);
+	    mores.append(this.fullSync);
+
+	    // 其它的
+	    var otherMoreMenus = Api.getMoreMenus();
+	    if(otherMoreMenus) {
+	    	for(var i = 0; i < otherMoreMenus.length; ++i) {
+	    		mores.append(otherMoreMenus[i]);
+	    	}
+	    }
+
+	    this.more.submenu = mores;
+
+	    this.menu.append(this.more);
 		
 	    this.popup = function(e) {
 	    	var y = $(window).height() - height;
@@ -1668,9 +1649,6 @@ function userMenu() {
 		userMenuSys.popup(e);
 	});
 
-	// 修改主题
-	changeTheme(UserInfo.Theme);
-	
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
 	  e.preventDefault();

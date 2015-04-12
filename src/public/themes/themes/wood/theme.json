@@ -1,0 +1,16 @@
+{
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "",
+    "langs": {
+        "en-us": {
+            "name": "Wood"
+        },
+        "zh-cn": {
+            "name": "木纹"
+        },
+        "zh-hk": {
+            "name": "木紋"
+        }
+    }
+}

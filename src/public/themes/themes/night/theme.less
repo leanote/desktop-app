@@ -1,0 +1,317 @@
+@noteBg: rgb(39, 38, 38);
+@noteBgOpacity: rgba(39, 38, 38, 0.96);
+@noteBgLess: rgba(68,68,68,1); // 稍浅
+@noteBgLessDeep: rgba(54,54,54,1);
+@noteBgDeep: #000;
+@txtcolor: rgba(194,194,194,1); // rgba(196,196,196,1);
+@txtColorAn: rgba(136,136,136,1);
+
+@itemHoverBg: rgba(60,60,60,1);
+@itemActiveBg: #868B87;
+
+@leftNotebookColor: #eee;
+
+#leftNotebook {
+  background: none !important;
+  background-color: @noteBgOpacity !important;
+ 
+  box-shadow: 5px 0px 5px @noteBg;
+  z-index: 3;
+  border-radius: 5px 0 0 5px;
+}
+#noteList {
+  // box-shadow: 0 0 10px @noteBgDeep;
+  // z-index: 2;
+}
+.folderHeader .fa-left,
+.folderHeader span {
+  color: @txtcolor;
+}
+#addNotebookPlus {
+  color: #F9F8F8;
+}
+#notebookList {
+  border-top: none;
+}
+#notebookList input {
+  background: transparent;
+  color: @txtcolor;
+}
+.folderBody a:hover {
+  background-color: transparent !important;
+  font-weight: bold;
+}
+.ztree li a.curSelectedNode {
+  color: @leftNotebookColor;
+}
+.ztree li a.curSelectedNode,
+#starNotes li.selected {
+  background-color: transparent;
+  font-weight: bold;
+}
+.ztree li a.curSelectedNode a,
+#starNotes li.selected a {
+  color: @leftNotebookColor;
+}
+#starNotes li,
+.ztree li {
+  border: none;
+}
+#starNotes li a,
+.ztree li a {
+  color: @leftNotebookColor;
+}
+.sync-icon,
+#myProfile a {
+  color: @txtcolor;
+}
+@searchNotebookForListBorderColor: rgba(230, 230, 230, 0.5);
+#searchNotebookForList {
+  background: transparent;
+  color: @txtcolor;
+  border: 1px solid @searchNotebookForListBorderColor;
+  height: 25px;
+}
+#searchNotebookForList::-webkit-input-placeholder {
+  color: #eee !important;
+  /* WebKit browsers */
+  font-size: 12px;
+}
+.no-info {
+  color: @txtcolor;
+}
+.progress-bar {
+  background: @txtcolor;
+}
+
+
+#noteAndEditor {
+  border: none;
+}
+#noteList, #notesAndSort {
+  background: @noteBgLess;
+}
+#notesAndSort {
+  border: none;
+  &, a {
+    color: @txtcolor;
+  }
+}
+
+#searchNote {
+  border-bottom: @noteBgLessDeep 1px solid;
+  padding-bottom: 5px;
+  input {
+      background: @itemHoverBg; 
+      border-color: @noteBgLessDeep;
+  }
+}
+#noteItemListWrap {
+  top: 80px;
+}
+#noteList {
+  border: none;
+}
+
+#noteItemList {
+  .item {
+    height: 69px;
+    border: none;
+    border-bottom: 1px solid @noteBgLessDeep;
+    background-color: transparent;
+    color: @txtcolor;
+    overflow: hidden;
+  }
+  .item-title {
+    color: @txtcolor;
+    border-bottom: none;
+  }
+  .item-info, .item-desc {
+    color: @txtColorAn;
+  }
+  .item-thumb {
+    display: none;
+  }
+  /* 不显示图片 */
+  .item-image .item-desc {
+    right: 0;
+  }
+  .item-desc{
+    left: 10px;
+    right: 10px;
+  }
+  .item-title, .item-info {
+    padding-right: 5px;
+  }
+}
+
+#noteItemList .item:hover, #noteItemList .contextmenu-hover {
+  background: @itemHoverBg !important;
+}
+
+.item-active .item-info, 
+.item-active .desc, 
+.item-active .item-info .fa, 
+.item-active .item-title,
+#noteItemList .item-active:hover .item-info .fa {
+  color: #eee!important;
+}
+.item-active, #noteItemList .item-active:hover {
+  background-color: @itemActiveBg !important;
+
+}
+
+#newMyNote #newNoteMarkdownBtn, #newMyNote #newNoteBtn {
+  border: 1px solid #615E5E;
+}
+
+@noteBg: rgb(39, 38, 38);
+#noteAndEditor, #note {
+  background-color: @noteBg !important;
+  color: @txtcolor;
+  // top: 0;
+}
+#noteTitle {
+  background-color: @noteBg !important;
+  color: @txtcolor;
+}
+#editorTool a {
+  color: @txtcolor;
+}
+
+
+//=========
+// tinymce
+// 编辑器按钮
+#mceToolbar, #wmd-button-bar {
+  background-color: transparent;
+  border-bottom: 1px solid #444040;
+}
+#tool {
+  border-bottom: 1px solid #444040;
+}
+.mce-btn {
+  background-color: transparent;
+}
+// 按钮字体, 图标字体
+.mce-menubtn span, .mce-ico {
+  color: #847D7D;
+}
+.mce-caret {
+  border-top-color: #847D7D;
+}
+// 图标
+.mce-btn i {
+  text-shadow: none;
+}
+// 图标, 背景色
+i.mce-i-backcolor {
+  background: #454141;
+}
+// 分隔线
+.tool-split {
+  display: none;
+}
+// 下拉图标对齐
+.mce-colorbutton .mce-caret {
+  margin-top: 8px;
+}
+.more-fa {
+  color: #847D7D;
+}
+
+// 文字, 文件背景图标下面那块的位置
+.mce-colorbutton .mce-btn-small .mce-preview {
+  margin-left: -18px;
+}
+.mce-colorbutton:hover .mce-open {
+  border-left-color: #5F5B5B;
+  border-right-color: #5F5B5B;
+}
+
+.mce-btn.mce-active, .mce-btn.mce-active:hover, .mce-btn:hover {
+  background-color: #413C3C;
+}
+
+// md
+.wmd-button-row, .preview-button-row,
+#mdEditor #wmd-input,
+.extension-preview-buttons,
+#mdEditor .preview-panel {
+  background: @noteBg;
+}
+.extension-preview-buttons {
+  border: none !important;
+}
+#mdEditor #wmd-input {
+  color: @txtcolor;
+}
+#mdEditor .navbar-default {
+  border: none !important;
+}
+.btn-success:hover, .btn-success:focus, .btn-success:active {
+  background-color: rgba(128, 128, 128, 0.5) !important;
+}
+#wmd-input .code, #wmd-input .pre {
+  color: @txtcolor;
+}
+code.prettyprint, pre.prettyprint {
+  background-color: #E1E1E7;
+}
+
+// 文档导航
+#leanoteNav, #leanoteNavMd {
+  background-color: #2A2828;
+}
+#leanoteNavContent a, #leanoteNavMd a {
+  color: @txtcolor;
+}
+
+#editorBottom {
+  border: none;
+}
+
+// tag
+#tag .add-tag-text {
+  color: @txtcolor;
+}
+#addTagInput {
+  background: none;
+  color: @txtcolor;
+}
+
+// 无笔记, 何不?
+#editorMask {
+  background: @noteBg;
+  a {
+    color: @txtcolor;
+  }
+}
+
+// writting
+body.writting #note {
+  #editor {
+    background: @noteBg;
+  }
+  #editorContentWrap {
+    background: #302E2E;
+  }
+  #editorContent {
+    background: @noteBg;
+    box-shadow: 0 1px 10px #000;
+  }
+  .mce-btn {
+    background: transparent !important;
+  }
+  #mceToolbar, #mdEditor .navbar-default, #wmd-button-bar {
+    box-shadow: 0 3px 10px #000;
+  }
+
+  #mdEditor, #mceToolbar, #wmd-button-bar {
+    background: @noteBg;
+  }
+  #mceToolbar, #mdEditor .navbar-default, #wmd-button-bar {
+    box-shadow: none;
+  }
+}
+
