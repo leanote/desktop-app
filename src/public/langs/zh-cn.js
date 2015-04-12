@@ -244,6 +244,10 @@
 	"Open link in browser": "在浏览器打开",
 
 	"Info": "提示",
-	"Warning": "警告"
+	"Warning": "警告",
+
+	"Mode": "模式",
+	"Toggle Fullscreen": "全屏切换",
+	"Toggle Presentation": "演示切换"
 
 }

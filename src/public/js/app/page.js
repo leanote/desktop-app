@@ -1437,12 +1437,12 @@ var Pren = {
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-			{label: 'Toggle Fullscreen', click: function() {
+			{label: getMsg('Toggle Fullscreen'), click: function() {
 				me.toggleFullscreen();
 			}
 		});
 		me.pren = new gui.MenuItem(
-			{label: 'Toggle Presentation', click: function() {
+			{label: getMsg('Toggle Presentation'), click: function() {
 				me.togglePren();
 			}
 		});
@@ -1506,7 +1506,7 @@ function userMenu() {
 	
 	mode.append(Pren.pren);
 	mode.append(Pren.fullScreen);
-	var modes = new gui.MenuItem({ label: 'Mode', submenu: mode});
+	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
 	if(isMac()) {
 		var nativeMenuBar = new gui.Menu({ type: "menubar" });
 		nativeMenuBar.createMacBuiltin("Leanote");
