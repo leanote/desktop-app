@@ -125,7 +125,7 @@ define(function() {
 			var me = this;
 			
 			// 修改主题
-			me.changeTheme(Config.theme || 'default');
+			me.changeTheme(Config.theme || '');
 		},
 		// 关闭时需要运行的
 		onClose: function() {
