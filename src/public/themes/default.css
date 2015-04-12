@@ -1442,6 +1442,7 @@ body.init #pageInner {
 }
 #preview-contents {
   -webkit-user-select: text;
+  padding-bottom: 30px;
 }
 #leftNotebook {
   overflow: hidden;

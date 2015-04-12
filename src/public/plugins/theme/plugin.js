@@ -93,17 +93,6 @@ define(function() {
 			var me = this;
 			var gui = Api.gui;
 
-			me._themeMenu = new gui.MenuItem({
-		        label: Api.getMsg('plugin.theme.changeTheme'),
-		    });
-
-		    // 设置
-		    Api.setThemeMenu(me._themeMenu);
-		},
-
-		// 打开后
-		onOpenAfter: function() {
-			var me = this;
 			me.getThemes();
 
 			var themeSubmenus = new gui.Menu();
@@ -121,10 +110,22 @@ define(function() {
 		    	})(me._themes[i]);
 		    }
 
-		    me._themeMenu.submenu = themeSubmenus;
+		    me._themeMenu = new gui.MenuItem({
+		        label: Api.getMsg('plugin.theme.changeTheme'),
+		    });
 
+		    me._themeMenu.submenu = themeSubmenus;
+			
+		    // 设置
+		    Api.setThemeMenu(me._themeMenu);
+		},
+
+		// 打开后
+		onOpenAfter: function() {
+			var me = this;
+			
 			// 修改主题
-			me.changeTheme(Config.theme);
+			me.changeTheme(Config.theme || 'default');
 		},
 		// 关闭时需要运行的
 		onClose: function() {
