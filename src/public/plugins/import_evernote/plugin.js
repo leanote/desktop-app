@@ -14,6 +14,9 @@ define(function() {
 			},
 			'zh-cn': {
 				'importEvernote': '导入Evernote',
+			},
+			'zh-hk': {
+				'importEvernote': '導入Evernote',
 			}
 		},
 

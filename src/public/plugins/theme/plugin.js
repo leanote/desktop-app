@@ -77,6 +77,9 @@ define(function() {
 			},
 			'zh-cn': {
 				'changeTheme': '修改主题',
+			},
+			'zh-hk': {
+				'changeTheme': '修改主题'
 			}
 		},
 		// 打开前要执行的

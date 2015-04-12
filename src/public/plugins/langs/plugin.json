@@ -1,0 +1,16 @@
+{
+    "name": "langs",
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "语言",
+    "langs": {
+        "en-us": {
+            "pluginName": "Langs",
+            "pluginDesc": ""
+        },
+        "zh-cn": {
+            "pluginName": "设置语言",
+            "pluginDesc": ""
+        }
+    }
+}

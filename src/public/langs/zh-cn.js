@@ -248,6 +248,10 @@
 
 	"Mode": "模式",
 	"Toggle Fullscreen": "全屏切换",
-	"Toggle Presentation": "演示切换"
+	"Toggle Presentation": "演示切换",
+
+	"More...": "更多",
+	"Force full sync": "强制全量同步",
+	"ForceFullSyncMsg": "强制全量同步会从服务器上同步所有数据, 可能耗时比较久, 你确定?"
 
 }

@@ -7,7 +7,10 @@
             "name": "Grass"
         },
         "zh-cn": {
-            "name": "草地"
+            "name": "绿草"
+        },
+        "zh-hk": {
+            "name": "綠草"
         }
     }
 }

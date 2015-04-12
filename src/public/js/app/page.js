@@ -1068,6 +1068,17 @@ function fullSync(callback) {
 	});
 }
 
+// 强制全量同步, 将Usn设为空, 刷新之
+function fullSyncForce() {
+	var ok = confirm(getMsg('ForceFullSyncMsg'));
+	if(ok) {
+		Note.curChangedSaveIt();
+		UserService.fullSyncForce(function() {
+			location.reload();
+		});
+	}
+}
+
 // 增量同步
 function incrSync() {
 	log('incr sync');
@@ -1552,12 +1563,7 @@ function userMenu() {
 	        }
 	    });
 	    
-	    this.sync = new gui.MenuItem({
-	        label: getMsg('Sync now'),
-	        click: function(e) {
-	        	incrSync();
-	        }
-	    });
+	    
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
 	        click: function(e) {
@@ -1582,13 +1588,7 @@ function userMenu() {
 
 			this.menu.append(Pren.pren);
 			this.menu.append(Pren.fullScreen);
-			/*
-			this.menu.append(new gui.MenuItem(
-			{label: 'Toggle Presentation', click: function() {
-				// me.togglePren();
-			}
-			}));
-			*/
+		
 			height = 270;
 		}
 
@@ -1596,7 +1596,40 @@ function userMenu() {
 	    this.menu.append(this.checkForUpdates);
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
-	    this.menu.append(this.sync);
+
+	    this.more = new gui.MenuItem({
+	        label: getMsg('More...'),
+	        click: function(e) {
+	        }
+	    });
+	    var mores = new gui.Menu();
+	    this.sync = new gui.MenuItem({
+	        label: getMsg('Sync now'),
+	        click: function(e) {
+	        	incrSync();
+	        }
+	    });
+	    this.fullSync = new gui.MenuItem({
+	        label: getMsg('Force full sync'),
+	        click: function(e) {
+	        	fullSyncForce();
+	        }
+	    });
+
+	    mores.append(this.sync);
+	    mores.append(this.fullSync);
+
+	    // 其它的
+	    var otherMoreMenus = Api.getMoreMenus();
+	    if(otherMoreMenus) {
+	    	for(var i = 0; i < otherMoreMenus.length; ++i) {
+	    		mores.append(otherMoreMenus[i]);
+	    	}
+	    }
+
+	    this.more.submenu = mores;
+
+	    this.menu.append(this.more);
 		
 	    this.popup = function(e) {
 	    	var y = $(window).height() - height;

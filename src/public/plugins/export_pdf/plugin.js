@@ -9,6 +9,9 @@ define(function() {
 			},
 			'zh-cn': {
 				'export': '导出PDF',
+			},
+			'zh-hk': {
+				'export': '導出PDF',
 			}
 		},
 

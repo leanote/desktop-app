@@ -11,6 +11,16 @@ var Api = {
 	fileService: FileService,
 	noteService: NoteService,
 
+	getConfigFilePath: function() {
+		return EvtService.getProjectBasePath() + '/public/config.js';
+	},
+	writeConfig: function(config) {
+		var me = this;
+		var fileData = "var Config = " + JSON.stringify(config, null, 4) + ';';
+		var ok = me.commonService.writeFile(me.getConfigFilePath(), fileData);
+		return ok;
+	},
+
 	// data = {'en-us': {}, 'zh-cn' {}};
 	// prefix = 'plugin.theme'
 	_langs: {
@@ -52,6 +62,7 @@ var Api = {
 		if(prefix) {
 			key = prefix + '.' + key;
 		}
+		
 		var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || key;
 
 		if(data) {
@@ -68,11 +79,12 @@ var Api = {
 	// 与之前lang.js取出的数据合并
 	_init: function() {
 		var me = this;
+		me._langs[me.curLang] || (me._langs[me.curLang] = {});
 		$.extend(me._langs[me.curLang], window.langData);
 
 		// extend
-		window.getMsg = function(key, prefix) { 
-			return me.getMsg(key, prefix);
+		window.getMsg = function(key, prefix, data) { 
+			return me.getMsg(key, prefix, data);
 		};
 	},
 
@@ -111,6 +123,7 @@ var Api = {
 
 	},
 
+	// 导出
 	_exportMenus: [],
 	addExportMenu: function(menu) {
 		var me = this;
@@ -119,6 +132,17 @@ var Api = {
 	getExportMenus: function() {
 		var me = this;
 		return me._exportMenus;
+	},
+
+	// 更多菜单
+	_moreMenus: [],
+	getMoreMenus: function() {
+		var me = this;
+		return me._moreMenus;
+	},
+	addMoreMenu: function(menu) {
+		var me = this;
+		me._moreMenus.push(menu);
 	}
 };
 

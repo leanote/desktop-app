@@ -182,5 +182,7 @@
 	"Notebook": "Notebook",
 	"Note": "Note",
 	"Tag": "Tag",
-	"Starred": "Starred"
+	"Starred": "Starred",
+
+	"ForceFullSyncMsg": "Full sync will load all data from server, are you sure ?"
 }
