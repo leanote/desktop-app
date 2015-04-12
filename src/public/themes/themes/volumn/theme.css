@@ -250,7 +250,6 @@ pre.prettyprint {
 }
 #editorMask {
   background: #eee8d5;
-  z-index: 88888 !important;
 }
 #editorMask a {
   color: #93a1a1;

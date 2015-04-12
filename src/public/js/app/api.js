@@ -59,11 +59,12 @@ var Api = {
 		if(!key) {
 			return '';
 		}
+		var rawKey = key;
 		if(prefix) {
 			key = prefix + '.' + key;
 		}
 		
-		var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || key;
+		var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || rawKey;
 
 		if(data) {
 			if(!me.isArray(data)) {

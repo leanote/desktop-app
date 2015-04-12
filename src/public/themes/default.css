@@ -1586,6 +1586,9 @@ img::selection {
 #loadingDialog #loadingDialogBodyMsg {
   font-size: 16px;
 }
+#editorMask {
+  z-index: 88888 !important;
+}
 .win-tool {
   padding: 5px;
   position: absolute;

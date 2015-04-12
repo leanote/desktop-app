@@ -867,28 +867,17 @@ Note.renderNoteContent = function(content, needRenderToLeft) {
 	// console.error('---------------- note:' + note.Title);
 	// console.trace();
 
-	var s = (new Date()).getTime();
-
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
 
 	var e = (new Date()).getTime();
 
-	console.log(e-s);
-
-	// console.log(content.NoteId + " => " + content.Content);
-
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.setCurNoteId(content.NoteId);
 
-	if(needRenderToLeft == undefined) {
-		needRenderToLeft = true;
-	}
-	if(needRenderToLeft) {
-		// life
-		// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
-		content.Desc = Note.genDesc(content.Content);
-		content.ImgSrc = Note.getImgSrc(content.Content);
-		Note.renderChangedNote(content);
+	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
+	var $leftNoteNav = $(tt('[noteId="?"]', content.NoteId));
+	if($leftNoteNav.find(".desc").text() == "") {
+		Note.renderNoteDesc(content);
 	}
 };
 

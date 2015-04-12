@@ -14,31 +14,45 @@ define(function() {
 			},
 			'zh-cn': {
 				'importEvernote': '导入Evernote',
+				'Choose Evernote files(.enex)': '选择Evernote文件(.enex)',
+				'Close': "关闭",
+				'Import to': "导入至",
+				"Done! %s notes imported!": "完成, 成功导入 %s 个笔记!",
+				"Import file: %s Success!": "文件 %s 导入成功!",
+				"Import file: %s Failure, is evernote file ?": "文件 %s 导入失败! 是Evernote文件?",
+				"Import: %s Success!": "导入笔记: %s 成功!"
 			},
 			'zh-hk': {
 				'importEvernote': '導入Evernote',
+				'Choose Evernote files(.enex)': '選擇Evernote文件(.enex)',
+				'Close': "關閉",
+				"Import to": "導入至",
+				"Done! %s notes imported!": "完成, 成功導入 %s 個筆記!",
+				"Import file: %s Success!": "文件 %s 導入成功!",
+				"Import file: %s Failure, is evernote file ?": "文件 %s 導入失敗! 是Evernote文件?",
+				"Import: %s Success!": "導入筆記: %s 成功!"
 			}
 		},
 
 		_tpl: `
 		<style>
-			#importEvernoteDialog .tab-pane {
-			  text-align: center;
-			  padding: 10px;
-			  padding-top: 20px;
-			}
-			#importEvernoteDialog .alert {
-			  margin-top: 10px;
-			  padding: 0;
-			  border: none;
-			}
+		#importEvernoteDialog .tab-pane {
+		  text-align: center;
+		  padding: 10px;
+		  padding-top: 20px;
+		}
+		#importEvernoteDialog .alert {
+		  margin-top: 10px;
+		  padding: 0;
+		  border: none;
+		}
 		</style>
 	    <div class="modal fade bs-modal-sm" id="importEvernoteDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 	        <div class="modal-dialog modal-sm">
 	          <div class="modal-content">
 	          <div class="modal-header">
 	              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	              <h4 class="modal-title" class="modalTitle">Import to <span id="importDialogNotebook"></span></h4>
+	              <h4 class="modal-title" class="modalTitle"><span class="lang">Import to</span> <span id="importDialogNotebook"></span></h4>
 	          </div>
 	          <div class="modal-body" id="">
 	            <div role="tabpanel">
@@ -46,9 +60,7 @@ define(function() {
 	              <!-- Nav tabs -->
 	              <ul class="nav nav-tabs" role="tablist">
 	                <li role="presentation" class="active"><a href="#evernoteTab" aria-controls="evernoteTab" role="tab" data-toggle="tab">Evernote</a></li>
-	                <!--
-	                <li role="presentation"><a href="#youdaoTab" aria-controls="youdaoTab" role="tab" data-toggle="tab">YouDao</a></li>
-	                -->
+	               
 	              </ul>
 
 	              <!-- Tab panes -->
@@ -57,7 +69,7 @@ define(function() {
 	                    <!-- import -->
 	                    <a id="chooseEvernoteFile" class="btn btn-success btn-choose-file">
 	                      <i class="fa fa-upload"></i>
-	                      <span>Choose Evernote files(.enex)</span>
+	                      <span class="lang">Choose Evernote files(.enex)</span>
 	                    </a>
 	                    <!-- 消息 -->
 	                    <div id="importEvernoteMsg" class="alert alert-info">
@@ -75,7 +87,7 @@ define(function() {
 	            </div>
 	          </div>
 	          <div class="modal-footer ">
-	            <button type="button" class="btn btn-default upgrade-cancel-btn" data-dismiss="modal">Close</button>
+	            <button type="button" class="btn btn-default upgrade-cancel-btn lang" data-dismiss="modal">Close</button>
 	          </div>
 	          </div><!-- /.modal-content -->
 	        </div><!-- /.modal-dialog -->
@@ -85,13 +97,20 @@ define(function() {
 		_curNotebook: null,
 		_inited: false,
 
+		getMsg: function(txt, data) {
+			return Api.getMsg(txt, 'plugin.import_evernote', data)
+		},
+
 		init: function() {
 			var me = this;
 			me._inited = true;
-
 			$('body').append(me._tpl);
-
 			me._importDialog = $("#importEvernoteDialog");
+
+			me._importDialog.find('.lang').each(function() {
+				var txt = $.trim($(this).text());
+				$(this).text(me.getMsg(txt));
+			});
 
 			$('#chooseEvernoteFile').click(function() {
 				$('#importEvernoteInput').click();
@@ -113,22 +132,22 @@ define(function() {
 						// $('#importEvernoteMsg .curImportFile').html("");
 						// $('#importEvernoteMsg .curImportNote').html("");
 						setTimeout(function() {
-							$('#importEvernoteMsg .allImport').html('Done! ' + n + ' notes imported!');
+							$('#importEvernoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
 						}, 500);
 					},
 					// 单个文件
 					function(ok, filename) {
 						if(ok) {
-							$('#importEvernoteMsg .curImportFile').html("Import file: " + filename + " Success!");
+							$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
 						} else {
-							$('#importEvernoteMsg .curImportFile').html("Import file: " + filename + " Failure, is evernote file ?");
+							$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is evernote file ?", filename));
 						}
 					},
 					// 单个笔记
 					function(note) {
 						if(note) {
 							n++;
-							$('#importEvernoteMsg .curImportNote').html("Import: " + note.Title + " Success!");
+							$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
 
 							// 插入到当前笔记中
 							Note.addSync([note]);
