@@ -1363,6 +1363,7 @@ top: 4px;
 	text-align: center;
 	font-style: 16px;
 	text-overflow:ellipsis; white-space:nowrap; overflow:hidden;
+	line-height: 35px;
 	span {
 		cursor: default;
 	}
@@ -1727,9 +1728,7 @@ body {
 #noteItemListWrap {
 	top: 75px;
 }
-#myNotebookNavForListNav {
-  line-height: 35px;
-}
+
 #notebook {
 	#myStarredNotes {
 		.folderHeader {
@@ -1742,6 +1741,9 @@ body {
 }
 #myNotebookNavForListNav span {
 	font-size: 16px;
+	span {
+		font-size: 14px; // tag
+	}
 }
 #newMyNote, #tool {
 	z-index: 1001; // 比topDrag大些

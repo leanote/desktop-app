@@ -40,8 +40,11 @@ var Api = {
 			}
 		}
 	},
+	isArray: function(obj) {
+		return Object.prototype.toString.call(obj) === '[object Array]';
+	},
 	// 国际化
-	getMsg: function(key, prefix) {
+	getMsg: function(key, prefix, data) {
 		var me = this;
 		if(!key) {
 			return '';
@@ -49,7 +52,17 @@ var Api = {
 		if(prefix) {
 			key = prefix + '.' + key;
 		}
-		return me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || key;
+		var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || key;
+
+		if(data) {
+			if(!me.isArray(data)) {
+				data = [data];
+			}
+			for(var i = 0; i < data.length; ++i) {
+				msg = msg.replace("%s", data[i]);
+			}
+		}
+		return msg;
 	},
 
 	// 与之前lang.js取出的数据合并

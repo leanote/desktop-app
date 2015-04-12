@@ -1242,6 +1242,7 @@ h3 {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  line-height: 35px;
 }
 #myNotebookNavForListNav span {
   cursor: default;
@@ -1532,9 +1533,6 @@ body.init #pageInner {
 #noteItemListWrap {
   top: 75px;
 }
-#myNotebookNavForListNav {
-  line-height: 35px;
-}
 #notebook #myStarredNotes .folderHeader {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -1543,6 +1541,9 @@ body.init #pageInner {
 }
 #myNotebookNavForListNav span {
   font-size: 16px;
+}
+#myNotebookNavForListNav span span {
+  font-size: 14px;
 }
 #newMyNote,
 #tool {

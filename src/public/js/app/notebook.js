@@ -748,7 +748,8 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 // 改变标签, isStarred是否是星笔记本
 Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle, isTag, isSearch) {
 	var me = this;
-	$("#curNotebookForListNote").html(trimTitle(title));
+	var title = isTag ? title : trimTitle(title);
+	$("#curNotebookForListNote").html(title);
 	me.isStarred = isStarred;
 	me.isTag = isTag;
 	me.isSearch = isSearch;
