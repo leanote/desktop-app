@@ -197,7 +197,12 @@
 	"Public as blog": "公开为博客",
 	"Cancel public": "取消公开为博客",
 	"Delete": "删除",
+	"Remove": "移除",
 	"Export": "导出",
+	"Histories": "历史记录",
+	"Toggle writting mode": "切换写作模式",
+	"Attachments": "附件",
+	"UnTitled": "无标题",
 
 	"Add sub notebook": "添加子笔记本",
 	"Rename": "重命名",
@@ -212,5 +217,31 @@
 	"Password": "密码",
 	"Sign up": "注册",
 	"Forget password?": "忘记密码?",
-	"Find password": "找回密码"
+	"Find password": "找回密码",
+
+	"Untitled": "无标题",
+	"No Starred Note": "无加星笔记",
+	"Conflict": "冲突",
+	"Star": "加星",
+	"Blog": "博客",
+	"Setting": "设置",
+
+	"Insert link into content": "插件附件链接到笔记中",
+	"Save as": "保存为",
+
+	"Image saved successful!": "图片保存成功!",
+	"Image saved failure!": "图片保存失败!",
+	"File saved failure!": "文件保存失败!",
+	"File saved successful!": "文件保存成功",
+
+	"File not exists": "文件不存在",
+	"Error": "错误",
+	"Cut": "剪切",
+	"Copy": "复制",
+	"Paste": "粘贴",
+	"Open link in browser": "在浏览器打开",
+
+	"Info": "提示",
+	"Warning": "警告"
+
 }

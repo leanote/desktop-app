@@ -44,6 +44,14 @@ var lang = {
 				$this.attr('placeholder', langData[txt]);
 			}
 		});
+
+		$('.lang-title').each(function() {
+			var $this = $(this);
+			var txt = $.trim($this.attr('title'));
+			if(langData[txt] != undefined) {
+				$this.attr('title', langData[txt]);
+			}
+		});
 	}
 };
 

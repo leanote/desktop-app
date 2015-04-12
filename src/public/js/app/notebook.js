@@ -139,11 +139,11 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 		if(!isShare) {
 			if(!Notebook.isAllNotebookId(treeNode.NotebookId) && !Notebook.isTrashNotebookId(treeNode.NotebookId)) {
 				icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + (treeNode.NumberNotes || 0) + '</span>'));
-				icoObj.after($('<span class="fa notebook-setting" title="setting"></span>'));
+				icoObj.after($('<span class="fa notebook-setting" title="' + getMsg('Setting') + '"></span>'));
 			}
 		} else {
 			if(!Share.isDefaultNotebookId(treeNode.NotebookId)) {
-				icoObj.after($('<span class="fa notebook-setting" title="setting"></span>'));
+				icoObj.after($('<span class="fa notebook-setting" title="' + getMsg('Setting') + '"></span>'));
 			}
 		}
 		if (treeNode.level > 1) {
@@ -480,7 +480,7 @@ Notebook.getChangedNotebooks = function(notebooks) {
 		navForNewNote += eachForNew;
 	}
 	return navForNewNote;
-}
+};
 
 Notebook.everNavForNewNote = "";
 Notebook.everNotebooks = [];

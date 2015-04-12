@@ -286,13 +286,13 @@ function log(o) {
             <div id="tool" class="clearfix">
               
               <div id="noteTitleDiv">
-                <input name="noteTitle" id="noteTitle" value="" placeholder="UnTitled" tabindex="1" />
+                <input name="noteTitle" id="noteTitle" class="lang-placeholder" value="" placeholder="UnTitled" tabindex="1" />
               </div>
               
               <ul class="pull-right" id="editorTool">
 
                 <li class="dropdown" id="attachDropdown">
-                  <a class="ios7-a dropdown-toggle" data-toggle="dropdown" id="showAttach" title="Attachments">
+                  <a class="ios7-a dropdown-toggle lang-title" data-toggle="dropdown" id="showAttach" title="Attachments">
                     <span class="fa fa-paperclip"></span>
                     <span id="attachNum"></span>
                   </a>
@@ -316,12 +316,12 @@ function log(o) {
                   </div>
                 </li>
 
-                <li><a class="ios7-a " id="contentHistory"
+                <li><a class="ios7-a lang-title" id="contentHistory"
                   data-toggle="dropdown" title="Histories">
                   <span class="fa fa-history"></span>
                   </a></li>
 
-                  <li><a class="ios7-a " id="writtingToggle"
+                  <li><a class="ios7-a lang-title" id="writtingToggle"
                   data-toggle="dropdown" title="Toggle writting mode">
                   <span class="fa fa-expand"></span>
                   </a></li>
@@ -608,7 +608,6 @@ function log(o) {
 <script src="public/js/jquery.ztree.all-3.5.js"></script>
 <!-- <script src="public/js/i18n/msg.en.js"></script> -->
 <script src="public/js/app/service.js"></script>
-<script src="public/js/app/native.js"></script>
 <script src="public/js/common.js"></script>
 <script>
 var UrlPrefix = 'app://leanote';
@@ -621,6 +620,7 @@ window.require = undefined;
 <script src="public/tinymce/tinymce.js"></script>
 <script src="public/libs/ace/ace.js"></script>
 <script src="public/js/app/api.js"></script> <!-- 本地api -->
+<script src="public/js/app/native.js"></script>
 <script src="public/js/app/page.js"></script>
 <script src="public/js/bootstrap-min.js"></script>
 <script src="public/js/app/note.js"></script>

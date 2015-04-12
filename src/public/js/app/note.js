@@ -12,7 +12,7 @@ Note.curNoteId = "";
 Note.interval = ""; // 定时器
 
 // 这里, settings, blog, star
-Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="blog"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="Conflict!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="Star"></i></div><div class="item-setting"><i class="fa fa-cog" title="Setting"></i></div>';
+Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
 
 // for render
 Note.itemTplNoImg = '<li href="#" class="item ?" noteId="?">'
@@ -1442,7 +1442,7 @@ Note.listNoteContentHistories = function() {
 		for (i in re) {
 			var content = re[i]
 			content.Ab = Note.genAbstract(content.Content, 200);
-			str += tt('<tr><td seq="?">#?<? class="each-content">?</?> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">?</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>', i, (+i+1), s, content.Ab, s, goNowToDatetime(content.UpdatedTime))
+			str += tt('<tr><td seq="?">#?<? class="each-content">?</?> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">?</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>', i, (+i+1), s, content.Ab, s, content.UpdatedTime)
 		}
 		str += "</table></div>";
 		$content.html(str);
@@ -1790,7 +1790,7 @@ Note.deleteNoteTag = function(item, tag) {
 
 // 渲染列表
 Note.starNotes = [];
-Note.starItemT = '<li data-id="?"><a>?<span class="delete-star" title="Remove">X</span></a></li>';
+Note.starItemT = '<li data-id="?"><a>?<span class="delete-star" title="' + getMsg('Remove') + '">X</span></a></li>';
 Note.starNotesO = $('#starNotes');
 Note.renderStars = function(notes) {
 	var me = this;
@@ -1799,12 +1799,12 @@ Note.renderStars = function(notes) {
 	me.starNotesO.html('');
 	for(var i = 0; i < notes.length; ++i) {
 		var note = notes[i];
-		var t = tt(me.starItemT, note.NoteId, note.Title || 'Untitled');
+		var t = tt(me.starItemT, note.NoteId, note.Title || getMsg('Untitled'));
 		me.starNotesO.append(t);
 	}
 
 	if(notes.length == 0) {
-		me.starNotesO.html('<p class="no-info">No Starred Note</p>');
+		me.starNotesO.html('<p class="no-info">' + getMsg('No Starred Note') + '</p>');
 	}
 };
 
@@ -1838,7 +1838,7 @@ Note.renderStarNote = function(target) {
 	me.directToNote(noteId);
 
 	// $('#curNotebookForLisNote').text("Starred");
-	Notebook.changeCurNotebookTitle('Starred', true);
+	Notebook.changeCurNotebookTitle(getMsg('Starred'), true);
 };
 
 // 笔记标题改了后, 如果在star中, 则也要改标题
@@ -1853,7 +1853,7 @@ Note.changeStarNoteTitle = function(noteId, title) {
 
 	var target = me.starNotesO.find('li[data-id="' + noteId + '"]');
 	if(target.length == 1) { 
-		target.find('a').html((title || 'Untitled') + '<span class="delete-star" title="Remove">X</span>');
+		target.find('a').html((title || 'Untitled') + '<span class="delete-star" title="'  + getMsg('Remove') + '">X</span>');
 	}
 };
 
@@ -2366,14 +2366,14 @@ var Attach = {
 				FileService.download(curAttach.Path, value, function(ok, msg) {
 					if(!ok) {
 						// TODO 提示下载成功
-						var notification = new window.Notification('Warning', {
-					        body: 'File saved failure!',
+						var notification = new window.Notification(getMsg('Warning'), {
+					        body: getMsg('File saved failure!'),
 					        // icon: appIcon
 					    });
 					} else {
 						// TODO 提示下载成功
-						var notification = new window.Notification('Info', {
-					        body: 'File saved successful!',
+						var notification = new window.Notification(getMsg('Info'), {
+					        body: getMsg('File saved successful!'),
 					        // icon: appIcon
 					    });
 					}
@@ -2501,9 +2501,9 @@ var Attach = {
 			html += '<li class="clearfix" data-id="' + each.FileId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
-						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
-						'	  <button type="button" class="btn btn-sm btn-primary download-attach" ' + disabled + '>' + d + '</button> ' +
-						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
+						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..." title="' + getMsg('Delete') + '"><i class="fa fa-trash-o"></i></button> ' + 
+						'	  <button type="button" class="btn btn-sm btn-primary download-attach" ' + disabled + ' title="' + getMsg('Save as') + '">' + d + '</button> ' +
+						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="' + getMsg('Insert link into content') + '"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 
 					'</li>';
 			self.attachsMap[each.FileId] = each;
