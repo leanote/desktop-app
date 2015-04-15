@@ -4,6 +4,6 @@ config.codekit
 .project
 /node_modules
 /dist
-/nw2
 /nw
-/gulpfile2.js
+/gulpfile.js
+package2.json
