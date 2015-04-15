@@ -6,4 +6,4 @@ config.codekit
 /dist
 /nw
 /gulpfile.js
-package2.json
+/package.json
