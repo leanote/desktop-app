@@ -5,3 +5,5 @@ config.codekit
 /node_modules
 /dist
 /nw2
+/nw
+/gulpfile2.js
