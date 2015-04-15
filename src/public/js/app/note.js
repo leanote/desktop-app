@@ -470,6 +470,8 @@ Note.curChangedSaveIt = function(force, callback) {
 	// console.error(">>");
 	
 	var hasChanged = Note.curHasChanged(force);
+
+	// console.log(hasChanged + "---");
 	
 	if(hasChanged && (hasChanged.hasChanged || hasChanged.IsNew)) {
 		// 把已改变的渲染到左边 item-list
@@ -482,7 +484,9 @@ Note.curChangedSaveIt = function(force, callback) {
 		
 		// 设置更新时间
 		Note.setNoteCache({"NoteId": hasChanged.NoteId, "UpdatedTime": new Date()}, false);
-		
+
+		console.log('设置完成');
+
 		// 表示有未完成的保存
 		/*
 		if(me.saveInProcess[hasChanged.NoteId]) {
@@ -494,7 +498,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		*/
 		
 		// 保存之
-		showMsg(getMsg("saving"));
+		// showMsg(getMsg("saving"));
 		
 		me.saveInProcess[hasChanged.NoteId] = true;
 		
@@ -1818,8 +1822,22 @@ Note.renderStarNote = function(target) {
 	me.starNotesO.find('li').removeClass('selected');
 	target.addClass('selected');
 
+
+	// 大BUG start
+	// 先保存现有的啊
+	me.curChangedSaveIt();
+	console.log('ok...');
+
 	// 把当前笔记放在第一位
 	me.clearAll();
+	
+	// 如果数据改了, me.starNotes 的content不是最新的
+	me.starNotes || (me.starNotes = []);
+	for(var i = 0; i < me.starNotes.length; ++i) {
+		me.starNotes[i] = me.getNote(me.starNotes[i].NoteId);
+	}
+	// 大BUG end
+
 	me.renderNotes(me.starNotes);
 	me.changeNoteForPjax(noteId, true, false);
 	me.directToNote(noteId);

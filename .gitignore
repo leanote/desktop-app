@@ -4,3 +4,4 @@ config.codekit
 .project
 /node_modules
 /dist
+/nw2
