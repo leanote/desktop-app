@@ -224,7 +224,7 @@ i.mce-i-backcolor {
 }
 #wmd-input .code,
 #wmd-input .pre {
-  color: #93a1a1;
+  color: #91aa41 !important;
 }
 code.prettyprint,
 pre.prettyprint {

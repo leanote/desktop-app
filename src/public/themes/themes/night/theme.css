@@ -24,7 +24,7 @@
   font-weight: bold;
 }
 .ztree li a.curSelectedNode {
-  color: #eee;
+  color: #eeeeee;
 }
 .ztree li a.curSelectedNode,
 #starNotes li.selected {
@@ -33,7 +33,7 @@
 }
 .ztree li a.curSelectedNode a,
 #starNotes li.selected a {
-  color: #eee;
+  color: #eeeeee;
 }
 #starNotes li,
 .ztree li {
@@ -41,7 +41,7 @@
 }
 #starNotes li a,
 .ztree li a {
-  color: #eee;
+  color: #eeeeee;
 }
 .sync-icon,
 #myProfile a {
@@ -217,6 +217,19 @@ i.mce-i-backcolor {
 #mdEditor .navbar-default {
   border: none !important;
 }
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+  background-color: rgba(128, 128, 128, 0.5) !important;
+}
+#wmd-input .code,
+#wmd-input .pre {
+  color: #91aa41 !important;
+}
+code.prettyprint,
+pre.prettyprint {
+  background-color: #E1E1E7;
+}
 #leanoteNav,
 #leanoteNavMd {
   background-color: #2A2828;
@@ -237,7 +250,6 @@ i.mce-i-backcolor {
 }
 #editorMask {
   background: #272626;
-  z-index: 88888 !important;
 }
 #editorMask a {
   color: #c2c2c2;
