@@ -7,3 +7,5 @@ config.codekit
 /nw
 /gulpfile.js
 /package.json
+/test
+sqlite3-raw
