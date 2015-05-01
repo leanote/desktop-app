@@ -2161,13 +2161,18 @@ Note.initContextmenu = function() {
 	        click: function(e) {
 	        }
 	    });
+	    
+	    this.menu.append(this.publicBlog);
+	    this.menu.append(this.unPublicBlog);
+	    this.menu.append(gui.getSeparatorMenu());
+
+	    this.menu.append(this.del);
+	    this.menu.append(gui.getSeparatorMenu());
+
+	    this.menu.append(this.move);
+	    this.menu.append(this.copy);
 
 	    // 导出
-	    this.exports = new gui.MenuItem({
-	        label: getMsg('Export'),
-	        click: function(e) {
-	        }
-	    });
 	    var exportsSubMenus = new gui.Menu();
 	    var exportMenus = Api.getExportMenus() || [];
 	    for(var i = 0; i < exportMenus.length; ++i) {
@@ -2182,21 +2187,16 @@ Note.initContextmenu = function() {
 		    });
 		    exportsSubMenus.append(menuItem);
 	    }
-	    
-
-	    this.menu.append(this.publicBlog);
-	    this.menu.append(this.unPublicBlog);
-	    this.menu.append(gui.getSeparatorMenu());
-
-	    this.menu.append(this.del);
-	    this.menu.append(gui.getSeparatorMenu());
-
-	    this.menu.append(this.move);
-	    this.menu.append(this.copy);
-
 	    if(exportMenus.length > 0) { 
-		    this.exports.submenu = exportsSubMenus;
-		    this.menu.append(this.exports);
+	    	 this.exports = new gui.MenuItem({
+		        label: getMsg('Export'),
+		        submenu: exportsSubMenus,
+		        click: function(e) {
+		        }
+		    });
+
+	    	this.menu.append(gui.getSeparatorMenu());
+	    	this.menu.append(this.exports);
 	    }
 
 	    this.enable = function(name, ok) {

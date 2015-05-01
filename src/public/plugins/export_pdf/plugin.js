@@ -34,23 +34,7 @@ define(function() {
 			$('#hiddenZone').append(me._input);
 			// 下载pdf输入框
 			me._input.change(function() {
-				var name = $(this).val();
-				$(this).val(''); // 为防止重名不触发
-				// console.log(me.downloadPdfPath);
-				if(me.downloadPdfPath) {
-					Api.fileService.download(me.downloadPdfPath, name, function(ok, msg) {
-						// console.log(ok + ' -=-');
-						if(ok) {
-							new window.Notification(getMsg('Info'), {
-						        body: getMsg('plugin.export_pdf.exportSuccess')
-						    });
-						} else {
-							new window.Notification(getMsg('Warning'), {
-						        body: getMsg('plugin.export_pdf.exportFailure')
-						    });
-						}
-					});
-				}
+				
 			});
 
 			me._inited = true;
@@ -78,8 +62,23 @@ define(function() {
 		    	setTimeout(function() {
 			    	if(curPath) {
 			    		me.downloadPdfPath = curPath;
-			    		me._input.attr('nwsaveas', name);
-			    		me._input.click();
+
+			    		Api.gui.dialog.showSaveDialog(Api.gui.getCurrentWindow(), {title: name, defaultPath: name}, function(targetPath) {
+    						if(targetPath && me.downloadPdfPath) {
+    							Api.fileService.download(me.downloadPdfPath, targetPath, function(ok, msg) {
+									if(ok) {
+										new window.Notification(getMsg('Info'), {
+									        body: getMsg('plugin.export_pdf.exportSuccess')
+									    });
+									} else {
+										new window.Notification(getMsg('Warning'), {
+									        body: getMsg('plugin.export_pdf.exportFailure')
+									    });
+									}
+								});
+    						}
+    					});
+
 			    	} else {
 			    		var m = "";
 			    		if(msg == "noteNotExists") {
