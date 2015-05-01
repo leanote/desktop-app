@@ -1146,9 +1146,11 @@ var State = {
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
-				var win = gui.getCurrentWindow();
-				win.setSize(1100, 600);
-				win.center();
+				if(/login/.test(location.href)) {
+					var win = gui.getCurrentWindow();
+					win.setSize(1100, 600);
+					win.center();
+				}
 			}
 			setTimeout(function() {
 				$('body').show();

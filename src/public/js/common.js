@@ -1423,7 +1423,7 @@ var ContextTips = {
 function goToMainPage() {
 	var BrowserWindow = gui.remote.require('browser-window');
 	var win = new BrowserWindow(getMainWinParams());
-	win.loadUrl('file://' + __dirname + '/note.html');
+	win.loadUrl('file://' + __dirname + '/note.html?from=login');
 }
 
 function switchAccount() {
