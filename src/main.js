@@ -17,6 +17,10 @@ app.on('window-all-closed', function() {
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
+
+  // leanote protocol
+  // require('leanote_protocol');
+
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 1000, height: 600, frame: true, transparent: false });
 
