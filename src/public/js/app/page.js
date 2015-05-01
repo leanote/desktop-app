@@ -375,18 +375,17 @@ function initEditor() {
 			// desk下有问题
 			// ed.on('keydown', Note.saveNote);
 			ed.on('keydown', function(e) { 
+				/*
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
 				    if(num == 86) { // ctrl + v
 				    	// document.execCommand('paste');
 				    }
 			    };
+			    */
+			    // 0.25.2必须要, 默认没有
+				commonCmd(e);
 			});
-			
-			// 为了把下拉菜单关闭
-	        ed.on("click", function(e) {
-	          $("body").trigger("click");
-	        });
 		},
 		
 		// fix TinyMCE Removes site base url
@@ -1147,8 +1146,9 @@ var State = {
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
-				// win.resizeTo(1100, 600);
-				// win.setPosition('center');
+				var win = gui.getCurrentWindow();
+				win.setSize(1100, 600);
+				win.center();
 			}
 			setTimeout(function() {
 				$('body').show();

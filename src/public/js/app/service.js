@@ -4,9 +4,11 @@ var Evt = require('evt');
 var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
 
-// 启动服务器, 图片
-var Server = require('server');
-Server.start();
+if(!/login.html/.test(location.href)) {
+	// 启动服务器, 图片
+	var Server = require('server');
+	Server.start();
+}
 
 // 所有service, 与数据库打交道
 var Service = {

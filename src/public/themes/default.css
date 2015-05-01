@@ -2349,3 +2349,23 @@ background-position:-1px -670px
 #notebookList {
   border-top: 1px dashed #eee;
 }
+body {
+  border: none;
+  border-shadow: none;
+  border-radius: none;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#newMyNote * {
+  font-family: 'Arial';
+}
+html,
+body,
+#page,
+#pageInner,
+#noteList,
+#notebook,
+#leftNotebook {
+  border-radius: 0;
+}

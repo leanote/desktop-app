@@ -1420,17 +1420,21 @@ var ContextTips = {
 	}
 };
 
+function goToMainPage() {
+	var BrowserWindow = gui.remote.require('browser-window');
+	var win = new BrowserWindow(getMainWinParams());
+	win.loadUrl('file://' + __dirname + '/note.html');
+}
+
 function switchAccount() {
 	SyncService.stop();
 	// location.href = 'login.html';
+	// 
+	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
-		var win2 = gui.Window.open('login.html', {
-			"icon": "public/images/logo/leanote_icon_blue.png",
-			frame: false, toolbar: false, resizable: false, 
-			transparent: true, 
-			width: 278, 
-			max_width: 278
-		});
+		var win = new BrowserWindow({ width: 278, height: 316, show: true, frame: false, resizable: false });
+		win.loadUrl('file://' + __dirname + '/login.html');
+		// win.show();
 	} else {
 		var win2 = gui.Window.open('login.html', {
 			"icon": "public/images/logo/leanote_icon_blue.png",
@@ -1441,10 +1445,7 @@ function switchAccount() {
 			max_width: 278
 		});
 	}
-	// win2.focus();
-	// w.focus();
-	// gui.Window.close();
-	win.close();
+	gui.getCurrentWindow().close();
 }
 
 // 没有一处调用
@@ -1465,6 +1466,11 @@ function commonCmd(e) {
     }
 }
 
+// 0.25.2必须要, 默认没有
+$('body').on('keydown', function(e) {
+	commonCmd(e);
+});
+
 function loadToolIcons() {
 	var imgs = ['traffic-close-hover@2x.png', 'traffic-minimise-hover@2x.png', 'traffic-zoom-hover@2x.png'];
 	for(var i in imgs) {
@@ -1482,7 +1488,7 @@ function getMainWinParams() {
 		return {
 			"icon": "public/images/logo/leanote_icon_blue.png",
 			frame: false,
-			transparent: true,
+			transparent: false,
 			width: 258,
 			height: 326,
 			toolbar: false,
