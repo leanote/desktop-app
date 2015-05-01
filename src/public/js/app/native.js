@@ -61,18 +61,7 @@ $(function() {
 		var name = $(this).val();
 		$(this).val(''); // 为防止重名不触发
 		if(downloadImgPath) {
-			FileService.download(downloadImgPath, name, function(ok, msg) {
-				// console.log(ok + ' -=-');
-				if(ok) {
-					new window.Notification(getMsg('Info'), {
-				        body: getMsg('Image saved successful!'),
-				    });
-				} else {
-					new window.Notification(getMsg('Warning'), {
-				        body: getMsg(msg || 'Image saved failure!'),
-				    });
-				}
-			});
+			
 		}
 	});
 });
@@ -112,15 +101,34 @@ function Menu() {
             var src = $curTarget.attr('src');
             if(!src) {
             	alert(getMsg('Error'));
+            	return;
             }
             // 得到图片, 打开dialog
             FileService.downloadImg(src, function(curPath) {
             	if(curPath) {
             		var paths = curPath.split(/\/|\\/);
-            		var name = paths[paths.length-1];
+            		var name = paths[paths.length-1] || "Untitled.png";
             		downloadImgPath = curPath;
-            		$('#downloadImgInput').attr('nwsaveas', name);
-            		$('#downloadImgInput').click();
+
+            		// title不能设置
+            		gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: name, defaultPath: name}, function(targetPath) {
+            			if(targetPath) {
+
+            				FileService.download(curPath, targetPath, function(ok, msg) {
+								if(ok) {
+									new window.Notification(getMsg('Info'), {
+								        body: getMsg('Image saved successful!'),
+								    });
+								} else {
+									new window.Notification(getMsg('Warning'), {
+								        body: getMsg(msg || 'Image saved failure!'),
+								    });
+								}
+							});
+            			}
+            			else {
+            			}
+            		});
             		
             	} else {
             		// alert会死?
