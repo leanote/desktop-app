@@ -1,26 +1,5 @@
 {
-  "name": "leanote",
-  "description": "leanote",
-  "version": "0.1",
-  "main": "note.html",
-  "node-remote": "http://leanote.com,https://leanote.com,http://app.leanote.com",
-  "window": {
-    "icon": "public/images/logo/leanote_icon_blue.png",
-    "toolbar": true,
-    
-    "frame": true,
-    "transparent": false,
-
-    "min_width": 268,
-    "min_height": 346,
-    // "width":  400, // 1100,
-    // "height": 300 // 600
-    "width":  278,
-    "height": 356
-
-    // width: 268px;
-    // height: 346px;
-  }
-  // ,
-  // "chromium-args": "--enable-smooth-scrolling"
+  "name"    : "Leanote",
+  "version" : "0.1.0",
+  "main"    : "main.js"
 }

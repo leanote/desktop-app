@@ -14,11 +14,13 @@ function isMac() {
 }
 
 // 窗口大小设置
-var win = gui.Window.get();
+// var win = gui.Window.get();
 
 var downloadImgPath;
 $(function() {
+
 	var isMacP = isMac();
+	/*
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
 		if(isMacP) {
@@ -27,8 +29,10 @@ $(function() {
 			win.close();
 		}
 	});
+	*/
 	// 从login.html -> note.html过来就没有reopen事件了?
 	// note.html -> login.html -> note.html, 使得两次bind
+	/*
 	if(gui.App._events) {
 		gui.App._events.reopen = function() {
 		    win.show();
@@ -40,6 +44,7 @@ $(function() {
 		    win.focus();
 		});
 	}
+	*/
 
 	$('.tool-min, .tool-min-blur').click(function() {
 		win.minimize();
@@ -142,19 +147,10 @@ function Menu() {
     this.menu.append(this.cut);
     this.menu.append(this.copy);
     this.menu.append(this.paste);
-    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+    this.menu.append(gui.getSeparatorMenu());
     this.menu.append(this.saveAs);
-    this.menu.append(new gui.MenuItem({ type: 'separator' }));
+    this.menu.append(gui.getSeparatorMenu());
     this.menu.append(this.openInBrowser);
-    
-    // You can have submenu!
-    /*
-	var submenu = new gui.Menu();
-	submenu.append(new gui.MenuItem({ label: 'checkbox 啊' , type: 'checkbox'}));
-	submenu.append(new gui.MenuItem({ label: 'Item 2', type: 'checkbox'}));
-	submenu.append(new gui.MenuItem({ label: 'Item 3'}));
-	this.openInBrowser.submenu = submenu;
-	*/
 }
 Menu.prototype.canCopy = function(bool) {
     this.cut.enabled = bool;
@@ -170,7 +166,7 @@ Menu.prototype.canOpenInBroswer = function(bool) {
     this.openInBrowser.enabled = bool;
 };
 Menu.prototype.popup = function(x, y) {
-    this.menu.popup(x, y);
+    this.menu.popup(gui.getCurrentWindow(), x, y);
 };
 var menu = new Menu();
 
@@ -188,7 +184,7 @@ $('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-inpu
 	}
 	// 判断是否满足http://leanote.com
 	if(winHref) {
-		if(winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
+		if (winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
 		} else {
 			winHref = false;
 		}

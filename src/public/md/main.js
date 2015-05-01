@@ -14143,7 +14143,7 @@ define('text',['module'], function (module) {
             !!process.versions.node &&
             !process.versions['node-webkit'])) {
         //Using special require.nodeRequire, something added by r.js.
-        fs = require.nodeRequire('fs');
+        // fs = require.nodeRequire('fs');
 
         text.get = function (url, callback, errback) {
             try {

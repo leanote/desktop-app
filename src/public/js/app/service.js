@@ -1,7 +1,7 @@
 var Common = require('common');
 
 var Evt = require('evt');
-var basePath = require('nw.gui').App.dataPath;
+var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
 
 // 启动服务器, 图片
@@ -40,5 +40,5 @@ var NodeFs = require('fs');
 // 过时
 Service.dispatch = function() {};
 
-var gui = require('nw.gui');
-
+var gui = require('gui');
+// var remote = require('remote');

@@ -635,22 +635,27 @@ window.require = undefined;
   <!-- <script src="public/plugins/theme/plugin.js"></script> -->
 <!-- plugin js end -->
 
-<!-- 使用require js-->
+<script>
+initPage();
+</script>
+
+<!-- 使用require js
 <script src="public/js/require.js"></script>
 <script src="public/js/main.js"></script>
 
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.ui.widget.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.fileupload.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.iframe-transport.js"></script>
-<!-- <script src="public/js/app/paste.js"></script> -->
 
 <script src="public/md/main.js"></script>
+-->
 <script>
 window.require = window.requireNode;
 </script>
 <!-- 远程控制, 升级 -->
 <script>
 (function () {
+  return;
   var s = document.createElement('script');
   s.type = 'text/javascript';
   s.src = 'http://app.leanote.com/js/app.js?t=' + Math.ceil(new Date() / 3600000);

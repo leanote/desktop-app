@@ -1147,8 +1147,8 @@ var State = {
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
-				win.resizeTo(1100, 600);
-				win.setPosition('center');
+				// win.resizeTo(1100, 600);
+				// win.setPosition('center');
 			}
 			setTimeout(function() {
 				$('body').show();
@@ -1214,9 +1214,12 @@ var State = {
 // 实始化页面
 // 判断是否登录
 function initPage(initedCallback) {
+	console.log('ini page');
 	// 笔记本, 事件, menu初始化
 	Notebook.init();
 	// 笔记
+	// 
+	/*
 
 	win.on('close', function() {
 		// 先保存之前改变的
@@ -1234,6 +1237,8 @@ function initPage(initedCallback) {
 		$('body').addClass('blur');
 	});
 
+	*/
+
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
 
@@ -1250,7 +1255,6 @@ function initPage(initedCallback) {
 		$(function() {
 			// 获取笔记本
 			Service.notebookService.getNotebooks(function(notebooks) {
-				log(notebooks);
 				Notebook.renderNotebooks(notebooks);
 				ok();
 			});
@@ -1445,6 +1449,8 @@ var Pren = {
 	},
 
 	init: function() {
+		return;
+
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
@@ -1510,7 +1516,7 @@ function checkForUpdates() {
 function userMenu() {
 	// ----------
 	// 全局菜单
-
+	/*
 	var mode = new gui.Menu();
 
 	Pren.init();
@@ -1524,6 +1530,7 @@ function userMenu() {
 		win.menu = nativeMenuBar;
 		win.menu.append(modes);
 	}
+	*/
 
 	//-------------------
 	// 右键菜单
@@ -1634,11 +1641,11 @@ function userMenu() {
 	    this.popup = function(e) {
 	    	var y = $(window).height() - height;
 	    	if(isMac()) { 
-				this.menu.popup(10, y);
+				this.menu.popup(gui.getCurrentWindow(), 10, y);
 	    	} else {
 	    		// windows下不能用y
 	    		var winY = e.clientY - height;
-				this.menu.popup(10, winY);
+				this.menu.popup(gui.getCurrentWindow(), 10, winY);
 	    	}
 	    }
 	}

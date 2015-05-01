@@ -2069,27 +2069,40 @@ Note.target = null; // 当前处理的note
 Note.menuItemsForMove = {}; // notebookId => menu
 Note.menuItemsForCopy = {}; // notebookId => menu
 Note.getContextNotebooksSys = function(notebooks) {
+
 	var submenuMoves = new gui.Menu();
 	var submenuCopys = new gui.Menu();
 
 	for(var i in notebooks) {
 		(function(j) {
 			var notebook = notebooks[j];
-			var move = new gui.MenuItem({label: notebook.Title, /*notebookId: notebook.NotebookId,*/ click: function() {
-				Note.moveNote(Note.target, {notebookId: notebook.NotebookId});
-			}});
-			var copy = new gui.MenuItem({label: notebook.Title, /*notebookId: notebook.NotebookId, */click: function() {
-				Note.copyNote(Note.target, {notebookId: notebook.NotebookId});
-			}});
 
-			Note.menuItemsForMove[notebook.NotebookId] = move;
-			Note.menuItemsForCopy[notebook.NotebookId] = copy;
+			var moveMenu = {
+				label: notebook.Title, 
+				click: function() {
+					Note.moveNote(Note.target, {notebookId: notebook.NotebookId});
+				}
+			};
+			var copyMenu = {
+				label: notebook.Title, 
+				click: function() {
+					Note.copyNote(Note.target, {notebookId: notebook.NotebookId});
+				}
+			};
 
 			if(!isEmpty(notebook.Subs)) {
 				var mc = Note.getContextNotebooksSys(notebook.Subs);
-				move.submenu = mc[0];
-				copy.submenu = mc[1];
+				moveMenu.submenu = mc[0];
+				moveMenu.type = 'submenu';
+				copyMenu.submenu = mc[1];
+				copyMenu.type = 'submenu';
 			}
+
+			var move = new gui.MenuItem(moveMenu);
+			var copy = new gui.MenuItem(copyMenu);
+
+			Note.menuItemsForMove[notebook.NotebookId] = move;
+			Note.menuItemsForCopy[notebook.NotebookId] = copy;
 
 			submenuMoves.append(move);
 			submenuCopys.append(copy);
@@ -2106,104 +2119,10 @@ Note.initContextmenu = function() {
 	var self = Note;
 	var notebooks = Notebook.everNotebooks;
 
-	/*
-	if(Note.contextmenu) {
-		Note.contextmenu.destroy();
-	}
-	// 得到可move/copy的notebook
-	var notebooks = Notebook.everNotebooks;
-	var mc = self.getContextNotebooks(notebooks);
-	
-	var notebooksMove = mc[0];
-	var notebooksCopy = mc[1];
-	self.notebooksCopy = mc[2];
-	
-	//---------------------
-	// context menu
-	//---------------------
-	var noteListMenu = {
-		width: 180, 
-		items: [
-			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Note.listNoteShareUserInfo},
-			// { type: "splitLine" },
-			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Note.setNote2Blog },
-			// { text: getMsg("cancelPublic"), alias: 'unset2Blog', faIcon: "fa-undo", action: Note.setNote2Blog },
-			// { type: "splitLine" },
-			// { text: "分享到社区", alias: 'html2Image', icon: "", action: Note.html2Image},
-			// { text: "导出PDF", alias: 'exportPDF', icon: "", action: Note.exportPDF},
-			// { type: "splitLine" },
-			{text: getMsg("delete"), icon: "", faIcon: "fa-trash-o", action: Note.deleteNote },
-			{text: getMsg("move"), alias: "move", faIcon: "fa-arrow-right",
-				type: "group", 
-				width: 180, 
-				items: notebooksMove
-			},
-			{text: getMsg("copy"), alias: "copy", icon:"", faIcon: "fa-copy",
-				type: "group", 
-				width: 180, 
-				items: notebooksCopy
-			}
-		], 
-		onShow: applyrule,
-		onContextMenu: beforeContextMenu,
-		
-		parent: "#noteItemList",
-		children: ".item-my",
-	}
-		
-	function menuAction(target) {
-		// $('#myModal').modal('show')
-		showDialog("dialogUpdateNotebook", {title: "修改笔记本", postShow: function() {
-		}});
-	}
-	function applyrule(menu) {
-		var noteId = $(this).attr("noteId");
-		var note = Note.cache[noteId];
-		if(!note) {
-			return;
-		}
-		// 要disable的items
-		var items = [];
-		
-		// 如果是trash, 什么都不能做
-		if(note.IsTrash) {
-			items.push("shareToFriends");
-			items.push("shareStatus");
-			items.push("unset2Blog");
-			items.push("set2Blog");
-			items.push("copy");
-		} else {
-			// 是否已公开为blog
-			if(!note.IsBlog) {
-				items.push("unset2Blog");
-			} else {
-				items.push("set2Blog");
-			}
-			
-			// 移动与复制不能是本notebook下
-			var notebookTitle = Notebook.getNotebookTitle(note.NotebookId);
-			items.push("move." + notebookTitle);
-			items.push("copy." + notebookTitle);
-		}
-
-        menu.applyrule({
-        	name: "target..",
-            disable: true,
-            items: items
-        });		
-	   
-	}
-	function beforeContextMenu() {
-	    return this.id != "target3";
-	}
-	
-	// 这里很慢!!
-	Note.contextmenu = $("#noteItemList .item-my").contextmenu(noteListMenu);
-	*/
-
 	//-------------------
 	// 右键菜单
 	function noteMenu() {
+
 		var me = this;
 		// this.target = '';
 	    this.menu = new gui.Menu();
@@ -2219,14 +2138,26 @@ Note.initContextmenu = function() {
 	        	Note.setNote2Blog(self.target);
 	        }
 	    });
+	    this.unPublicBlog = new gui.MenuItem({
+	        label: getMsg("Cancel Public"),
+	        click: function(e) {
+	        	Note.setNote2Blog(self.target);
+	        }
+	    });
+
+	    var ms = Note.getContextNotebooksSys(notebooks);
+	    // this.move.submenu = ms[0];
+	    // this.copy.submenu = ms[1];
 
 	    this.move = new gui.MenuItem({
 	        label: getMsg("Move"),
+	        submenu: ms[0], // 必须要放这里, 之后不能赋值
 	        click: function(e) {
 	        }
 	    });
 	    this.copy = new gui.MenuItem({
 	        label: getMsg("Copy"),
+	        submenu: ms[1],
 	        click: function(e) {
 	        }
 	    });
@@ -2252,27 +2183,21 @@ Note.initContextmenu = function() {
 		    exportsSubMenus.append(menuItem);
 	    }
 	    
-	    var ms = Note.getContextNotebooksSys(notebooks);
-	    this.move.submenu = ms[0];
-	    this.copy.submenu = ms[1];
 
 	    this.menu.append(this.publicBlog);
+	    this.menu.append(this.unPublicBlog);
+	    this.menu.append(gui.getSeparatorMenu());
+
 	    this.menu.append(this.del);
+	    this.menu.append(gui.getSeparatorMenu());
+
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
+	    
 	    if(exportMenus.length > 0) { 
 		    this.exports.submenu = exportsSubMenus;
 		    this.menu.append(this.exports);
 	    }
-
-	    // this.menu.append(ms[0]);
-	    // this.menu.append(ms[1]);
-
-		// You can have submenu!
-		// var submenu = new gui.Menu();
-		// submenu.append(new gui.MenuItem({ label: 'checkbox 啊' , type: 'checkbox'}));
-		// submenu.append(new gui.MenuItem({ label: 'Item 2', type: 'checkbox'}));
-		// submenu.append(new gui.MenuItem({ label: 'Item 3'}));
 
 	    this.enable = function(name, ok) {
 	    	this[name].enabled = ok;
@@ -2286,11 +2211,7 @@ Note.initContextmenu = function() {
 	    		return;
 	    	}
 	    	var notebookId = note.NotebookId;
-	    	// var notebookMenuForMove = self.menuItemsForMove[notebookId];
-	    	// var notebookMenuForCopy = self.menuItemsForCopy[notebookId];
-	    	// notebookMenuForMove.enabled = false;
-	    	// notebookMenuForCopy.enabled = false;
-
+	    	
 	    	if(note.IsTrash) {
 	    		this.copy.enabled = false;
 	    	} else {
@@ -2298,16 +2219,14 @@ Note.initContextmenu = function() {
 	    	}
 
 	    	if(note.IsBlog) {
-	    		this.publicBlog['label'] = getMsg('Cancel public');
+	    		this.publicBlog.enabled = false;
+	    		this.unPublicBlog.enabled = true;
 	    	} else {
-	    		this.publicBlog['label'] = getMsg('Public as blog');
+	    		this.publicBlog.enabled = true;
+	    		this.unPublicBlog.enabled = false;
 	    	}
 
-			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
-
-	    	// notebookMenuForMove.enabled = true;
-	    	// notebookMenuForCopy.enabled = true;
-
+			this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);
 	    }
 	}
 

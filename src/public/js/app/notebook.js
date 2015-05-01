@@ -1099,6 +1099,7 @@ Notebook.init = function() {
 	//-------------------
 	// 右键菜单
 	function newNotebookListMenu() {
+		
 		var me = this;
 		this.target = '';
 	    this.menu = new gui.Menu();
@@ -1183,13 +1184,14 @@ Notebook.init = function() {
 			} else {
 				this.addSub.enabled = true;
 			}
-			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
+			this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);
 	    }
 	}
 	var newNotebookListMenuSys = new newNotebookListMenu();
 
 	// 清空回收站
 	function newClearTrashMenu() {
+
 		var me = this;
 	    this.menu = new gui.Menu();
 	    this.clear = new gui.MenuItem({
@@ -1200,7 +1202,7 @@ Notebook.init = function() {
 	    });
 	    this.menu.append(this.clear);
 	    this.popup = function(e, target) {
-			this.menu.popup(e.originalEvent.x, e.originalEvent.y);
+			this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);
 	    }
 	}
 	var newClearTrashMenuSys = new newClearTrashMenu();

@@ -1,9 +1,6 @@
 var Config = {
     "plugins": [
-        "theme",
-        "import_evernote",
-        "export_pdf",
-        "langs"
+        
     ],
     "langs": [
         {
