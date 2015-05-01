@@ -18,6 +18,12 @@ app.on('window-all-closed', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
 
+  app.getPath('appData');
+
+  // var Evt = require('evt');
+  // var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
+  // Evt.setDataBasePath(basePath);
+
   // leanote protocol
   // require('leanote_protocol');
 
@@ -26,6 +32,12 @@ app.on('ready', function() {
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
+
+
+  // 不能放在这里, 刚开始有图片, 之后添加的图片不能显示 ??
+  // // 启动服务器, 图片
+  // var Server = require('server');
+  // Server.start();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

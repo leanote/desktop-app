@@ -7,6 +7,7 @@
  * Version: 1.2.3
  * Build date: 26 February 2012
  */
+
 window['rangy'] = (function() {
 
 
@@ -9597,7 +9598,7 @@ define('utils',[
 	"crel",
 	"xregexp",
 	"stacktrace",
-	"FileSaver"
+	// "FileSaver"
 ], function( _, storage, crel, XRegExp, printStackTrace, saveAs) {
 
 	var utils = {};
@@ -19985,7 +19986,14 @@ define('text!html/umlDiagramsSettingsBlock.html',[],function () { return '<p>Cre
     eve.toString = function () {
         return "You are running Eve " + version;
     };
-    (typeof module != "undefined" && module.exports) ? (module.exports = eve) : (typeof define != "undefined" ? (define("eve", [], function() { return eve; })) : (glob.eve = eve));
+
+    // life, atom环境不一样
+    define("eve", [], function() { return eve; });
+    return;
+
+    (typeof module != "undefined" && module.exports) ? 
+        (module.exports = eve) : 
+        (typeof define != "undefined" ? (define("eve", [], function() { return eve; })) : (glob.eve = eve));
 })(this);
 // ┌─────────────────────────────────────────────────────────────────────┐ \\
 // │ "Raphaël 2.1.0" - JavaScript Vector Library                         │ \\
@@ -39376,8 +39384,8 @@ define('core',[
 		});
 		// Custom insert image dialog
 		pagedownEditor.hooks.set("insertImageDialog", function(callback) {
-            // life
-            $('#chooseImageInput').click();
+            // life, atom
+            insertLocalImage();
             // 上传图片
             return;
 		});
@@ -42997,7 +43005,7 @@ requirejs.config({
 		'jquery-ui-draggable': 'bower-libs/jquery-ui/ui/jquery.ui.draggable',
 		'jquery-ui-effect': 'bower-libs/jquery-ui/ui/jquery.ui.effect',
 		'jquery-ui-effect-slide': 'bower-libs/jquery-ui/ui/jquery.ui.effect-slide',
-		FileSaver: 'bower-libs/FileSaver/FileSaver',
+		// FileSaver: 'bower-libs/FileSaver/FileSaver',
 		stacktrace: 'bower-libs/stacktrace/stacktrace',
 		'requirejs-text': 'bower-libs/requirejs-text/text',
 		'bootstrap-tour': 'bower-libs/bootstrap-tour/build/js/bootstrap-tour',
@@ -43096,9 +43104,9 @@ requirejs.config({
 		stacktrace: {
 			exports: 'printStackTrace'
 		},
-		FileSaver: {
-			exports: 'saveAs'
-		},
+		// FileSaver: {
+			// exports: 'saveAs'
+		// },
 		MutationObservers: [
 			'WeakMap'
 		],
