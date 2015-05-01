@@ -2193,7 +2193,7 @@ Note.initContextmenu = function() {
 
 	    this.menu.append(this.move);
 	    this.menu.append(this.copy);
-	    
+
 	    if(exportMenus.length > 0) { 
 		    this.exports.submenu = exportsSubMenus;
 		    this.menu.append(this.exports);
@@ -2274,37 +2274,40 @@ var Attach = {
 			e.stopPropagation();
 			var $li = $(this).closest('li');
 			var attachId = $li.data("id");
-			curAttachId = attachId;
+			var title = $li.find('.attach-title').text();
 
-			$('#downloadFileInput').attr('nwsaveas', $li.find('.attach-title').text()).click();
-			// window.open(UrlPrefix + "/attach/download?attachId=" + attachId);
-			// location.href = "/attach/download?attachId=" + attachId;
+			gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: title, defaultPath: title}, function(targetPath) {
+    			if(targetPath) {
+					var curAttach = me.getAttach(attachId);
+					if(curAttach) {
+						FileService.download(curAttach.Path, targetPath, function(ok, msg) {
+							if(!ok) {
+								// TODO 提示下载成功
+								var notification = new window.Notification(getMsg('Warning'), {
+							        body: getMsg('File saved failure!'),
+							        // icon: appIcon
+							    });
+							} else {
+								// TODO 提示下载成功
+								var notification = new window.Notification(getMsg('Info'), {
+							        body: getMsg('File saved successful!'),
+							        // icon: appIcon
+							    });
+							}
+						});
+					} else {
+						alert('error');
+					}
+    			}
+    			else {
+    			}
+    		});
+
 		});
 		
 		// 下载
 		$('#downloadFileInput').change(function(e) {
-			var value = $(this).val();
-			$(this).val('');
-			var curAttach = me.getAttach(curAttachId);
-			if(curAttach) {
-				FileService.download(curAttach.Path, value, function(ok, msg) {
-					if(!ok) {
-						// TODO 提示下载成功
-						var notification = new window.Notification(getMsg('Warning'), {
-					        body: getMsg('File saved failure!'),
-					        // icon: appIcon
-					    });
-					} else {
-						// TODO 提示下载成功
-						var notification = new window.Notification(getMsg('Info'), {
-					        body: getMsg('File saved successful!'),
-					        // icon: appIcon
-					    });
-					}
-				});
-			} else {
-				alert('error');
-			}
+			
 		});
 		
 		// make link
@@ -2344,24 +2347,28 @@ var Attach = {
 
 		// 添加Attach
 		$('#chooseFile').click(function() {
-			$('#chooseFileInput').click();
-		});
-		// 得到路径, 保存文件即可
-		$('#chooseFileInput').change(function() { 
-			var files = $(this).val();
-			$(this).val('');
+			gui.dialog.showOpenDialog(gui.getCurrentWindow(), 
+				{
+					properties: ['openFile', 'multiSelections']
+				},
+				function(paths) {
+					if(!paths) {
+						return;
+					}
 
-			// 如果是新建的笔记, 必须先保存note
-			var note = Note.getCurNote();
-			if(note && note.IsNew) {
-				Note.curChangedSaveIt(true);
-			}
+					// 如果是新建的笔记, 必须先保存note
+					var note = Note.getCurNote();
+					if(note && note.IsNew) {
+						Note.curChangedSaveIt(true);
+					}
 
-			FileService.addAttach(files, Note.curNoteId, function(files) {
-				if(files) {
-					me.addAttachs(files);
+					FileService.addAttach(paths, Note.curNoteId, function(files) {
+						if(files) {
+							me.addAttachs(files);
+						}
+					});
 				}
-			});
+			);
 		});
 	},
 	attachListO: $("#attachList"),
