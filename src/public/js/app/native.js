@@ -56,14 +56,6 @@ $(function() {
 		// win.toggleKioskMode();
 	});
 
-	// 下载图片输入框
-	$('#downloadImgInput').change(function() {
-		var name = $(this).val();
-		$(this).val(''); // 为防止重名不触发
-		if(downloadImgPath) {
-			
-		}
-	});
 });
 
 // bind close event

@@ -448,6 +448,45 @@ function pasteImage(e) {
 	}
 }
 
+// 插入本地图片
+function insertLocalImage() {
+	gui.dialog.showOpenDialog(gui.getCurrentWindow(), 
+		{
+			properties: ['openFile', 'multiSelections'],
+			filters: [
+				{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'] }
+			]
+		},
+		function(paths) {
+			if(!paths) {
+				return;
+			}
+
+			for(var i = 0; i < paths.length; ++i) {
+				(function(k) {
+					var imagePath = paths[k];
+					// var imagePath = file.path;
+					// 上传之
+					FileService.uploadImage(imagePath, function(newImage, msg) {
+						if(newImage) {
+							var note = Note.getCurNote();
+							var url = EvtService.getImageLocalUrl(newImage.FileId);
+							if(!note.IsMarkdown) {
+								tinymce.activeEditor.insertContent('<img src="' + url + '">');
+							} else {
+								// TODO markdown insert Image
+								MD.insertLink(url, '', true);
+							}
+						} else {
+							alert(msg || "error");
+						}
+					});
+				})(i);
+			}
+		}
+	);
+}
+
 // 插入图片(链接)
 // Markdown 插入图片
 function insertImage(link) {
