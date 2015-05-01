@@ -111,10 +111,9 @@ define(function() {
 		    }
 
 		    me._themeMenu = new gui.MenuItem({
+		    	submenu: themeSubmenus,
 		        label: Api.getMsg('plugin.theme.changeTheme'),
 		    });
-
-		    me._themeMenu.submenu = themeSubmenus;
 			
 		    // 设置
 		    Api.setThemeMenu(me._themeMenu);

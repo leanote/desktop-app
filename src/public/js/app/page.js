@@ -1604,11 +1604,7 @@ function userMenu() {
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
-	    this.more = new gui.MenuItem({
-	        label: getMsg('More...'),
-	        click: function(e) {
-	        }
-	    });
+	    
 	    var mores = new gui.Menu();
 	    this.sync = new gui.MenuItem({
 	        label: getMsg('Sync now'),
@@ -1634,7 +1630,13 @@ function userMenu() {
 	    	}
 	    }
 
-	    this.more.submenu = mores;
+	    // 更多
+	    this.more = new gui.MenuItem({
+	        label: getMsg('More...'),
+	        submenu: mores,
+	        click: function(e) {
+	        }
+	    });
 
 	    this.menu.append(this.more);
 		

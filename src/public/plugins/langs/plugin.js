@@ -67,9 +67,9 @@ define(function() {
 			}
 
 		    var langMenu = new gui.MenuItem({
+		    	submenu: langSubmenus,
 		        label: Api.getMsg('plugin.langs.setLang'),
 		    });
-		    langMenu.submenu = langSubmenus;
 
 		    // 设置
 		    Api.addMoreMenu(new gui.MenuItem({

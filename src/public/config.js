@@ -1,6 +1,9 @@
 var Config = {
     "plugins": [
-        
+        "theme",
+        "import_evernote",
+        "export_pdf",
+        "langs"
     ],
     "langs": [
         {
@@ -16,6 +19,6 @@ var Config = {
             "name": "繁体中文"
         }
     ],
-    "lang": "en-us",
-    "theme": "default"
+    "lang": "zh-hk",
+    "theme": "pebbles"
 };

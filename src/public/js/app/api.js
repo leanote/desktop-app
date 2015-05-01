@@ -4,7 +4,7 @@ var Api = {
 	note: Note,
 	tag: Tag,
 	loading: Loading,
-	// gui: gui,
+	gui: gui,
 	nodeFs: NodeFs,
 	evtService: EvtService,
 	commonService: CommonService,
