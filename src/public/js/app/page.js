@@ -1306,16 +1306,16 @@ function initPage(initedCallback) {
 
 // 初始bind事件上传图片
 // tinymce, markdown触发之
+// https://github.com/atom/electron/blob/master/docs/api/file-object.md
 function initUploadImage() {
 	$('#chooseImageInput').change(function() {
 		var $this = $(this);
-		var imagePath = $this.val();
-		$this.val('');
+		var files = $this.get(0).files;
 
-		var imagePaths = imagePath.split(';'); // 一次性可上传多张图片
-		for(var i = 0; i < imagePaths.length; ++i) {
+		for(var i = 0; i < files.length; ++i) {
 			(function(k) {
-				var imagePath = imagePaths[k];
+				var file = files[k];
+				var imagePath = file.path;
 				// 上传之
 				FileService.uploadImage(imagePath, function(newImage, msg) {
 					if(newImage) {
