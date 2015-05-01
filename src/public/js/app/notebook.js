@@ -1142,9 +1142,9 @@ Notebook.init = function() {
 		    	importSubmenus.append(new gui.MenuItem(importMenus[i]));
 		    }
 		    this.imports = new gui.MenuItem({
+		    	submenu: importSubmenus,
 		        label: getMsg('Import notes')
 		    });
-		    this.imports.submenu = importSubmenus;
 		    this.menu.append(this.imports);
 	    }
 

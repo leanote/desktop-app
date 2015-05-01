@@ -112,50 +112,58 @@ define(function() {
 				$(this).text(me.getMsg(txt));
 			});
 
+			// 导入, 选择文件
 			$('#chooseEvernoteFile').click(function() {
-				$('#importEvernoteInput').click();
-			});
 
-			var evernoteMsg = $('#')
-			$('#importEvernoteInput').change(function() {
-				var paths = $(this).val();
-
-				var notebookId = me._curNotebook.NotebookId;
-
-				var n = 0;
-
-				me.clear();
-
-				importService.importFromEvernote(notebookId, paths,
-					// 全局
-					function(ok) {
-						// $('#importEvernoteMsg .curImportFile').html("");
-						// $('#importEvernoteMsg .curImportNote').html("");
-						setTimeout(function() {
-							$('#importEvernoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
-						}, 500);
+				Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+					{
+						properties: ['openFile', 'multiSelections'],
+						filters: [
+							{ name: 'Evernote', extensions: ['enex'] }
+						]
 					},
-					// 单个文件
-					function(ok, filename) {
-						if(ok) {
-							$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
-						} else {
-							$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is evernote file ?", filename));
+					function(paths) {
+						if(!paths) {
+							return;
 						}
-					},
-					// 单个笔记
-					function(note) {
-						if(note) {
-							n++;
-							$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
 
-							// 插入到当前笔记中
-							Note.addSync([note]);
-						}
+						var notebookId = me._curNotebook.NotebookId;
+
+						var n = 0;
+
+						me.clear();
+
+						importService.importFromEvernote(notebookId, paths,
+							// 全局
+							function(ok) {
+								// $('#importEvernoteMsg .curImportFile').html("");
+								// $('#importEvernoteMsg .curImportNote').html("");
+								setTimeout(function() {
+									$('#importEvernoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
+								}, 500);
+							},
+							// 单个文件
+							function(ok, filename) {
+								if(ok) {
+									$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
+								} else {
+									$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is evernote file ?", filename));
+								}
+							},
+							// 单个笔记
+							function(note) {
+								if(note) {
+									n++;
+									$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
+
+									// 插入到当前笔记中
+									Note.addSync([note]);
+								}
+							}
+						);
 					}
 				);
 
-				$(this).val("");
 			});
 		},
 

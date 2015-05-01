@@ -89,9 +89,9 @@ var Import = {
     var resources = note['resource'] || [];
     var parsedRes = [];
     var attachs = [];
-    console.log("-----------")
-    console.log(note);
-    console.log(resources);
+    // console.log("-----------")
+    // console.log(note);
+    // console.log(resources);
     async.eachSeries(resources, function(res, cb) {
         // console.log(res['data'][0]['$']);
         /*
@@ -162,9 +162,12 @@ var Import = {
   // callback 是全局的
   // eachFileCallback是每一个文件的
   // eachNoteFileCallback是每一个笔记的
+  // filePaths = []
   importFromEvernote: function(notebookId, filePaths, callback, eachFileCallback, eachNoteCallback) {
     var me = this;
-    var filePaths = filePaths.split(';');
+    // var filePaths = filePaths.split(';');
+    // 
+    var filePaths = filePaths || [];
 
     async.eachSeries(filePaths, function(path, cb) {
       fs.readFile(path, function(err, xml) {

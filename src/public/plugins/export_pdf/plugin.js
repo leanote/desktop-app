@@ -36,7 +36,7 @@ define(function() {
 			me._input.change(function() {
 				var name = $(this).val();
 				$(this).val(''); // 为防止重名不触发
-				console.log(me.downloadPdfPath);
+				// console.log(me.downloadPdfPath);
 				if(me.downloadPdfPath) {
 					Api.fileService.download(me.downloadPdfPath, name, function(ok, msg) {
 						// console.log(ok + ' -=-');
