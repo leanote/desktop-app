@@ -20,5 +20,5 @@ var Config = {
         }
     ],
     "lang": "zh-hk",
-    "theme": "pebbles"
+    "theme": "water"
 };

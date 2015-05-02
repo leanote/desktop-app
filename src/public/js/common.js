@@ -226,9 +226,9 @@ function ajaxPost(url, param, successFunc, failureFunc, async) {
 	_ajax("POST", url, param, successFunc, failureFunc, async);
 }
 function ajaxPostJson(url, param, successFunc, failureFunc, async) {
-	log("-------------------ajaxPostJson:");
-	log(url);
-	log(param);
+	// log("-------------------ajaxPostJson:");
+	// log(url);
+	// log(param);
 	
 	// 默认是异步的
 	if(typeof async == "undefined") {
@@ -1467,9 +1467,9 @@ function commonCmd(e) {
 }
 
 // 0.25.2必须要, 默认没有
-$('body').on('keydown', function(e) {
-	commonCmd(e);
-});
+// $('body').on('keydown', function(e) {
+// 	commonCmd(e);
+// });
 
 function loadToolIcons() {
 	var imgs = ['traffic-close-hover@2x.png', 'traffic-minimise-hover@2x.png', 'traffic-zoom-hover@2x.png'];
@@ -1537,5 +1537,17 @@ var Loading = {
 	}
 };
 
+var onClose = function(afterFunc) {
+	try {
+	    // 先保存之前改变的
+	    Note.curChangedSaveIt();
+	    // 保存状态
+	    State.saveCurState(function() {
+	        afterFunc && afterFunc();
+	    });
+	} catch(e) {
+		afterFunc && afterFunc();
+	}
+}
 
 ContextTips.init();

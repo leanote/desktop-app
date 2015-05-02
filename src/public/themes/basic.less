@@ -1011,7 +1011,7 @@ h1, h2, h3 {
 }
 #noteItemList .item {
   position: relative;
-  height: 110px;
+  height: 70px;
   overflow: hidden;
   cursor: default;
 	border: 1px solid @borderColor;
@@ -1020,6 +1020,7 @@ h1, h2, h3 {
   background-color: #fff;
 }
 
+/*
 #noteItemList .item:hover, 
 #noteItemList .contextmenu-hover {
   background-color: #ddd !important;
@@ -1029,6 +1030,7 @@ h1, h2, h3 {
     //font-weight: 800;
   }
 }
+*/
 
 .item-active, #noteItemList .item-active:hover {
   background-color: #65bd77 !important; // #eee;/*@bgColor*/;
@@ -1044,21 +1046,21 @@ h1, h2, h3 {
     // font-weight: 800;
   }
 }#noteItemList .item-thumb  {
-  width: 100px; 
-  height: 100px; 
+  width: 66px; 
+  height: 66px; 
+  line-height: 66px;
   overflow: hidden;
   position: absolute; 
   z-index: 1;
+  top: 1px;
   right: 0px;
-top: 4px;
-  height: 100px;
   background-color: #fff;
-  margin-right: 5px;
-  line-height: 100px;
+  margin-right: 1px;
+  border-radius: 3px;
   text-align: center;
 }
   .item-thumb img {
-     max-width: 100px;
+     max-width: 66px;
   }
 
 .item-title {
@@ -1083,7 +1085,7 @@ top: 4px;
   }
 }
 #noteItemList .item-image .item-desc {
-  right: 100px;
+  right: 70px;
 }
 
 .item-info {
@@ -1093,6 +1095,10 @@ top: 4px;
 .desc {
 	margin: 0;
 	word-wrap: break-word;
+  text-overflow: ellipsis;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 //--------
@@ -1548,12 +1554,14 @@ html,body, #page, #pageInner {
     background: transparent;
 	// box-shadow: 0px 0px 10px #B52F2F;
 }
+/*
 .modal-backdrop {
 	right: 5px;
 	left: 5px;
 	bottom: 5px;
 	border-radius: 5px;
 }
+*/
 #mainContainer, #mainMask {
 	border-radius: 5px;
 }
@@ -1749,7 +1757,7 @@ body {
 	}
 }
 #newMyNote, #tool {
-	z-index: 1001; // 比topDrag大些
+	z-index: 1001; // 比topDrag大些, 在atom下没用
 }
 #editor, #mdEditor {
 	// top: 51px;
@@ -1758,11 +1766,12 @@ body {
 	-webkit-app-region: drag;
 	position: absolute;
 	top: 0;
-	left: 0;
-	right: 0;
+	left: 60px; //
+	right: auto; // 宽度是左+中, 用js来控制
 	height: 40px;
 	z-index: 1000;
 	cursor: move;
+	// display: none;
 	// background-color: red;
 }
 //--------- end
@@ -1799,6 +1808,17 @@ img::selection {
 #editorMask {
   z-index: 88888 !important;
 }
+
+/*
+#starNotes li a, 
+.ztree li a, 
+.ztree li span.button, 
+.folderHeader,
+#myProfile .dropdown-toggle,
+#tagNav li a {
+	cursor: default !important;
+}
+*/
 
 @import '../css/traffic.less';
 @import '../css/ani.less';

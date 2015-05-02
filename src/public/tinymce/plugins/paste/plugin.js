@@ -526,35 +526,22 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 		
 		// 上传图片
-		/*
 		function pasteImage(event) {
 			// use event.originalEvent.clipboard for newer chrome versions
 			  var items = (event.clipboardData  || event.originalEvent.clipboardData).items; // 可能有多个file, 找到属于图片的file
 			  log(JSON.stringify(items)); // will give you the mime types
 			  // find pasted image among pasted items
 			  var blob;
-			  return;
 			  for (var i = 0; i < items.length; i++) {
 			    if (items[i].type.indexOf("image") === 0) {
 			      blob = items[i].getAsFile();
 			    }
 			  }
-			  console.log("paste images");
-			  console.log(blob);
 			  // load image if there is a pasted image
 			  if (blob) {
 			    var reader = new FileReader();
 			    reader.onload = function(event) {
 			      	// 上传之
-			      	log('result');
-			      	// log(reader.result);
-			      	var ret = reader.result
-			      	ret = ret.replace(/^data:image\/\w+;base64,/, "")
-			      	log(ret);
-					FS.writeFile("/Users/life/Desktop/a.png", new Buffer(ret, 'base64'), function(err) {  
-					    
-					}); 
-
 			      	var c = new FormData;
 				    c.append("from", "pasteImage");
 				    c.append("file", blob);
@@ -596,12 +583,10 @@ define("tinymce/pasteplugin/Clipboard", [
 				    	});
 			    };
 			    reader.readAsDataURL(blob);
-			    // reader.readAsBinaryString(blob);
 			    return true;
 			  }
 			  return false;
 		}
-		*/
 
 		editor.on('paste', function(e) {
 			if(inAcePrevent()) {
@@ -640,7 +625,6 @@ define("tinymce/pasteplugin/Clipboard", [
 
 				removePasteBin();
 
-				//life
 				if (html == pasteBinDefaultContent || !isKeyBoardPaste) {
 					html = clipboardContent['text/html'] || clipboardContent['text/plain'] || pasteBinDefaultContent;
 
@@ -663,11 +647,11 @@ define("tinymce/pasteplugin/Clipboard", [
 			//-----------
 			// paste image
 			try {
-				pasteImage(e);
-				return;
+				/*
 				if(pasteImage(e)) {
 					return;
 				}
+				*/
 			} catch(e) {};
 
 		});
@@ -1192,14 +1176,12 @@ define("tinymce/pasteplugin/Plugin", [
 			active: self.clipboard.pasteFormat == "text"
 		});
 		
-		/*
 		editor.addButton('pasteCopyImage', {
 			icon: 'copy',
 			tooltip: "When Paste other site's image, copy it into my album as public image",
 			onclick: togglePasteCopyImage,
 			active: self.clipboard.copyImage === true
 		});
-		*/
 
 		editor.addMenuItem('pastetext', {
 			text: 'Paste as text',
@@ -1210,5 +1192,5 @@ define("tinymce/pasteplugin/Plugin", [
 	});
 });
 
-expose(["tinymce/pasteplugin/Utils","tinymce/pasteplugin/Clipboard","tinymce/pasteplugin/WordFilter","tinymce/pasteplugin/Quirks","tinymce/pasteplugin/Plugin"]);
+expose(["tinymce/pasteplugin/Utils","tinymce/pasteplugin/WordFilter"]);
 })(this);

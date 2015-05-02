@@ -30,7 +30,7 @@ define(function() {
 			];
 
 			// 遍历主题目录, 得到主题
-			var themeBaePath = Api.evtService.getProjectBasePath() +  "/public/themes/themes";
+			var themeBaePath = __dirname + "/public/themes/themes";
 			var dirs = Api.nodeFs.readdirSync(themeBaePath);
 			for(var i = 0; i < dirs.length; ++i) {
 				var dir = dirs[i]; // 名称

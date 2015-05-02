@@ -5,7 +5,9 @@ config.codekit
 /node_modules
 /dist
 /nw
+/atom
 /gulpfile.js
 /package.json
 sqlite*
 /test
+tinymce_old

@@ -12,7 +12,7 @@ var Api = {
 	noteService: NoteService,
 
 	getConfigFilePath: function() {
-		return EvtService.getProjectBasePath() + '/public/config.js';
+		return __dirname + '/public/config.js';
 	},
 	writeConfig: function(config) {
 		var me = this;

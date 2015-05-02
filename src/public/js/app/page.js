@@ -173,6 +173,7 @@ var Resize = {
 	// 最终调用该方法
 	set3ColumnsWidth: function(notebookWidth, noteListWidth) {
 		var self = this;
+
 		if(notebookWidth < 150 || noteListWidth < 100) {
 			return;
 		}
@@ -191,6 +192,9 @@ var Resize = {
 		
 		UserInfo.NotebookWidth = notebookWidth;
 		UserInfo.NoteListWidth = noteListWidth;
+
+		console.log("??????????");
+		self.setTopDragWidth();
 	},
 	resize3Columns: function(event, isFromeIfr) {
 		var self = this;
@@ -243,6 +247,22 @@ var Resize = {
 		if(MD) {
 			MD.onResize();
 		}
+	},
+
+	// 左+中
+	// 在atom中, 尽管title和tool的index比topDrag大也没用, 导致不能点击tool, 不能选择title
+	setTopDragWidth: function() {
+		if(!isMac()) { 
+			return;
+		}
+		var self = this;
+		var width = UserInfo.NotebookWidth + UserInfo.noteListWidth;
+		if(isNaN(width)) {
+			width = self.leftNotebook.width() + self.noteList.width();
+		}
+
+		// 60是最左的关闭, 50是新建
+		$('#topDrag').width((width - 60 - 50) + 'px');
 	}
 };
 
@@ -370,6 +390,7 @@ function initEditor() {
 	// 初始化编辑器
 	tinymce.init({
 		inline: true,
+		theme: 'leanote',
 		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
 		setup: function(ed) {
 			// desk下有问题
@@ -384,7 +405,7 @@ function initEditor() {
 			    };
 			    */
 			    // 0.25.2必须要, 默认没有
-				commonCmd(e);
+				// commonCmd(e);
 			});
 		},
 		
@@ -398,7 +419,7 @@ function initEditor() {
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
 		// content_css : ["public/css/editor/editor.css"],
-		skin : "custom",
+		// skin : "custom",
 		language: Api.curLang == 'zh-cn' ? 'zh' : 'en', // 语言
 		plugins : [
 				"autolink link image lists charmap hr", "paste",
@@ -1217,29 +1238,45 @@ var State = {
 // 判断是否登录
 function initPage(initedCallback) {
 	console.log('ini page');
+	
 	// 笔记本, 事件, menu初始化
 	Notebook.init();
 	// 笔记
-	// 
+	
+	// 没用, 估计要到main.js中, 不能这样, 这样刷新后就有问题
 	/*
-
-	win.on('close', function() {
-		// 先保存之前改变的
-		Note.curChangedSaveIt();
-		// 保存状态
-		State.saveCurState(function() {
-			win.close(true);
-		});
+	gui.win.on('close', function(e) {
+		e.preventDefault();
+		return false;
+		// onClose();
 	});
+	*/
 
-	win.on('focus', function() {
+	// window.onbeforeunload = function(e) {
+	//   console.log('I do not want to be closed');
+
+	//   // Unlike usual browsers, in which a string should be returned and the user is
+	//   // prompted to confirm the page unload. Electron gives the power completely
+	//   // to the developers, return empty string or false would prevent the unloading
+	//   // now. You can also use the dialog API to let user confirm it.
+	//   return false;
+	// };
+
+	// 在刷新时会有问题, 刷新后前一个browser消失了, 但事件还是存在在main process中
+	/*
+	gui.win.on('focus', function() {
+	});
+	gui.win.on('blur', function() {
+	});
+	*/
+	var ipc = require('ipc');
+	ipc.on('focusWindow', function(arg) {
 		$('body').removeClass('blur');
 	});
-	win.on('blur', function() {
+
+	ipc.on('blurWindow', function(arg) {
 		$('body').addClass('blur');
 	});
-
-	*/
 
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
@@ -1344,30 +1381,45 @@ var Pren = {
 
 	_isFullscreen: false,
 	_isPren: false,
+	_isView: false,
 
 	// 全局菜单
 	pren: null,
 	fullScreen: null,
+	view: null,
 
 	presentationO: $('#presentation'),
 
 	toggleFullscreen: function() {
 		var me = this;
-		win.toggleFullscreen();
+		gui.win.setFullScreen(!me._isFullscreen);
 		me._isFullscreen = !me._isFullscreen;
+		
 		if(me._isFullscreen) {
 			me.pren.enabled = false;
+			me.view.enabled = false;
 		} else {
 			me.pren.enabled = true;
+			me.view.enabled = true;
 		}
 	},
-	togglePren: function() {
+	togglePren: function(isToggleView) {
 		var me = this;
-		try {
-			win.toggleKioskMode();
-		} catch(e) {}
+		if(!isToggleView) {
+			try {
+				gui.win.setKiosk(!me._isPren);
 
-		if(!me._isPren) {
+				// if(!me._isPren) {
+				// 	$('body').get(0).webkitRequestFullScreen();
+				// } else {
+				// 	$('body').get(0).webkitCancelFullScreen();
+				// }
+			} catch(e) {}
+		}
+
+		var no = isToggleView ? !me._isView : !me._isPren;
+
+		if(no) {
 			$('.pren-title').html($('#noteTitle').val());
 			var note = Note.getCurNote();
 			$('.pren-content').html('');
@@ -1384,32 +1436,71 @@ var Pren = {
 
 			$('body').addClass('no-drag');
 			$('#page').hide();
-			me._isPren = true;
-
+			
 			// 代码高亮
 			$(".pren-content pre").addClass("prettyprint linenums");
 			prettyPrint();
 
 		} else {
 			$('#themePresentation').attr('disabled', true);
-			me._isPren = false;
+			
 			$('body').removeClass('no-drag');
 			$('#page').show();
 			me.restore();
 		}
 
-		if(me._isPren) {
-			me.fullScreen.enabled = false;
-		} else {
-			me.fullScreen.enabled = true;
+		if(isToggleView) {
+			me._isView = !me._isView;
+
+			if(me._isView) {
+				me.fullScreen.enabled = false;
+				me.pren.enabled = false;
+			} else {
+				me.fullScreen.enabled = true;
+				me.pren.enabled = true;
+			}
 		}
+		else {
+			me._isPren = !me._isPren;
+
+			if(me._isPren) {
+				me.fullScreen.enabled = false;
+				me.view.enabled = false;
+			} else {
+				me.fullScreen.enabled = true;
+				me.view.enabled = true;
+			}
+		}
+
+		// 可拖拉
+		if(isToggleView) {
+			if(me._isView) {
+				$('body').addClass('view');
+			}
+			else {
+				$('body').removeClass('view');
+			}
+		}
+	},
+
+	// 预览, 演示快捷
+	preOrNext: function(isPre) {
+		var me = this;
+		if(!me._isView && !me._isPren) {
+			return;
+		}
+		if(isPre) {
+			var to = me.presentationO.scrollTop() - me.presentationO.height();
+		} else {
+			var to = me.presentationO.scrollTop() + me.presentationO.height();
+		}
+		me.presentationO.animate({scrollTop: to + 'px'}, 200);
 	},
 
 	// 恢复, 为了下次显示
 	restore: function() {
 		var me = this;
 		me.presentationO.scrollTop(0);
-
 	},
 	
 	_themeMode: 'normal', // 当前背景颜色模式, 三种, normal, writting, black
@@ -1451,29 +1542,51 @@ var Pren = {
 	},
 
 	init: function() {
-		return;
-
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-			{label: getMsg('Toggle Fullscreen'), click: function() {
-				me.toggleFullscreen();
-			}
+			{
+				label: getMsg('Toggle Fullscreen'), 
+				accelerator: 'command+shift+f',
+				click: function() {
+					me.toggleFullscreen();
+				}
 		});
 		me.pren = new gui.MenuItem(
-			{label: getMsg('Toggle Presentation'), click: function() {
+			{
+				label: getMsg('Toggle Presentation'), 
+				accelerator: 'command+shift+p',
+				click: function() {
 				me.togglePren();
 			}
 		});
+		me.view = new gui.MenuItem(
+			{
+				label: getMsg('Toggle View'), 
+				accelerator: 'command+shift+e',
+				click: function() {
+				me.togglePren(true);
+			}
+		});
 	
-		// Esc
+		// Esc, <- ->
 		$("body").on('keydown', function(e) {
 			if(e.keyCode == 27) {
 				if(me._isPren) {
 					me.togglePren();
 				} else if(me._isFullscreen) {
 					me.toggleFullscreen();
+				} else if(me._isView) {
+					me.togglePren(true);
 				}
+			}
+			// <--
+			else if(e.keyCode == 37) {
+				me.preOrNext(true);
+			}
+			// -->
+			else if(e.keyCode == 39) {
+				me.preOrNext();
 			}
 		});
 
@@ -1492,7 +1605,11 @@ var Pren = {
 		});
 
 		$('.pren-tool-close').click(function() {
-			me.togglePren();
+			if(me._isPren) {
+				me.togglePren();
+			} else if(me._isView) {
+				me.togglePren(true);
+			}
 		});
 
 		$('.pren-tool-bg-color').click(function() {
@@ -1504,6 +1621,12 @@ var Pren = {
 		$('.pren-tool-text-size-max').click(function() {
 			me.toggleFontSizeMode(false);
 		});
+		$('.pren-tool-pre').click(function() {
+			me.preOrNext(true);
+		});
+		$('.pren-tool-next').click(function() {
+			me.preOrNext();
+		});
 	}
 };
 
@@ -1514,25 +1637,159 @@ function checkForUpdates() {
 	}
 };
 
+function setMacTopMenu() {
+
+  var template = [
+    {
+      label: 'Leanote',
+      submenu: [
+        {
+          label: 'About Leanote',
+          selector: 'orderFrontStandardAboutPanel:'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Services',
+          submenu: []
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Hide Electron',
+          accelerator: 'Command+H',
+          selector: 'hide:'
+        },
+        {
+          label: 'Hide Others',
+          accelerator: 'Command+Shift+H',
+          selector: 'hideOtherApplications:'
+        },
+        {
+          label: 'Show All',
+          selector: 'unhideAllApplications:'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: function() { app.quit(); }
+        },
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          label: 'Undo',
+          accelerator: 'Command+Z',
+          selector: 'undo:'
+        },
+        {
+          label: 'Redo',
+          accelerator: 'Shift+Command+Z',
+          selector: 'redo:'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Cut',
+          accelerator: 'Command+X',
+          selector: 'cut:'
+        },
+        {
+          label: 'Copy',
+          accelerator: 'Command+C',
+          selector: 'copy:'
+        },
+        {
+          label: 'Paste',
+          accelerator: 'Command+V',
+          selector: 'paste:'
+        },
+        {
+          label: 'Select All',
+          accelerator: 'Command+A',
+          selector: 'selectAll:'
+        },
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'Command+R',
+          click: function() { 
+          	onClose(function() {
+	          	gui.win.reloadIgnoringCache();
+          	});
+          }
+        },
+        {
+          label: 'Toggle DevTools',
+          accelerator: 'Alt+Command+I',
+          click: function() { gui.win.toggleDevTools(); }
+        },
+      ]
+    },
+    {
+      label: 'Window',
+      submenu: [
+        {
+          label: 'Minimize',
+          accelerator: 'Command+M',
+          selector: 'performMiniaturize:'
+        },
+        {
+          label: 'Close',
+          accelerator: 'Command+W',
+          selector: 'performClose:'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Bring All to Front',
+          selector: 'arrangeInFront:'
+        },
+      ]
+    }
+  ];
+
+	var menu = gui.Menu.buildFromTemplate(template);
+
+	var mode = new gui.Menu();
+	
+	mode.append(Pren.fullScreen);
+
+	mode.append(gui.getSeparatorMenu());
+	mode.append(Pren.pren);
+	mode.append(Pren.view);
+
+	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
+
+	menu.append(modes);
+
+	gui.Menu.setApplicationMenu(menu);
+}
+
 // user
 function userMenu() {
 	// ----------
 	// 全局菜单
-	/*
-	var mode = new gui.Menu();
+	var win = gui.getCurrentWindow();
 
 	Pren.init();
 	
-	mode.append(Pren.pren);
-	mode.append(Pren.fullScreen);
-	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
 	if(isMac()) {
-		var nativeMenuBar = new gui.Menu({ type: "menubar" });
-		nativeMenuBar.createMacBuiltin("Leanote");
-		win.menu = nativeMenuBar;
-		win.menu.append(modes);
+		setMacTopMenu();
 	}
-	*/
 
 	//-------------------
 	// 右键菜单

@@ -389,10 +389,10 @@ Note.genDesc = function(content) {
 	content = content.replace(/</g, "&lt;");
 	content = content.replace(/>/g, "&gt;");
 	
-	if(content.length < 300) {
+	if(content.length < 20) {
 		return content;
 	}
-	return content.substring(0, 300);
+	return content.substring(0, 20);
 }
 
 // 得到摘要
@@ -2139,7 +2139,7 @@ Note.initContextmenu = function() {
 	        }
 	    });
 	    this.unPublicBlog = new gui.MenuItem({
-	        label: getMsg("Cancel Public"),
+	        label: getMsg("Cancel public"),
 	        click: function(e) {
 	        	Note.setNote2Blog(self.target);
 	        }

@@ -20,16 +20,15 @@ var downloadImgPath;
 $(function() {
 
 	var isMacP = isMac();
-	/*
+    
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
-		if(isMacP) {
-			win.hide();
-		} else {
-			win.close();
-		}
+        onClose(function() {
+            gui.win.close();
+        });
+        // gui.win.showInactive();
 	});
-	*/
+
 	// 从login.html -> note.html过来就没有reopen事件了?
 	// note.html -> login.html -> note.html, 使得两次bind
 	/*
@@ -47,13 +46,16 @@ $(function() {
 	*/
 
 	$('.tool-min, .tool-min-blur').click(function() {
-		win.minimize();
+		gui.win.minimize();
 	});
+    // 不灵敏
 	$('.tool-max, .tool-max-blur').click(function() {
-		win.maximize();
-		// win.toggleFullscreen(); // mac下是新屏幕
-		// 全屏模式
-		// win.toggleKioskMode();
+        if(gui.win.isMaximized()) { 
+            gui.win.unmaximize();
+        }
+        else {
+            gui.win.maximize();
+        }
 	});
 
 });

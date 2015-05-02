@@ -5,10 +5,10 @@ var fs = require('fs');
 var lang = {
 	readJson: function(file) {
 		try {
-			var data = fs.readFileSync(process.cwd() + '/' + file, 'utf-8');
+			var data = fs.readFileSync(__dirname + '/' + file, 'utf-8');
 			return JSON.parse(data);
 		} catch(e) { 
-			alert(e);
+			console.log(e);
 			return false;
 		}
 	},
