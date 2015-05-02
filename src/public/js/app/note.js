@@ -1203,6 +1203,7 @@ Note.syncFinished = function() {
 
 	Note.hideSyncProgress();
 };
+// 过时
 Note.sync = function() {
 	var me = this;
 	me.showSpin();
@@ -1270,11 +1271,7 @@ Note.saveNote = function(e) {
 	var num = e.which ? e.which : e.keyCode;
 	// 保存
     if((e.ctrlKey || e.metaKey) && num == 83 ) { // ctrl + s or command + s
-    	Note.curChangedSaveIt(true, function(note) {
-    		console.log('after updated:');
-    		console.log(note);
-    		Note.sync();
-    	});
+		incrSync(true);
     	e.preventDefault();
     	return false;
     } else {
@@ -2700,7 +2697,7 @@ $(function() {
 	Note._syncWarningE = $('#syncWarning');
 	// sync
 	Note._syncRefreshE.click(function() {
-		Note.sync();
+		incrSync(true);
 	});
 
 	Note._syncWarningE.click(function() {

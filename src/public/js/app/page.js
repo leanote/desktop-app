@@ -1100,10 +1100,21 @@ function fullSyncForce() {
 }
 
 // 增量同步
-function incrSync() {
-	log('incr sync');
+function _incrSync(saveNoteBefore) {
+	console.log('incr sync');
 	Note.showSpin();
 	SyncService.incrSync();
+	Note.syncProgress(2);
+}
+function incrSync(saveNoteBefore) {
+	if(saveNoteBefore) {
+		Note.curChangedSaveIt(true, function() {
+			_incrSync();
+		});
+	}
+	else {
+		_incrSync();
+	}
 }
 
 // 历史, 恢复原貌
@@ -1184,7 +1195,7 @@ var State = {
 		// end
 		// 打开时，同步一下
 		setTimeout(function() {
-			incrSync();
+			incrSync(false);
 		}, 500);
 
 		initedCallback && initedCallback();
@@ -1868,7 +1879,7 @@ function userMenu() {
 	    this.sync = new gui.MenuItem({
 	        label: getMsg('Sync now'),
 	        click: function(e) {
-	        	incrSync();
+	        	incrSync(true);
 	        }
 	    });
 	    this.fullSync = new gui.MenuItem({
