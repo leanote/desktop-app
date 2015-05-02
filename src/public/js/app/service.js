@@ -1,7 +1,8 @@
 var Common = require('common');
 
 var Evt = require('evt');
-var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
+var app = require('remote').require('app');
+var basePath = app.getPath('appData') + '/leanote'; // /Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
 
 if(!/login.html/.test(location.href)) {

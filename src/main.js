@@ -189,7 +189,11 @@ function openIt() {
   // require('leanote_protocol');
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1050, height: 595, frame: false, transparent: false });
+  mainWindow = new BrowserWindow({width: 1050, 
+    height: 595, 
+    frame: process.platform != 'darwin', 
+    transparent: false }
+  );
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
@@ -211,11 +215,14 @@ function openIt() {
   var ipc = require('ipc');
   mainWindow.on('focus', function() {
     // ipc.send('focusWindow'); mainProcess没有该方法
-    mainWindow.webContents.send('focusWindow');
+    if(mainWindow && mainWindow.webContents)
+      mainWindow.webContents.send('focusWindow');
   });
   mainWindow.on('blur', function() {
-    mainWindow.webContents.send('blurWindow');
+    if(mainWindow && mainWindow.webContents)
+      mainWindow.webContents.send('blurWindow');
   });
+  
   /*
   mainWindow.on('close', function() {
     mainWindow.webContents.send('closeWindow');
@@ -234,14 +241,14 @@ function openIt() {
   });
 */
 
-  // setMenu();
+  // 作为调试
+  setMenu();
 }
 
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', openIt);
 
-
-app.on('activate-with-no-open-windows', function(){ 
+app.on('activate-with-no-open-windows', function() { 
   openIt();
 });

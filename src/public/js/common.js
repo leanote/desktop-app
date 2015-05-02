@@ -419,23 +419,39 @@ function _setEditorContent(content, isMarkdown, preview) {
 
 // 复制图片
 // 在web端得到图片
+var clipboard = require('clipboard');
 function pasteImage(e) {
+	var image = clipboard.readImage();
+	if(image) {
+		var dataUrl = image.toDataUrl();
+		// 空图片
+	    if(dataUrl == "data:image/png;base64,") {
+		    return;
+	    }
+	    FileService.pasteImage2(dataUrl, function(url) {
+			insertImage(url);
+		});
+	}
+	return;
+
+	// 以下是node-webkit版
+
 	var items = (event.clipboardData  || event.originalEvent.clipboardData).items; // 可能有多个file, 找到属于图片的file
 	// find pasted image among pasted items
 	var blob;
     for (var i = 0; i < items.length; i++) {
     	// if (items[i].type.indexOf("image") === 0) {
     	blob = items[i].getAsFile();
-		console.log("paste images");
-		console.log(blob);
+		// console.log("paste images");
+		// console.log(blob);
 		// load image if there is a pasted image
 		if (blob) {
 			// console.log("??");
 		    var reader = new FileReader();
 		    reader.onloadend = function() { 
-		    	console.log('read end');
-		    	console.log(reader);
-		    	console.log(reader.result);
+		    	// console.log('read end');
+		    	// console.log(reader);
+		    	// console.log(reader.result);
 			    if(reader.result) {
 			    	if(blob.type.indexOf('image/') === 0) { // image类型
 				    	FileService.pasteImage2(reader.result, function(url) {
@@ -1439,16 +1455,9 @@ function switchAccount() {
 	if(isMac()) {
 		var win = new BrowserWindow({ width: 278, height: 316, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
-		// win.show();
 	} else {
-		var win2 = gui.Window.open('login.html', {
-			"icon": "public/images/logo/leanote_icon_blue.png",
-			frame: true, toolbar: false, resizable: false, 
-			transparent: false, 
-			width: 278,
-			height: 346, 
-			max_width: 278
-		});
+		var win = new BrowserWindow({ width: 278, height: 516, show: true, frame: true, resizable: false });
+		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
 }

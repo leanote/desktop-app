@@ -1576,6 +1576,11 @@ body.init #pageInner {
   z-index: 1000;
   cursor: move;
 }
+#topDrag2 {
+  width: 100%;
+  height: 10px;
+  -webkit-app-region: drag;
+}
 .no-info {
   text-align: center;
   margin: 10px 0;
@@ -1601,7 +1606,7 @@ img::selection {
   font-size: 16px;
 }
 #editorMask {
-  z-index: 88888 !important;
+  z-index: 1030 !important;
 }
 /*
 #starNotes li a, 

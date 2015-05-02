@@ -70,7 +70,20 @@ function Menu() {
     this.cut = new gui.MenuItem({
         label: getMsg('Cut'),
         click: function() {
-            document.execCommand('cut');
+            // tinymce中没用, 会有recusive execCommand
+            if($curTarget.closest('#editorContent').length == 0) {
+                document.execCommand('cut');
+            } else {
+                /*
+                We don't execute document.execCommand() this time, because it is called recursively.
+                console.log('tinymce中没用');
+                setTimeout(function() {
+                    tinymce.activeEditor
+                    document.execCommand('Cut');
+                    tinymce.activeEditor.execCommand('cut');
+                }, 10);
+                */
+            }
         }
     });
     this.copy = new gui.MenuItem({
@@ -175,7 +188,7 @@ var menu = new Menu();
 // 右键菜单
 var winHref = '';
 var $curTarget;
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent').on('contextmenu', function (e) {
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent, #presentation').on('contextmenu', function (e) {
 	e.preventDefault();
 	var $target = $(e.target);
 	$curTarget = $target;
