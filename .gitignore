@@ -9,3 +9,8 @@ config.codekit
 /package.json
 sqlite*
 /test
+/atom
+/updates
+/src/node_modules/request
+/src/public/tinymce_old
+/src/test*.js
