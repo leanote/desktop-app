@@ -152,8 +152,10 @@ $(function() {
 		ApiService.auth(email, pwd, host, function(ret) {
 			$('#loadingLogo').removeClass('loading');
 			if(ret.Ok) {
-				goToMainPage();
-				gui.getCurrentWindow().close();
+				setTimeout(function(){ 
+					goToMainPage();
+					gui.getCurrentWindow().close();
+				}, 2000);
 			} else {
 				showMsg(getMsg("Email or Password Error"));
 			}
