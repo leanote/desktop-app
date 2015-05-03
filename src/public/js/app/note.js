@@ -383,16 +383,17 @@ Note.genDesc = function(content) {
 	
 	// 避免其它的<img 之类的不完全
 	content = $("<div></div>").html(content).text();
-	
+
+	content = $.trim(content);
 	
 	// pre下text()会将&lt; => < &gt; => >
 	content = content.replace(/</g, "&lt;");
 	content = content.replace(/>/g, "&gt;");
 	
-	if(content.length < 300) {
+	if(content.length < 20) {
 		return content;
 	}
-	return content.substring(0, 300);
+	return content.substring(0, 20);
 }
 
 // 得到摘要
@@ -1203,6 +1204,7 @@ Note.syncFinished = function() {
 
 	Note.hideSyncProgress();
 };
+// 过时
 Note.sync = function() {
 	var me = this;
 	me.showSpin();
@@ -1270,11 +1272,7 @@ Note.saveNote = function(e) {
 	var num = e.which ? e.which : e.keyCode;
 	// 保存
     if((e.ctrlKey || e.metaKey) && num == 83 ) { // ctrl + s or command + s
-    	Note.curChangedSaveIt(true, function(note) {
-    		console.log('after updated:');
-    		console.log(note);
-    		Note.sync();
-    	});
+		incrSync(true);
     	e.preventDefault();
     	return false;
     } else {
@@ -2106,101 +2104,6 @@ Note.initContextmenu = function() {
 	var self = Note;
 	var notebooks = Notebook.everNotebooks;
 
-	/*
-	if(Note.contextmenu) {
-		Note.contextmenu.destroy();
-	}
-	// 得到可move/copy的notebook
-	var notebooks = Notebook.everNotebooks;
-	var mc = self.getContextNotebooks(notebooks);
-	
-	var notebooksMove = mc[0];
-	var notebooksCopy = mc[1];
-	self.notebooksCopy = mc[2];
-	
-	//---------------------
-	// context menu
-	//---------------------
-	var noteListMenu = {
-		width: 180, 
-		items: [
-			// { text: getMsg("shareToFriends"), alias: 'shareToFriends', icon: "", faIcon: "fa-share-square-o", action: Note.listNoteShareUserInfo},
-			// { type: "splitLine" },
-			// { text: getMsg("publicAsBlog"), alias: 'set2Blog', faIcon: "fa-bold", action: Note.setNote2Blog },
-			// { text: getMsg("cancelPublic"), alias: 'unset2Blog', faIcon: "fa-undo", action: Note.setNote2Blog },
-			// { type: "splitLine" },
-			// { text: "分享到社区", alias: 'html2Image', icon: "", action: Note.html2Image},
-			// { text: "导出PDF", alias: 'exportPDF', icon: "", action: Note.exportPDF},
-			// { type: "splitLine" },
-			{text: getMsg("delete"), icon: "", faIcon: "fa-trash-o", action: Note.deleteNote },
-			{text: getMsg("move"), alias: "move", faIcon: "fa-arrow-right",
-				type: "group", 
-				width: 180, 
-				items: notebooksMove
-			},
-			{text: getMsg("copy"), alias: "copy", icon:"", faIcon: "fa-copy",
-				type: "group", 
-				width: 180, 
-				items: notebooksCopy
-			}
-		], 
-		onShow: applyrule,
-		onContextMenu: beforeContextMenu,
-		
-		parent: "#noteItemList",
-		children: ".item-my",
-	}
-		
-	function menuAction(target) {
-		// $('#myModal').modal('show')
-		showDialog("dialogUpdateNotebook", {title: "修改笔记本", postShow: function() {
-		}});
-	}
-	function applyrule(menu) {
-		var noteId = $(this).attr("noteId");
-		var note = Note.cache[noteId];
-		if(!note) {
-			return;
-		}
-		// 要disable的items
-		var items = [];
-		
-		// 如果是trash, 什么都不能做
-		if(note.IsTrash) {
-			items.push("shareToFriends");
-			items.push("shareStatus");
-			items.push("unset2Blog");
-			items.push("set2Blog");
-			items.push("copy");
-		} else {
-			// 是否已公开为blog
-			if(!note.IsBlog) {
-				items.push("unset2Blog");
-			} else {
-				items.push("set2Blog");
-			}
-			
-			// 移动与复制不能是本notebook下
-			var notebookTitle = Notebook.getNotebookTitle(note.NotebookId);
-			items.push("move." + notebookTitle);
-			items.push("copy." + notebookTitle);
-		}
-
-        menu.applyrule({
-        	name: "target..",
-            disable: true,
-            items: items
-        });		
-	   
-	}
-	function beforeContextMenu() {
-	    return this.id != "target3";
-	}
-	
-	// 这里很慢!!
-	Note.contextmenu = $("#noteItemList .item-my").contextmenu(noteListMenu);
-	*/
-
 	//-------------------
 	// 右键菜单
 	function noteMenu() {
@@ -2286,11 +2189,7 @@ Note.initContextmenu = function() {
 	    		return;
 	    	}
 	    	var notebookId = note.NotebookId;
-	    	// var notebookMenuForMove = self.menuItemsForMove[notebookId];
-	    	// var notebookMenuForCopy = self.menuItemsForCopy[notebookId];
-	    	// notebookMenuForMove.enabled = false;
-	    	// notebookMenuForCopy.enabled = false;
-
+	    	
 	    	if(note.IsTrash) {
 	    		this.copy.enabled = false;
 	    	} else {
@@ -2774,7 +2673,7 @@ $(function() {
 	Note._syncWarningE = $('#syncWarning');
 	// sync
 	Note._syncRefreshE.click(function() {
-		Note.sync();
+		incrSync(true);
 	});
 
 	Note._syncWarningE.click(function() {

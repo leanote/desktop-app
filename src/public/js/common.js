@@ -226,9 +226,9 @@ function ajaxPost(url, param, successFunc, failureFunc, async) {
 	_ajax("POST", url, param, successFunc, failureFunc, async);
 }
 function ajaxPostJson(url, param, successFunc, failureFunc, async) {
-	log("-------------------ajaxPostJson:");
-	log(url);
-	log(param);
+	// log("-------------------ajaxPostJson:");
+	// log(url);
+	// log(param);
 	
 	// 默认是异步的
 	if(typeof async == "undefined") {
@@ -1387,9 +1387,10 @@ function switchAccount() {
 	if(isMac()) {
 		var win2 = gui.Window.open('login.html', {
 			"icon": "public/images/logo/leanote_icon_blue.png",
-			frame: false, toolbar: false, resizable: false, 
-			transparent: true, 
-			width: 278, 
+			frame: true, toolbar: false, resizable: false, 
+			transparent: false, 
+			width: 278,
+			height: 346, 
 			max_width: 278
 		});
 	} else {
@@ -1442,10 +1443,10 @@ function getMainWinParams() {
 	if(isMac()) {
 		return {
 			"icon": "public/images/logo/leanote_icon_blue.png",
-			frame: false,
-			transparent: true,
-			width: 258,
-			height: 326,
+			frame: true,
+			transparent: false,
+			width: 1100,
+			height: 600,
 			toolbar: false,
 			"chromium-args": "--enable-smooth-scrolling"
 		};
@@ -1492,5 +1493,17 @@ var Loading = {
 	}
 };
 
+var onClose = function(afterFunc) {
+	try {
+	    // 先保存之前改变的
+	    Note.curChangedSaveIt();
+	    // 保存状态
+	    State.saveCurState(function() {
+	        afterFunc && afterFunc();
+	    });
+	} catch(e) {
+		afterFunc && afterFunc();
+	}
+}
 
 ContextTips.init();

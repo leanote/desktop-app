@@ -7,8 +7,8 @@
 <meta name="apple-touch-fullscreen" content="yes">
 <meta name=”apple-mobile-web-app-capable” content=”yes” />
 <meta name="keywords" content="leanote,leanote.com">
-<meta name="description" content="leanote, Not Just A Notebook">
-<title class="lang">Leanote, Not Just A Notebook</title>
+<meta name="description" content="leanote, Not Just A Notepad!">
+<title class="lang">Leanote, Not Just A Notepad!</title>
 
 <link href="public/css/bootstrap.css" rel="stylesheet" />
 <!-- 先加载, 没有样式, 宽度不定 -->
@@ -21,11 +21,13 @@
 <link rel="stylesheet" href="public/themes/default.css" type="text/css"/>
 <link rel="stylesheet" href="public/themes/presentation.css" type="text/css" disabled id="themePresentation"/>
 <link rel="stylesheet" href="public/themes/writting.css" type="text/css" disabled id="themeWritting"/>
-<!-- for change theme -->
-<link rel="stylesheet" href="" type="text/css" id="theme"/>
 
 <!-- mdeditor -->
 <link href="public/md/themes/default.css" rel="stylesheet" />
+
+
+<!-- for change theme -->
+<link rel="stylesheet" href="" type="text/css" id="theme"/>
 
 <script>
 // for windows
@@ -52,8 +54,13 @@ function log(o) {
     <div class="pren-tool">
       <a class="pren-tool-close"><i class="fa fa-remove"></i></a>
       <a class="pren-tool-bg-color"><i class="fa fa-adjust"></i></a>
+      <hr />
       <a class="pren-tool-text-size-min"><i class="fa fa-font"></i></a>
       <a class="pren-tool-text-size-max"><i class="fa fa-font"></i></a>
+      <hr />
+      <a class="pren-tool-pre"><i class="fa fa-long-arrow-up"></i></a>
+      <a class="pren-tool-next"><i class="fa fa-long-arrow-down"></i></a>
+
     </div>
     <!-- 标题 -->
     <div class="pren-title">
@@ -415,7 +422,7 @@ function log(o) {
                   <div id="leanoteNavMd" class="leanoteNav">
                     <h1>
                       <i class="fa fa-align-justify" title="Note nav"></i>
-                      <span>Note nav</span>
+                      <span class="lang">nav</span>
                     </h1>
                     <div id="leanoteNavContentMd" class="leanoteNavContent table-of-contents">
                     </div>
@@ -606,7 +613,6 @@ function log(o) {
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/lang.js"></script>
 <script src="public/js/jquery.ztree.all-3.5.js"></script>
-<!-- <script src="public/js/i18n/msg.en.js"></script> -->
 <script src="public/js/app/service.js"></script>
 <script src="public/js/common.js"></script>
 <script>
@@ -642,7 +648,6 @@ window.require = undefined;
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.ui.widget.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.fileupload.js"></script>
 <script src="public/tinymce/plugins/leaui_image/public/js/jquery.iframe-transport.js"></script>
-<!-- <script src="public/js/app/paste.js"></script> -->
 
 <script src="public/md/main.js"></script>
 <script>

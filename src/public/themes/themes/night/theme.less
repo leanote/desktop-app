@@ -88,6 +88,9 @@
 #noteAndEditor {
   border: none;
 }
+#noteList, #notesAndSort, #searchNote,#noteItemListWrap  {
+  background: transparent;
+}
 #noteList, #notesAndSort {
   background: @noteBgLess;
 }
@@ -253,15 +256,36 @@ i.mce-i-backcolor {
   background-color: rgba(128, 128, 128, 0.5) !important;
 }
 #wmd-input .code, #wmd-input .pre {
-  color: @txtcolor;
+  color: @txtcolor !important;
 }
 code.prettyprint, pre.prettyprint {
-  background-color: #E1E1E7;
+  background-color: #353538;
+  .kwd, .tag {
+    color: #566BB0;
+  }
+  .str {
+    color: #2D905F;
+  }
+  .pln {
+    color: #9595A3;
+  }
+  .atv {
+    color: #378668;
+  }
+
+}
+.preview-container code {
+  background: rgb(53, 53, 56);
+  color: rgb(164, 179, 174);
 }
 
 // 文档导航
 #leanoteNav, #leanoteNavMd {
   background-color: #2A2828;
+  border: 1px solid #353538;
+}
+.leanoteNav.unfolder h1 {
+  border-bottom: 1px dashed #353538;
 }
 #leanoteNavContent a, #leanoteNavMd a {
   color: @txtcolor;

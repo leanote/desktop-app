@@ -19,14 +19,21 @@ var win = gui.Window.get();
 var downloadImgPath;
 $(function() {
 	var isMacP = isMac();
-	$('.tool-close, .tool-close-blur').click(function() {
-		// mac下关闭才是隐藏
-		if(isMacP) {
+
+	// https://github.com/nwjs/nw.js/issues/430
+	win.on('close', function(ev) {
+		if(ev != 'quit' && isMacP) {
 			win.hide();
 		} else {
-			win.close();
+			// 先保存之前改变的
+			Note.curChangedSaveIt();
+			// 保存状态
+			State.saveCurState(function() {
+				win.close(true);
+			});
 		}
 	});
+
 	// 从login.html -> note.html过来就没有reopen事件了?
 	// note.html -> login.html -> note.html, 使得两次bind
 	if(gui.App._events) {
@@ -40,6 +47,7 @@ $(function() {
 		    win.focus();
 		});
 	}
+	/*
 
 	$('.tool-min, .tool-min-blur').click(function() {
 		win.minimize();
@@ -50,6 +58,7 @@ $(function() {
 		// 全屏模式
 		// win.toggleKioskMode();
 	});
+	*/
 
 	// 下载图片输入框
 	$('#downloadImgInput').change(function() {
@@ -177,7 +186,7 @@ var menu = new Menu();
 // 右键菜单
 var winHref = '';
 var $curTarget;
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent').on('contextmenu', function (e) {
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent, #presentation').on('contextmenu', function (e) {
 	e.preventDefault();
 	var $target = $(e.target);
 	$curTarget = $target;

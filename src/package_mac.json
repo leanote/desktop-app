@@ -8,13 +8,13 @@
     "icon": "public/images/logo/leanote_icon_blue.png",
     "toolbar": false,
     
-    "frame": false,
-    "transparent": true,
+    "frame": true,
+    "transparent": false,
 
-    "min_width": 268,
-    "min_height": 346,
-    "width":  278,
-    "height": 356
+    "min_width": 258,
+    "min_height": 326,
+    "width":  1100,
+    "height": 600
   }
   //,
   // "chromium-args": "--enable-smooth-scrolling"

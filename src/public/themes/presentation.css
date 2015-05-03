@@ -17,6 +17,10 @@ body {
 #topDrag {
   display: none;
 }
+body.view #topDrag {
+  display: block;
+  right: 50px;
+}
 #presentation {
   position: absolute;
   left: 0;
@@ -34,6 +38,11 @@ body {
 }
 #presentation a {
   color: #2a6496;
+}
+#presentation hr {
+  margin: 10px;
+  width: 20px;
+  border: none;
 }
 #presentation.writting,
 #presentation.black {
@@ -239,6 +248,7 @@ body {
   top: 0;
   bottom: 0;
   width: 45px;
+  z-index: 1001;
   opacity: 0;
   text-align: center;
 }

@@ -20,5 +20,5 @@ var Config = {
         }
     ],
     "lang": "en-us",
-    "theme": "default"
+    "theme": "vegetables"
 };

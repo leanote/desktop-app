@@ -6,6 +6,7 @@ config.codekit
 /dist
 /nw
 /gulpfile.js
+/gulpfile_atom.js
 /package.json
 sqlite*
 /test
