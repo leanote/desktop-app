@@ -1,14 +1,14 @@
 # Leanote Desktop App
 
-Use node-webkit to create leanote desktop app.
+Use Electron(atom-shell) to create leanote desktop app.
 
 ![preview.png](preview.png "")
 
 ## How to develop it
 
-### 1. Install node-webkit
+### 1. Install Electron
 
-See https://github.com/nwjs/nw.js
+See https://github.com/atom/electron
 
 
 ### 2. How to run it
@@ -16,8 +16,8 @@ See https://github.com/nwjs/nw.js
 Download this project, and run
 
 ````
-$> cd PATH-TO-LEANOTE-DESKTOP-APP
-$> PATH-TO-NODE-WEBKIT/nw src
+$> cd PATH-TO-LEANOTE-DESKTOP-APP/src
+$> Electron .
 ```
 
 

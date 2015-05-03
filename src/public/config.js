@@ -19,6 +19,6 @@ var Config = {
             "name": "繁体中文"
         }
     ],
-    "lang": "zh-hk",
+    "lang": "en-us",
     "theme": "water"
 };
