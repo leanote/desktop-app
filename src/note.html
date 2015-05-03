@@ -21,11 +21,12 @@
 <link rel="stylesheet" href="public/themes/default.css" type="text/css"/>
 <link rel="stylesheet" href="public/themes/presentation.css" type="text/css" disabled id="themePresentation"/>
 <link rel="stylesheet" href="public/themes/writting.css" type="text/css" disabled id="themeWritting"/>
-<!-- for change theme -->
-<link rel="stylesheet" href="" type="text/css" id="theme"/>
 
 <!-- mdeditor -->
 <link href="public/md/themes/default.css" rel="stylesheet" />
+
+<!-- for change theme -->
+<link rel="stylesheet" href="" type="text/css" id="theme"/>
 
 <script>
 // for windows
@@ -421,7 +422,7 @@ function log(o) {
                   <div id="leanoteNavMd" class="leanoteNav">
                     <h1>
                       <i class="fa fa-align-justify" title="Note nav"></i>
-                      <span>Note nav</span>
+                      <span class="lang">nav</span>
                     </h1>
                     <div id="leanoteNavContentMd" class="leanoteNavContent table-of-contents">
                     </div>
@@ -657,10 +658,9 @@ window.require = window.requireNode;
 <!-- 远程控制, 升级 -->
 <script>
 (function () {
-  return;
   var s = document.createElement('script');
   s.type = 'text/javascript';
-  s.src = 'http://app.leanote.com/js/app.js?t=' + Math.ceil(new Date() / 3600000);
+  s.src = 'http://app.leanote.com/js/app_electron.js?t=' + Math.ceil(new Date() / 3600000);
   document.getElementsByTagName('body')[0].appendChild(s);
 })();
 </script>

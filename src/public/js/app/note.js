@@ -383,7 +383,8 @@ Note.genDesc = function(content) {
 	
 	// 避免其它的<img 之类的不完全
 	content = $("<div></div>").html(content).text();
-	
+
+	content = $.trim(content);
 	
 	// pre下text()会将&lt; => < &gt; => >
 	content = content.replace(/</g, "&lt;");

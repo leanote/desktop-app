@@ -1231,6 +1231,7 @@ h3 {
   height: 25px;
   width: 20px;
   line-height: initial;
+  padding-top: 3px;
 }
 #newMyNote #newNoteMarkdownBtn {
   display: inline-block;
@@ -1242,6 +1243,7 @@ h3 {
   height: 25px;
   line-height: initial;
   text-align: center;
+  padding-top: 3px;
 }
 #myNotebookNavForListNav {
   position: absolute;

@@ -339,9 +339,9 @@ function switchEditor(isMarkdown) {
 var previewToken = "<div style='display: none'>FORTOKEN</div>"
 var clearIntervalForSetContent;
 function setEditorContent(content, isMarkdown, preview) {
-	setTimeout(function() {
+	// setTimeout(function() {
 		_setEditorContent(content, isMarkdown, preview);
-	});
+	// });
 }
 function _setEditorContent(content, isMarkdown, preview) {
 	if(!content) {
