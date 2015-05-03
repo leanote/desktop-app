@@ -1681,9 +1681,9 @@ function userMenu() {
 			this.menu.append(Pren.fullScreen);
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 			this.menu.append(Pren.pren);
-			this.mode.append(Pren.view);
+			this.menu.append(Pren.view);
 		
-			height = 270;
+			height = 310;
 		}
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));

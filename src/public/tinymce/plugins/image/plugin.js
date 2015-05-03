@@ -13,7 +13,7 @@
 tinymce.PluginManager.add('image', function(editor, url) {
 	// 弹框
 	function showDialog() {
-		insertLocalImage();
+		$('#chooseImageInput').click();
 	}
 	// 添加按钮
 	editor.addButton('image', {
