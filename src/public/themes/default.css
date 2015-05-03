@@ -784,13 +784,6 @@ h3 {
 #notesAndSort {
   height: 36px;
 }
-#noteItemListWrap {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 69px;
-  bottom: 3px;
-}
 #mdEditorPreview {
   position: absolute;
   top: 35px;
@@ -1610,6 +1603,10 @@ img::selection {
 #editorMask {
   z-index: 1030 !important;
 }
+.mce-colorbtn-trans div {
+  line-height: 11px;
+  text-align: center;
+}
 /*
 #starNotes li a, 
 .ztree li a, 
@@ -1795,12 +1792,18 @@ a.raw:hover {
 #switcher span:hover {
   color: #0fb264;
 }
+#noteList,
+#notesAndSort,
+#searchNote,
+#noteItemListWrap {
+  background: #fafafa;
+}
 #searchNote {
-  padding: 0 10px;
+  padding: 2px 10px;
   line-height: 30px;
   width: 100%;
   margin: 0;
-  margin-top: 2px;
+  /* margin-top: 2px; */
 }
 #searchNote input {
   background-size: 18px 13px;
@@ -1818,6 +1821,16 @@ a.raw:hover {
 #searchNote input:active {
   outline: none !important;
   box-shadow: none;
+}
+#noteItemListWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 75px;
+  bottom: 3px;
+}
+#noteItemList .item:first-child {
+  margin-top: 0;
 }
 #header ul {
   margin: 0;
@@ -2086,7 +2099,6 @@ a.raw:hover {
   outline-offset: -2px;
 }
 #notesAndSort {
-  background-color: #ffffff;
   border-bottom: 1px solid #ebeff2;
 }
 /* 包裹iframe */
