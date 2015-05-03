@@ -2,6 +2,8 @@
 
 Use node-webkit to create leanote desktop app.
 
+For electron branch, please see https://github.com/leanote/desktop-app/tree/electron
+
 ![preview.png](preview.png "")
 
 ## How to develop it
