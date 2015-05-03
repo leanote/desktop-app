@@ -1558,7 +1558,7 @@ var Pren = {
 		me.fullScreen = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Fullscreen'), 
-				accelerator: 'command+shift+f',
+				accelerator: 'ctrl+=',
 				click: function() {
 					me.toggleFullscreen();
 				}
@@ -1566,7 +1566,7 @@ var Pren = {
 		me.pren = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Presentation'), 
-				accelerator: 'command+shift+p',
+				accelerator: 'ctrl+p',
 				click: function() {
 				me.togglePren();
 			}
@@ -1574,7 +1574,7 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'), 
-				accelerator: 'command+shift+e',
+				accelerator: 'ctrl+e',
 				click: function() {
 				me.togglePren(true);
 			}
@@ -1669,7 +1669,7 @@ function setMacTopMenu() {
           type: 'separator'
         },
         {
-          label: 'Hide Electron',
+          label: 'Hide Leanote',
           accelerator: 'Command+H',
           selector: 'hide:'
         },
@@ -1688,7 +1688,11 @@ function setMacTopMenu() {
         {
           label: 'Quit',
           accelerator: 'Command+Q',
-          click: function() { app.quit(); }
+          click: function() {
+          	onClose(function() {
+	          	app.quit();
+          	});
+          }
         },
       ]
     },

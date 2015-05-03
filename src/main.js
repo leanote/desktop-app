@@ -242,7 +242,7 @@ function openIt() {
 */
 
   // 作为调试
-  setMenu();
+  // setMenu();
 }
 
 // This method will be called when Electron has done everything
