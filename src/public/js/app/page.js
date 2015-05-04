@@ -1498,7 +1498,7 @@ var Pren = {
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-			{label: getMsg('Toggle Fullscreen') + '   (Ctrl++)', click: function() {
+			{label: getMsg('Toggle Fullscreen') + '   (Ctrl+=)', click: function() {
 				me.toggleFullscreen();
 			}
 		});

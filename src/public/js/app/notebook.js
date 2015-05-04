@@ -25,11 +25,28 @@ Notebook.getCurNotebook = function() {
 	return Notebook.cache[Notebook.curNotebookId];
 };
 
+// 为什么可能会没有? 因为可能是新加的笔记本, 此时该笔记本又有笔记, 一起同步过来
+// 还没显示到web上
+// 放在这里, 让addNote时调用
+Notebook._newNotebookNumberNotes = {}; // notebookId => count
+Notebook.reRenderNotebookNumberNotesIfIsNewNotebook = function(notebookId) {
+	var count = Notebook._newNotebookNumberNotes[notebookId];
+	if(count) {
+		delete Notebook._newNotebookNumberNotes[notebookId];
+	}
+	else {
+		return;
+	}
+	Notebook.updateNotebookNumberNotes(notebookId, count);
+};
 // 为了server Web调用
 Notebook.updateNotebookNumberNotes = function(notebookId, count) {
 	var self = this;
 	var notebook = self.getNotebook(notebookId);
+	//  为什么可能会没有? 因为可能是新加的笔记本, 此时该笔记本又有笔记, 一起同步过来
+	//  还没显示到web上
 	if(!notebook) {
+		Notebook._newNotebookNumberNotes[notebookId] = count;
 		return;
 	}
 	notebook.NumberNotes = count;
@@ -1033,11 +1050,13 @@ Notebook.addSync = function(notebooks) {
 	if(isEmpty(notebooks)) { 
 		return;
 	}
-	log('add sync notebook');
+	console.log('web add sync notebook');
 	for(var i in notebooks) {
 		var notebook = notebooks[i];
 		Notebook.setCache(notebook);
-		me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), {Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: true}, true, true, false);
+		me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), 
+			{Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: false},  // IsNew: false啊!!!
+			true, true, false);
 	}
 }
 // 本地 -> 添加到服务器上的
@@ -1099,6 +1118,7 @@ Notebook.init = function() {
 	//-------------------
 	// 右键菜单
 	function newNotebookListMenu() {
+		
 		var me = this;
 		this.target = '';
 	    this.menu = new gui.Menu();
