@@ -15,3 +15,4 @@ tinymce_old
 src/node_modules/request
 src/test*.js
 /updates
+/old
