@@ -1558,7 +1558,7 @@ var Pren = {
 		me.fullScreen = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Fullscreen'), 
-				accelerator: 'ctrl+=',
+				accelerator: 'command+=',
 				click: function() {
 					me.toggleFullscreen();
 				}
@@ -1566,7 +1566,7 @@ var Pren = {
 		me.pren = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Presentation'), 
-				accelerator: 'ctrl+p',
+				accelerator: 'command+p',
 				click: function() {
 				me.togglePren();
 			}
@@ -1574,7 +1574,7 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'), 
-				accelerator: 'ctrl+e',
+				accelerator: 'command+e',
 				click: function() {
 				me.togglePren(true);
 			}
