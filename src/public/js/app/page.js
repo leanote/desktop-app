@@ -1878,11 +1878,11 @@ function userMenu() {
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
-	    
 	    var mores = new gui.Menu();
 	    this.sync = new gui.MenuItem({
 	        label: getMsg('Sync now'),
 	        click: function(e) {
+	        	console.log('sync now');
 	        	incrSync(true);
 	        }
 	    });

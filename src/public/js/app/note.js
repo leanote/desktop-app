@@ -465,6 +465,7 @@ Note.curChangedSaveIt = function(force, callback) {
 	var me = this;
 	// 如果当前没有笔记, 不保存
 	if(!Note.curNoteId || Note.isReadOnly) {
+		callback && callback();
 		return;
 	}
 
@@ -2815,6 +2816,10 @@ Note.addSync = function(notes) {
 	for(var i in notes) {
 		var note = notes[i];
 		Note.addNoteCache(note);
+
+		// 很可能其笔记本也是新添加的, 此时重新render notebooks' numberNotes
+		Notebook.reRenderNotebookNumberNotesIfIsNewNotebook(note.NotebookId);
+
 		// alert(note.ServerNoteId);
 		// 添加到当前的笔记列表中
 		var newHtmlObject = Note._getNoteHtmlObjct(note);
