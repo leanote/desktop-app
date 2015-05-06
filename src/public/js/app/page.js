@@ -719,16 +719,18 @@ LeaAce = {
 		return "leanote_ace_" + (new Date()).getTime() + "_" + this._aceId;
 	},
 	initAce: function(id, val, force) {
+		var me = this;
+		if(!force && !me.canAndIsAce()) {
+			return;
+		}
+		var $pre = $('#' + id);
+		if($pre.length == 0) {
+			return;
+		}
+		var rawCode = $pre.html(); // 原生code
 		try {
-			var me = this;
-			if(!force && !me.canAndIsAce()) {
-				return;
-			}
 			me.disableAddHistory();
-			var $pre = $('#' + id);
-			if($pre.length == 0) {
-				return;
-			}
+			
 			// 本身就有格式的, 防止之前有格式的显示为<span>(ace下)
 			if($pre.attr('style') || $pre.html().indexOf('style') != -1) {
 				$pre.html($pre.text());
@@ -740,7 +742,7 @@ LeaAce = {
 			$pre.removeClass('ace-to-pre');
 			$pre.attr("contenteditable", false); // ? 避免tinymce编辑
 			var aceEditor = ace.edit(id);
-			aceEditor.setShowInvisibles(false);
+
 			aceEditor.setTheme("ace/theme/tomorrow");
 
 			var brush = me.getPreBrush($pre);
@@ -756,7 +758,8 @@ LeaAce = {
 			// retina
 			if(window.devicePixelRatio == 2) {
 				aceEditor.setFontSize("12px");
-			} else {
+			}
+			else {
 				aceEditor.setFontSize("14px");
 			}
 			aceEditor.getSession().setUseWorker(false); // 不用语法检查
@@ -793,11 +796,17 @@ LeaAce = {
 			}
 
 			// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
+			// "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 			me.resetAddHistory();
 			return aceEditor;
 		} catch(e) {
-
+			// 当有错误时, 会有XXXXX的形式, 此时不要ace, 直接原生的!!!
+			console.error('ace error!!!!');
+			console.error(e);
+			$pre.attr("contenteditable", true);
+			$pre.removeClass('ace-tomorrow ace_editor ace-tm');
+			$pre.html(rawCode);
+			me.resetAddHistory();
 		}
 	},
 	clearIntervalForInitAce: null,
@@ -1287,6 +1296,13 @@ function initPage(initedCallback) {
 
 	ipc.on('blurWindow', function(arg) {
 		$('body').addClass('blur');
+	});
+	// 后端发来event, 告诉要关闭了, 处理好后发送给后端说可以关闭了
+	ipc.on('closeWindow', function(arg) {
+		console.log('Front get closeWindow message')
+		onClose(function() {
+			ipc.sendSync('quit-app');
+		});
 	});
 
 	// 注入前端变量#

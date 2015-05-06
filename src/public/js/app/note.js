@@ -1432,7 +1432,8 @@ Note.listNoteContentHistories = function() {
 		for (i in re) {
 			var content = re[i]
 			content.Ab = Note.genAbstract(content.Content, 200);
-			str += tt('<tr><td seq="?">#?<? class="each-content">?</?> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">?</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>', i, (+i+1), s, content.Ab, s, goNowToDatetime(content.UpdatedTime))
+			// 为什么不用tt(), 因为content可能含??
+			str += '<tr><td seq="' +  i + '">#' + (i+1) +'<' + s + ' class="each-content">' + content.Ab + '</' + s + '> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">' + goNowToDatetime(content.UpdatedTime) + '</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>';
 		}
 		str += "</table></div>";
 		$content.html(str);

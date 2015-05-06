@@ -24,7 +24,7 @@ $(function() {
 	$('.tool-close, .tool-close-blur').click(function() {
 		// mac下关闭才是隐藏
         onClose(function() {
-            gui.win.close();
+            gui.win.hide();
         });
         // gui.win.showInactive();
 	});

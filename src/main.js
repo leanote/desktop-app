@@ -10,9 +10,33 @@ var mainWindow = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-  if (process.platform != 'darwin')
+  // if (process.platform != 'darwin')
     app.quit();
 });
+
+// 避免可以启动多个app
+app.on('open-file', function(e) {
+  console.log('reopen');
+  if(mainWindow) {
+    mainWindow.show();
+    mainWindow.focus();
+  } else {
+    openIt();
+  }
+});
+
+app.on('activate-with-no-open-windows', function() { 
+  if(mainWindow) {
+    mainWindow.show();
+  }
+  else {
+    openIt();
+  }
+});
+
+// This method will be called when Electron has done everything
+// initialization and ready for creating browser windows.
+app.on('ready', openIt);
 
 var Menu = require('menu');
 var MenuItem = require('menu-item');
@@ -178,8 +202,7 @@ function setMenu() {
 }
 
 function openIt() {
-
-  app.getPath('appData');
+  // app.getPath('appData');
 
   // var Evt = require('evt');
   // var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
@@ -197,7 +220,6 @@ function openIt() {
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
-
 
   // 不能放在这里, 刚开始有图片, 之后添加的图片不能显示 ??
   // // 启动服务器, 图片
@@ -223,32 +245,19 @@ function openIt() {
       mainWindow.webContents.send('blurWindow');
   });
   
-  /*
-  mainWindow.on('close', function() {
+  // 关闭,先保存数据
+  mainWindow.on('close', function(e) {
+    mainWindow.hide();
+    e.preventDefault();
     mainWindow.webContents.send('closeWindow');
   });
-  */
-
-/*
-  ipc.on('asynchronous-message', function(event, arg) {
-    console.log(arg);  // prints "ping"
-    event.sender.send('asynchronous-reply', 'pong');
+  // 前端发来可以关闭了
+  ipc.on('quit-app', function(event, arg) {
+    console.log('get quit-app request');
+    mainWindow.destroy();
+    mainWindow = null;
   });
-
-  ipc.on('synchronous-message', function(event, arg) {
-    console.log(arg);  // prints "ping"
-    event.returnValue = 'pong';
-  });
-*/
 
   // 作为调试
   // setMenu();
 }
-
-// This method will be called when Electron has done everything
-// initialization and ready for creating browser windows.
-app.on('ready', openIt);
-
-app.on('activate-with-no-open-windows', function() { 
-  openIt();
-});

@@ -150,13 +150,14 @@ $(function() {
 			host = '';
 		}
 		ApiService.auth(email, pwd, host, function(ret) {
-			$('#loadingLogo').removeClass('loading');
 			if(ret.Ok) {
 				setTimeout(function(){ 
+					$('#loadingLogo').removeClass('loading');
 					goToMainPage();
 					gui.getCurrentWindow().close();
 				}, 2000);
 			} else {
+				$('#loadingLogo').removeClass('loading');
 				showMsg(getMsg("Email or Password Error"));
 			}
 		});

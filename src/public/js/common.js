@@ -366,6 +366,7 @@ function _setEditorContent(content, isMarkdown, preview) {
 		if(typeof tinymce != "undefined" && tinymce.activeEditor) {
 			var editor = tinymce.activeEditor;
 			editor.setContent(content);
+
 			/*
 			if(LeaAce.canAce() && LeaAce.isAce) {
 				try {
