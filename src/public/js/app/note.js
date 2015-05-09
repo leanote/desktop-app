@@ -1805,6 +1805,10 @@ Note.toggleReadOnly = function() {
 	if(!note) {
 		return;
 	}
+	
+	$('.created-time').html(goNowToDatetime(note.CreatedTime));
+	$('.updated-time').html(goNowToDatetime(note.UpdatedTime));
+
 	if(note.readOnly) {
 		return;
 	}
@@ -1815,9 +1819,6 @@ Note.toggleReadOnly = function() {
 			LeaAce.setAceReadOnly($(this), true);
 		});
 	}
-
-	$('.created-time').html(goNowToDatetime(note.CreatedTime));
-	$('.updated-time').html(goNowToDatetime(note.UpdatedTime));
 
 	note.readOnly = true;
 	Note.readOnly = true;

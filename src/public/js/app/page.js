@@ -778,7 +778,7 @@ LeaAce = {
 			aceEditor.setOption("wrap", "free");
 			aceEditor.setShowInvisibles(false);
 			aceEditor.setAutoScrollEditorIntoView(true);
-			aceEditor.setReadOnly(true);
+			aceEditor.setReadOnly(Note.readOnly);
 			aceEditor.setOption("maxLines", 10000);
 			aceEditor.commands.addCommand({
 			    name: "undo",
