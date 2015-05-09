@@ -30,6 +30,9 @@ var Writting = {
 		Resize.setMdColumnWidth(width);
 		// $("#mceToolbar").css("height", "40px");
 		resizeEditor();
+
+		// 切换到写模式
+		Note.toggleWriteable();
 	},
 	initNormal: function() {
 		Resize.setMdColumnWidth(UserInfo.MdEditorWidth);
@@ -193,7 +196,7 @@ var Resize = {
 		UserInfo.NotebookWidth = notebookWidth;
 		UserInfo.NoteListWidth = noteListWidth;
 
-		console.log("??????????");
+		// console.log("??????????");
 		self.setTopDragWidth();
 	},
 	resize3Columns: function(event, isFromeIfr) {
@@ -397,9 +400,9 @@ function initEditor() {
 			// desk下有问题
 			// ed.on('keydown', Note.saveNote);
 			ed.on('keydown', function(e) {
-				// 如果是readony, 则不能做任何操作
-				if(Note.readOnly) {
-					console.log('readonly');
+				var num = e.which ? e.which : e.keyCode;
+				// 如果是readony, 则不能做任何操作, 除了复制
+				if(Note.readOnly && !((e.ctrlKey || e.metaKey) && num == 67)) {
 					e.preventDefault();
 					return;
 				}

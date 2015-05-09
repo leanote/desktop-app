@@ -1607,6 +1607,12 @@ img::selection {
   line-height: 11px;
   text-align: center;
 }
+.mce-btn-small .mce-caret {
+  margin-top: 8px;
+}
+.mce-listbox.mce-btn-small .mce-caret {
+  margin-top: -2px;
+}
 /*
 #starNotes li a, 
 .ztree li a, 
@@ -1617,6 +1623,13 @@ img::selection {
 	cursor: default !important;
 }
 */
+#moreBtn {
+  dispaly: block;
+  position: absolute;
+  cursor: pointer;
+  right: 5px;
+  padding: 3px 10px;
+}
 .info-toolbar {
   position: absolute;
   top: 0;

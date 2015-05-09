@@ -1793,7 +1793,8 @@ Note.toggleReadOnly = function() {
 
 	// console.log('(((((((((((((((((((((((');
 	// tinymce
-	$('#editor').addClass('read-only');
+	var $editor = $('#editor');
+	$editor.addClass('read-only').removeClass('all-tool'); // 不要全部的
 
 	// 不可写
 	$('#editorContent').attr('contenteditable', false);
@@ -1846,6 +1847,11 @@ Note.toggleWriteable = function() {
 		$('#editorContent pre').each(function() {
 			LeaAce.setAceReadOnly($(this), false);
 		});
+	}
+	else {
+		if(MD) {
+			MD.onResize();
+		}
 	}
 
 	note.readOnly = false;
