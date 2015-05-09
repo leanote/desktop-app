@@ -289,34 +289,22 @@ Note.curHasChanged = function(force) {
 		NotebookId: cacheNote.NotebookId
 	};
 	
+	// 新的
 	if(hasChanged.IsNew) {
+		hasChanged.hasChanged = true;
 		$.extend(hasChanged, cacheNote);
-	} else {
-		/*
-		if(!cacheNote.isDirty) { // 不是dirty
-			// dirty操作在后台控制吧, 因为有些命令如添加链接不会触发keydown的
-			console.log("no dirty");
-			hasChanged.hasChanged = false;
-			return hasChanged;
-		} else {
-			// console.log("is dirty");
-		}
-		*/
 	}
-	
+
 	if(cacheNote.Title != title) {
 		hasChanged.hasChanged = true; // 本页使用用小写
 		hasChanged.Title = title; // 要传到后台的用大写
-		if(!hasChanged.Title) {
-//			alert(1);
-		}
 	}
 	
-	// 这里, 总为true, 那么, 总会保存的
-	// if(!arrayEqual(cacheNote.Tags, tags)) {
-	hasChanged.hasChanged = true;
-	hasChanged.Tags = tags;
-	// }
+	// 这里
+	if(!arrayEqual(cacheNote.Tags, tags)) {
+		hasChanged.hasChanged = true;
+		hasChanged.Tags = tags;
+	}
 	
 	// 比较text, 因为note Nav会添加dom会导致content改变
 	if((force && cacheNote.Content != content) || (!force && (/**/(!cacheNote.IsMarkdown && $(cacheNote.Content).text() != contentText) || (cacheNote.IsMarkdown && cacheNote.Content != contentText)) /**/) ) {
@@ -460,11 +448,17 @@ Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
 Note.curChangedSaveIt = function(force, callback) {
 	var me = this;
 	// 如果当前没有笔记, 不保存
-	if(!Note.curNoteId || Note.isReadOnly || Note.readOnly) {
-		console.log('不用保存, 当前只读 ' + Note.readOnly);
+	if(!Note.curNoteId || Note.isReadOnly /*|| Note.readOnly*/) {
 		callback && callback();
 		return;
 	}
+
+	/*
+	if(!force && Note.readOnly) {
+		console.log('不用保存, 当前只读 ' + Note.readOnly);
+		return;
+	}
+	*/
 
 	// console.error(">>");
 	
@@ -526,7 +520,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		return hasChanged;
 
 	} else {
-		console.log('不用保存');
+		console.log('不用保存 (^_^)');
 	}
 	
 	callback && callback();
@@ -1805,7 +1799,7 @@ Note.toggleReadOnly = function() {
 	if(!note) {
 		return;
 	}
-	
+
 	$('.created-time').html(goNowToDatetime(note.CreatedTime));
 	$('.updated-time').html(goNowToDatetime(note.UpdatedTime));
 

@@ -401,11 +401,24 @@ function initEditor() {
 			// ed.on('keydown', Note.saveNote);
 			ed.on('keydown', function(e) {
 				var num = e.which ? e.which : e.keyCode;
-				// 如果是readony, 则不能做任何操作, 除了复制
-				if(Note.readOnly && !((e.ctrlKey || e.metaKey) && num == 67)) {
+				// 如果是readony, 则不能做任何操作, 除了v, x, z
+				if(Note.readOnly && (
+						(e.ctrlKey || e.metaKey) && (num == 88 || num == 86 || num == 90)
+					)
+				) {
+					console.log('keydown preventDefault')
 					e.preventDefault();
 					return;
 				}
+
+				// 没有ctrl, 直接输入x, <-
+				if(Note.readOnly && 
+					!(e.ctrlKey || e.metaKey)) {
+					console.log('keydown preventDefault')
+					e.preventDefault();
+					return;
+				}
+
 				/*
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
