@@ -339,14 +339,24 @@ function log(o) {
           <div id="editor">
             <!-- 编辑器 -->
             <div id="mceToolbar">
-              <div id="popularToolbar"
-                style="position: absolute; right: 30px; left: 0"></div>
-              <a
-                style="dispaly: block; position: absolute; cursor: pointer; right: 10px; padding: 3px 10px"
-                id="moreBtn"> 
-                <i class="more-fa fa fa-angle-down"></i>
-              </a>
+              <div id="mceToolbarContainer">
+                <div id="popularToolbar"
+                  style="position: absolute; right: 30px; left: 0"></div>
+                <a
+                  style="dispaly: block; position: absolute; cursor: pointer; right: 10px; padding: 3px 10px"
+                  id="moreBtn"> 
+                  <i class="more-fa fa fa-angle-down"></i>
+                </a>
+              </div>
+
+              <!-- 查看信息 -->
+              <div id="infoToolbar" class="info-toolbar">
+                <a class="toolbar-update"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+                <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
+                <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
+              </div>
             </div>
+
             <div class="editorBg"></div>
             <div id="leanoteNav" class="leanoteNav">
               <h1>
@@ -381,24 +391,31 @@ function log(o) {
                 <div class="layout-wrapper-l2">
                     <div class="navbar navbar-default">
                         <div class="navbar-inner" id="wmd-button-bar">
-                            <ul class="nav left-buttons">
-                                <li class="wmd-button-group1 btn-group"></li>
-                            </ul>
-                            <ul class="nav left-buttons">
-                                <li class="wmd-button-group2 btn-group"></li>
-                            </ul>
-                            <ul class="nav left-buttons">
-                                <li class="wmd-button-group3 btn-group"></li>
-                            </ul>
-                            <ul class="nav left-buttons">
-                                <li class="wmd-button-group5 btn-group"></li>
-                            </ul>
-                            <!-- 帮助 -->
-                             <ul class="nav left-buttons">
-                                <li class="wmd-button-group6 btn-group">
-                                  <li class="wmd-button btn btn-success" id="wmd-help-button" title="Markdown syntax" style="left: 0px; display: none;"><span style="display: none; background-position: 0px 0px;"></span><i class="fa fa-question-circle"></i></li>
-                                </li>
-                            </ul> 
+                            <div id="mceInfoToolbar" class="info-toolbar">
+                              <a class="toolbar-update"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+                              <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
+                              <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
+                            </div>
+                            <div class="wmd-button-bar-inner">
+                              <ul class="nav left-buttons">
+                                  <li class="wmd-button-group1 btn-group"></li>
+                              </ul>
+                              <ul class="nav left-buttons">
+                                  <li class="wmd-button-group2 btn-group"></li>
+                              </ul>
+                              <ul class="nav left-buttons">
+                                  <li class="wmd-button-group3 btn-group"></li>
+                              </ul>
+                              <ul class="nav left-buttons">
+                                  <li class="wmd-button-group5 btn-group"></li>
+                              </ul>
+                              <!-- 帮助 -->
+                               <ul class="nav left-buttons">
+                                  <li class="wmd-button-group6 btn-group">
+                                    <li class="wmd-button btn btn-success" id="wmd-help-button" title="Markdown syntax" style="left: 0px; display: none;"><span style="display: none; background-position: 0px 0px;"></span><i class="fa fa-question-circle"></i></li>
+                                  </li>
+                              </ul> 
+                            </div>
                         </div>
                         <div class="editorBg"></div>
                     </div>
@@ -407,15 +424,15 @@ function log(o) {
                           <pre id="wmd-input" class="form-control"><div id="wmd-input-sub" class="editor-content mousetrap" contenteditable=true></div><div class="editor-margin"></div></pre>
                         </div>
                         <div id="right-column">
-                        <div class="preview-panel panel-open" id="preview-panel">
-                          <div id="mdSplitter2" class="layout-resizer layout-resizer-preview open" style="-webkit-user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); touch-action: none;"></div>
-                            <div class="layout-toggler layout-toggler-preview btn btn-info open" title="Toggle preview" data-open="1"><i class="fa fa-angle-right"></i></div>
-                            <div class="preview-container">
-                                <div id="preview-contents">
-                                    <div id="wmd-preview" class="preview-content"></div>
-                                </div>
-                            </div>
-                        </div>
+                          <div class="preview-panel panel-open" id="preview-panel">
+                            <div id="mdSplitter2" class="layout-resizer layout-resizer-preview open" style="-webkit-user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); touch-action: none;"></div>
+                              <div class="layout-toggler layout-toggler-preview btn btn-info open" title="Toggle preview" data-open="1"><i class="fa fa-angle-right"></i></div>
+                              <div class="preview-container">
+                                  <div id="preview-contents">
+                                      <div id="wmd-preview" class="preview-content"></div>
+                                  </div>
+                              </div>
+                          </div>
                         </div>
                     </div>
                     <div class="extension-preview-buttons">

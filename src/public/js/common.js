@@ -338,12 +338,12 @@ function switchEditor(isMarkdown) {
 // 可能是tinymce还没有渲染成功
 var previewToken = "<div style='display: none'>FORTOKEN</div>"
 var clearIntervalForSetContent;
-function setEditorContent(content, isMarkdown, preview) {
+function setEditorContent(content, isMarkdown, preview, callback) {
 	// setTimeout(function() {
-		_setEditorContent(content, isMarkdown, preview);
+		_setEditorContent(content, isMarkdown, preview, callback);
 	// });
 }
-function _setEditorContent(content, isMarkdown, preview) {
+function _setEditorContent(content, isMarkdown, preview, callback) {
 	if(!content) {
 		content = "";
 	}
@@ -367,6 +367,8 @@ function _setEditorContent(content, isMarkdown, preview) {
 			var editor = tinymce.activeEditor;
 			editor.setContent(content);
 
+			callback && callback(); // Note.toggleReadOnly();
+
 			/*
 			if(LeaAce.canAce() && LeaAce.isAce) {
 				try {
@@ -383,7 +385,7 @@ function _setEditorContent(content, isMarkdown, preview) {
 		} else {
 			// 等下再设置
 			clearIntervalForSetContent = setTimeout(function() {
-				setEditorContent(content, false);
+				setEditorContent(content, false, false, callback);
 			}, 100);
 		}
 	} else {
@@ -410,9 +412,10 @@ function _setEditorContent(content, isMarkdown, preview) {
 	*/
 		if(MD) {
 			MD.setContent(content);
+			callback && callback();
 		} else {
 			clearIntervalForSetContent = setTimeout(function() {
-				setEditorContent(content, true);
+				setEditorContent(content, true, false, callback);
 			}, 100);
 		}
 	}

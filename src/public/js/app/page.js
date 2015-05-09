@@ -391,11 +391,18 @@ function initEditor() {
 	tinymce.init({
 		inline: true,
 		theme: 'leanote',
+		// readonly : false,
 		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
 		setup: function(ed) {
 			// desk下有问题
 			// ed.on('keydown', Note.saveNote);
-			ed.on('keydown', function(e) { 
+			ed.on('keydown', function(e) {
+				// 如果是readony, 则不能做任何操作
+				if(Note.readOnly) {
+					console.log('readonly');
+					e.preventDefault();
+					return;
+				}
 				/*
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
@@ -575,7 +582,7 @@ $(function() {
 	}
 	
 	// markdown preview下的a不能点击
-	$('#preview-contents').on('click', 'a', function(e) {
+	$('#preview-contents, #editorContent').on('click', 'a', function(e) {
 		e.preventDefault();
 		return false;
 	});
@@ -768,6 +775,7 @@ LeaAce = {
 			aceEditor.setOption("wrap", "free");
 			aceEditor.setShowInvisibles(false);
 			aceEditor.setAutoScrollEditorIntoView(true);
+			aceEditor.setReadOnly(true);
 			aceEditor.setOption("maxLines", 10000);
 			aceEditor.commands.addCommand({
 			    name: "undo",
@@ -931,6 +939,19 @@ LeaAce = {
 			return;
 		}
 		return this._aceEditors[id];
+	},
+	setAceReadOnly: function(pre, readOnly) {
+		var me = this;
+		if(typeof pre == 'object') {
+			var id = pre.attr('id');
+		}
+		else {
+			var id = pre;
+		}
+		var ace = me.getAce(id);
+		if(ace) {
+			ace.setReadOnly(readOnly);
+		}
 	},
 	// 当前焦点是否在aceEditor中
 	nowIsInAce: function () {

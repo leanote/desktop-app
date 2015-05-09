@@ -168,8 +168,10 @@ function Menu() {
     this.menu.append(this.openInBrowser);
 }
 Menu.prototype.canCopy = function(bool) {
-    this.cut.enabled = bool;
     this.copy.enabled = bool;
+};
+Menu.prototype.canCut = function(bool) {
+    this.cut.enabled = bool;
 };
 Menu.prototype.canPaste = function(bool) {
     this.paste.enabled = bool;
@@ -210,7 +212,22 @@ $('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-inpu
 	var selectionType = window.getSelection().type.toUpperCase();
 	// var clipData = gui.Clipboard.get().get();
 	// menu.canPaste(clipData.length > 0);
-	menu.canPaste(true);
+
+    var canPaste = true;
+    var canCut = true;
+
+    // 如果
+    if($target.closest('#editor').length > 0 || $target.closest('#mdEditor').length > 0) {
+        if(Note.readOnly) {
+            canPaste = false;
+            canCut = false;
+        }
+    }
+	
 	menu.canCopy(selectionType === 'RANGE');
+
+    menu.canPaste(canPaste);
+    menu.canCut(canCut);
+
 	menu.popup(e.originalEvent.x, e.originalEvent.y);
 });

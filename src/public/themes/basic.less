@@ -1830,5 +1830,63 @@ img::selection {
 }
 */
 
+
+// readonly
+.info-toolbar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 10px;
+	bottom: 0;
+	line-height: 30px;
+	padding-left: 10px;
+	height: 30px;
+	display: none;
+
+	.toolbar-update {
+		color: inherit;
+		float: right;
+	}
+
+	.created-time {
+		display: inline-block;
+		padding-right: 10px;
+	}
+}
+#editorContent {
+	-webkit-user-select: text;
+}
+
+#editor.read-only {
+	#mceToolbarContainer {
+		display: none;
+	}
+	.info-toolbar {
+		display: block;
+	}
+}
+
+#mdEditor.read-only {
+	.info-toolbar {
+		display: block;
+	}
+	.wmd-button-bar-inner,
+	#mdSplitter2, // 拖动
+	.btn-info // 拖动
+	{
+		display: none;
+	}
+	#left-column {
+		// display: none;
+		visibility: hidden;
+	}
+	#right-column {
+		left: 0 !important;
+	}
+	.preview-container {
+		left: 10px;
+	}
+}
+
 @import '../css/traffic.less';
 @import '../css/ani.less';

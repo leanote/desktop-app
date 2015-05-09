@@ -35,12 +35,8 @@ Note.notebookIds = {}; // notebookId => true
 
 Note.isReadOnly = false;
 // 定时保存信息
-Note.intervalTime = 10 * 1000; // 600s, 10mins
+Note.intervalTime = 10 * 1000; // 10秒 
 Note.startInterval = function() {
-	// 不要自动保存
-	return;
-
-	console.error("??");
 	if(Note.interval) {
 		clearInterval(Note.interval);
 	}
@@ -464,7 +460,8 @@ Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
 Note.curChangedSaveIt = function(force, callback) {
 	var me = this;
 	// 如果当前没有笔记, 不保存
-	if(!Note.curNoteId || Note.isReadOnly) {
+	if(!Note.curNoteId || Note.isReadOnly || Note.readOnly) {
+		console.log('不用保存, 当前只读 ' + Note.readOnly);
 		callback && callback();
 		return;
 	}
@@ -486,8 +483,6 @@ Note.curChangedSaveIt = function(force, callback) {
 		
 		// 设置更新时间
 		Note.setNoteCache({"NoteId": hasChanged.NoteId, "UpdatedTime": new Date()}, false);
-
-		console.log('设置完成');
 
 		// 表示有未完成的保存
 		/*
@@ -523,12 +518,15 @@ Note.curChangedSaveIt = function(force, callback) {
 				// 新建笔记也要change history
 				Pjax.changeNote(ret);
 			}
-			showMsg(getMsg("saveSuccess"), 1000);
+			console.log('保存成功!');
 
 			callback && callback(ret);
 		});
 		
 		return hasChanged;
+
+	} else {
+		console.log('不用保存');
 	}
 	
 	callback && callback();
@@ -870,12 +868,17 @@ Note.renderNote = function(note) {
 // render content
 // 这一步很慢
 Note.renderNoteContent = function(content, needRenderToLeft) {
-	// console.error('---------------- note:' + note.Title);
+	// console.error('---------------- note:' + content.Title);
 	// console.trace();
 
-	setEditorContent(content.Content, content.IsMarkdown, content.Preview);
+	setEditorContent(content.Content, content.IsMarkdown, content.Preview, function() {
+		// console.log('>>>>>>>>>>>>>>>>>')
+		Note.setCurNoteId(content.NoteId);
+		// 只读
+		Note.toggleReadOnly();
+	});
 
-	var e = (new Date()).getTime();
+	// var e = (new Date()).getTime();
 
 	// 只有在renderNoteContent时才设置curNoteId
 	Note.setCurNoteId(content.NoteId);
@@ -1170,7 +1173,10 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	Note.setCurNoteId(note.NoteId);
 	
 	// 更新数量
-	Notebook.incrNotebookNumberNotes(notebookId)
+	Notebook.incrNotebookNumberNotes(notebookId);
+
+	// 切换到写模式
+	Note.toggleWriteable();
 };
 
 // 同步
@@ -1470,8 +1476,8 @@ Note.listNoteContentHistories = function() {
 	});
 };
 
-//--------------
-// read only
+//-----------------
+// read only, 已过时
 
 Note.showReadOnly = function() {
 	Note.isReadOnly = true;
@@ -1777,6 +1783,73 @@ Note.deleteNoteTag = function(item, tag) {
 			}
 		}
 	}
+};
+
+Note.readOnly = true;
+// 切换只读模式
+Note.toggleReadOnly = function() {
+	var me = this;
+	var note = me.getCurNote();
+
+	// console.log('(((((((((((((((((((((((');
+	// tinymce
+	$('#editor').addClass('read-only');
+
+	// 不可写
+	$('#editorContent').attr('contenteditable', false);
+
+	// markdown
+	$('#mdEditor').addClass('read-only');
+
+	if(!note) {
+		return;
+	}
+	if(note.readOnly) {
+		return;
+	}
+
+	if(!note.IsMarkdown) {
+		// 里面的pre也设为不可写
+		$('#editorContent pre').each(function() {
+			LeaAce.setAceReadOnly($(this), true);
+		});
+	}
+
+	$('.created-time').html(goNowToDatetime(note.CreatedTime));
+	$('.updated-time').html(goNowToDatetime(note.UpdatedTime));
+
+	note.readOnly = true;
+	Note.readOnly = true;
+};
+// 切换到编辑模式
+Note.toggleWriteable = function() {
+	var me = this;
+
+	// $('#infoToolbar').hide();
+	$('#editor').removeClass('read-only');
+	$('#editorContent').attr('contenteditable', true);
+
+	// markdown
+	$('#mdEditor').removeClass('read-only');
+
+	var note = me.getCurNote();
+	if(!note) {
+		return;
+	}
+
+	if(!note.readOnly) {
+		return;
+	}
+
+	if(!note.IsMarkdown) {
+		// 里面的pre也设为不可写
+		$('#editorContent pre').each(function() {
+			LeaAce.setAceReadOnly($(this), false);
+		});
+	}
+
+	note.readOnly = false;
+	Note.readOnly = false;
 };
 
 // 渲染列表
@@ -2705,6 +2778,12 @@ $(function() {
 
 	Note._syncWarningE.click(function() {
 		Note.fixNetOrAuthError();
+	});
+
+	// readony
+	// 修改
+	$('.toolbar-update').click(function() {
+		Note.toggleWriteable();
 	});
 
 });

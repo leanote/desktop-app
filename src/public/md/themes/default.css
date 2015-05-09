@@ -920,8 +920,8 @@ a.input-group-addon {
 }
 .extension-preview-buttons {
   position: absolute;
-  right: 0;
-  top: 30px;
+  right: -1px;
+  top: 29px;
   bottom: auto;
   z-index: 40;
   background-color: #f0f0f0;

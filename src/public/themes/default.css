@@ -1617,6 +1617,51 @@ img::selection {
 	cursor: default !important;
 }
 */
+.info-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 10px;
+  bottom: 0;
+  line-height: 30px;
+  padding-left: 10px;
+  height: 30px;
+  display: none;
+}
+.info-toolbar .toolbar-update {
+  color: inherit;
+  float: right;
+}
+.info-toolbar .created-time {
+  display: inline-block;
+  padding-right: 10px;
+}
+#editorContent {
+  -webkit-user-select: text;
+}
+#editor.read-only #mceToolbarContainer {
+  display: none;
+}
+#editor.read-only .info-toolbar {
+  display: block;
+}
+#mdEditor.read-only .info-toolbar {
+  display: block;
+}
+#mdEditor.read-only .wmd-button-bar-inner,
+#mdEditor.read-only #mdSplitter2,
+#mdEditor.read-only .btn-info {
+  display: none;
+}
+#mdEditor.read-only #left-column {
+  visibility: hidden;
+}
+#mdEditor.read-only #right-column {
+  left: 0 !important;
+}
+#mdEditor.read-only .preview-container {
+  left: 10px;
+}
 .win-tool {
   padding: 5px;
   position: absolute;
