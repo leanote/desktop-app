@@ -4,6 +4,10 @@ Use Electron(atom-shell) to create leanote desktop app.
 
 ![preview.png](preview.png "")
 
+
+## Download
+Please see http://app.leanote.com
+
 ## How to develop it
 
 ### 1. Install Electron
