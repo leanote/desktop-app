@@ -13,6 +13,8 @@ sqlite*
 /test
 tinymce_old
 src/node_modules/request
+src/node_modules/fs.extra
+src/merge.js
 src/test*.js
 /updates
 /old
