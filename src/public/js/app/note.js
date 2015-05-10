@@ -1800,8 +1800,14 @@ Note.toggleReadOnly = function() {
 		return;
 	}
 
-	$('.created-time').html(goNowToDatetime(note.CreatedTime));
-	$('.updated-time').html(goNowToDatetime(note.UpdatedTime));
+	if(note.IsMarkdown) {
+		$('#mdInfoToolbar .created-time').html(goNowToDatetime(note.CreatedTime));
+		$('#mdInfoToolbar .updated-time').html(goNowToDatetime(note.UpdatedTime));
+	}
+	else {
+		$('#infoToolbar .created-time').html(goNowToDatetime(note.CreatedTime));
+		$('#infoToolbar .updated-time').html(goNowToDatetime(note.UpdatedTime));
+	}
 
 	if(note.readOnly) {
 		return;

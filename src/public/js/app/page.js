@@ -753,11 +753,13 @@ LeaAce = {
 		var rawCode = $pre.html(); // 原生code
 		try {
 			me.disableAddHistory();
-			
+
 			// 本身就有格式的, 防止之前有格式的显示为<span>(ace下)
-			if($pre.attr('style') || $pre.html().indexOf('style') != -1) {
+			var classes = $pre.attr('class') || '';
+			var isHtml = classes.indexOf('brush:html') != -1;
+			if($pre.attr('style') || 
+				(!isHtml && $pre.html().indexOf('style') != -1)) { // 如果是html就不用考虑了, 因为html格式的支持有style
 				$pre.html($pre.text());
-				// return;
 			}
 			$pre.find('.toggle-raw').remove();
 			var preHtml = $pre.html();
