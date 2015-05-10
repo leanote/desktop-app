@@ -6,6 +6,10 @@ For electron branch, please see https://github.com/leanote/desktop-app/tree/elec
 
 ![preview.png](preview.png "")
 
+
+## Download
+Please see http://app.leanote.com
+
 ## How to develop it
 
 ### 1. Install node-webkit
