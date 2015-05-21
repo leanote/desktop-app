@@ -1279,6 +1279,8 @@ Note.saveNote = function(e) {
     } else {
     }
 
+    return;
+
     // copy, paste
     if(e.ctrlKey || e.metaKey) {
 	    if(num == 67) { // ctrl + c

@@ -530,6 +530,14 @@ function previewIsEmpty(preview) {
 	return false;
 }
 
+// ace的值有误?
+function isAceError(val) {
+	if(!val) {
+		return false;
+	}
+	return val.indexOf('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX') != -1;
+}
+
 // 有tinymce得到的content有<html>包围
 // false表示编辑器未初始化
 function getEditorContent(isMarkdown) {
@@ -548,6 +556,10 @@ function getEditorContent(isMarkdown) {
 				var aceEditor = LeaAce.getAce(id);
 				if(aceEditor) {
 					var val = aceEditor.getValue();
+					// 表示有错
+					if(isAceError(val)) {
+						val = pre.html();
+					}
 					val = val.replace(/</g, '&lt').replace(/>/g, '&gt');
 					pre.removeAttr('style', '').removeAttr('contenteditable').removeClass('ace_editor');
 					pre.html(val);

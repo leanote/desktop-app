@@ -397,8 +397,15 @@ function initEditor() {
 		// readonly : false,
 		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
 		setup: function(ed) {
-			// desk下有问题
-			// ed.on('keydown', Note.saveNote);
+
+			// electron下有问题, Ace剪切导致行数减少, #16
+			ed.on('cut', function(e) {
+				if($(e.target).hasClass('ace_text-input')) {
+					e.preventDefault();
+					return;
+				}
+			});
+
 			ed.on('keydown', function(e) {
 				var num = e.which ? e.which : e.keyCode;
 				// 如果是readony, 则不能做任何操作, 除了v, x, z
@@ -835,6 +842,8 @@ LeaAce = {
 			me.resetAddHistory();
 		}
 	},
+
+	// tinymce.setContent调用
 	clearIntervalForInitAce: null,
 	initAceFromContent: function(editor) {
 		if(!this.canAndIsAce()) {
@@ -852,15 +861,21 @@ LeaAce = {
 			var pres = content.find('pre');
 			for(var i = 0 ; i < pres.length; ++i) {
 				var pre = pres.eq(i);
-				// 如果不是ace
-				if(me.isInAce(pre)) {
-					break;
+				// 如果是ace, 那不用处理了, 为什么会有这种情况呢?
+				// 按理是没有这种情况的
+				var aceAndNode = me.isInAce(pre);
+				if(aceAndNode) {
+					if(isAceError(aceAndNode[0].getValue())) {
+						console.error('之前有些没有destroy掉');
+					}
+					else {
+						break;
+					}
 				}
 				setTimeout((function(pre) {
 					return function() {
 						pre.find('.toggle-raw').remove();
 						var value = pre.html();
-						log(value);
 						value = value.replace(/ /g, "&nbsp;").replace(/\<br *\/*\>/gi,"\n").replace(/</g, '&lt;').replace(/>/g, '&gt;');
 						pre.html(value);
 						var id = pre.attr('id');
@@ -938,6 +953,8 @@ LeaAce = {
 			}
 		}, 10);
 	},
+	// tinymce.setContent调用, 表示在setContent之前先把之前的ace destroy掉
+	// 很可能会有一些没有destroy的情况
 	destroyAceFromContent: function(everContent) {
 		if(!this.canAce()) {
 			return;
@@ -1063,6 +1080,10 @@ LeaAce = {
 			var aceEditor = aceEditorAndPre[0];
 			var $pre = aceEditorAndPre[1];
 			var value = aceEditor.getValue();
+			// 表示有错
+			if(isAceError(value)) {
+				value = $pre.html();
+			}
 			value = value.replace(/</g, '&lt').replace(/>/g, '&gt');
 			// var id = getAceId();
 			var replacePre = $('<pre class="' + $pre.attr('class') + ' ace-to-pre">' + value + "</pre>");
