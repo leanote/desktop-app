@@ -168,19 +168,20 @@ function Menu() {
     this.menu.append(this.openInBrowser);
 }
 Menu.prototype.canCopy = function(bool) {
-    this.copy.enabled = bool;
+    this.copy.enabled = !!bool;
 };
 Menu.prototype.canCut = function(bool) {
-    this.cut.enabled = bool;
+    this.cut.enabled = !!bool;
 };
 Menu.prototype.canPaste = function(bool) {
-    this.paste.enabled = bool;
+    this.paste.enabled = !!bool;
 };
 Menu.prototype.canSaveAs = function(bool) {
-    this.saveAs.enabled = bool;
+    // Electron只接受bool
+    this.saveAs.enabled = !!bool;
 };
 Menu.prototype.canOpenInBroswer = function(bool) {
-    this.openInBrowser.enabled = bool;
+    this.openInBrowser.enabled = !!bool;
 };
 Menu.prototype.popup = function(x, y) {
     this.menu.popup(gui.getCurrentWindow(), x, y);
