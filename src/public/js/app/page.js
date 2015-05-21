@@ -1630,11 +1630,12 @@ var Pren = {
 
 	init: function() {
 		var me = this;
+		var isMac_ = isMac();
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Fullscreen'), 
-				accelerator: 'command+=',
+				accelerator: isMac_ ? 'command+=' : 'ctrl+=',
 				click: function() {
 					me.toggleFullscreen();
 				}
@@ -1642,7 +1643,7 @@ var Pren = {
 		me.pren = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Presentation'), 
-				accelerator: 'command+p',
+				accelerator: isMac_ ? 'command+p' : 'ctrl+p',
 				click: function() {
 				me.togglePren();
 			}
@@ -1650,7 +1651,7 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'), 
-				accelerator: 'command+e',
+				accelerator: isMac_ ? 'command+e' : 'ctrl+e',
 				click: function() {
 				me.togglePren(true);
 			}
@@ -1944,6 +1945,7 @@ function userMenu() {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
 			this.menu.append(Pren.pren);
+			this.menu.append(Pren.view);
 			this.menu.append(Pren.fullScreen);
 		
 			height = 270;

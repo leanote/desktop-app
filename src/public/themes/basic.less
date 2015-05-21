@@ -1901,5 +1901,28 @@ img::selection {
 	}
 }
 
+// notify
+#notify {
+	position: fixed;
+	right: 0px;
+	bottom: 0;
+	z-index: 9999;
+	height: 100px;
+	cursor: pointer;
+	.alert {
+		box-shadow: 0 0 20px rgba(0,0,0,0.1);
+		position: absolute;
+		width: 250px;
+		right: -250px;
+		bottom: 0;
+		opacity: 0;
+		transition: opacity 0.5s, right 0.5s;
+	}
+	.alert.alert-show {
+		opacity: 1;
+		right: 5px;
+	}
+}
+
 @import '../css/traffic.less';
 @import '../css/ani.less';

@@ -67,13 +67,9 @@ define(function() {
     						if(targetPath && me.downloadPdfPath) {
     							Api.fileService.download(me.downloadPdfPath, targetPath, function(ok, msg) {
 									if(ok) {
-										new window.Notification(getMsg('Info'), {
-									        body: getMsg('plugin.export_pdf.exportSuccess')
-									    });
+									    Notify.show({title: 'Info', body: getMsg('plugin.export_pdf.exportSuccess')});
 									} else {
-										new window.Notification(getMsg('Warning'), {
-									        body: getMsg('plugin.export_pdf.exportFailure')
-									    });
+									    Notify.show({type: 'warning', title: 'Warning', body: getMsg('plugin.export_pdf.exportFailure')});
 									}
 								});
     						}
@@ -85,13 +81,7 @@ define(function() {
 			    			m = getMsg('plugin.export_pdf.notExists');
 			    		}
 
-			    		// alert会死?
-			    		// alert('File not exists');
-			    		// https://github.com/nwjs/nw.js/wiki/Notification
-			    		var notification = new window.Notification(getMsg('Warning'), {
-					        body: getMsg('plugin.export_pdf.exportFailure') + m
-					        // icon: appIcon
-					    });
+					    Notify.show({type: 'warning', title: 'Warning', body: getMsg('plugin.export_pdf.exportFailure') + m});
 			    	}
 		    	}, 100);
 		    });

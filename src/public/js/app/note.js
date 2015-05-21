@@ -2364,17 +2364,9 @@ var Attach = {
 					if(curAttach) {
 						FileService.download(curAttach.Path, targetPath, function(ok, msg) {
 							if(!ok) {
-								// TODO 提示下载成功
-								var notification = new window.Notification(getMsg('Warning'), {
-							        body: getMsg('File saved failure!'),
-							        // icon: appIcon
-							    });
+							    Notify.show({type: 'warning', title: 'Warning', body: 'File saved failed!'});
 							} else {
-								// TODO 提示下载成功
-								var notification = new window.Notification(getMsg('Info'), {
-							        body: getMsg('File saved successful!'),
-							        // icon: appIcon
-							    });
+							    Notify.show({title: 'Info', body: 'File saved successful!'});
 							}
 						});
 					} else {
@@ -2385,11 +2377,6 @@ var Attach = {
     			}
     		});
 
-		});
-		
-		// 下载
-		$('#downloadFileInput').change(function(e) {
-			
 		});
 		
 		// make link

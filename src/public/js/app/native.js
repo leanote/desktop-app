@@ -123,13 +123,9 @@ function Menu() {
 
             				FileService.download(curPath, targetPath, function(ok, msg) {
 								if(ok) {
-									new window.Notification(getMsg('Info'), {
-								        body: getMsg('Image saved successful!'),
-								    });
+                                    Notify.show({title: 'Info', body: 'Image saved successful!'});
 								} else {
-									new window.Notification(getMsg('Warning'), {
-								        body: getMsg(msg || 'Image saved failure!'),
-								    });
+                                    Notify.show({type: 'warning', title: 'Warning', body: 'Image saved failed!'});
 								}
 							});
             			}
@@ -138,13 +134,7 @@ function Menu() {
             		});
             		
             	} else {
-            		// alert会死?
-            		// alert('File not exists');
-            		// https://github.com/nwjs/nw.js/wiki/Notification
-            		var notification = new window.Notification('Warning', {
-				        body: getMsg('File not exists'),
-				        // icon: appIcon
-				    });
+                    Notify.show({type: 'warning', title: 'Warning', body: 'File not exists!'});
             	}
             });
         }

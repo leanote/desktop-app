@@ -1472,7 +1472,7 @@ function switchAccount() {
 		var win = new BrowserWindow({ width: 278, height: 316, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 516, show: true, frame: true, resizable: false });
+		var win = new BrowserWindow({ width: 278, height: 416, show: true, frame: true, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
@@ -1564,6 +1564,74 @@ var Loading = {
 	},
 	hide: function() {
 		$('#loadingDialog').modal('hide');
+	}
+};
+
+// 通知
+var Notify = {
+	$el : $('#notify'),
+	interval: null,
+	defaultTimeout: 3000,
+	isMac: isMac(),
+	init: function() {
+		var me = this;
+
+		this.$alert = this.$el.find('.alert');
+		this.$title = this.$el.find('.title');
+		this.$body = this.$el.find('.body');
+
+		this.$el.click(function() {
+			me.hide();
+		});
+
+		this.$el.hover(function() {
+			me.clearInterval();
+		}, function() {
+			me.startInterval(me.defaultTimeout);
+		});
+	},
+	show: function(param) { // type, title, body, timeout) {
+		var me = this;
+
+		var type = param.type || 'info';
+		var title = param.title || 'Info';
+		var body = param.body || '';
+		var timeout = param.timeout || this.defaultTimeout;
+
+		// 不管哪个平台, 都使用自带的
+		var useLocal = param.useLocal;
+		
+		if(!useLocal && me.isMac) {
+			new window.Notification(getMsg(title), {
+		        body: getMsg(body),
+		    });
+			return;
+		}
+
+		if(!me.inited) {
+			me.init();
+			me.inited = true;
+		}
+		this.$alert.attr('class', 'alert alert-dismissible alert-' + (type || 'info'));
+		this.$title.html(getMsg(title));
+		this.$body.html(getMsg(body));
+
+		this.$alert.addClass('alert-show');
+		this.startInterval(timeout);
+	},
+	startInterval: function(timeout) {
+		var me = this;
+		me.interval = setTimeout(function() {
+			me.hide();
+		}, timeout);
+	},
+	clearInterval: function() {
+		clearInterval(this.interval);
+		this.interval = null;
+	},
+	hide: function() {
+		this.clearInterval();
+		this.$alert.removeClass('alert-show');
 	}
 };
 
