@@ -1495,7 +1495,6 @@ var Pren = {
 		if(!isToggleView) {
 			try {
 				gui.win.setKiosk(!me._isPren);
-
 				// if(!me._isPren) {
 				// 	$('body').get(0).webkitRequestFullScreen();
 				// } else {
@@ -1587,6 +1586,8 @@ var Pren = {
 	// 恢复, 为了下次显示
 	restore: function() {
 		var me = this;
+		// 防止id重复, markdown下有问题
+		$('.pren-content').html('');
 		me.presentationO.scrollTop(0);
 	},
 	
