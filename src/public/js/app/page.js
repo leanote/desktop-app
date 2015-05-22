@@ -1151,8 +1151,6 @@ LeaAce = {
 function fullSync(callback) {
 	log('full sync');
 	SyncService.fullSync(function(ret) {
-		log('after....')
-		log(ret);
 		callback && callback();
 	});
 }
@@ -1161,9 +1159,13 @@ function fullSync(callback) {
 function fullSyncForce() {
 	var ok = confirm(getMsg('ForceFullSyncMsg'));
 	if(ok) {
-		Note.curChangedSaveIt();
-		UserService.fullSyncForce(function() {
-			location.reload();
+		var timeout = isMac() ? 0 : 200;
+		onClose(function() {
+			UserService.fullSyncForce(function() {
+				setTimeout(function() {
+					location.reload();
+				}, timeout);
+			});
 		});
 	}
 }
@@ -1744,7 +1746,7 @@ function checkForUpdates() {
 };
 
 function setMacTopMenu() {
-
+	var isMac_ = isMac();
   var template = [
     {
       label: 'Leanote',
@@ -1834,7 +1836,7 @@ function setMacTopMenu() {
       submenu: [
         {
           label: 'Reload',
-          accelerator: 'Command+R',
+          accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() { 
           	onClose(function() {
 	          	gui.win.reloadIgnoringCache();
@@ -1843,7 +1845,7 @@ function setMacTopMenu() {
         },
         {
           label: 'Toggle DevTools',
-          accelerator: 'Alt+Command+I',
+          accelerator: isMac_ ? 'Alt+Command+I' : 'Ctrl+I',
           click: function() { gui.win.toggleDevTools(); }
         },
       ]
@@ -1897,9 +1899,9 @@ function userMenu() {
 
 	Pren.init();
 	
-	if(isMac()) {
+	// if(isMac()) {
 		setMacTopMenu();
-	}
+	// }
 
 	//-------------------
 	// 右键菜单

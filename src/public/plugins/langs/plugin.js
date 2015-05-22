@@ -32,7 +32,13 @@ define(function() {
 			Config.lang = langFileName;
 			var ok = Api.writeConfig(Config);
 			if(ok) {
-				location.reload();
+				Api.onClose(function() {
+					// mac下server关闭要点时间
+					var timeout = Api.isMac ? 0 : 200;
+					setTimeout(function() {
+						location.reload();
+					}, timeout);
+				});
 			} else {
 				alert(getMsg('error'));
 			}
@@ -73,8 +79,8 @@ define(function() {
 
 		    // 设置
 		    Api.addMoreMenu(new gui.MenuItem({
-			        type: 'separator'
-			    }));
+		        type: 'separator'
+		    }));
 		    Api.addMoreMenu(langMenu);
 		},
 		// 打开后

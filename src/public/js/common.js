@@ -1637,6 +1637,9 @@ var Notify = {
 
 var onClose = function(afterFunc) {
 	try {
+		// 先把服务关掉
+	    Server.close();
+
 	    // 先保存之前改变的
 	    Note.curChangedSaveIt();
 	    // 保存状态

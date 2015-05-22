@@ -5,6 +5,8 @@ var Api = {
 	tag: Tag,
 	loading: Loading,
 	gui: gui,
+	onClose: onClose,
+	isMac: isMac(),
 	nodeFs: NodeFs,
 	evtService: EvtService,
 	commonService: CommonService,
