@@ -1636,7 +1636,7 @@ var Pren = {
 		me.fullScreen = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Fullscreen'), 
-				accelerator: isMac_ ? 'command+=' : 'ctrl+=',
+				accelerator: isMac_ ? 'command+=' : 'Ctrl+=',
 				click: function() {
 					me.toggleFullscreen();
 				}
@@ -1644,7 +1644,7 @@ var Pren = {
 		me.pren = new gui.MenuItem(
 			{
 				label: getMsg('Toggle Presentation'), 
-				accelerator: isMac_ ? 'command+p' : 'ctrl+p',
+				accelerator: isMac_ ? 'command+p' : 'Ctrl+P',
 				click: function() {
 				me.togglePren();
 			}
@@ -1652,7 +1652,7 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'), 
-				accelerator: isMac_ ? 'command+e' : 'ctrl+e',
+				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
 				click: function() {
 				me.togglePren(true);
 			}
@@ -1660,7 +1660,8 @@ var Pren = {
 	
 		// Esc, <- ->
 		$("body").on('keydown', function(e) {
-			if(e.keyCode == 27) {
+			var keyCode = e.keyCode;
+			if(keyCode== 27) {
 				if(me._isPren) {
 					me.togglePren();
 				} else if(me._isFullscreen) {
@@ -1670,12 +1671,28 @@ var Pren = {
 				}
 			}
 			// <--
-			else if(e.keyCode == 37) {
+			else if(keyCode == 37) {
 				me.preOrNext(true);
 			}
 			// -->
-			else if(e.keyCode == 39) {
+			else if(keyCode == 39) {
 				me.preOrNext();
+			}
+
+			// windows下需要
+			if(e.ctrlKey || e.metaKey) {
+				// p
+				if(keyCode == 80) {
+					me.togglePren();
+				}
+				// +
+				else if(keyCode == 187) {
+					me.toggleFullscreen();
+				}
+				// e
+				else if(keyCode == 69) {
+					me.togglePren(true);
+				}
 			}
 		});
 
