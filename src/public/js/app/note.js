@@ -307,7 +307,12 @@ Note.curHasChanged = function(force) {
 	}
 	
 	// 比较text, 因为note Nav会添加dom会导致content改变
-	if((force && cacheNote.Content != content) || (!force && (/**/(!cacheNote.IsMarkdown && $(cacheNote.Content).text() != contentText) || (cacheNote.IsMarkdown && cacheNote.Content != contentText)) /**/) ) {
+	if((force && cacheNote.Content != content) 
+		|| (!force && (
+			(!cacheNote.IsMarkdown && $('<div'> + cacheNote.Content + '</div>').text() != contentText) 
+			|| (cacheNote.IsMarkdown && cacheNote.Content != contentText)
+			) 
+		) ) {
 		hasChanged.hasChanged = true;
 		hasChanged.Content = content;
 		

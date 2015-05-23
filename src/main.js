@@ -56,6 +56,7 @@ function buildMenu(items) {
 }
 
 function setMenu() {
+  var isMac = process.platform == 'darwin';
   var template = [
     {
       label: 'Leanote',
@@ -141,12 +142,12 @@ function setMenu() {
       submenu: [
         {
           label: 'Reload',
-          accelerator: 'Command+R',
+          accelerator: isMac ? 'Command+R' : 'Ctrl+R',
           click: function() { BrowserWindow.getFocusedWindow().reloadIgnoringCache(); }
         },
         {
           label: 'Toggle DevTools',
-          accelerator: 'Alt+Command+I',
+          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+I',
           click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
         },
       ]

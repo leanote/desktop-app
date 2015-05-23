@@ -1523,7 +1523,7 @@ h1, h2, h3 {
 	-webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	box-shadow: 0 6px 12px rgba(0,0,0,.175);
 	background-clip: padding-box;
-	overflow: auto;
+	overflow: hidden;
 	width: 100px;
 	height: 100px;
 	display: none;
@@ -1535,7 +1535,9 @@ h1, h2, h3 {
 .conflict-title {
 	display: block;
 	text-decoration: underline;
-	white-space: nowrap;text-overflow:ellipsis; overflow:hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 html,body, #page, #pageInner {
