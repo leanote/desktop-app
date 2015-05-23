@@ -45,17 +45,17 @@
 .h4,
 .h5,
 .h6 {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
 }
 body {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
   font-weight: 300;
   font-size: 14px;
 }
 h1,
 h2,
 h3 {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
   font-weight: 300 !important;
 }
 /*"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue", Helvetica, "Microsoft Yahei", Verdana, Simsun, "Segoe UI", "Segoe UI Web Regular", "Segoe UI Symbol",  "BBAlpha Sans", "S60 Sans", Arial, sans-serif;*/
@@ -2210,7 +2210,7 @@ a.raw:hover {
   line-height: 20px !important;
 }
 .mce-btn span {
-  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif !important;
+  font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif !important;
 }
 .mce-primary button,
 .mce-primary button i {

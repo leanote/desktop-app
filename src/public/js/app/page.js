@@ -1899,9 +1899,9 @@ function userMenu() {
 
 	Pren.init();
 	
-	// if(isMac()) {
+	if(isMac()) {
 		setMacTopMenu();
-	// }
+	}
 
 	//-------------------
 	// 右键菜单

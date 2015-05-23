@@ -36,7 +36,7 @@
   visibility: visible;
 }
 * {
-  font-family: 'Microsoft YaHei', '微软雅黑', ' WenQuanYi Micro Hei', 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', sans-serif;
+  font-family: 'Microsoft YaHei', '微软雅黑', ' WenQuanYi Micro Hei', 'Helvetica Neue', Arial, 'Hiragino Sans GB', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
 }
 body {
   border: none;

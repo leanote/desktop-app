@@ -196,7 +196,7 @@
     "Upgrade": "升級",
     "This note is conflicted with:": "該筆記與以下筆記沖突:",
     "Maker as resolved": "標記已解決沖突",
-    "Leanote, Not Just A Notebook": "Leanote, 不只是筆記",
+    "Leanote, Not Just A Notepad": "Leanote, 不只是筆記",
     "Public as blog": "公開為博客",
     "Cancel public": "取消公開為博客",
     "Delete": "刪除",

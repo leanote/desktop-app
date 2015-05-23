@@ -31,7 +31,7 @@ body.view #topDrag {
   display: block;
   -webkit-user-select: text;
   overflow-y: scroll;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
 }
 #presentation svg {
   border-radius: 5px;
@@ -286,7 +286,7 @@ body.view #topDrag {
   font-size: 18px;
   line-height: 1.5;
   max-width: 100%;
-  font-family: Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif;
+  font-family: "Microsoft Yahei", "Hiragino Sans GB", "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
 }
 .pren-content svg *,
 .pren-content pre * {
