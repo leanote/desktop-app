@@ -2263,16 +2263,18 @@ Note.initContextmenu = function() {
 	    var exportsSubMenus = new gui.Menu();
 	    var exportMenus = Api.getExportMenus() || [];
 	    for(var i = 0; i < exportMenus.length; ++i) {
-	    	var menu = exportMenus[i];
-	    	var clickBac = menu.click;
-	    	var menuItem = new gui.MenuItem({
-		        label: menu.label,
-		        click: function(e) {
-		        	var note = Note.getNote($(self.target).attr('noteId'));
-		        	clickBac && clickBac(note);
-		        }
-		    });
-		    exportsSubMenus.append(menuItem);
+	    	(function(j) {
+		    	var menu = exportMenus[j];
+		    	var clickBac = menu.click;
+		    	var menuItem = new gui.MenuItem({
+			        label: menu.label,
+			        click: function(e) {
+			        	var note = Note.getNote($(self.target).attr('noteId'));
+			        	clickBac && clickBac(note);
+			        }
+			    });
+			    exportsSubMenus.append(menuItem);
+		    })(i);
 	    }
 	    if(exportMenus.length > 0) { 
 	    	 this.exports = new gui.MenuItem({

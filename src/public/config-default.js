@@ -3,6 +3,7 @@ var Config = {
         "theme",
         "import_evernote",
         "export_pdf",
+        "export_html",
         "langs"
     ],
     "langs": [
@@ -20,5 +21,5 @@ var Config = {
         }
     ],
     "lang": "en-us",
-    "theme": "default"
+    "theme": ""
 };
