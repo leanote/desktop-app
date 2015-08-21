@@ -4,7 +4,6 @@ Use Electron(atom-shell) to create leanote desktop app.
 
 ![preview.png](preview.png "")
 
-
 ## Download
 Please see http://app.leanote.com
 
@@ -24,9 +23,12 @@ $> cd PATH-TO-LEANOTE-DESKTOP-APP/src
 $> Electron .
 ```
 
-
 ## LICENSE
-LEANOTE - NOT JUST A NOTEBOOK!
+
+[LICENSE](https://github.com/leanote/desktop-app/blob/master/LICENSE)
+
+```
+LEANOTE - NOT JUST A NOTEPAD!
 
 Copyright 2015 by the contributors.
 
@@ -41,5 +43,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 Leanote destop app is licensed under the GPL v2.
-
-[LICENSE](https://github.com/leanote/desktop-app/blob/master/LICENSE)
+```
