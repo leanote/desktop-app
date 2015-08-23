@@ -52,6 +52,11 @@ body {
   font-weight: normal;
   font-size: 14px;
 }
+@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-device-pixel-ratio: 2) {
+  body {
+    font-weight: 300;
+  }
+}
 h1,
 h2,
 h3 {

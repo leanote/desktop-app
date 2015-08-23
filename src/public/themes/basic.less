@@ -60,6 +60,14 @@ body {
   font-weight: normal;
   font-size: @fontSize;
 }
+
+// retina频幕则font-weight: 300
+@media
+only screen and (-webkit-min-device-pixel-ratio : 2),
+only screen and (min-device-pixel-ratio : 2) {
+    body { font-weight: 300;}
+}
+
 h1, h2, h3 {
   font-family: @fontFamily;
   font-weight: 300 !important;
