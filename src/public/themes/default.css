@@ -49,7 +49,7 @@
 }
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
-  font-weight: 300;
+  font-weight: normal;
   font-size: 14px;
 }
 h1,
