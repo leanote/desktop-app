@@ -2928,4 +2928,3 @@ Note.deleteSync = function(notes) {
 		}
 	}
 }
-
