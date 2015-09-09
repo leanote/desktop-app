@@ -4,3 +4,15 @@ config.codekit
 .project
 /node_modules
 /dist
+/nw
+/gulpfile.js
+/gulpfile_atom.js
+/package.json
+sqlite*
+/test
+/atom
+/updates
+/src/node_modules/request
+/src/public/tinymce_old
+/src/test*.js
+/old

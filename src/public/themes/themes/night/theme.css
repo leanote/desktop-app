@@ -24,7 +24,7 @@
   font-weight: bold;
 }
 .ztree li a.curSelectedNode {
-  color: #eee;
+  color: #eeeeee;
 }
 .ztree li a.curSelectedNode,
 #starNotes li.selected {
@@ -33,7 +33,7 @@
 }
 .ztree li a.curSelectedNode a,
 #starNotes li.selected a {
-  color: #eee;
+  color: #eeeeee;
 }
 #starNotes li,
 .ztree li {
@@ -41,7 +41,7 @@
 }
 #starNotes li a,
 .ztree li a {
-  color: #eee;
+  color: #eeeeee;
 }
 .sync-icon,
 #myProfile a {
@@ -66,6 +66,12 @@
 }
 #noteAndEditor {
   border: none;
+}
+#noteList,
+#notesAndSort,
+#searchNote,
+#noteItemListWrap {
+  background: transparent;
 }
 #noteList,
 #notesAndSort {
@@ -217,9 +223,48 @@ i.mce-i-backcolor {
 #mdEditor .navbar-default {
   border: none !important;
 }
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+  background-color: rgba(128, 128, 128, 0.5) !important;
+}
+#wmd-input .code,
+#wmd-input .pre {
+  color: #c2c2c2 !important;
+}
+code.prettyprint,
+pre.prettyprint {
+  background-color: #353538;
+}
+code.prettyprint .kwd,
+pre.prettyprint .kwd,
+code.prettyprint .tag,
+pre.prettyprint .tag {
+  color: #566BB0;
+}
+code.prettyprint .str,
+pre.prettyprint .str {
+  color: #2D905F;
+}
+code.prettyprint .pln,
+pre.prettyprint .pln {
+  color: #9595A3;
+}
+code.prettyprint .atv,
+pre.prettyprint .atv {
+  color: #378668;
+}
+.preview-container code {
+  background: #353538;
+  color: #a4b3ae;
+}
 #leanoteNav,
 #leanoteNavMd {
   background-color: #2A2828;
+  border: 1px solid #353538;
+}
+.leanoteNav.unfolder h1 {
+  border-bottom: 1px dashed #353538;
 }
 #leanoteNavContent a,
 #leanoteNavMd a {
@@ -237,7 +282,6 @@ i.mce-i-backcolor {
 }
 #editorMask {
   background: #272626;
-  z-index: 88888 !important;
 }
 #editorMask a {
   color: #c2c2c2;

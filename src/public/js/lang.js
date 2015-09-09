@@ -8,7 +8,7 @@ var lang = {
 			var data = fs.readFileSync(process.cwd() + '/' + file, 'utf-8');
 			return JSON.parse(data);
 		} catch(e) { 
-			alert(e);
+			console.log(e);
 			return false;
 		}
 	},

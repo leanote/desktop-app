@@ -15,7 +15,7 @@
     "blogSet": "博客设置",
     "blue": "蓝色",
     "Cancel": "取消",
-    "cancelPublic": "取消公开为博客",
+    "Cancel public": "取消公开为博客",
     "canntNewNoteTips": "Sorry, 这里不能添加笔记的. 你需要先选择一个笔记本.",
     "checkEmai": "查收邮箱",
     "checkEmail": "查看邮件",
@@ -252,6 +252,7 @@
 	"Mode": "模式",
 	"Toggle Fullscreen": "全屏切换",
 	"Toggle Presentation": "演示切换",
+    "Toggle View": "预览切换",
 
 	"More...": "更多",
 	"Force full sync": "强制全量同步",

@@ -68,6 +68,12 @@
   border: none;
 }
 #noteList,
+#notesAndSort,
+#searchNote,
+#noteItemListWrap {
+  background: transparent;
+}
+#noteList,
 #notesAndSort {
   background: #444444;
 }
@@ -224,15 +230,41 @@ i.mce-i-backcolor {
 }
 #wmd-input .code,
 #wmd-input .pre {
-  color: #c2c2c2;
+  color: #c2c2c2 !important;
 }
 code.prettyprint,
 pre.prettyprint {
-  background-color: #E1E1E7;
+  background-color: #353538;
+}
+code.prettyprint .kwd,
+pre.prettyprint .kwd,
+code.prettyprint .tag,
+pre.prettyprint .tag {
+  color: #566BB0;
+}
+code.prettyprint .str,
+pre.prettyprint .str {
+  color: #2D905F;
+}
+code.prettyprint .pln,
+pre.prettyprint .pln {
+  color: #9595A3;
+}
+code.prettyprint .atv,
+pre.prettyprint .atv {
+  color: #378668;
+}
+.preview-container code {
+  background: #353538;
+  color: #a4b3ae;
 }
 #leanoteNav,
 #leanoteNavMd {
   background-color: #2A2828;
+  border: 1px solid #353538;
+}
+.leanoteNav.unfolder h1 {
+  border-bottom: 1px dashed #353538;
 }
 #leanoteNavContent a,
 #leanoteNavMd a {

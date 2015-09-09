@@ -370,23 +370,23 @@ function initEditor() {
 	// 初始化编辑器
 	tinymce.init({
 		inline: true,
+		theme: 'leanote',
 		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
 		setup: function(ed) {
 			// desk下有问题
 			// ed.on('keydown', Note.saveNote);
 			ed.on('keydown', function(e) { 
+				/*
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
 				    if(num == 86) { // ctrl + v
 				    	// document.execCommand('paste');
 				    }
 			    };
+			    */
+			    // 0.25.2必须要, 默认没有
+				// commonCmd(e);
 			});
-			
-			// 为了把下拉菜单关闭
-	        ed.on("click", function(e) {
-	          $("body").trigger("click");
-	        });
 		},
 		
 		// fix TinyMCE Removes site base url
@@ -399,7 +399,7 @@ function initEditor() {
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
 		// content_css : ["public/css/editor/editor.css"],
-		skin : "custom",
+		// skin : "custom",
 		language: Api.curLang == 'zh-cn' ? 'zh' : 'en', // 语言
 		plugins : [
 				"autolink link image lists charmap hr", "paste",
@@ -1080,10 +1080,21 @@ function fullSyncForce() {
 }
 
 // 增量同步
-function incrSync() {
-	log('incr sync');
+function _incrSync(saveNoteBefore) {
+	console.log('incr sync');
 	Note.showSpin();
 	SyncService.incrSync();
+	Note.syncProgress(2);
+}
+function incrSync(saveNoteBefore) {
+	if(saveNoteBefore) {
+		Note.curChangedSaveIt(true, function() {
+			_incrSync();
+		});
+	}
+	else {
+		_incrSync();
+	}
 }
 
 // 历史, 恢复原貌
@@ -1147,8 +1158,8 @@ var State = {
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
-				win.resizeTo(1100, 600);
-				win.setPosition('center');
+				// win.resizeTo(1100, 600);
+				// win.setPosition('center');
 			}
 			setTimeout(function() {
 				$('body').show();
@@ -1161,7 +1172,7 @@ var State = {
 		// end
 		// 打开时，同步一下
 		setTimeout(function() {
-			incrSync();
+			incrSync(false);
 		}, 500);
 
 		initedCallback && initedCallback();
@@ -1218,21 +1229,14 @@ function initPage(initedCallback) {
 	Notebook.init();
 	// 笔记
 
-	win.on('close', function() {
-		// 先保存之前改变的
-		Note.curChangedSaveIt();
-		// 保存状态
-		State.saveCurState(function() {
-			win.close(true);
-		});
-	});
-
+	/*
 	win.on('focus', function() {
 		$('body').removeClass('blur');
 	});
 	win.on('blur', function() {
 		$('body').addClass('blur');
 	});
+	*/
 
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
@@ -1338,10 +1342,12 @@ var Pren = {
 
 	_isFullscreen: false,
 	_isPren: false,
+	_isView: false,
 
 	// 全局菜单
 	pren: null,
 	fullScreen: null,
+	view: null,
 
 	presentationO: $('#presentation'),
 
@@ -1351,17 +1357,23 @@ var Pren = {
 		me._isFullscreen = !me._isFullscreen;
 		if(me._isFullscreen) {
 			me.pren.enabled = false;
+			me.view.enabled = false;
 		} else {
 			me.pren.enabled = true;
+			me.view.enabled = true;
 		}
 	},
-	togglePren: function() {
+	togglePren: function(isToggleView) {
 		var me = this;
-		try {
-			win.toggleKioskMode();
-		} catch(e) {}
+		if(!isToggleView) {
+			try {
+				win.toggleKioskMode();
+			} catch(e) {}
+		}
 
-		if(!me._isPren) {
+		var no = isToggleView ? !me._isView : !me._isPren;
+
+		if(no) {
 			$('.pren-title').html($('#noteTitle').val());
 			var note = Note.getCurNote();
 			$('.pren-content').html('');
@@ -1378,7 +1390,6 @@ var Pren = {
 
 			$('body').addClass('no-drag');
 			$('#page').hide();
-			me._isPren = true;
 
 			// 代码高亮
 			$(".pren-content pre").addClass("prettyprint linenums");
@@ -1386,24 +1397,63 @@ var Pren = {
 
 		} else {
 			$('#themePresentation').attr('disabled', true);
-			me._isPren = false;
 			$('body').removeClass('no-drag');
 			$('#page').show();
 			me.restore();
 		}
 
-		if(me._isPren) {
-			me.fullScreen.enabled = false;
-		} else {
-			me.fullScreen.enabled = true;
+		if(isToggleView) {
+			me._isView = !me._isView;
+
+			if(me._isView) {
+				me.fullScreen.enabled = false;
+				me.pren.enabled = false;
+			} else {
+				me.fullScreen.enabled = true;
+				me.pren.enabled = true;
+			}
 		}
+		else {
+			me._isPren = !me._isPren;
+
+			if(me._isPren) {
+				me.fullScreen.enabled = false;
+				me.view.enabled = false;
+			} else {
+				me.fullScreen.enabled = true;
+				me.view.enabled = true;
+			}
+		}
+
+		// 可拖拉
+		if(isToggleView) {
+			if(me._isView) {
+				$('body').addClass('view');
+			}
+			else {
+				$('body').removeClass('view');
+			}
+		}
+	},
+
+	// 预览, 演示快捷
+	preOrNext: function(isPre) {
+		var me = this;
+		if(!me._isView && !me._isPren) {
+			return;
+		}
+		if(isPre) {
+			var to = me.presentationO.scrollTop() - me.presentationO.height();
+		} else {
+			var to = me.presentationO.scrollTop() + me.presentationO.height();
+		}
+		me.presentationO.animate({scrollTop: to + 'px'}, 200);
 	},
 
 	// 恢复, 为了下次显示
 	restore: function() {
 		var me = this;
 		me.presentationO.scrollTop(0);
-
 	},
 	
 	_themeMode: 'normal', // 当前背景颜色模式, 三种, normal, writting, black
@@ -1448,23 +1498,54 @@ var Pren = {
 		var me = this;
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-			{label: getMsg('Toggle Fullscreen'), click: function() {
+			{label: getMsg('Toggle Fullscreen') + '   (Ctrl+=)', click: function() {
 				me.toggleFullscreen();
 			}
 		});
 		me.pren = new gui.MenuItem(
-			{label: getMsg('Toggle Presentation'), click: function() {
+			{label: getMsg('Toggle Presentation') + '   (Ctrl+p)', click: function() {
 				me.togglePren();
+			}
+		});
+		me.view = new gui.MenuItem(
+			{label: getMsg('Toggle View') + '   (Ctrl+e)', click: function() {
+				me.togglePren(true);
 			}
 		});
 	
 		// Esc
 		$("body").on('keydown', function(e) {
-			if(e.keyCode == 27) {
+			var keyCode = e.keyCode;
+			if(keyCode == 27) {
 				if(me._isPren) {
 					me.togglePren();
 				} else if(me._isFullscreen) {
 					me.toggleFullscreen();
+				} else if(me._isView) {
+					me.togglePren(true);
+				}
+			}
+			// <--
+			else if(e.keyCode == 37) {
+				me.preOrNext(true);
+			}
+			// -->
+			else if(e.keyCode == 39) {
+				me.preOrNext();
+			}
+
+			if(e.ctrlKey || e.metaKey) {
+				// p
+				if(keyCode == 80) {
+					me.togglePren();
+				}
+				// +
+				else if(keyCode == 187) {
+					me.toggleFullscreen();
+				}
+				// e
+				else if(keyCode == 69) {
+					me.togglePren(true);
 				}
 			}
 		});
@@ -1484,7 +1565,11 @@ var Pren = {
 		});
 
 		$('.pren-tool-close').click(function() {
-			me.togglePren();
+			if(me._isPren) {
+				me.togglePren();
+			} else if(me._isView) {
+				me.togglePren(true);
+			}
 		});
 
 		$('.pren-tool-bg-color').click(function() {
@@ -1495,6 +1580,12 @@ var Pren = {
 		});
 		$('.pren-tool-text-size-max').click(function() {
 			me.toggleFontSizeMode(false);
+		});
+		$('.pren-tool-pre').click(function() {
+			me.preOrNext(true);
+		});
+		$('.pren-tool-next').click(function() {
+			me.preOrNext();
 		});
 	}
 };
@@ -1516,6 +1607,7 @@ function userMenu() {
 	Pren.init();
 	
 	mode.append(Pren.pren);
+	mode.append(Pren.view);
 	mode.append(Pren.fullScreen);
 	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
 	if(isMac()) {
@@ -1586,10 +1678,12 @@ function userMenu() {
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
-			this.menu.append(Pren.pren);
 			this.menu.append(Pren.fullScreen);
+			this.menu.append(new gui.MenuItem({ type: 'separator' }));
+			this.menu.append(Pren.pren);
+			this.menu.append(Pren.view);
 		
-			height = 270;
+			height = 310;
 		}
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
