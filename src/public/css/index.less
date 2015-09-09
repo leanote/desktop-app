@@ -21,7 +21,7 @@
   font-style: normal;
   font-weight: 300;
   src: local('Open Sans Light'), local('OpenSans-Light'), url('../fonts/open-sans2/DXI1ORHCpsQm3Vp6mXoaTXhCUOGz7vYGh680lGh-uXM.woff') format('woff');
-} 
+}
 @font-face {
   font-family: 'Open Sans';
   font-style: normal;
@@ -44,10 +44,11 @@
 /*"HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue", Helvetica, "Microsoft Yahei", Verdana, Simsun, "Segoe UI", "Segoe UI Web Regular", "Segoe UI Symbol",  "BBAlpha Sans", "S60 Sans", Arial, sans-serif;*/
 @selectionBg: @aBlackColor;
 @selectionColor: #fff;
-::selection { background:@selectionBg; color:@selectionColor; } 
-::-moz-selection { background:@selectionBg; color:@selectionColor; } 
+::selection { background:@selectionBg; color:@selectionColor; }
+::-moz-selection { background:@selectionBg; color:@selectionColor; }
 ::-webkit-selection { background:@selectionBg; color:@selectionColor; }
 html,body {
+    -webkit-user-select: none;
 }
 *, body {
   font-family: @fontFamily;
@@ -132,13 +133,13 @@ section {
 
 .preview {
 	margin: auto;
-	width: 850px;	
+	width: 850px;
 	text-align: center;
 	overflow: hidden;
 	img {
 		// box-shadow: -15px 10px 0 rgba(0, 0, 0, 0.15);
 	}
-	
+
 	.img-header {
 		height: 40px;
 		width: 750px;
@@ -263,7 +264,7 @@ section {
 	position: relative;
 }
 
-#formContainer {
+.formContainer {
 	border-radius: 2px !important;
 	border: 1px solid #d9d9d9;
 	overflow: hidden;
@@ -289,11 +290,11 @@ input, .form-control {
 }
 
 #loginForm {
-	width: 320px; 
-	position: absolute; 
-	right: 0; 
+	width: 320px;
+	position: absolute;
+	right: 0;
 	top: 100px;
-	// background-color: #666; 
+	// background-color: #666;
 	background-color: #30373f;
 	z-index: 999;
 	padding: 10px 20px;
@@ -325,7 +326,7 @@ input, .form-control {
 	}
 	#beian {
 		a {
-			font-size: 8px;		
+			font-size: 8px;
 		}
 	}
 }
@@ -338,10 +339,10 @@ input, .form-control {
 	color: #000;
 	padding-top: 30px;
 	h1 {
-		width: @boxWidth;; 
-		margin: auto; 
+		width: @boxWidth;;
+		margin: auto;
 		margin-bottom: 30px;
-		width: @boxWidth;; 
+		width: @boxWidth;;
 		color: #eee;
 	}
 }
@@ -357,9 +358,9 @@ input, .form-control {
 	font-weight: bold;
 	font-size: 16px;
 }
-#boxForm {
+.boxForm {
 	// background-color: #fff;
-	width: @boxWidth;; 
+	width: @boxWidth;;
 	margin: auto;
 	border-radius: 2px;
 	form {
@@ -387,7 +388,7 @@ input, .form-control {
 	}
 }
 #quickLinks {
-	width: @boxWidth;; 
+	width: @boxWidth;;
 	margin: auto;
 	text-align: right;
 	a {
@@ -424,7 +425,7 @@ input, .form-control {
 		padding-left: 12px;
 		padding-right: 12px;
 	}
-	
+
 	.btn-qq {
 		color: #fff !important;
 		background-color: #0873CE;
@@ -435,7 +436,7 @@ input, .form-control {
 		background-color: #4C96D5;
 		border-color: #0873CE;
 	}
-	
+
 	.btn-github {
 		color: #fff !important;
 		background-color: #000;
@@ -527,7 +528,7 @@ input, .form-control {
 	margin-left: 10px;
 }
 #errorBox {
-	width: @boxWidth;; 
+	width: @boxWidth;;
 	margin: auto;
 	padding: 20px 30px;
 	padding-bottom: 30px;
@@ -814,7 +815,7 @@ body {
 .pwd-group {
 	position: relative;
 }
-#loginBtn {
+.btn-embeded {
 	position: absolute;
 	width: 30px;
 	height: 30px;
@@ -827,14 +828,14 @@ body {
 	background: none;
 	text-align: center;
 	outline: none;
-	
+
 	.fa {
 		font-size: 18px;
 		color: #6A7377;
 	}
 }
 
-#loginBtn[disabled] {
+.btn-embeded[disabled] {
 	border: none;
 	.fa {
 		color: #ccc;
@@ -845,11 +846,13 @@ form {
 	position: relative;
 }
 #loginMsg {
-	position: absolute;
-	top: -30px;
+	//position: absolute;
+	margin: auto;
+    padding: 0;
+    text-align: center;
 }
 
-.server {
+.bottom {
 	position: absolute;
 	bottom: 5px;
 	left: 0;
@@ -861,6 +864,8 @@ form {
 	}
 }
 
+.decolour {
+    -webkit-filter: grayscale(100%);
+}
 
 @import "traffic.less";
-

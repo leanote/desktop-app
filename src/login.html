@@ -42,7 +42,8 @@ if(process.platform != 'darwin') {
 <div id="winTool" class="win-tool clearfix">
 	<a class="tool-close-blur"></a>
 </div>
-<div class="server"><a id="customServer" class="lang">Custom server</a></div>
+<div class="bottom"><a id="localAccount" class="lang">Create Local Account</a>
+<a id="customServer" class="lang">Custom server</a></div>
 <section id="box" class="animated fadeInUp">
 	<div class="drag"></div>
 	<div>
@@ -51,31 +52,45 @@ if(process.platform != 'darwin') {
 				<img src="public/images/logo/leanote_icon_blue.png">
 			</a>
 		</h1>
-		<div id="boxForm">
+		<div class="alert alert-danger" id="loginMsg"></div>
+		<div class="boxForm hide">
 			<form>
-				<div class="alert alert-danger" id="loginMsg"></div>
-
-				<div id="formContainer">
-					<div class="form-group form-group-1 hide" id="hostGroup"> 
+			<div class="formContainer">
+				<div class="form-group form-group-1">
+					<input type="text" required placeholder="Username or Email" class="form-control lang-placeholder" id="username" name="username" value="">
+				</div>
+				<div class="form-group pwd-group">
+					<input type="password" required placeholder="Password" class="form-control lang-placeholder" id="pwd1" name="pwd1">
+				</div>
+				<div class="form-group pwd-group">
+					<input type="password" required placeholder="Retype Rassword" class="form-control lang-placeholder" id="pwd2" name="pwd2">
+					<button id="regBtn" class="btn-embeded"><i class="fa fa-arrow-right"></i></button>
+				</div>
+			</div>
+			</form>
+		</div>
+		<div class="boxForm">
+			<form>
+				<div class="formContainer">
+					<div class="form-group form-group-1 hide" id="hostGroup">
 					    <input type="text" placeholder="Host, http://leanote.com" class="form-control lang-placeholder" id="host" name="host">
 					</div>
 
 					<div class="form-group form-group-1">
-						<input type="text" placeholder="Username or Email" class="form-control lang-placeholder" id="email" name="email" value=""> 
+						<input type="text" placeholder="Username or Email" class="form-control lang-placeholder" id="email" name="email" value="">
 					</div>
-
-					<div class="form-group pwd-group"> 
+					<div class="form-group pwd-group">
 					    <input type="password" placeholder="Password" class="form-control lang-placeholder" id="pwd" name="pwd">
-					    <button id="loginBtn" disabled><i class="fa fa-arrow-right"></i></button>
+					    <button id="loginBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
 					</div>
 				</div>
-				
+
 				<div class="clearfix btns">
 					<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small class="lang">Forget password?</small></a>
 					<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small class="lang">Sign up</small></a>
-					
+
 				</div>
-			</form>	
+			</form>
 		</div>
     </div>
 </section>
@@ -98,6 +113,7 @@ $(function() {
 	});
 
 	var $hostGroup = $('#hostGroup');
+	var $pwdTestGroup = $('#pwdTestGroup');
 	var hasHost = false;
 
 	function isValidUrl(url) {
@@ -119,7 +135,7 @@ $(function() {
 		$("#loginMsg").hide();
 	}
 	$("#loginBtn").click(function(e) {
-		e.preventDefault(); 
+		e.preventDefault();
 		var email = $("#email").val();
 		var pwd = $("#pwd").val();
 		var host = $('#host').val();
@@ -149,20 +165,71 @@ $(function() {
 		if(!hasHost) {
 			host = '';
 		}
-		ApiService.auth(email, pwd, host, function(ret) {
-			if(ret.Ok) {
-				setTimeout(function(){ 
+		UserService.login(email, pwd, function(ret) {
+			if (ret) {
+				setTimeout(function(){
 					$('#loadingLogo').removeClass('loading');
 					goToMainPage();
 					gui.getCurrentWindow().close();
 				}, 2000);
+			}
+			else {
+				ApiService.auth(email, pwd, host, function(ret) {
+					if(ret.Ok) {
+						setTimeout(function(){
+							$('#loadingLogo').removeClass('loading');
+							goToMainPage();
+							gui.getCurrentWindow().close();
+						}, 2000);
+					} else {
+						$('#loadingLogo').removeClass('loading');
+						showMsg(getMsg("Email or Password Error"));
+					}
+				});
+			}
+		})
+	});
+	$("#regBtn").click(function(e) {
+		e.preventDefault();
+		var username = $("#username").val();
+		var pwd1 = $("#pwd1").val();
+		var pwd2 = $('#pwd2').val();
+
+		if(!username) {
+			showMsg(getMsg("Username is required"), "username");
+			return;
+		}
+		if(!pwd1 || !pwd2) {
+			showMsg(getMsg("Password is required"), "pwd");
+			return;
+		} else {
+			if(pwd1.length < 6 || pwd2.length < 6) {
+				showMsg(getMsg("Username or Password Error"), "pwd");
+				return;
+			}
+		}
+		$('#loadingLogo').addClass('loading');
+		hideMsg();
+		var user = {};
+		user.Username = username;
+		user.Pwd = pwd1;
+		user.IsLocal = true;
+		UserService.saveNew(user, function(ret, dbuser) {
+			if(ret) {
+				dbuser.UserId = dbuser._id;
+				UserService.saveCurUser(dbuser, function() {
+					setTimeout(function(){
+						$('#loadingLogo').removeClass('loading');
+						goToMainPage();
+						gui.getCurrentWindow().close();
+					}, 2000);
+				})
 			} else {
 				$('#loadingLogo').removeClass('loading');
 				showMsg(getMsg("Email or Password Error"));
 			}
 		});
 	});
-
 	var $loginBtnO = $("#loginBtn");
 	function checkDisabled() {
 		var email = $("#email").val();
@@ -193,6 +260,11 @@ $(function() {
 			$hostGroup.addClass('hide');
 			hasHost = false;
 		}
+	});
+
+	$('#localAccount').click(function() {
+		$('#logo').toggleClass('decolour');
+		$('.boxForm').toggleClass ('hide');
 	});
 });
 
