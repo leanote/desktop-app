@@ -1415,16 +1415,16 @@ function initPage(initedCallback) {
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
-			// 之前已同步过, 就不要full sync了
-			if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
-				_init();
 			//no full sync for local account
 			//see https://github.com/leanote/desktop-app/issues/36
-			} else if (UserInfo.IsLocal) {
+			if (UserInfo.IsLocal) {
 				console.log('skip full sync for local account');
 				_init();
 				$('#syncRefresh').off ('click');
 				$('#syncRefresh').hide ();
+			}// 之前已同步过, 就不要full sync了
+			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
+				_init();
 			} else {
 				fullSync(function() {
 					_init();
