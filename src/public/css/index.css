@@ -71,6 +71,10 @@
   background: #000000;
   color: #ffffff;
 }
+html,
+body {
+  -webkit-user-select: none;
+}
 *,
 body {
   font-family: 'Open Sans', '微软雅黑', Arial, Tahoma, sans-serif;
@@ -269,12 +273,12 @@ section {
 #loginContainer {
   position: relative;
 }
-#formContainer {
+.formContainer {
   border-radius: 2px !important;
   border: 1px solid #d9d9d9;
   overflow: hidden;
 }
-#formContainer .form-group-1 {
+.formContainer .form-group-1 {
   border-bottom: 1px solid #d9d9d9;
 }
 input,
@@ -345,17 +349,17 @@ input,
   font-weight: bold;
   font-size: 16px;
 }
-#boxForm {
+.boxForm {
   width: 248px;
   margin: auto;
   border-radius: 2px;
   width: 200px;
 }
-#boxForm .form-group {
+.boxForm .form-group {
   margin: 0px;
   width: 200px;
 }
-#boxForm .btns a {
+.boxForm .btns a {
   color: #666;
 }
 .back {
@@ -740,7 +744,7 @@ btns {
 .pwd-group {
   position: relative;
 }
-#loginBtn {
+.btn-embeded {
   position: absolute;
   width: 30px;
   height: 30px;
@@ -752,33 +756,37 @@ btns {
   text-align: center;
   outline: none;
 }
-#loginBtn .fa {
+.btn-embeded .fa {
   font-size: 18px;
   color: #6A7377;
 }
-#loginBtn[disabled] {
+.btn-embeded[disabled] {
   border: none;
 }
-#loginBtn[disabled] .fa {
+.btn-embeded[disabled] .fa {
   color: #ccc;
 }
 form {
   position: relative;
 }
 #loginMsg {
-  position: absolute;
-  top: -30px;
+  margin: auto;
+  padding: 0;
+  text-align: center;
 }
-.server {
+.bottom {
   position: absolute;
   bottom: 5px;
   left: 0;
   right: 0;
   text-align: center;
 }
-.server a {
+.bottom a {
   color: #666;
   font-size: 85%;
+}
+.decolour {
+  -webkit-filter: grayscale(100%);
 }
 .win-tool {
   padding: 5px;

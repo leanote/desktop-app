@@ -65,7 +65,7 @@ var Resize = {
 	lineMove: false,
 	mdLineMove: false,
 	target: null,
-	
+
 	leftNotebook: $("#leftNotebook"),
 	notebookSplitter: $("#notebookSplitter"),
 	noteList: $("#noteList"),
@@ -74,17 +74,17 @@ var Resize = {
 	note: $("#note"),
 	body: $("body"),
 	leftColumn: $("#left-column"),
-	rightColumn: $("#right-column"), // $("#preview-panel"), // 
+	rightColumn: $("#right-column"), // $("#preview-panel"), //
 	mdSplitter: $("#mdSplitter2"),
-	
+
 	init: function() {
 		var self = this;
 		self.initEvent();
 	},
-	
+
 	initEvent: function() {
 		var self = this;
-		
+
 		// 鼠标点下
 		$(".noteSplit").bind("mousedown", function(event) {
 			event.preventDefault(); // 防止选择文本
@@ -94,7 +94,7 @@ var Resize = {
 			// 防止iframe捕获不了事件
 			$("#noteMask").css("z-index", 99999); // .css("background-color", // "#ccc");
 		});
-		
+
 		// 鼠标点下
 		self.mdSplitter.bind("mousedown", function(event) {
 			event.preventDefault(); // 防止选择文本
@@ -103,7 +103,7 @@ var Resize = {
 			}
 			// $(this).css("background-color", "#ccc");
 		});
-		
+
 		// 鼠标移动时
 		self.body.bind("mousemove", function(event) {
 			if(self.lineMove) { // 如果没有这个if会导致不能选择文本
@@ -113,7 +113,7 @@ var Resize = {
 				event.preventDefault();
 				self.resizeMdColumns(event);
 			}
-		});	
+		});
 
 		// 鼠标放开, 结束
 		self.body.bind("mouseup", function(event) {
@@ -121,7 +121,7 @@ var Resize = {
 			// 取消遮罩
 			$("#noteMask").css("z-index", -1);
 		});
-		
+
 		// 瞬间
 		var everLeftWidth;
 		$('.layout-toggler-preview').click(function() {
@@ -135,7 +135,7 @@ var Resize = {
 				everLeftWidth = self.leftColumn.width();
 				self.leftColumn.width(leftWidth);
 				self.rightColumn.css('left', 'auto').width(minRightWidth);
-				
+
 				// 禁止split
 				$t.removeClass('open');//.addClass('close');
 				self.rightColumn.find('.layout-resizer').removeClass('open');
@@ -146,8 +146,8 @@ var Resize = {
 				self.leftColumn.width(everLeftWidth);
 				$('.preview-container').show();
 				self.rightColumn.css('left', everLeftWidth).width('auto');
-				
-				if(MD) { 
+
+				if(MD) {
 					MD.onResize();
 				}
 			}
@@ -159,9 +159,9 @@ var Resize = {
 		if(self.lineMove || self.mdLineMove) {
 			// ajax保存
 			UserService.updateG({
-				MdEditorWidth: UserInfo.MdEditorWidth, 
+				MdEditorWidth: UserInfo.MdEditorWidth,
 				MdEditorWidthForWritting: UserInfo.MdEditorWidthForWritting,
-				NotebookWidth: UserInfo.NotebookWidth, 
+				NotebookWidth: UserInfo.NotebookWidth,
 				NoteListWidth: UserInfo.NoteListWidth
 			}, function() {
 				// alert(UserInfo.NotebookWidth);
@@ -172,7 +172,7 @@ var Resize = {
 		$(".noteSplit").css("background", "none");
 		self.mdSplitter.css("background", "none");
 	},
-	
+
 	// 最终调用该方法
 	set3ColumnsWidth: function(notebookWidth, noteListWidth) {
 		var self = this;
@@ -184,15 +184,15 @@ var Resize = {
 		if(noteWidth < 400) {
 			return;
 		}
-		
+
 		self.leftNotebook.width(notebookWidth);
 		self.notebookSplitter.css("left", notebookWidth);
-		
+
 		self.noteAndEditor.css("left", notebookWidth);
 		self.noteList.width(noteListWidth);
 		self.noteSplitter.css("left", noteListWidth);
 		self.note.css("left", noteListWidth + 2);
-		
+
 		UserInfo.NotebookWidth = notebookWidth;
 		UserInfo.NoteListWidth = noteListWidth;
 
@@ -204,7 +204,7 @@ var Resize = {
 		if (isFromeIfr) {
 			event.clientX += self.body.width() - self.note.width();
 		}
-		
+
 		var notebookWidth, noteListWidth;
 		if(self.lineMove) {
 			if (self.target == "notebookSplitter") {
@@ -216,11 +216,11 @@ var Resize = {
 				noteListWidth = event.clientX - notebookWidth;
 				self.set3ColumnsWidth(notebookWidth, noteListWidth);
 			}
-	
+
 			resizeEditor();
 		}
 	},
-	
+
 	// mdeditor
 	resizeMdColumns: function(event) {
 		var self = this;
@@ -231,7 +231,7 @@ var Resize = {
 	},
 
 	// 设置宽度
-	setMdColumnWidth: function(mdEditorWidth) { 
+	setMdColumnWidth: function(mdEditorWidth) {
 		var self = this;
 		if(mdEditorWidth > 100) {
 			if(Writting.isWriting()) {
@@ -245,7 +245,7 @@ var Resize = {
 			self.rightColumn.css("left", mdEditorWidth);
 			// self.mdSplitter.css("left", mdEditorWidth);
 		}
-		
+
 		// 这样, scrollPreview 才会到正确的位置
 		if(MD) {
 			MD.onResize();
@@ -255,7 +255,7 @@ var Resize = {
 	// 左+中
 	// 在atom中, 尽管title和tool的index比topDrag大也没用, 导致不能点击tool, 不能选择title
 	setTopDragWidth: function() {
-		if(!isMac()) { 
+		if(!isMac()) {
 			return;
 		}
 		var self = this;
@@ -301,7 +301,7 @@ Mobile = {
 		LEA.isMobile = /Mobile|Android|iPhone|iPad/i.test(u);
 		LEA.isIpad =  /iPad/i.test(u);
 		LEA.isIphone = /iPhone/i.test(u);
-		if(!LEA.isMobile && $(document).width() <= 700){ 
+		if(!LEA.isMobile && $(document).width() <= 700){
 			LEA.isMobile = true
 		}
 		return LEA.isMobile;
@@ -314,7 +314,7 @@ Mobile = {
 		self.toEditor(true, noteId);
 		return false;
 	},
-	
+
 	toEditor: function(changeHash, noteId) {
 		var self = this;
 		self.bodyO.addClass("full-editor");
@@ -332,7 +332,7 @@ Mobile = {
 		var self = this;
 		self.bodyO.removeClass("full-editor");
 		self.noteO.removeClass("editor-show");
-	
+
 		/*
 		if(changeHash) {
 			location.hash = "notebookAndNote";
@@ -384,9 +384,9 @@ function initEditor() {
 			$("#mceToolbar").height(mceToobarEverHeight);
 			$(this).find("i").removeClass("fa-angle-up").addClass("fa-angle-down");
 		}
-		
+
 		resizeEditor();
-		
+
 		restoreBookmark();
 	});
 
@@ -419,7 +419,7 @@ function initEditor() {
 				}
 
 				// 没有ctrl, 直接输入x, <-
-				if(Note.readOnly && 
+				if(Note.readOnly &&
 					!(e.ctrlKey || e.metaKey)) {
 					console.log('keydown preventDefault')
 					e.preventDefault();
@@ -438,13 +438,13 @@ function initEditor() {
 				// commonCmd(e);
 			});
 		},
-		
+
 		// fix TinyMCE Removes site base url
 		// http://stackoverflow.com/questions/3360084/tinymce-removes-site-base-urls
 		convert_urls:true,
 		relative_urls:false,
 		remove_script_host:false,
-		
+
 		selector : "#editorContent",
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
@@ -455,14 +455,14 @@ function initEditor() {
 				"autolink link image lists charmap hr", "paste",
 				"searchreplace leanote_nav leanote_code tabfocus",
 				"table directionality textcolor" ], // nonbreaking
-				
+
 		toolbar1 : "formatselect | forecolor backcolor | bold italic underline strikethrough | image | leanote_code leanote_inline_code | bullist numlist | alignleft aligncenter alignright alignjustify",
 		toolbar2 : "outdent indent blockquote | link unlink | table | hr removeformat | subscript superscript |searchreplace | pastetext pasteCopyImage | leanote_ace_pre | fontselect fontsizeselect",
 
 		// 使用tab键: http://www.tinymce.com/wiki.php/Plugin3x:nonbreaking
 		// http://stackoverflow.com/questions/13543220/tiny-mce-how-to-allow-people-to-indent
 		// nonbreaking_force_tab : true,
-		
+
 		menubar : false,
 		toolbar_items_size : 'small',
 		statusbar : false,
@@ -476,17 +476,17 @@ function initEditor() {
 				+ "新宋体=NSimSun;" + "黑体=SimHei;"
 				+ "微软雅黑=Microsoft YaHei",
 		block_formats : "Header 1=h1;Header 2=h2;Header 3=h3;Header 4=h4;Paragraph=p",
-		  // This option specifies whether data:url images (inline images) should be removed or not from the pasted contents. 
-		  // Setting this to "true" will allow the pasted images, and setting this to "false" will disallow pasted images.  
+		  // This option specifies whether data:url images (inline images) should be removed or not from the pasted contents.
+		  // Setting this to "true" will allow the pasted images, and setting this to "false" will disallow pasted images.
 		  // For example, Firefox enables you to paste images directly into any contentEditable field. This is normally not something people want, so this option is "false" by default.
 		  paste_data_images: true
 	});
-	
+
 	// 刷新时保存 参考autosave插件
 	window.onbeforeunload = function(e) {
     	Note.curChangedSaveIt();
 	};
-	
+
 	// 全局ctrl + s
 	$("body").on('keydown', Note.saveNote);
 }
@@ -496,12 +496,12 @@ function initEditor() {
 var random = 1;
 function scrollTo(self, tagName, text) {
 	var iframe = $("#editorContent"); // .contents();
-	if(Writting.isWriting()) { 
+	if(Writting.isWriting()) {
 		iframe = $('#editorContentWrap');
 	}
 	var target = iframe.find(tagName + ":contains(" + text + ")");
 	random++;
-	
+
 	// 找到是第几个
 	// 在nav是第几个
 	var navs = $('#leanoteNavContent [data-a="' + tagName + '-' + encodeURI(text) + '"]');
@@ -512,7 +512,7 @@ function scrollTo(self, tagName, text) {
 			break;
 		}
 	}
-	
+
 	if (target.size() >= i+1) {
 		target = target.eq(i);
 		// 之前插入, 防止多行定位不准
@@ -533,7 +533,7 @@ function setLayoutWidth() {
 	// 界面设置, 左侧是否是隐藏的
 	UserInfo.NotebookWidth = UserInfo.NotebookWidth || $("#notebook").width();
 	UserInfo.NoteListWidth = UserInfo.NoteListWidth || $("#noteList").width();
-	
+
 	Resize.init();
 	// alert(UserInfo.NotebookWidth);
 	Resize.set3ColumnsWidth(UserInfo.NotebookWidth, UserInfo.NoteListWidth);
@@ -548,7 +548,7 @@ $(function() {
 		Mobile.isMobile();
 		resizeEditor();
 	});
-	
+
 	// 初始化编辑器
 	initEditor();
 
@@ -568,7 +568,7 @@ $(function() {
 			$(this).find(".fa-angle-right").removeClass("fa-angle-right").addClass("fa-angle-down");
 		}
 	});
-	
+
 	// 导航隐藏与显示
 	$(".leanoteNav h1").on("click", function(e) {
 		var $leanoteNav = $(this).closest('.leanoteNav');
@@ -578,7 +578,7 @@ $(function() {
 			$leanoteNav.removeClass("unfolder");
 		}
 	});
-	
+
 	// 打开设置
 	function openSetInfoDialog(whichTab) {
 		showDialogRemote("/user/account", {tab: whichTab});
@@ -589,7 +589,7 @@ $(function() {
 		e.preventDefault();
 		return false;
 	});
-	
+
 	// 得到最大dropdown高度
 	// 废弃
 	function getMaxDropdownHeight(obj) {
@@ -598,12 +598,12 @@ $(function() {
 		maxHeight -= 70;
 		if(maxHeight < 0) {
 			maxHeight = 0;
-		}	
-		
+		}
+
 		var preHeight = $(obj).find("ul").height();
 		return preHeight < maxHeight ? preHeight : maxHeight;
 	}
-	
+
 	// markdown preview下的a不能点击
 	$('#preview-contents, #editorContent').on('click', 'a', function(e) {
 		e.preventDefault();
@@ -633,7 +633,7 @@ var Pjax = {
 			log("pop");
 			me.changeNotebookAndNote(state.noteId);
 		}, false);
-		
+
 		// ie9
 		if(!history.pushState) {
 			$(window).on("hashchange", function() {
@@ -652,7 +652,7 @@ var Pjax = {
 			return;
 		}
 		var isShare = note.Perm != undefined;
-		
+
 		var notebookId = note.NotebookId;
 		// 如果是在当前notebook下, 就不要转换notebook了
 		if(Notebook.curNotebookId == notebookId) {
@@ -660,7 +660,7 @@ var Pjax = {
 			Note.changeNoteForPjax(noteId, false);
 			return;
 		}
-		
+
 		// 自己的
 		if(!isShare) {
 			// 先切换到notebook下, 得到notes列表, 再changeNote
@@ -678,7 +678,7 @@ var Pjax = {
 			});
 		}
 	},
-		
+
 	// ajax后调用
 	changeNote: function(noteInfo) {
 		var me = this;
@@ -764,7 +764,7 @@ LeaAce = {
 			// 本身就有格式的, 防止之前有格式的显示为<span>(ace下)
 			var classes = $pre.attr('class') || '';
 			var isHtml = classes.indexOf('brush:html') != -1;
-			if($pre.attr('style') || 
+			if($pre.attr('style') ||
 				(!isHtml && $pre.html().indexOf('style') != -1)) { // 如果是html就不用考虑了, 因为html格式的支持有style
 				$pre.html($pre.text());
 			}
@@ -807,7 +807,7 @@ LeaAce = {
 			    bindKey: {win: "Ctrl-z", mac: "Command-z"},
 			    exec: function(editor) {
 			    	var undoManager = editor.getSession().getUndoManager();
-			    	if(undoManager.hasUndo()){ 
+			    	if(undoManager.hasUndo()){
 			    		undoManager.undo();
 			    	} else {
 			    		undoManager.reset();
@@ -993,7 +993,7 @@ LeaAce = {
 		if(!this.canAce()) {
 			return;
 		}
-		
+
 		var node = tinymce.activeEditor.selection.getNode();
 		// log("now...");
 		// log(node);
@@ -1055,7 +1055,7 @@ LeaAce = {
 		var everBrush = "";
 		if(m && m.length > 0) {
 			everBrush = m[0];
-		}	
+		}
 		return everBrush;
 	},
 	// pre转换成ace
@@ -1224,7 +1224,7 @@ var State = {
 		CurNotebookId = Notebook.curNotebookId;
 
 		var state = {
-			StarredOpened: StarredOpened, 
+			StarredOpened: StarredOpened,
 			NotebookOpened: NotebookOpened,
 			TagOpened: TagOpened,
 
@@ -1262,12 +1262,13 @@ var State = {
 				$("#mainMask").hide(0);
 			}, 100);
 		});
-
 		// end
 		// 打开时，同步一下
-		setTimeout(function() {
-			incrSync(false);
-		}, 500);
+		if (!UserInfo.IsLocal) {//no sync for local account
+			setTimeout(function() {
+				incrSync(false);
+			}, 500);
+		}
 
 		initedCallback && initedCallback();
 		// $('body').show();
@@ -1282,7 +1283,7 @@ var State = {
 			return;
 		}
 		// 1. 左侧哪个open
-		if(!state.NotebookOpened) { 
+		if(!state.NotebookOpened) {
 			$('.folderNote.opened').removeClass('opened').addClass('closed');
 			if(state.StarredOpened) {
 				$('#myStarredNotes').removeClass('closed').addClass('opened');
@@ -1290,7 +1291,7 @@ var State = {
 				$('#myTag').removeClass('closed').addClass('opened');
 			}
 		}
-		// 2. 
+		// 2.
 		// 当前是starred notes
 		var notebookId = state.CurNotebookId;
 		if(state.CurIsStarred) {
@@ -1320,11 +1321,11 @@ var State = {
 // 判断是否登录
 function initPage(initedCallback) {
 	console.log('ini page');
-	
+
 	// 笔记本, 事件, menu初始化
 	Notebook.init();
 	// 笔记
-	
+
 	// 没用, 估计要到main.js中, 不能这样, 这样刷新后就有问题
 	/*
 	gui.win.on('close', function(e) {
@@ -1414,15 +1415,22 @@ function initPage(initedCallback) {
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
-			// 之前已同步过, 就不要full sync了
-			if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
+			//no full sync for local account
+			//see https://github.com/leanote/desktop-app/issues/36
+			if (UserInfo.IsLocal) {
+				console.log('skip full sync for local account');
 				_init();
-	 		} else {
+				$('#syncRefresh').off ('click');
+				$('#syncRefresh').hide ();
+			}// 之前已同步过, 就不要full sync了
+			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
+				_init();
+			} else {
 				fullSync(function() {
 					_init();
 				});
 	 		}
-	 		$('#username').text(UserInfo.Email);
+	 		$('#username').text(UserInfo.Username);
 	 		userMenu();
 	 		setLayoutWidth();
 		} else {
@@ -1483,7 +1491,7 @@ var Pren = {
 		var me = this;
 		gui.win.setFullScreen(!me._isFullscreen);
 		me._isFullscreen = !me._isFullscreen;
-		
+
 		if(me._isFullscreen) {
 			me.pren.enabled = false;
 			me.view.enabled = false;
@@ -1524,14 +1532,14 @@ var Pren = {
 
 			$('body').addClass('no-drag');
 			$('#page').hide();
-			
+
 			// 代码高亮
 			$(".pren-content pre").addClass("prettyprint linenums");
 			prettyPrint();
 
 		} else {
 			$('#themePresentation').attr('disabled', true);
-			
+
 			$('body').removeClass('no-drag');
 			$('#page').show();
 			me.restore();
@@ -1592,7 +1600,7 @@ var Pren = {
 		$('.pren-content').html('');
 		me.presentationO.scrollTop(0);
 	},
-	
+
 	_themeMode: 'normal', // 当前背景颜色模式, 三种, normal, writting, black
 
 	toggleThemeMode: function() {
@@ -1637,7 +1645,7 @@ var Pren = {
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
 			{
-				label: getMsg('Toggle Fullscreen'), 
+				label: getMsg('Toggle Fullscreen'),
 				accelerator: isMac_ ? 'command+=' : 'Ctrl+=',
 				click: function() {
 					me.toggleFullscreen();
@@ -1645,7 +1653,7 @@ var Pren = {
 		});
 		me.pren = new gui.MenuItem(
 			{
-				label: getMsg('Toggle Presentation'), 
+				label: getMsg('Toggle Presentation'),
 				accelerator: isMac_ ? 'command+p' : 'Ctrl+P',
 				click: function() {
 				me.togglePren();
@@ -1653,13 +1661,13 @@ var Pren = {
 		});
 		me.view = new gui.MenuItem(
 			{
-				label: getMsg('Toggle View'), 
+				label: getMsg('Toggle View'),
 				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
 				click: function() {
 				me.togglePren(true);
 			}
 		});
-	
+
 		// Esc, <- ->
 		$("body").on('keydown', function(e) {
 			var keyCode = e.keyCode;
@@ -1702,7 +1710,7 @@ var Pren = {
 		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
 		    return re.test(str_url);
 		}
-		
+
 		// 防止在本窗口打开
 		me.presentationO.on('click', 'a', function(e) {
 			e.preventDefault();
@@ -1837,7 +1845,7 @@ function setMacTopMenu() {
         {
           label: 'Reload',
           accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
-          click: function() { 
+          click: function() {
           	onClose(function() {
 	          	gui.win.reloadIgnoringCache();
           	});
@@ -1877,7 +1885,7 @@ function setMacTopMenu() {
 	var menu = gui.Menu.buildFromTemplate(template);
 
 	var mode = new gui.Menu();
-	
+
 	mode.append(Pren.fullScreen);
 
 	mode.append(gui.getSeparatorMenu());
@@ -1898,7 +1906,7 @@ function userMenu() {
 	var win = gui.getCurrentWindow();
 
 	Pren.init();
-	
+
 	if(isMac()) {
 		setMacTopMenu();
 	}
@@ -1917,15 +1925,9 @@ function userMenu() {
 
 	    this.menu = new gui.Menu();
 	    this.email = new gui.MenuItem({
-	        label: UserInfo.Email + ' (' + shortHost + ')',
+	        label: UserInfo.Username + ' (' + shortHost + ')',
 	        enabled: false,
 	        click: function(e) {
-	        }
-	    });
-	    this.blog = new gui.MenuItem({
-	        label: getMsg('My blog'),
-	        click: function(e) {
-	        	openExternal(UserInfo.Host + '/blog/' + UserInfo.UserId);
 	        }
 	    });
 	    this.switchAccount = new gui.MenuItem({
@@ -1933,15 +1935,15 @@ function userMenu() {
 	        click: function(e) {
 	        	// window.open('login.html');
 	        	// win.close();
-	        	// 
+	        	//
 	        	switchAccount();
 	        	// 这样, 不能window.open(), 不然needle有问题
 	        	// 可以gui.Window.open();
 	        	// location.href = 'login.html';
 	        }
 	    });
-	    
-	    
+
+
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
 	        click: function(e) {
@@ -1950,7 +1952,15 @@ function userMenu() {
 	    });
 
 	    this.menu.append(this.email);
-	    this.menu.append(this.blog);
+		if (!UserInfo.IsLocal) {//hide sync menu for local account
+		    this.blog = new gui.MenuItem({
+		        label: getMsg('My blog'),
+		        click: function(e) {
+		        	openExternal(UserInfo.Host + '/blog/' + UserInfo.UserId);
+		        }
+		    });
+		    this.menu.append(this.blog);
+		}
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -1959,7 +1969,7 @@ function userMenu() {
 	    if(themeMenu) {
 		    this.menu.append(themeMenu);
 	    }
-		
+
 		var height = 180;
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -1967,7 +1977,7 @@ function userMenu() {
 			this.menu.append(Pren.pren);
 			this.menu.append(Pren.view);
 			this.menu.append(Pren.fullScreen);
-		
+
 			height = 270;
 		}
 
@@ -1977,22 +1987,24 @@ function userMenu() {
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
 	    var mores = new gui.Menu();
-	    this.sync = new gui.MenuItem({
-	        label: getMsg('Sync now'),
-	        click: function(e) {
-	        	console.log('sync now');
-	        	incrSync(true);
-	        }
-	    });
-	    this.fullSync = new gui.MenuItem({
-	        label: getMsg('Force full sync'),
-	        click: function(e) {
-	        	fullSyncForce();
-	        }
-	    });
+		if (!UserInfo.IsLocal) {//hide sync menu for local account
+		    this.sync = new gui.MenuItem({
+		        label: getMsg('Sync now'),
+		        click: function(e) {
+		        	console.log('sync now');
+		        	incrSync(true);
+		        }
+		    });
+		    this.fullSync = new gui.MenuItem({
+		        label: getMsg('Force full sync'),
+		        click: function(e) {
+		        	fullSyncForce();
+		        }
+		    });
 
-	    mores.append(this.sync);
-	    mores.append(this.fullSync);
+		    mores.append(this.sync);
+		    mores.append(this.fullSync);
+		}
 
 	    // 其它的
 	    var otherMoreMenus = Api.getMoreMenus();
@@ -2011,10 +2023,10 @@ function userMenu() {
 	    });
 
 	    this.menu.append(this.more);
-		
+
 	    this.popup = function(e) {
 	    	var y = $(window).height() - height;
-	    	if(isMac()) { 
+	    	if(isMac()) {
 				this.menu.popup(gui.getCurrentWindow(), 10, y);
 	    	} else {
 	    		// windows下不能用y
@@ -2045,4 +2057,3 @@ $(function() {
 	initUploadImage();
 	Writting.init();
 });
-
