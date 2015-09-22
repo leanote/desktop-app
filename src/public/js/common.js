@@ -1557,10 +1557,36 @@ var trimTitle = function(title) {
 };
 
 var Loading = {
-	show: function(msg) {
+	$loadingDialog: $('#loadingDialog'),
+	$progressBar: $('#loadingDialog .progress-bar'),
+	// option {hasProgress: true, onClose: function}
+	inited: false,
+	show: function(msg, option) {
+		option = option || {};
 		msg || (msg = getMsg("loading..."));
 		$('#loadingDialogBodyMsg').html(msg);
-		$('#loadingDialog').modal({backdrop: 'static', keyboard: false});
+		this.$loadingDialog.modal({backdrop: 'static', keyboard: true});
+		if (option.hasProgress) {
+			this.$loadingDialog.addClass('has-progress');
+		}
+		else {
+			this.$loadingDialog.removeClass('has-progress');
+		}
+		this.onClose = option.onClose;
+		if (!this.inited) {
+			this.init();
+		}
+	},
+	init: function () {
+		this.inited = true;
+		var me = this;
+		this.$loadingDialog.on('hidden.bs.modal', function (e) {
+			me.onClose && me.onClose();
+		});
+	},
+	// '100'
+	setProgress: function (rate) {
+		this.$progressBar.width(rate + '%');
 	},
 	hide: function() {
 		$('#loadingDialog').modal('hide');

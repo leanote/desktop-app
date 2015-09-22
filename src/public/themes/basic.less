@@ -1817,6 +1817,29 @@ img::selection {
 	#loadingDialogBodyMsg {
 		font-size: 16px;
 	}
+
+    .progress {
+        margin: 0;
+        margin-top: 20px;
+        height: 1px;
+        display: none;
+    }
+
+    &.has-progress {
+        .progress {
+            display: block;
+        }
+    }
+
+    button {
+        margin: 5px;
+        font-size: 14px;
+        position: absolute;
+        z-index: 10;
+        right: 5px;
+        top: 0;
+        text-shadow: none;
+    }
 }
 
 #editorMask {

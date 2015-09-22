@@ -53,10 +53,29 @@ define(function() {
 				me.init();
 			}
 
-			Api.loading.show();
+			var closed = false;
+			var interval;
+			Api.loading.show('', {hasProgress: true, onClose: function () {
+				closed = true;
+				clearInterval(interval);
+			}});
+			Api.loading.setProgress(1);
+			var progress = 1;
+			interval = setInterval(function () {
+				progress += 5;
+				if (progress > 90) {
+					progress = 90;
+				}
+				Api.loading.setProgress(progress);
+			}, 500);
 
 			// 保存
 		    Api.noteService.exportPdf(note.NoteId, function(curPath, filename, msg) {
+		    	clearInterval(interval);
+		    	if (closed) {
+		    		return;
+		    	}
+				Api.loading.setProgress(99);
 		    	Api.loading.hide();
 
 		    	setTimeout(function() {
