@@ -1382,8 +1382,9 @@ function initPage(initedCallback) {
 
 	function _init() {
 		$(function() {
+			// 很奇怪, 当port被占用后, notebook不能获取, 其它的可以
 			// 获取笔记本
-			Service.notebookService.getNotebooks(function(notebooks) {
+			NotebookService.getNotebooks(function(notebooks) {
 				Notebook.renderNotebooks(notebooks);
 				ok();
 			});
