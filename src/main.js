@@ -25,12 +25,17 @@ app.on('open-file', function(e) {
   }
 });
 
+// var appIsReady = false;
 app.on('activate-with-no-open-windows', function() { 
   if(mainWindow) {
     mainWindow.show();
   }
   else {
-    openIt();
+    // 有时, 重启电脑会出现这种情况
+    // Cannot create BrowserWindow before app is ready
+    // 很可能app.on('ready')还没有出现, 但是ready后肯定有mainWindow了
+    // 所以, 这一段注释掉
+    // openIt();
   }
 });
 
