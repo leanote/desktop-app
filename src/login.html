@@ -44,8 +44,10 @@ if(process.platform != 'darwin') {
 				<span class="lang localAccount">Create Local Account</span>
 			</h1>
 
-			<!-- 信息  -->
-			<div class="alert alert-danger" id="loginMsg"></div>
+			<div class="alert-wrap">
+				<!-- 信息  -->
+				<div class="alert alert-danger" id="loginMsg"></div>
+			</div>
 
 			<!-- 创建本地用户 -->
 			<div class="boxForm local-form">
@@ -59,7 +61,10 @@ if(process.platform != 'darwin') {
 						</div>
 						<div class="form-group pwd-group">
 							<input type="password" required placeholder="Confirm password" class="form-control lang-placeholder" id="pwd2" name="pwd2">
-							<button id="regBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
+							<button id="regBtn" class="btn-embeded" disabled>
+								<i class="btn-go fa fa-arrow-right"></i>
+								<i class="btn-loading"><img src="public/images/loading-24.gif"/></i>
+						</button>
 						</div>
 					</div>
 				</form>
@@ -78,7 +83,10 @@ if(process.platform != 'darwin') {
 						</div>
 						<div class="form-group pwd-group">
 						    <input type="password" placeholder="Password" class="form-control lang-placeholder" id="pwd" name="pwd">
-						    <button id="loginBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
+						    <button id="loginBtn" class="btn-embeded" disabled>
+						    	<i class="btn-go fa fa-arrow-right"></i>
+						    	<i class="btn-loading"><img src="public/images/loading-24.gif"/></i>
+						</button>
 						</div>
 					</div>
 
@@ -138,6 +146,9 @@ $(function() {
 	var $email = $("#email");
 	var $host = $('#host');
 
+	var $body = $('body');
+
+
 	$("#loginBtn").click(function(e) {
 		e.preventDefault();
 		var email = $email.val();
@@ -161,7 +172,7 @@ $(function() {
 			showMsg(getMsg('Invalid host'), 'host');
 			return;
 		}
-		$('#loadingLogo').addClass('loading');
+		$body.addClass('loading');
 		hideMsg();
 		// TODO show loading
 		// console.log(33);
@@ -172,7 +183,7 @@ $(function() {
 		UserService.login(email, pwd, function(ret) {
 			if (ret) {
 				setTimeout(function(){
-					$('#loadingLogo').removeClass('loading');
+					$body.removeClass('loading');
 					goToMainPage();
 					gui.getCurrentWindow().close();
 				}, 2000);
@@ -181,12 +192,12 @@ $(function() {
 				ApiService.auth(email, pwd, host, function(ret) {
 					if(ret.Ok) {
 						setTimeout(function(){
-							$('#loadingLogo').removeClass('loading');
+							$body.removeClass('loading');
 							goToMainPage();
 							gui.getCurrentWindow().close();
 						}, 2000);
 					} else {
-						$('#loadingLogo').removeClass('loading');
+						$body.removeClass('loading');
 						showMsg(getMsg("Email or Password Error"));
 					}
 				});
@@ -214,7 +225,7 @@ $(function() {
 				return;
 			}
 		}
-		$('#loadingLogo').addClass('loading');
+		$body.addClass('loading');
 		hideMsg();
 		var user = {};
 		user.Username = username;
@@ -225,13 +236,13 @@ $(function() {
 				dbuser.UserId = dbuser._id;
 				UserService.saveCurUser(dbuser, function() {
 					setTimeout(function(){
-						$('#loadingLogo').removeClass('loading');
+						$body.removeClass('loading');
 						goToMainPage();
 						gui.getCurrentWindow().close();
 					}, 2000);
 				})
 			} else {
-				$('#loadingLogo').removeClass('loading');
+				$body.removeClass('loading');
 				showMsg(getMsg(dbuser));
 			}
 		});
@@ -269,9 +280,6 @@ $(function() {
 			checkDisabled();
 		});
 	});
-
-	var $body = $('body');
-
 	$('#customServer').click(function() {
 		$body.addClass('custom-server');
 		$host.focus();
@@ -290,12 +298,6 @@ $(function() {
 		$email.focus();
 		hideMsg();
 	});
-
-	// setTimeout(function () {
-	// 	var s = $('<script>');
-	// 	s.attr('src', 'public/js/app/service_login.js');
-	// 	$body.append(s);
-	// }, 1000);
 });
 
 // win.resizeTo(268, 356);

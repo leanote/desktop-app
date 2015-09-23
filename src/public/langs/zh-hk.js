@@ -268,6 +268,13 @@
     "Invalid host": "服務地址錯誤",
     "Leanote login": "登錄",
     "Email is required": "請輸入用戶名或郵箱",
-    "Password is required": "請輸入密碼"
+    "Password is required": "請輸入密碼",
+
+    "The minimum password length is 6": "密碼長度最少6位",
+    "Self-hosted Service": "自建服務",
+    "Create Local Account": "創建本地帳戶",
+    "Sign in to Leanote": "登錄到Leanote",
+    "Confirm password": "確認密碼",
+    "Username": "用户名"
 
 }

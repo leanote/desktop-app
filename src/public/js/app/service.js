@@ -11,6 +11,9 @@ if(!/login.html/.test(location.href)) {
 	Server.start();
 }
 
+var db = require('db');
+db.init();
+
 // 所有service, 与数据库打交道
 var Service = {
 	notebookService: require('notebook'),

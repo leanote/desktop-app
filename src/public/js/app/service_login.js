@@ -11,6 +11,9 @@ var Service = {
 	apiService: require('api'),
 };
 
+var db = require('db');
+db.initForLogin();
+
 // 全局变量
 var ApiService = Service.apiService;
 var UserService = Service.userService;

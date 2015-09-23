@@ -69,123 +69,11 @@ a:hover {
   text-decoration: none !important;
   // color: @aBlackColor;
 }
-@headerHeight: 60px;
-#headerContainer {
-	// height: @headerHeight;
-	background-color: #fff;
-	-webkit-box-shadow: 1px 1px 8px -1px rgba(0, 0, 0, 0.1);
-	box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
-	margin: 0;
-	.navbar-brand {
-		padding: 0;
-		padding-left: 10px;
-		line-height: @headerHeight;
-		img {
-			height: 50px;
-			display: inline-block;
-			margin-top: -5px;
-		}
-	}
-	.navbar-nav a {
-		line-height: @headerHeight;
-		padding: 0 10px;
-	}
-}
-#header, #posts, #loginContainer {
-}
-#postsContainer, #suggestion {
-	background: #f5f5f5 url("../images/noise.png");
-}
-#postsContainer {
-	 margin-top: @headerHeight;
-}
+
 section {
 	// background-color: #fff;
 	color: #e2f3e5;
 	margin-top: @headerHeight;
-}
-.header {
-	text-align: center;
-	padding: 30px;
-	p {
-		color: rgb(208, 235, 214);
-		font-size: 16px;
-	}
-	.btn {
-		padding: 10px 16px;
-		font-size: 14px;
-		font-size: 18px;
-		line-height: 1.33;
-		border-radius: 2px;
-		margin: 20px 0;
-	}
-	.btn-primary {
-		background-color: #25313e;
-		border-color: #1f2a34;
-	}
-	.btn-default {
-	}
-	h2 {
-		font-size: 32px;
-		color: #fff;
-	}
-}
-
-.preview {
-	margin: auto;
-	width: 850px;
-	text-align: center;
-	overflow: hidden;
-	img {
-		// box-shadow: -15px 10px 0 rgba(0, 0, 0, 0.15);
-	}
-
-	.img-header {
-		height: 40px;
-		width: 750px;
-		margin: auto;
-		border-radius: 5px 5px 0 0;
-		text-align: left;
-		background-color: #F4F4F4;
-		img {
-			box-shadow: none;
-			margin: 10px;
-			width: 50px;
-		}
-	}
-	.mobile {
-		position: absolute; bottom: -80px; right: 0;
-		.mobile-header {
-			padding: 8px 15px;
-			border-radius: 14px 14px 0 0;
-			text-align: center;
-			background-color: rgb(46, 62, 78);
-			img {
-				width: 30px;
-			}
-		}
-		img {
-			border: 3px solid rgb(46, 62, 78);
-			border-bottom: 0;
-			width: 200px;
-		}
-	}
-}
-
-/* header */
-#header {
-  color: #000000;
-  position: relative;
-  h1 {
-  	margin: 0;
-  	padding: 0;
-	line-height: 45px;
-  }
-  background-color: #fff;
-}
-#navbar {
-	float: right;
-	background: #fff;
 }
 
 #loginBtns {
@@ -854,9 +742,14 @@ body {
 form {
 	position: relative;
 }
+.alert-wrap {
+	position: relative;
+}
 #loginMsg {
-	//position: absolute;
-	margin: auto;
+	position: absolute;
+    top: -25px;
+    left: 0;
+    right: 0;
     padding: 0;
     padding-bottom: 5px;
     text-align: center;
@@ -944,4 +837,17 @@ html, body {
 }
 .drag {
 	left: 50px;
+}
+
+.btn-loading {
+	display: none;
+}
+
+body.loading {
+	.btn-go {
+		display: none;
+	}
+	.btn-loading {
+		display: inline;
+	}
 }

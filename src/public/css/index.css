@@ -93,113 +93,9 @@ a {
 a:hover {
   text-decoration: none !important;
 }
-#headerContainer {
-  background-color: #fff;
-  -webkit-box-shadow: 1px 1px 8px -1px rgba(0, 0, 0, 0.1);
-  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.1);
-  margin: 0;
-}
-#headerContainer .navbar-brand {
-  padding: 0;
-  padding-left: 10px;
-  line-height: 60px;
-}
-#headerContainer .navbar-brand img {
-  height: 50px;
-  display: inline-block;
-  margin-top: -5px;
-}
-#headerContainer .navbar-nav a {
-  line-height: 60px;
-  padding: 0 10px;
-}
-#postsContainer,
-#suggestion {
-  background: #f5f5f5 url("../images/noise.png");
-}
-#postsContainer {
-  margin-top: 60px;
-}
 section {
   color: #e2f3e5;
   margin-top: 60px;
-}
-.header {
-  text-align: center;
-  padding: 30px;
-}
-.header p {
-  color: #d0ebd6;
-  font-size: 16px;
-}
-.header .btn {
-  padding: 10px 16px;
-  font-size: 14px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 2px;
-  margin: 20px 0;
-}
-.header .btn-primary {
-  background-color: #25313e;
-  border-color: #1f2a34;
-}
-.header h2 {
-  font-size: 32px;
-  color: #fff;
-}
-.preview {
-  margin: auto;
-  width: 850px;
-  text-align: center;
-  overflow: hidden;
-}
-.preview .img-header {
-  height: 40px;
-  width: 750px;
-  margin: auto;
-  border-radius: 5px 5px 0 0;
-  text-align: left;
-  background-color: #F4F4F4;
-}
-.preview .img-header img {
-  box-shadow: none;
-  margin: 10px;
-  width: 50px;
-}
-.preview .mobile {
-  position: absolute;
-  bottom: -80px;
-  right: 0;
-}
-.preview .mobile .mobile-header {
-  padding: 8px 15px;
-  border-radius: 14px 14px 0 0;
-  text-align: center;
-  background-color: #2e3e4e;
-}
-.preview .mobile .mobile-header img {
-  width: 30px;
-}
-.preview .mobile img {
-  border: 3px solid #2e3e4e;
-  border-bottom: 0;
-  width: 200px;
-}
-/* header */
-#header {
-  color: #000000;
-  position: relative;
-  background-color: #fff;
-}
-#header h1 {
-  margin: 0;
-  padding: 0;
-  line-height: 45px;
-}
-#navbar {
-  float: right;
-  background: #fff;
 }
 #loginBtns {
   border-left: 1px solid #eee;
@@ -777,8 +673,14 @@ btns {
 form {
   position: relative;
 }
+.alert-wrap {
+  position: relative;
+}
 #loginMsg {
-  margin: auto;
+  position: absolute;
+  top: -25px;
+  left: 0;
+  right: 0;
   padding: 0;
   padding-bottom: 5px;
   text-align: center;
@@ -903,4 +805,13 @@ body {
 }
 .drag {
   left: 50px;
+}
+.btn-loading {
+  display: none;
+}
+body.loading .btn-go {
+  display: none;
+}
+body.loading .btn-loading {
+  display: inline;
 }
