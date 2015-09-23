@@ -15,7 +15,6 @@ if(!/login.html/.test(location.href)) {
 var Service = {
 	notebookService: require('notebook'),
 	noteService: require('note'),
-	tagService: require('tag'),
 	userService: require('user'),
 	tagService: require('tag'),
 	apiService: require('api'),

@@ -344,6 +344,15 @@ input, .form-control {
 		margin-bottom: 30px;
 		width: @boxWidth;;
 		color: #eee;
+
+		height: 102px;
+		text-align: center;
+		span {
+			display: none;
+			font-size: 24px;
+			color: #000;
+			line-height: 102px;
+		}
 	}
 }
 
@@ -849,23 +858,90 @@ form {
 	//position: absolute;
 	margin: auto;
     padding: 0;
+    padding-bottom: 5px;
     text-align: center;
 }
 
 .bottom {
 	position: absolute;
-	bottom: 5px;
+	bottom: 10px;
 	left: 0;
 	right: 0;
 	text-align: center;
 	a {
 		color: #666;
 		font-size: 85%;
+		display: block;
+	}
+
+	.loginWithLeanote {
+		display: none;
 	}
 }
 
-.decolour {
-    -webkit-filter: grayscale(100%);
+.host-group, .local-form {
+	display: none;
+}
+
+.local-account, .custom-server {
+	.bottom {
+		a {
+			display: none;
+		}
+		.loginWithLeanote {
+			display: block;
+		}
+	}
+}
+
+.custom-server {
+	.host-group {
+		display: block;
+	}
+	.btns {
+		display: none;
+	}
+
+	#loadingLogo {
+		display: none;
+	}
+	#box h1 span.customServer {
+		display: block;
+	}
+}
+.local-account {
+	.local-form {
+		display: block;
+	}
+	.leanote-form {
+		display: none;
+	}
+
+	// #loadingLogo {
+	// 	-webkit-filter: grayscale(100%);
+	// }
+
+	#loadingLogo {
+		display: none;
+	}
+	#box h1 span.localAccount {
+		display: block;
+	}
 }
 
 @import "traffic.less";
+
+body #container {
+	margin: 0 auto;
+	border-radius: 0;
+	box-shadow: none;
+	border: none;
+}
+
+html, body {
+	overflow: hidden;
+	background-color: rgba(247, 249, 250, 0.99);
+}
+.drag {
+	left: 50px;
+}

@@ -5,30 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="keywords" content="leanote,leanote.com">
-<meta name="description" content="leanote, Not Just A Notebook!">
+<meta name="description" content="leanote, Not Just A Notepad!">
 <meta name="author" content="leanote">
 <title class="lang">Leanote login</title>
 <link href="public/css/bootstrap.css" rel="stylesheet">
 <link href="public/css/font-awesome-4.2.0/css/font-awesome.css" rel="stylesheet">
 <link href="public/css/index.css" rel="stylesheet">
-<style>
-body #container {
-	margin: 0 auto;
-	border-radius: 0;
-	box-shadow: none;
-	border: none;
-}
-
-html, body {
-	overflow: hidden;
-	background-color: rgba(247, 249, 250, 0.99);
-}
-#winTool {
-}
-.drag {
-	left: 50px;
-}
-</style>
 <script>
 // for windows
 if(process.platform != 'darwin') {
@@ -38,67 +20,84 @@ if(process.platform != 'darwin') {
 </head>
 <body id="boxBody">
 	<div id="container">
-<!-- 关闭, 最小化, 最大 -->
-<div id="winTool" class="win-tool clearfix">
-	<a class="tool-close-blur"></a>
-</div>
-<div class="bottom"><a id="localAccount" class="lang">Create Local Account</a>
-<a id="customServer" class="lang">Custom server</a></div>
-<section id="box" class="animated fadeInUp">
-	<div class="drag"></div>
-	<div>
-		<h1 id="logo">
-			<a onclick="openExternal('http://leanote.com')" id="loadingLogo" title="leanote">
-				<img src="public/images/logo/leanote_icon_blue.png">
-			</a>
-		</h1>
-		<div class="alert alert-danger" id="loginMsg"></div>
-		<div class="boxForm hide">
-			<form>
-			<div class="formContainer">
-				<div class="form-group form-group-1">
-					<input type="text" required placeholder="Username or Email" class="form-control lang-placeholder" id="username" name="username" value="">
-				</div>
-				<div class="form-group pwd-group">
-					<input type="password" required placeholder="Password" class="form-control lang-placeholder" id="pwd1" name="pwd1">
-				</div>
-				<div class="form-group pwd-group">
-					<input type="password" required placeholder="Retype Rassword" class="form-control lang-placeholder" id="pwd2" name="pwd2">
-					<button id="regBtn" class="btn-embeded"><i class="fa fa-arrow-right"></i></button>
-				</div>
+
+	<!-- 关闭, 最小化, 最大 -->
+	<div id="winTool" class="win-tool clearfix">
+		<a class="tool-close-blur"></a>
+	</div>
+
+	<div class="bottom">
+		<a id="customServer" class="lang customServer">Self-hosted Service</a>
+		<a id="localAccount" class="lang localAccount">Create Local Account</a>
+
+		<a id="loginWithLeanote" class="lang loginWithLeanote">Sign in to Leanote</a>
+	</div>
+
+	<section id="box">
+		<div class="drag"></div>
+		<div>
+			<h1 id="logo">
+				<a onclick="openExternal('http://leanote.com')" id="loadingLogo" title="leanote">
+					<img src="public/images/logo/leanote_icon_blue.png">
+				</a>
+				<span class="lang customServer">Self-hosted Service</span>
+				<span class="lang localAccount">Create Local Account</span>
+			</h1>
+
+			<!-- 信息  -->
+			<div class="alert alert-danger" id="loginMsg"></div>
+
+			<!-- 创建本地用户 -->
+			<div class="boxForm local-form">
+				<form>
+					<div class="formContainer">
+						<div class="form-group form-group-1">
+							<input type="text" required placeholder="Username" class="form-control lang-placeholder" id="username" name="username" value="">
+						</div>
+						<div class="form-group form-group-1">
+							<input type="password" required placeholder="Password" class="form-control lang-placeholder" id="pwd1" name="pwd1">
+						</div>
+						<div class="form-group pwd-group">
+							<input type="password" required placeholder="Confirm password" class="form-control lang-placeholder" id="pwd2" name="pwd2">
+							<button id="regBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
+						</div>
+					</div>
+				</form>
 			</div>
-			</form>
-		</div>
-		<div class="boxForm">
-			<form>
-				<div class="formContainer">
-					<div class="form-group form-group-1 hide" id="hostGroup">
-					    <input type="text" placeholder="Host, http://leanote.com" class="form-control lang-placeholder" id="host" name="host">
+
+			<!-- 普通用户 -->
+			<div class="boxForm leanote-form">
+				<form>
+					<div class="formContainer">
+						<div class="form-group form-group-1 host-group" id="hostGroup">
+						    <input type="text" placeholder="Host, http://leanote.com" class="form-control lang-placeholder" id="host" name="host">
+						</div>
+
+						<div class="form-group form-group-1">
+							<input type="text" placeholder="Username or Email" class="form-control lang-placeholder" id="email" name="email" value="">
+						</div>
+						<div class="form-group pwd-group">
+						    <input type="password" placeholder="Password" class="form-control lang-placeholder" id="pwd" name="pwd">
+						    <button id="loginBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
+						</div>
 					</div>
 
-					<div class="form-group form-group-1">
-						<input type="text" placeholder="Username or Email" class="form-control lang-placeholder" id="email" name="email" value="">
+					<div class="clearfix btns">
+						<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small class="lang">Forget password?</small></a>
+						<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small class="lang">Sign up</small></a>
 					</div>
-					<div class="form-group pwd-group">
-					    <input type="password" placeholder="Password" class="form-control lang-placeholder" id="pwd" name="pwd">
-					    <button id="loginBtn" class="btn-embeded" disabled><i class="fa fa-arrow-right"></i></button>
-					</div>
-				</div>
+				</form>
+			</div>
+	    </div>
+	</section>
 
-				<div class="clearfix btns">
-					<a onclick="openExternal('http://leanote.com/findPassword')" class="pull-right m-t-xs"><small class="lang">Forget password?</small></a>
-					<a onclick="openExternal('http://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small class="lang">Sign up</small></a>
+</div>
 
-				</div>
-			</form>
-		</div>
-    </div>
-</section>
 <script src="public/config.js"></script>
 <script src="public/js/jquery-1.9.0.min.js"></script>
 <script src="public/js/lang.js"></script>
 <script src="public/js/bootstrap.js"></script>
-<script src="public/js/app/service.js"></script>
+<!-- 很慢 -->
 <script>
 function getMsg(key) {
 	return langData[key] || key;
@@ -108,6 +107,7 @@ function getMsg(key) {
 
 <script>
 $(function() {
+
 	$('.tool-close-blur').click(function() {
 		gui.getCurrentWindow().close();
 	});
@@ -134,11 +134,15 @@ $(function() {
 	function hideMsg() {
 		$("#loginMsg").hide();
 	}
+
+	var $email = $("#email");
+	var $host = $('#host');
+
 	$("#loginBtn").click(function(e) {
 		e.preventDefault();
-		var email = $("#email").val();
+		var email = $email.val();
 		var pwd = $("#pwd").val();
-		var host = $('#host').val();
+		var host = $host.val();
 
 		if(!email) {
 			showMsg(getMsg("Email is required"), "email");
@@ -189,6 +193,8 @@ $(function() {
 			}
 		})
 	});
+
+	// 创建本地账户
 	$("#regBtn").click(function(e) {
 		e.preventDefault();
 		var username = $("#username").val();
@@ -200,11 +206,11 @@ $(function() {
 			return;
 		}
 		if(!pwd1 || !pwd2) {
-			showMsg(getMsg("Password is required"), "pwd");
+			showMsg(getMsg("Password is required"), "pwd1");
 			return;
 		} else {
 			if(pwd1.length < 6 || pwd2.length < 6) {
-				showMsg(getMsg("Username or Password Error"), "pwd");
+				showMsg(getMsg("The minimum password length is 6"), "pwd1");
 				return;
 			}
 		}
@@ -214,7 +220,7 @@ $(function() {
 		user.Username = username;
 		user.Pwd = pwd1;
 		user.IsLocal = true;
-		UserService.saveNew(user, function(ret, dbuser) {
+		UserService.createLocalUser(user, function(ret, dbuser) {
 			if(ret) {
 				dbuser.UserId = dbuser._id;
 				UserService.saveCurUser(dbuser, function() {
@@ -226,11 +232,13 @@ $(function() {
 				})
 			} else {
 				$('#loadingLogo').removeClass('loading');
-				showMsg(getMsg("Email or Password Error"));
+				showMsg(getMsg(dbuser));
 			}
 		});
 	});
+
 	var $loginBtnO = $("#loginBtn");
+	var $regBtnO = $('#regBtn');
 	function checkDisabled() {
 		var email = $("#email").val();
 		var pwd = $("#pwd").val();
@@ -238,6 +246,16 @@ $(function() {
 			$loginBtnO.attr('disabled', true);
 		} else {
 			$loginBtnO.attr('disabled', false);
+		}
+
+		// reg
+		var username = $("#username").val();
+		var pwd1 = $("#pwd1").val();
+		var pwd2 = $('#pwd2').val();
+		if (username && pwd1 && pwd2) {
+			$regBtnO.attr('disabled', false);
+		} else {
+			$regBtnO.attr('disabled', true);
 		}
 	}
 
@@ -252,20 +270,32 @@ $(function() {
 		});
 	});
 
+	var $body = $('body');
+
 	$('#customServer').click(function() {
-		if($hostGroup.hasClass('hide')) {
-			$hostGroup.removeClass('hide');
-			hasHost = true;
-		} else {
-			$hostGroup.addClass('hide');
-			hasHost = false;
-		}
+		$body.addClass('custom-server');
+		$host.focus();
+		hideMsg();
 	});
 
 	$('#localAccount').click(function() {
-		$('#logo').toggleClass('decolour');
-		$('.boxForm').toggleClass ('hide');
+		$body.addClass('local-account');
+		$('#username').focus();
+		hideMsg();
 	});
+
+	$('#loginWithLeanote').click(function () {
+		$body.removeClass('local-account custom-server');
+		hasHost = false;
+		$email.focus();
+		hideMsg();
+	});
+
+	// setTimeout(function () {
+	// 	var s = $('<script>');
+	// 	s.attr('src', 'public/js/app/service_login.js');
+	// 	$body.append(s);
+	// }, 1000);
 });
 
 // win.resizeTo(268, 356);
@@ -273,7 +303,8 @@ $(function() {
 
 </script>
 
-</div>
+<script src="public/js/app/service_login.js" defer="defer"></script>
+
 </body>
 
 </html>

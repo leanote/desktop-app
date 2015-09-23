@@ -984,7 +984,7 @@ var email2LoginAddress = {
     'eyou.com': 'http://www.eyou.com/',
     '21cn.com': 'http://mail.21cn.com/',
     '188.com': 'http://www.188.com/',
-    'foxmail.coom': 'http://www.foxmail.com'
+    'foxmail.com': 'http://www.foxmail.com'
 };
 
 function getEmailLoginAddress(email) {
@@ -1466,13 +1466,12 @@ function goToMainPage() {
 function switchAccount() {
 	SyncService.stop();
 	// location.href = 'login.html';
-	// 
 	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
-		var win = new BrowserWindow({ width: 278, height: 316, show: true, frame: false, resizable: false });
+		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 416, show: true, frame: true, resizable: false });
+		var win = new BrowserWindow({ width: 278, height: 426, show: true, frame: true, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();

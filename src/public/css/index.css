@@ -337,6 +337,14 @@ input,
   margin-bottom: 30px;
   width: 248px;
   color: #eee;
+  height: 102px;
+  text-align: center;
+}
+#box h1 span {
+  display: none;
+  font-size: 24px;
+  color: #000;
+  line-height: 102px;
 }
 #boxHeader {
   border-color: #e8e8e8;
@@ -772,11 +780,12 @@ form {
 #loginMsg {
   margin: auto;
   padding: 0;
+  padding-bottom: 5px;
   text-align: center;
 }
 .bottom {
   position: absolute;
-  bottom: 5px;
+  bottom: 10px;
   left: 0;
   right: 0;
   text-align: center;
@@ -784,9 +793,46 @@ form {
 .bottom a {
   color: #666;
   font-size: 85%;
+  display: block;
 }
-.decolour {
-  -webkit-filter: grayscale(100%);
+.bottom .loginWithLeanote {
+  display: none;
+}
+.host-group,
+.local-form {
+  display: none;
+}
+.local-account .bottom a,
+.custom-server .bottom a {
+  display: none;
+}
+.local-account .bottom .loginWithLeanote,
+.custom-server .bottom .loginWithLeanote {
+  display: block;
+}
+.custom-server .host-group {
+  display: block;
+}
+.custom-server .btns {
+  display: none;
+}
+.custom-server #loadingLogo {
+  display: none;
+}
+.custom-server #box h1 span.customServer {
+  display: block;
+}
+.local-account .local-form {
+  display: block;
+}
+.local-account .leanote-form {
+  display: none;
+}
+.local-account #loadingLogo {
+  display: none;
+}
+.local-account #box h1 span.localAccount {
+  display: block;
 }
 .win-tool {
   padding: 5px;
@@ -843,4 +889,18 @@ form {
 }
 .blur .win-tool a {
   background: url(icon/traffic-disabled@2x.png);
+}
+body #container {
+  margin: 0 auto;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+html,
+body {
+  overflow: hidden;
+  background-color: rgba(247, 249, 250, 0.99);
+}
+.drag {
+  left: 50px;
 }

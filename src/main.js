@@ -4,6 +4,8 @@ var BrowserWindow = require('browser-window');  // Module to create native brows
 // Report crashes to our server.
 require('crash-reporter').start();
 
+var debug = false;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
@@ -16,7 +18,7 @@ app.on('window-all-closed', function() {
 
 // 避免可以启动多个app
 app.on('open-file', function(e) {
-  console.log('reopen');
+  // console.log('reopen');
   if(mainWindow) {
     mainWindow.show();
     mainWindow.focus();
@@ -218,10 +220,12 @@ function openIt() {
   // require('leanote_protocol');
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1050, 
-    height: 595, 
-    frame: process.platform != 'darwin', 
-    transparent: false }
+  mainWindow = new BrowserWindow({
+      width: 1050, 
+      height: 595, 
+      frame: debug || process.platform != 'darwin', 
+      transparent: false
+    }
   );
 
   // and load the index.html of the app.
@@ -265,5 +269,5 @@ function openIt() {
   });
 
   // 作为调试
-  // setMenu();
+  debug && setMenu();
 }
