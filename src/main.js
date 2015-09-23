@@ -209,6 +209,39 @@ function setMenu() {
   Menu.setApplicationMenu(menu); // Must be called within app.on('ready', function(){ ... });
 }
 
+var ipc = require('ipc');
+
+// DB线程
+var threadDB = {
+  instance: null,
+
+  _token2Sender: {}, // token => sender
+
+  init: function () {
+    var me = this;
+    // 多线程
+    var childProcess = require('child_process');
+    this.instance = childProcess.fork('./thread_db.js');
+
+    // 线程返回消息
+    // {token: token, err: err, ret: ret}
+    this.instance.on('message', function(m) {
+      // console.log('_token2Sender----------')
+      // console.log(me._token2Sender);
+      var sender = me._token2Sender[m.token];
+      sender.send('db-exec-ret', m);
+    });
+
+    // 前端发来消息
+    // m = {token: token, method: 'insert, findOne', dbname: 'notes', params: {username: "life"}};
+    ipc.on('db-exec', function(event, m) {
+      me._token2Sender[m.token] = event.sender;
+      me.instance.send(m);
+    });
+  }
+
+};
+
 function openIt() {
   // app.getPath('appData');
 
@@ -231,6 +264,8 @@ function openIt() {
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
 
+  threadDB.init();
+
   // 不能放在这里, 刚开始有图片, 之后添加的图片不能显示 ??
   // // 启动服务器, 图片
   // var Server = require('server');
@@ -244,7 +279,6 @@ function openIt() {
     mainWindow = null;
   });
 
-  var ipc = require('ipc');
   mainWindow.on('focus', function() {
     // ipc.send('focusWindow'); mainProcess没有该方法
     if(mainWindow && mainWindow.webContents)
