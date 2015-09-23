@@ -8,19 +8,22 @@ define(function() {
 				'export': 'Export PDF',
 				'exportSuccess': 'PDF saved successful!',
 				'exportFailure': 'PDF saved failure!',
-				'notExists': 'Please sync your note to ther server firslty.'
+				'notExists': 'Please sync your note to ther server firslty.',
+				'localUser': 'Not support for local user'
 			},
 			'zh-cn': {
 				'export': '导出PDF',
 				'exportSuccess': 'PDF导出成功!',
 				'exportFailure': 'PDF导出失败!',
-				'notExists': '请先同步该笔记!'
+				'notExists': '请先同步该笔记!',
+				'localUser': '本地用户不支持导出PDF'
 			},
 			'zh-hk': {
 				'export': '導出PDF',
 				'exportSuccess': 'PDF導出成功!',
 				'exportFailure': 'PDF導出失敗!',
-				'notExists': '請先同步該筆記!'
+				'notExists': '請先同步該筆記!',
+				'localUser': '本地用戶不支持導出PDF'
 			}
 		},
 
@@ -115,6 +118,10 @@ define(function() {
 		        label: Api.getMsg('plugin.export_pdf.export'),
 		        click: (function() {
 		        	return function(note) {
+		        		if (UserInfo.IsLocal) {
+		        			Notify.show({type: 'warning', title: 'Warning', body: getMsg('plugin.export_pdf.localUser')});
+		        			return;
+		        		}
 		        		me.exportPDF(note);
 		        	}
 		        })()

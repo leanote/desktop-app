@@ -2514,3 +2514,7 @@ body,
 #leftNotebook {
   border-radius: 0;
 }
+.local #syncRefresh,
+.local #syncProgress {
+  display: none;
+}

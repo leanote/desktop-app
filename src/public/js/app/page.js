@@ -1416,14 +1416,15 @@ function initPage(initedCallback) {
 	UserService.init(function(userInfo) {
 		if(userInfo) {
 			UserInfo = userInfo;
-			//no full sync for local account
-			//see https://github.com/leanote/desktop-app/issues/36
+			// no full sync for local account
+			// see https://github.com/leanote/desktop-app/issues/36
 			if (UserInfo.IsLocal) {
-				console.log('skip full sync for local account');
+				// console.log('skip full sync for local account');
 				_init();
-				$('#syncRefresh').off ('click');
-				$('#syncRefresh').hide ();
-			}// 之前已同步过, 就不要full sync了
+				$('#syncRefresh').off('click');
+				$('body').addClass('local');
+			}
+			// 之前已同步过, 就不要full sync了
 			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
 				_init();
 			} else {
@@ -1926,7 +1927,7 @@ function userMenu() {
 
 	    this.menu = new gui.Menu();
 	    this.email = new gui.MenuItem({
-	        label: UserInfo.Username + ' (' + shortHost + ')',
+	        label: UserInfo.IsLocal ? UserInfo.Username + ' (' + getMsg('Local') + ')' : UserInfo.Username + ' (' + shortHost + ')',
 	        enabled: false,
 	        click: function(e) {
 	        }

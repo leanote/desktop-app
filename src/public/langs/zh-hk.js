@@ -275,6 +275,7 @@
     "Create Local Account": "創建本地帳戶",
     "Sign in to Leanote": "登錄到Leanote",
     "Confirm password": "確認密碼",
-    "Username": "用户名"
-
+    "Username": "用戶名",
+    "User exists": "用戶已存在",
+    "Local": "本地"
 }

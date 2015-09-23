@@ -103,9 +103,9 @@ if(process.platform != 'darwin') {
 
 <script src="public/config.js"></script>
 <script src="public/js/jquery-1.9.0.min.js"></script>
+<script src="public/js/app/service_login.js"></script>
 <script src="public/js/lang.js"></script>
 <script src="public/js/bootstrap.js"></script>
-<!-- 很慢 -->
 <script>
 function getMsg(key) {
 	return langData[key] || key;
@@ -180,27 +180,18 @@ $(function() {
 		if(!hasHost) {
 			host = '';
 		}
-		UserService.login(email, pwd, function(ret) {
+		UserService.login(email, pwd, host, function(ret) {
 			if (ret) {
-				setTimeout(function(){
+				setTimeout(function() {
 					$body.removeClass('loading');
 					goToMainPage();
 					gui.getCurrentWindow().close();
 				}, 2000);
 			}
+			// 不成功, 则用api登录
 			else {
-				ApiService.auth(email, pwd, host, function(ret) {
-					if(ret.Ok) {
-						setTimeout(function(){
-							$body.removeClass('loading');
-							goToMainPage();
-							gui.getCurrentWindow().close();
-						}, 2000);
-					} else {
-						$body.removeClass('loading');
-						showMsg(getMsg("Email or Password Error"));
-					}
-				});
+				$body.removeClass('loading');
+				showMsg(getMsg("Email or Password Error"));
 			}
 		})
 	});
@@ -227,20 +218,13 @@ $(function() {
 		}
 		$body.addClass('loading');
 		hideMsg();
-		var user = {};
-		user.Username = username;
-		user.Pwd = pwd1;
-		user.IsLocal = true;
-		UserService.createLocalUser(user, function(ret, dbuser) {
+		UserService.createLocalUser(username, pwd1, function(ret, dbuser) {
 			if(ret) {
-				dbuser.UserId = dbuser._id;
-				UserService.saveCurUser(dbuser, function() {
-					setTimeout(function(){
-						$body.removeClass('loading');
-						goToMainPage();
-						gui.getCurrentWindow().close();
-					}, 2000);
-				})
+				setTimeout(function(){
+					$body.removeClass('loading');
+					goToMainPage();
+					gui.getCurrentWindow().close();
+				}, 2000);
 			} else {
 				$body.removeClass('loading');
 				showMsg(getMsg(dbuser));
@@ -305,7 +289,6 @@ $(function() {
 
 </script>
 
-<script src="public/js/app/service_login.js" defer="defer"></script>
 
 </body>
 

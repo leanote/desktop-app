@@ -2219,6 +2219,7 @@ Note.initContextmenu = function() {
 	        	Note.deleteNote(self.target);
 	        }
 	    });
+
 	    this.publicBlog = new gui.MenuItem({
 	        label: getMsg("Public as blog"),
 	        click: function(e) {
@@ -2249,9 +2250,11 @@ Note.initContextmenu = function() {
 	        }
 	    });
 
-	    this.menu.append(this.publicBlog);
-	    this.menu.append(this.unPublicBlog);
-	    this.menu.append(gui.getSeparatorMenu());
+	    if (!UserInfo.IsLocal) {
+		    this.menu.append(this.publicBlog);
+		    this.menu.append(this.unPublicBlog);
+		    this.menu.append(gui.getSeparatorMenu());
+	    }
 
 	    this.menu.append(this.del);
 	    this.menu.append(gui.getSeparatorMenu());
