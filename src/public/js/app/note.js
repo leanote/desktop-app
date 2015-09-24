@@ -1410,73 +1410,6 @@ Note.shareNote = function(target) {
 	shareNoteOrNotebook(noteId, true);
 }
 
-// 历史记录
-Note.listNoteContentHistories = function() {
-	// 弹框
-	$("#leanoteDialog #modalTitle").html(getMsg("history"));
-	$content = $("#leanoteDialog .modal-body");
-	$content.html("");
-	$("#leanoteDialog .modal-footer").html('<button type="button" class="btn btn-default" data-dismiss="modal">' + getMsg("close") + '</button>');
-	options = {}
-	options.show = true;
-	$("#leanoteDialog").modal(options);
-
-	NoteService.getNoteHistories(Note.curNoteId, function(re) {
-		// console.log("histories.....");
-		// console.log(re);
-	// });
-	// ajaxGet("/noteContentHistory/listHistories", {noteId: Note.curNoteId}, function(re) {
-		if(!isArray(re)) {
-			$content.html(getMsg("noHistories")); return;
-		}
-		// 组装成一个tab
-		var str = /*"<p>" + getMsg("historiesNum") + '</p>' + */'<div id="historyList"><table class="table table-hover">';
-		note = Note.cache[Note.curNoteId];
-		var s = "div"
-		if(note.IsMarkdown) {
-			s = "pre";
-		}
-		for (i in re) {
-			var content = re[i]
-			content.Ab = Note.genAbstract(content.Content, 200);
-			// 为什么不用tt(), 因为content可能含??
-			str += '<tr><td seq="' +  i + '">#' + (i+1) +'<' + s + ' class="each-content">' + content.Ab + '</' + s + '> <div class="btns">' + getMsg("datetime") + ': <span class="label label-default">' + goNowToDatetime(content.UpdatedTime) + '</span> <button class="btn btn-default all">' + getMsg("unfold") + '</button> <button class="btn btn-primary back">' + getMsg('restoreFromThisVersion') + '</button></div></td></tr>';
-		}
-		str += "</table></div>";
-		$content.html(str);
-		$("#historyList .all").click(function() {
-			$p = $(this).parent().parent();
-			var seq = $p.attr("seq");
-			var $c = $p.find(".each-content");
-			var info = re[seq];
-			if(!info.unfold) { // 默认是折叠的
-				$(this).text(getMsg("fold")); // 折叠
-				$c.html(info.Content);
-				info.unfold = true;
-			} else {
-				$(this).text(getMsg("unfold")); // 展开
-				$c.html(info.Ab);
-				info.unfold = false
-			}
-		});
-
-		// 还原
-		$("#historyList .back").click(function() {
-			$p = $(this).parent().parent();
-			var seq = $p.attr("seq");
-			if(confirm(getMsg("confirmBackup"))) {
-				// 保存当前版本
-				Note.curChangedSaveIt();
-				// 设置之
-				note = Note.cache[Note.curNoteId];
-				setEditorContent(re[seq].Content, note.IsMarkdown);
-				//
-				hideDialog();
-			}
-		});
-	});
-};
-
 //-----------------
 // read only, 已过时
 
@@ -2715,9 +2648,9 @@ $(function() {
 
 	//------------
 	// 文档历史
-	$("#contentHistory").click(function() {
-		Note.listNoteContentHistories()
-	});
+	// $("#contentHistory").click(function() {
+	// 	Note.listNoteContentHistories()
+	// });
 
 	$("#saveBtn").click(function() {
 		Note.curChangedSaveIt(true);
