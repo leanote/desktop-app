@@ -209,7 +209,30 @@ function setMenu() {
   Menu.setApplicationMenu(menu); // Must be called within app.on('ready', function(){ ... });
 }
 
+var child_process = require('child_process');
+function killPort(callback) {
+  var port = '8912';
+  if (process.platform.toLowerCase().indexOf('win') === 0) {
+    // & EXIT 表示只循环一次
+    // Leanote会有两个pid绑定端口, 另一个和electron相关, kill掉也会把自己kill掉
+    var sh1 = 'FOR /F "tokens=4 delims= " %P IN (\'netstat -a -n -o ^| findstr :' + port + '\') DO (TaskKill.exe /F /PID %P) & Exit';
+    var sh2 = 'FOR /F "tokens=5 delims= " %P IN (\'netstat -a -n -o ^| findstr :' + port + '\') DO (TaskKill.exe /F /PID %P) & Exit';
+    child_process.exec(sh1, function () {
+      child_process.exec(sh2, callback);
+    });
+  }
+  else {
+    var sh = 'kill -9 $(lsof -i:' + port + ' -t)';
+    child_process.exec(sh, callback);
+  }
+}
+
 function openIt() {
+  killPort(_openIt);
+}
+
+function _openIt() {
+  // console.log(arguments);
   // app.getPath('appData');
 
   // var Evt = require('evt');
