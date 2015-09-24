@@ -2,8 +2,8 @@
 .settings
 config.codekit
 .project
-/node_modules
 /dist
+.bin
 /nw
 /atom
 /gulpfile.js
@@ -11,10 +11,10 @@ config.codekit
 /package.json
 sqlite*
 /test
+min
+.codekit-cache
 tinymce_old
-src/node_modules/request
-src/node_modules/fs.extra
-src/merge.js
-src/test*.js
+node_modules/request
+node_modules/fs.extra
 /updates
 /old

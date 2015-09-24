@@ -1,0 +1,90 @@
+{
+  "name": "needle",
+  "version": "0.7.10",
+  "description": "Tiny yet feature-packed HTTP client. With multipart, charset decoding and proxy support.",
+  "keywords": [
+    "http",
+    "https",
+    "simple",
+    "request",
+    "client",
+    "multipart",
+    "upload",
+    "proxy",
+    "deflate",
+    "timeout",
+    "charset",
+    "iconv"
+  ],
+  "tags": [
+    "http",
+    "https",
+    "simple",
+    "request",
+    "client",
+    "multipart",
+    "upload",
+    "proxy",
+    "deflate",
+    "timeout",
+    "charset",
+    "iconv"
+  ],
+  "author": {
+    "name": "Tomás Pollak",
+    "email": "tomas@forkhq.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomas/needle.git"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.4.4"
+  },
+  "devDependencies": {
+    "mocha": "",
+    "sinon": "",
+    "should": "",
+    "xml2js": "",
+    "JSONStream": "",
+    "q": "",
+    "jschardet": ""
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib/needle",
+  "bin": {
+    "needle": "./bin/needle"
+  },
+  "engines": {
+    "node": ">= 0.10.x"
+  },
+  "gitHead": "7586fd4b0dd9bc7cb55b43365dd82c898c0d11f7",
+  "bugs": {
+    "url": "https://github.com/tomas/needle/issues"
+  },
+  "homepage": "https://github.com/tomas/needle",
+  "_id": "needle@0.7.10",
+  "_shasum": "e1c2db920b9fafde46709cc5e9f4aa87c259656d",
+  "_from": "needle@*",
+  "_npmVersion": "1.4.28",
+  "_npmUser": {
+    "name": "tomas",
+    "email": "tomas@forkhq.com"
+  },
+  "maintainers": [
+    {
+      "name": "tomas",
+      "email": "tomas@forkhq.com"
+    }
+  ],
+  "dist": {
+    "shasum": "e1c2db920b9fafde46709cc5e9f4aa87c259656d",
+    "tarball": "http://registry.npmjs.org/needle/-/needle-0.7.10.tgz"
+  },
+  "_resolved": "https://registry.npmjs.org/needle/-/needle-0.7.10.tgz"
+}
