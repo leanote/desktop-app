@@ -1,20 +1,25 @@
 # Leanote Desktop App
 
-Use node-webkit to create leanote desktop app.
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/leanote/desktop-app?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
+Use Electron(atom-shell) to create leanote desktop app.
 
 For electron branch, please see https://github.com/leanote/desktop-app/tree/electron
 
 ![preview.png](preview.png "")
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> electron
 ## Download
 Please see http://app.leanote.com
 
 ## How to develop it
 
-### 1. Install node-webkit
+### 1. Install Electron
 
-See https://github.com/nwjs/nw.js
+See https://github.com/atom/electron
 
 
 ### 2. How to run it
@@ -22,13 +27,16 @@ See https://github.com/nwjs/nw.js
 Download this project, and run
 
 ````
-$> cd PATH-TO-LEANOTE-DESKTOP-APP
-$> PATH-TO-NODE-WEBKIT/nw src
+$> cd PATH-TO-LEANOTE-DESKTOP-APP/src
+$> Electron .
 ```
 
-
 ## LICENSE
-LEANOTE - NOT JUST A NOTEBOOK!
+
+[LICENSE](https://github.com/leanote/desktop-app/blob/master/LICENSE)
+
+```
+LEANOTE - NOT JUST A NOTEPAD!
 
 Copyright 2015 by the contributors.
 
@@ -43,5 +51,4 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 Leanote destop app is licensed under the GPL v2.
-
-[LICENSE](https://github.com/leanote/desktop-app/blob/master/LICENSE)
+```

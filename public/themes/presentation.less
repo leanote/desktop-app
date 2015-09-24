@@ -1,0 +1,330 @@
+/**
+ * 演示
+ */
+body {
+	box-shadow: none;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border-radius: 0;
+	border: none;
+}
+
+#mainMask,
+#winTool,
+.navbar.navbar-default
+{
+ 	display: none;
+}
+#topDrag {
+	display: none;
+}
+// 查看模式
+body.view {
+	#topDrag {
+		display: block;
+		right: 50px;
+	}
+}
+#presentation {
+ 	position: absolute;
+ 	left: 0;
+ 	right: 0;
+ 	bottom: 0;
+ 	top: 0;
+ 	background-color: #fff;
+ 	// display: none;
+ 	display: block;
+ 	-webkit-user-select: text;
+ 	overflow-y: scroll;
+ 	font-family: "Helvetica Neue",Helvetica,Arial,"Droid Sans Mono", "Droid Sans Fallback",sans-serif;
+
+ 	svg {
+		border-radius: 5px;
+ 	}
+
+ 	a {
+ 		color: #2a6496;
+ 	}
+
+ 	hr {
+ 		margin: 10px;
+ 		width: 20px;
+ 		border: none;
+ 	}
+
+ 	&.writting, &.black {
+ 		background-color: #F9F9F5;
+
+ 		color: #2C3E50;
+ 		pre.prettyprint {
+ 			/* Pretty printing styles. Used with prettify.js. */
+			/* SPAN elements with the classes below are added by prettyprint. */
+			.pln { color: #000 }  /* plain text */
+
+			@media screen {
+			  .str { color: #080 }  /* string content */
+			  .kwd { color: #008 }  /* a keyword */
+			  .com { color: #800 }  /* a comment */
+			  .typ { color: #606 }  /* a type name */
+			  .lit { color: #066 }  /* a literal value */
+			  /* punctuation, lisp open bracket, lisp close bracket */
+			  .pun, .opn, .clo { color: #660 }
+			  .tag { color: #008 }  /* a markup tag name */
+			  .atn { color: #606 }  /* a markup attribute name */
+			  .atv { color: #080 }  /* a markup attribute value */
+			  .dec, .var { color: #606 }  /* a declaration; a variable name */
+			  .fun { color: red }  /* a function name */
+			}
+
+			/* Specify class=linenums on a pre to get line numbering */
+			ol.linenums { margin-top: 0; margin-bottom: 0; color: rgba(102, 128, 153, 0.4) } /* IE indents via margin-left */
+			ol.linenums { margin-left: 10px;}
+			// ol.linenums > li { padding-left: 15px;}
+
+		    display: block;
+		    background-color: rgba(102, 128, 153, 0.05);
+		    box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1) inset, 45px 0 0 rgba(102, 128, 153, 0.05) inset, 0 1px 0 rgba(102, 128, 153, 0.05);
+		    padding: 9.5px;
+ 		}
+ 	}
+
+ 	&.black {
+ 		background-color: #000;
+ 		color: #fff;
+ 		
+ 		blockquote {
+	 		background-color: rgba(192, 182, 182, 0.5);
+	 		border-left-color: #988F8F;
+ 		}
+		code {
+			color: #DAD6D7;
+			background-color: #908185;
+		}
+ 		pre.prettyprint {
+ 			background-color: #CACAB7;
+ 		}
+ 		ol.linenums > li {
+ 			color: #000;
+ 		}
+ 		svg {
+ 			background: #F9F9F5;
+ 		}
+
+ 		.pren-tool {
+ 			a {
+	 			color: #fff;
+ 			}
+ 		}
+ 	}
+
+ 	// text-size
+ 	&.text-min-1 .pren-content {
+ 		* {
+		  font-size: 16px;
+		}
+		svg *, pre * {
+ 			font-size: 16px;
+ 		}
+		h1 {
+		  font-size: 28px;
+		}
+		h2 {
+		  font-size: 22px;
+		}
+		h3 {
+		  font-size: 18px;
+		}
+		h4 {
+		  font-size: 14px;
+		}
+ 	}
+ 	&.text-min-2 .pren-content {
+ 		* {
+		  font-size: 14px;
+		}
+		svg *, pre * {
+ 			font-size: 16px;
+ 		}
+		h1 {
+		  font-size: 24px;
+		}
+		h2 {
+		  font-size: 20px;
+		}
+		h3 {
+		  font-size: 16px;
+		}
+		h4 {
+		  font-size: 14px;
+		}
+ 	}
+
+ 	&.text-max-1 .pren-content {
+ 		* {
+		  font-size: 20px;
+		}
+		svg *, pre * {
+ 			font-size: 16px;
+ 		}
+		h1 {
+		  font-size: 32px;
+		}
+		h2 {
+		  font-size: 28px;
+		}
+		h3 {
+		  font-size: 24px;
+		}
+		h4 {
+		  font-size: 18px;
+		}
+ 	}
+
+ 	&.text-max-2 .pren-content {
+ 		* {
+		  font-size: 24px;
+		}
+		svg *, pre * {
+ 			font-size: 16px;
+ 		}
+		h1 {
+		  font-size: 38px;
+		}
+		h2 {
+		  font-size: 32px;
+		}
+		h3 {
+		  font-size: 28px;
+		}
+		h4 {
+		  font-size: 24px;
+		}
+ 	}
+ 	
+}
+.pren-tool {
+	position: fixed;
+	-webkit-user-select: none;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 45px;
+	z-index: 1001; // 比topDrag多一个
+	// visibility: hidden;
+	opacity: 0;
+	&:hover {
+		opacity: 1;
+	}
+	text-align: center;
+	a {
+		display: block;
+		font-size: 16px;
+		height: 30px;
+		line-height: 30px;
+	}
+	.pren-tool-bg-color {
+		margin-top: 30px;
+	}
+	.pren-tool-text-size-max {
+		font-size: 16px;
+	}
+	.pren-tool-text-size-min {
+		font-size: 12px;
+	}
+	
+}
+.pren-title {
+	font-size: 32px;
+ 	margin: 100px 0;
+ 	// margin-top: 100px;
+ 	text-align: center;
+ 	padding: 0 150px;
+ 	font-weight: bold;
+}
+.pren-content {
+ 	margin: 0 150px;
+ 	overflow: hidden;
+	word-wrap: break-word;
+ 	* {
+	  font-size: 18px;
+	  line-height: 1.5;
+	  max-width: 100%; // 有些html有宽度, 就会超出
+	  font-family: "Microsoft Yahei","Hiragino Sans GB","WenQuanYi Micro Hei","Droid Sans Mono", "Droid Sans Fallback",sans-serif;
+	}
+	svg *, pre * {
+		font-size: 16px;
+	}
+	p {
+		margin: 10px 0;
+	}
+	h1 {
+	  font-size: 30px;
+	}
+	h2 {
+	  font-size: 24px;
+	}
+	h3 {
+	  font-size: 18px;
+	}
+	h4 {
+	  font-size: 14px;
+	}
+}
+
+ /*
+ body.init #pageInner {
+ 	display: block;
+ }
+ #noteAndEditor {
+ 	left: 0 !important;
+ }
+ #note {
+ 	left: 0 !important;
+ 	// left: 100px !important;
+ 	// right: 100px !important;
+
+ 	// padding: 0 100px;
+
+ 	#tool {
+ 		border: none;
+ 	}
+ 	#noteTitleDiv {
+ 		right: 0;
+ 		margin: 20px 0;
+ 	}
+ 	#noteTitle {
+ 		text-align: center;
+ 		font-size: 24px;
+ 	}
+
+ 	* {
+	  font-size: 18px;
+	}
+	h1 {
+	  font-size: 30px;
+	}
+	h2 {
+	  font-size: 24px;
+	}
+	h3 {
+	  font-size: 18px;
+	}
+	h4 {
+	  font-size: 14px;
+	}
+ }
+
+ #editor, #mdEditor {
+ 	bottom: 0;
+ 	top: 100px !important;
+ }
+
+#mdEditor .layout-wrapper-l3, #editorContent {
+ 	top: 0 !important;
+}
+
+#editorContent {
+ 	padding: 0 100px;
+}
+*/
