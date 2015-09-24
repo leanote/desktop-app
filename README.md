@@ -4,14 +4,8 @@
 
 Use Electron(atom-shell) to create leanote desktop app.
 
-For electron branch, please see https://github.com/leanote/desktop-app/tree/electron
-
 ![preview.png](preview.png "")
 
-<<<<<<< HEAD
-
-=======
->>>>>>> electron
 ## Download
 Please see http://app.leanote.com
 

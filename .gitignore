@@ -11,14 +11,6 @@ config.codekit
 /package.json
 sqlite*
 /test
-<<<<<<< HEAD
-/atom
-/updates
-/src/node_modules/request
-/src/public/tinymce_old
-/src/test*.js
-/old
-=======
 tinymce_old
 src/node_modules/request
 src/node_modules/fs.extra
@@ -26,4 +18,3 @@ src/merge.js
 src/test*.js
 /updates
 /old
->>>>>>> electron

@@ -9,12 +9,7 @@
  */
 
 /*global tinymce:true */
-<<<<<<< HEAD:src/public/tinymce/themes/modern/theme.js
-
-tinymce.ThemeManager.add('modern', function(editor) {
-=======
 tinymce.ThemeManager.add('leanote', function(editor) {
->>>>>>> electron:public/tinymce/themes/leanote/theme.js
 	var self = this, settings = editor.settings, Factory = tinymce.ui.Factory, each = tinymce.each, DOM = tinymce.DOM;
 
 	// Default menus
@@ -46,9 +41,11 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 				return;
 			}
 
+			var i = 0;
+			var maxWidth = $("#mceToolbar").width()-40;
+			var split = false;
 			each(items.split(/[ ,]/), function(item) {
 				var itemName;
-
 				function bindSelectorChanged() {
 					var selection = editor.selection;
 
@@ -82,22 +79,31 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 						});
 					}
 
+					// log(itemName)
+					// log(item);
 					if (item.settings.stateSelector) {
 						selection.selectorChanged(item.settings.stateSelector, function(state) {
 							item.active(state);
 						}, true);
 					}
-
-					if (item.settings.disabledStateSelector) {
+					
+					// life 4/25
+					// 在pre时都disabled
+					if(itemName != "leanote_code") {// } && itemName != "formatselect") {
+						item.settings.disabledStateSelector = "pre";
 						selection.selectorChanged(item.settings.disabledStateSelector, function(state) {
+							// log(itemName + " " + state);
 							item.disabled(state);
 						});
+						// log(itemName);
 					}
 				}
 
 				if (item == "|") {
 					buttonGroup = null;
+					split = true;
 				} else {
+					// Factory.has()只有plugins里才有, 这Factory类就是对plugin的实例化
 					if (Factory.has(item)) {
 						item = {type: item};
 
@@ -108,17 +114,25 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 						toolbarItems.push(item);
 						buttonGroup = null;
 					} else {
-						if (!buttonGroup) {
-							buttonGroup = {type: 'buttongroup', items: []};
-							toolbarItems.push(buttonGroup);
-						}
-
+						// log(editor.buttons);
+						/*
+						aligncenter: Object
+						alignjustify: Object
+						alignleft: Object
+							cmd: "JustifyLeft"
+							icon: "alignleft"
+							onPostRender: function () {
+							onclick: function () {
+							size: "small"
+							tooltip: "Align left"
+							type: "button"
+						 */
 						if (editor.buttons[item]) {
 							// TODO: Move control creation to some UI class
 							itemName = item;
 							item = editor.buttons[itemName];
 
-							if (typeof item == "function") {
+							if (typeof(item) == "function") {
 								item = item();
 							}
 
@@ -129,7 +143,20 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 							}
 
 							item = Factory.create(item);
-							buttonGroup.items.push(item);
+							i++;
+							var w = $("#popularToolbar").width();
+							var html = item.renderHtml();
+							// life
+							// $(item.renderHtml()).insertBefore("#moreBtn"); // ("#mceToolbarMore");
+							if(split) {
+								$("#popularToolbar").append('<span class="tool-split">|</span>');
+								split = false;
+							}
+							$("#popularToolbar").append(html); // ("#mceToolbarMore");
+						
+							item.postRender();
+
+							// buttonGroup.items.push(item);
 
 							if (editor.initialized) {
 								bindSelectorChanged();
@@ -146,20 +173,6 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			return true;
 		}
 
-		// Convert toolbar array to multiple options
-		if (tinymce.isArray(settings.toolbar)) {
-			// Empty toolbar array is the same as a disabled toolbar
-			if (settings.toolbar.length === 0) {
-				return;
-			}
-
-			tinymce.each(settings.toolbar, function(toolbar, i) {
-				settings["toolbar" + (i + 1)] = toolbar;
-			});
-
-			delete settings.toolbar;
-		}
-
 		// Generate toolbar<n>
 		for (var i = 1; i < 10; i++) {
 			if (!addToolbar(settings["toolbar" + i])) {
@@ -167,21 +180,15 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			}
 		}
 
-		// Generate toolbar or default toolbar unless it's disabled
-		if (!toolbars.length && settings.toolbar !== false) {
+		// Generate toolbar or default toolbar
+		if (!toolbars.length) {
 			addToolbar(settings.toolbar || defaultToolbar);
 		}
 
-		if (toolbars.length) {
-			return {
-				type: 'panel',
-				layout: 'stack',
-				classes: "toolbar-grp",
-				ariaRoot: true,
-				ariaRemember: true,
-				items: toolbars
-			};
-		}
+		// 这里面就含有了事件, 牛X
+//		 log(toolbars);
+
+		return toolbars;
 	}
 
 	/**
@@ -280,7 +287,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			}
 		}
 
-		var enabledMenuNames = typeof settings.menubar == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
+		var enabledMenuNames = typeof(settings.menubar) == "string" ? settings.menubar.split(/[ ,]/) : defaultMenuBar;
 		for (var i = 0; i < enabledMenuNames.length; i++) {
 			var menu = enabledMenuNames[i];
 			menu = createMenu(menu);
@@ -303,7 +310,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			var item = panel.find(type)[0];
 
 			if (item) {
-				item.focus(true);
+				item.focus();
 			}
 		}
 
@@ -346,13 +353,13 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			width = Math.max(settings.min_width || 100, width);
 			width = Math.min(settings.max_width || 0xFFFF, width);
 
-			DOM.setStyle(containerElm, 'width', width + (containerSize.width - iframeSize.width));
-			DOM.setStyle(iframeElm, 'width', width);
+			DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+			DOM.css(iframeElm, 'width', width);
 		}
 
 		height = Math.max(settings.min_height || 100, height);
 		height = Math.min(settings.max_height || 0xFFFF, height);
-		DOM.setStyle(iframeElm, 'height', height);
+		DOM.css(iframeElm, 'height', height);
 
 		editor.fire('ResizeEditor');
 	}
@@ -367,7 +374,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 	 *
 	 * @return {Object} Name/value object with theme data.
 	 */
-	function renderInlineUI(args) {
+	function renderInlineUI() {
 		var panel, inlineToolbarContainer;
 
 		if (settings.fixed_toolbar_container) {
@@ -387,7 +394,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 					deltaY = Math.max(0, scrollContainerPos.y - bodyPos.y);
 				}
 
-				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl', 'tr-br']).moveBy(deltaX, deltaY);
+				panel.fixed(false).moveRel(body, editor.rtl ? ['tr-br', 'br-tr'] : ['tl-bl', 'bl-tl']).moveBy(deltaX, deltaY);
 			}
 		}
 
@@ -418,7 +425,6 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
 				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
-				role: 'application',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
@@ -429,7 +435,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-					createToolbars()
+					settings.toolbar === false ? null : {type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
 				]
 			});
 
@@ -440,7 +446,6 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 				]});
 			}*/
 
-			editor.fire('BeforeRenderUI');
 			panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
@@ -449,22 +454,17 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			editor.on('nodeChange', reposition);
 			editor.on('activate', show);
 			editor.on('deactivate', hide);
-
-			editor.nodeChanged();
 		}
 
 		settings.content_editable = true;
 
-		editor.on('focus', function() {
-			// Render only when the CSS file has been loaded
-			if (args.skinUiCss) {
-				tinymce.DOM.styleSheetLoader.load(args.skinUiCss, render, render);
-			} else {
-				render();
-			}
+		// life 一直显示
+		// render();
+		setTimeout(function() {
+			render();
 		});
-
-		editor.on('blur hide', hide);
+		editor.on('focus', render);
+		// editor.on('blur', hide);
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
@@ -473,11 +473,6 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 				panel = null;
 			}
 		});
-
-		// Preload skin css
-		if (args.skinUiCss) {
-			tinymce.DOM.styleSheetLoader.load(args.skinUiCss);
-		}
 
 		return {};
 	}
@@ -491,24 +486,39 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 	function renderIframeUI(args) {
 		var panel, resizeHandleCtrl, startSize;
 
-		if (args.skinUiCss) {
-			tinymce.DOM.loadCSS(args.skinUiCss);
-		}
-
 		// Basic UI layout
+		// iframe的父
+		// life
+		// <div><iframe /></div>
+		var iframeBeforeHtml = '<div id="noteTitleDiv">' + 
+            '<input name="noteTitle" id="noteTitle" placeholder="Title" ></div>';
+        iframeBeforeHtml = "";
+
+        // 菜单, 这里没有
+        // createMenuButtons();
+
+        // toolbar [0, 1]
+
+		createToolbars();
+
+		var items = [
+				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
+				// settings.toolbar === false ? null : {type: 'panel', layout: 'stack', items: createToolbars()},
+				null,
+				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area ifr', html: iframeBeforeHtml, border: '1 0 0 0'}
+			];
+
+		// 建panel, 还没用到, 只是建
+		// 要修改这里!!
 		panel = self.panel = Factory.create({
 			type: 'panel',
-			role: 'application',
 			classes: 'tinymce',
 			style: 'visibility: hidden',
 			layout: 'stack',
 			border: 1,
-			items: [
-				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				createToolbars(),
-				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
-			]
-		});
+			items: items
+			});
+
 
 		if (settings.resize !== false) {
 			resizeHandleCtrl = {
@@ -536,7 +546,7 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
-			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', ariaRoot: true, items: [
+			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
 				{type: 'elementpath'},
 				resizeHandleCtrl
 			]});
@@ -546,8 +556,28 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			panel.find('*').disabled(true);
 		}
 
-		editor.fire('BeforeRenderUI');
+		// Render before the target textarea/div
+		// 把textarea隐藏起来?
+		// 这里还把toolbar显示出来!!!!
+		// 到target显示出来
+		// .reflow()可以不要
+		/*
+		ui/Control.js
+		// 先调用自己的renderHTML()
+		renderBefore: function(elm) {
+			var self = this;
+
+			elm.parentNode.insertBefore(DomUtils.createFragment(self.renderHtml()), elm);
+			self.postRender();
+
+			return self;
+		},
+		 */
+//		log("<renderBefore");
 		panel.renderBefore(args.targetNode).reflow();
+		// args.targetNode.parentNode.insertBefore(panel.renderHtml(), args.targetNode);
+//		log(panel);
+//		log("renderBefore>");
 
 		if (settings.width) {
 			tinymce.DOM.setStyle(panel.getEl(), 'width', settings.width);
@@ -562,9 +592,13 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 		// Add accesibility shortkuts
 		addAccessibilityKeys(panel);
 
+		// 这里
+//		log("panel.getEl()")
+//		log(panel.getEl());
+		// return {}
 		return {
 			iframeContainer: panel.find('#iframe')[0].getEl(),
-			editorContainer: panel.getEl()
+			editorContainer: panel.getEl() // 这里不加也可以显示, 那么, 显示不是这里控制
 		};
 	}
 
@@ -577,7 +611,10 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 	self.renderUI = function(args) {
 		var skin = settings.skin !== false ? settings.skin || 'lightgray' : false;
 
+		/*
+		自己加载, 不要这样加载
 		if (skin) {
+
 			var skinUrl = settings.skin_url;
 
 			if (skinUrl) {
@@ -589,14 +626,15 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			// Load special skin for IE7
 			// TODO: Remove this when we drop IE7 support
 			if (tinymce.Env.documentMode <= 7) {
-				args.skinUiCss = skinUrl + '/skin.ie7.min.css';
+				tinymce.DOM.loadCSS(skinUrl + '/skin.ie7.min.css');
 			} else {
-				args.skinUiCss = skinUrl + '/skin.min.css';
+				tinymce.DOM.loadCSS(skinUrl + '/skin.min.css');
 			}
 
 			// Load content.min.css or content.inline.min.css
 			editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
 		}
+		*/
 
 		// Handle editor setProgressState change
 		editor.on('ProgressState', function(e) {
@@ -609,10 +647,12 @@ tinymce.ThemeManager.add('leanote', function(editor) {
 			}
 		});
 
+		// Render inline UI
 		if (settings.inline) {
 			return renderInlineUI(args);
 		}
 
+		// Render iframe UI
 		return renderIframeUI(args);
 	};
 

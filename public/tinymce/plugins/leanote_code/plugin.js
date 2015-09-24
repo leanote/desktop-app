@@ -192,10 +192,7 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
 				text = html2BreakLine(node);
 				$(node).replaceWith("<pre id='" + id  + "'" + brushClasses + ">" + text + "</pre>");
 			}
-<<<<<<< HEAD:src/public/tinymce/plugins/leanote_code/plugin.js
-=======
 
->>>>>>> electron:public/tinymce/plugins/leanote_code/plugin.js
 			var aceEditor = LeaAce.initAce(id);
 			if(aceEditor) {
 				aceEditor.focus();

@@ -394,13 +394,6 @@ function initEditor() {
 	tinymce.init({
 		inline: true,
 		theme: 'leanote',
-<<<<<<< HEAD:src/public/js/app/page.js
-		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
-		setup: function(ed) {
-			// desk下有问题
-			// ed.on('keydown', Note.saveNote);
-			ed.on('keydown', function(e) { 
-=======
 		// readonly : false,
 		valid_children: "+pre[div|#text|p|span|textarea|i|b|strong]", // ace
 		setup: function(ed) {
@@ -433,7 +426,6 @@ function initEditor() {
 					return;
 				}
 
->>>>>>> electron:public/js/app/page.js
 				/*
 				var num = e.which ? e.which : e.keyCode;
 				if(e.ctrlKey || e.metaKey) {
@@ -1259,16 +1251,11 @@ var State = {
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
-<<<<<<< HEAD:src/public/js/app/page.js
-				// win.resizeTo(1100, 600);
-				// win.setPosition('center');
-=======
 				if(/login/.test(location.href)) {
 					var win = gui.getCurrentWindow();
 					win.setSize(1100, 600);
 					win.center();
 				}
->>>>>>> electron:public/js/app/page.js
 			}
 			setTimeout(function() {
 				$('body').show();
@@ -1279,17 +1266,11 @@ var State = {
 		});
 		// end
 		// 打开时，同步一下
-<<<<<<< HEAD:src/public/js/app/page.js
-		setTimeout(function() {
-			incrSync(false);
-		}, 500);
-=======
 		if (!UserInfo.IsLocal) {//no sync for local account
 			setTimeout(function() {
 				incrSync(false);
 			}, 500);
 		}
->>>>>>> electron:public/js/app/page.js
 
 		initedCallback && initedCallback();
 		// $('body').show();
@@ -1347,10 +1328,6 @@ function initPage(initedCallback) {
 	Notebook.init();
 	// 笔记
 
-<<<<<<< HEAD:src/public/js/app/page.js
-	/*
-	win.on('focus', function() {
-=======
 	// 没用, 估计要到main.js中, 不能这样, 这样刷新后就有问题
 	/*
 	gui.win.on('close', function(e) {
@@ -1379,16 +1356,12 @@ function initPage(initedCallback) {
 	*/
 	var ipc = require('ipc');
 	ipc.on('focusWindow', function(arg) {
->>>>>>> electron:public/js/app/page.js
 		$('body').removeClass('blur');
 	});
 
 	ipc.on('blurWindow', function(arg) {
 		$('body').addClass('blur');
 	});
-<<<<<<< HEAD:src/public/js/app/page.js
-	*/
-=======
 	// 后端发来event, 告诉要关闭了, 处理好后发送给后端说可以关闭了
 	ipc.on('closeWindow', function(arg) {
 		console.log('Front get closeWindow message')
@@ -1396,7 +1369,6 @@ function initPage(initedCallback) {
 			ipc.sendSync('quit-app');
 		});
 	});
->>>>>>> electron:public/js/app/page.js
 
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
@@ -1536,16 +1508,12 @@ var Pren = {
 		var me = this;
 		if(!isToggleView) {
 			try {
-<<<<<<< HEAD:src/public/js/app/page.js
-				win.toggleKioskMode();
-=======
 				gui.win.setKiosk(!me._isPren);
 				// if(!me._isPren) {
 				// 	$('body').get(0).webkitRequestFullScreen();
 				// } else {
 				// 	$('body').get(0).webkitCancelFullScreen();
 				// }
->>>>>>> electron:public/js/app/page.js
 			} catch(e) {}
 		}
 
@@ -1575,10 +1543,7 @@ var Pren = {
 
 		} else {
 			$('#themePresentation').attr('disabled', true);
-<<<<<<< HEAD:src/public/js/app/page.js
-=======
 
->>>>>>> electron:public/js/app/page.js
 			$('body').removeClass('no-drag');
 			$('#page').show();
 			me.restore();
@@ -1683,14 +1648,6 @@ var Pren = {
 		var isMac_ = isMac();
 		// 初始化menu
 		me.fullScreen = new gui.MenuItem(
-<<<<<<< HEAD:src/public/js/app/page.js
-			{label: getMsg('Toggle Fullscreen') + '   (Ctrl+=)', click: function() {
-				me.toggleFullscreen();
-			}
-		});
-		me.pren = new gui.MenuItem(
-			{label: getMsg('Toggle Presentation') + '   (Ctrl+p)', click: function() {
-=======
 			{
 				label: getMsg('Toggle Fullscreen'),
 				accelerator: isMac_ ? 'command+=' : 'Ctrl+=',
@@ -1703,22 +1660,10 @@ var Pren = {
 				label: getMsg('Toggle Presentation'),
 				accelerator: isMac_ ? 'command+p' : 'Ctrl+P',
 				click: function() {
->>>>>>> electron:public/js/app/page.js
 				me.togglePren();
 			}
 		});
 		me.view = new gui.MenuItem(
-<<<<<<< HEAD:src/public/js/app/page.js
-			{label: getMsg('Toggle View') + '   (Ctrl+e)', click: function() {
-				me.togglePren(true);
-			}
-		});
-	
-		// Esc
-		$("body").on('keydown', function(e) {
-			var keyCode = e.keyCode;
-			if(keyCode == 27) {
-=======
 			{
 				label: getMsg('Toggle View'),
 				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
@@ -1731,7 +1676,6 @@ var Pren = {
 		$("body").on('keydown', function(e) {
 			var keyCode = e.keyCode;
 			if(keyCode== 27) {
->>>>>>> electron:public/js/app/page.js
 				if(me._isPren) {
 					me.togglePren();
 				} else if(me._isFullscreen) {
@@ -1741,16 +1685,6 @@ var Pren = {
 				}
 			}
 			// <--
-<<<<<<< HEAD:src/public/js/app/page.js
-			else if(e.keyCode == 37) {
-				me.preOrNext(true);
-			}
-			// -->
-			else if(e.keyCode == 39) {
-				me.preOrNext();
-			}
-
-=======
 			else if(keyCode == 37) {
 				me.preOrNext(true);
 			}
@@ -1760,7 +1694,6 @@ var Pren = {
 			}
 
 			// windows下需要
->>>>>>> electron:public/js/app/page.js
 			if(e.ctrlKey || e.metaKey) {
 				// p
 				if(keyCode == 80) {
@@ -1972,15 +1905,7 @@ function userMenu() {
 	var win = gui.getCurrentWindow();
 
 	Pren.init();
-<<<<<<< HEAD:src/public/js/app/page.js
-	
-	mode.append(Pren.pren);
-	mode.append(Pren.view);
-	mode.append(Pren.fullScreen);
-	var modes = new gui.MenuItem({ label: getMsg('Mode'), submenu: mode});
-=======
 
->>>>>>> electron:public/js/app/page.js
 	if(isMac()) {
 		setMacTopMenu();
 	}
@@ -2048,20 +1973,11 @@ function userMenu() {
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
-<<<<<<< HEAD:src/public/js/app/page.js
-			this.menu.append(Pren.fullScreen);
-			this.menu.append(new gui.MenuItem({ type: 'separator' }));
-			this.menu.append(Pren.pren);
-			this.menu.append(Pren.view);
-		
-			height = 310;
-=======
 			this.menu.append(Pren.pren);
 			this.menu.append(Pren.view);
 			this.menu.append(Pren.fullScreen);
 
 			height = 270;
->>>>>>> electron:public/js/app/page.js
 		}
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));

@@ -1648,8 +1648,6 @@ img::selection {
 }
 #editorMask {
   z-index: 1030 !important;
-<<<<<<< HEAD:src/public/themes/default.css
-=======
 }
 .mce-colorbtn-trans div {
   line-height: 11px;
@@ -1743,22 +1741,7 @@ img::selection {
 #notify .alert.alert-show {
   opacity: 1;
   right: 5px;
->>>>>>> electron:public/themes/default.css
 }
-.mce-colorbtn-trans div {
-  line-height: 11px;
-  text-align: center;
-}
-/*
-#starNotes li a, 
-.ztree li a, 
-.ztree li span.button, 
-.folderHeader,
-#myProfile .dropdown-toggle,
-#tagNav li a {
-	cursor: default !important;
-}
-*/
 .win-tool {
   padding: 5px;
   position: absolute;
@@ -2554,27 +2537,6 @@ body,
 #leftNotebook {
   border-radius: 0;
 }
-<<<<<<< HEAD:src/public/themes/default.css
-#winTool {
-  display: none;
-}
-#topDrag {
-  display: none;
-}
-#notebook {
-  top: 0 !important;
-}
-#noteList,
-#note {
-  top: 0;
-  padding-top: 0;
-}
-.modal-backdrop {
-  right: 0px;
-  left: 0px;
-  bottom: 0px;
-  border-radius: 0px;
-=======
 .local #syncRefresh,
 .local #syncProgress {
   display: none;
@@ -2672,5 +2634,4 @@ body,
   padding-right: 5px;
   padding-left: 10px;
   overflow-y: auto;
->>>>>>> electron:public/themes/default.css
 }

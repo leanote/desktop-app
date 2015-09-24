@@ -1468,19 +1468,8 @@ function switchAccount() {
 	// location.href = 'login.html';
 	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
-<<<<<<< HEAD:src/public/js/common.js
-		var win2 = gui.Window.open('login.html', {
-			"icon": "public/images/logo/leanote_icon_blue.png",
-			frame: true, toolbar: false, resizable: false, 
-			transparent: false, 
-			width: 278,
-			height: 346, 
-			max_width: 278
-		});
-=======
 		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
->>>>>>> electron:public/js/common.js
 	} else {
 		var win = new BrowserWindow({ width: 278, height: 426, show: true, frame: true, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
@@ -1527,17 +1516,10 @@ function getMainWinParams() {
 	if(isMac()) {
 		return {
 			"icon": "public/images/logo/leanote_icon_blue.png",
-<<<<<<< HEAD:src/public/js/common.js
-			frame: true,
-			transparent: false,
-			width: 1100,
-			height: 600,
-=======
 			frame: false,
 			transparent: false,
 			width: 258,
 			height: 326,
->>>>>>> electron:public/js/common.js
 			toolbar: false,
 			"chromium-args": "--enable-smooth-scrolling"
 		};
@@ -1610,10 +1592,6 @@ var Loading = {
 	}
 };
 
-<<<<<<< HEAD:src/public/js/common.js
-var onClose = function(afterFunc) {
-	try {
-=======
 // 通知
 var Notify = {
 	$el : $('#notify'),
@@ -1687,7 +1665,6 @@ var onClose = function(afterFunc) {
 		// 先把服务关掉
 	    Server.close();
 
->>>>>>> electron:public/js/common.js
 	    // 先保存之前改变的
 	    Note.curChangedSaveIt();
 	    // 保存状态
@@ -1698,13 +1675,10 @@ var onClose = function(afterFunc) {
 		afterFunc && afterFunc();
 	}
 }
-<<<<<<< HEAD:src/public/js/common.js
-=======
 
 function isURL(str_url) {
     var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
     return re.test(str_url);
 }
->>>>>>> electron:public/js/common.js
 
 ContextTips.init();

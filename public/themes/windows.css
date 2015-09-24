@@ -36,11 +36,7 @@
   visibility: visible;
 }
 * {
-<<<<<<< HEAD:src/public/themes/windows.css
-  font-family: 'Lantinghei SC', 'Microsoft YaHei', '微软雅黑', ' WenQuanYi Micro Hei', 'Helvetica Neue', Arial, 'Hiragino Sans GB', sans-serif;
-=======
   font-family: 'Microsoft YaHei', '微软雅黑', ' WenQuanYi Micro Hei', 'Helvetica Neue', Arial, 'Hiragino Sans GB', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback", sans-serif;
->>>>>>> electron:public/themes/windows.css
 }
 body {
   border: none;

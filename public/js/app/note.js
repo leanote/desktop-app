@@ -374,19 +374,11 @@ Note.genDesc = function(content) {
 	content = $("<div></div>").html(content).text();
 
 	content = $.trim(content);
-<<<<<<< HEAD:src/public/js/app/note.js
-	
-	// pre下text()会将&lt; => < &gt; => >
-	content = content.replace(/</g, "&lt;");
-	content = content.replace(/>/g, "&gt;");
-	
-=======
 
 	// pre下text()会将&lt; => < &gt; => >
 	content = content.replace(/</g, "&lt;");
 	content = content.replace(/>/g, "&gt;");
 
->>>>>>> electron:public/js/app/note.js
 	if(content.length < 20) {
 		return content;
 	}
@@ -461,11 +453,7 @@ Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
 Note.curChangedSaveIt = function(force, callback) {
 	var me = this;
 	// 如果当前没有笔记, 不保存
-<<<<<<< HEAD:src/public/js/app/note.js
-	if(!Note.curNoteId || Note.isReadOnly) {
-=======
 	if(!Note.curNoteId || Note.isReadOnly /*|| Note.readOnly*/) {
->>>>>>> electron:public/js/app/note.js
 		callback && callback();
 		return;
 	}
@@ -2248,11 +2236,7 @@ Note.initContextmenu = function() {
 	    		return;
 	    	}
 	    	var notebookId = note.NotebookId;
-<<<<<<< HEAD:src/public/js/app/note.js
-	    	
-=======
 
->>>>>>> electron:public/js/app/note.js
 	    	if(note.IsTrash) {
 	    		this.copy.enabled = false;
 	    	} else {
