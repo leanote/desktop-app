@@ -21,7 +21,7 @@ See https://github.com/atom/electron
 Download this project, and run
 
 ````
-$> cd PATH-TO-LEANOTE-DESKTOP-APP/src
+$> cd PATH-TO-LEANOTE-DESKTOP-APP
 $> Electron .
 ```
 
