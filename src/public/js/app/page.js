@@ -472,9 +472,11 @@ function initEditor() {
 				+ "Times New Roman=times new roman,times;"
 				+ "Courier New=courier new,courier;"
 				+ "Tahoma=tahoma,arial,helvetica,sans-serif;"
-				+ "Verdana=verdana,geneva;" + "宋体=SimSun;"
-				+ "新宋体=NSimSun;" + "黑体=SimHei;"
-				+ "微软雅黑=Microsoft YaHei",
+				+ "Verdana=verdana,geneva;"
+				+ "宋体=SimSun;"
+				+ "新宋体=NSimSun;"
+				+ "黑体=SimHei;"
+				+ "Microsoft YaHei=Microsoft YaHei",
 		block_formats : "Header 1=h1;Header 2=h2;Header 3=h3;Header 4=h4;Paragraph=p",
 		  // This option specifies whether data:url images (inline images) should be removed or not from the pasted contents.
 		  // Setting this to "true" will allow the pasted images, and setting this to "false" will disallow pasted images.
@@ -1707,11 +1709,6 @@ var Pren = {
 				}
 			}
 		});
-
-		function isURL(str_url) {
-		    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
-		    return re.test(str_url);
-		}
 
 		// 防止在本窗口打开
 		me.presentationO.on('click', 'a', function(e) {

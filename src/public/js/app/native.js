@@ -181,28 +181,28 @@ var menu = new Menu();
 // 右键菜单
 var winHref = '';
 var $curTarget;
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent, #presentation').on('contextmenu', function (e) {
-	e.preventDefault();
-	var $target = $(e.target);
-	$curTarget = $target;
-	var text = $target.text();
-	winHref = $target.attr('href');
-	if(!winHref) {
-		winHref = text;
-	}
-	// 判断是否满足http://leanote.com
-	if(winHref) {
-		if (winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
-		} else {
-			winHref = false;
-		}
-	}
+var openContextmenu = function (e, canCut2, canPaste2) {
+    e.preventDefault();
+    var $target = $(e.target);
+    $curTarget = $target;
+    var text = $target.text();
+    winHref = $target.attr('href');
+    if(!winHref) {
+        winHref = text;
+    }
+    // 判断是否满足http://leanote.com
+    if(winHref) {
+        if (winHref.indexOf('http://127.0.0.1') < 0 && isURL(winHref)) {
+        } else {
+            winHref = false;
+        }
+    }
 
-	menu.canOpenInBroswer(!!winHref);
-	menu.canSaveAs($target.is('img') && $target.attr('src'));
-	var selectionType = window.getSelection().type.toUpperCase();
-	// var clipData = gui.Clipboard.get().get();
-	// menu.canPaste(clipData.length > 0);
+    menu.canOpenInBroswer(!!winHref);
+    menu.canSaveAs($target.is('img') && $target.attr('src'));
+    var selectionType = window.getSelection().type.toUpperCase();
+    // var clipData = gui.Clipboard.get().get();
+    // menu.canPaste(clipData.length > 0);
 
     var canPaste = true;
     var canCut = true;
@@ -214,11 +214,23 @@ $('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-inpu
             canCut = false;
         }
     }
-	
-	menu.canCopy(selectionType === 'RANGE');
+    
+    menu.canCopy(selectionType === 'RANGE');
 
     menu.canPaste(canPaste);
     menu.canCut(canCut);
 
-	menu.popup(e.originalEvent.x, e.originalEvent.y);
+    if (typeof canCut2 !== 'undefined') {
+        menu.canCut(!!canCut2);
+    }
+    if (typeof canPaste2 !== 'undefined') {
+        menu.canPaste(!!canPaste2);
+    }
+
+    menu.popup(e.originalEvent.x, e.originalEvent.y);
+};
+
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent, #presentation').on('contextmenu', openContextmenu);
+$('body').on('contextmenu', '.history-content', function (e) {
+    openContextmenu(e, false, false);
 });

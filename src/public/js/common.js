@@ -1676,4 +1676,9 @@ var onClose = function(afterFunc) {
 	}
 }
 
+function isURL(str_url) {
+    var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
+    return re.test(str_url);
+}
+
 ContextTips.init();

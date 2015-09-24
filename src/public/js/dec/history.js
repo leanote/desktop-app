@@ -100,6 +100,14 @@ define(function() {
                     Note.curChangedSaveIt(true);
                 }
             });
+
+            $historyContent.on('click', 'a', function(e) {
+                e.preventDefault();
+                var href = $(this).attr('href');
+                if(href && href.indexOf('http://127.0.0.1') < 0 && isURL(href)) {
+                    openExternal(href);
+                }
+            });
         },
 
         getHistories: function () {
