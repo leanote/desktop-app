@@ -1594,7 +1594,7 @@ body.init #pageInner {
   position: absolute;
   top: 0;
   left: 60px;
-  right: 140px;
+  width: 140px;
   height: 40px;
   z-index: 1000;
   cursor: move;

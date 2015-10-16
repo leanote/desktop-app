@@ -178,10 +178,12 @@ var Resize = {
 		var self = this;
 
 		if(notebookWidth < 150 || noteListWidth < 100) {
+			self.setTopDragWidth();
 			return;
 		}
 		var noteWidth = self.body.width() - notebookWidth - noteListWidth;
 		if(noteWidth < 400) {
+			self.setTopDragWidth();
 			return;
 		}
 
@@ -196,7 +198,6 @@ var Resize = {
 		UserInfo.NotebookWidth = notebookWidth;
 		UserInfo.NoteListWidth = noteListWidth;
 
-		// console.log("??????????");
 		self.setTopDragWidth();
 	},
 	resize3Columns: function(event, isFromeIfr) {
@@ -264,8 +265,9 @@ var Resize = {
 			width = self.leftNotebook.width() + self.noteList.width();
 		}
 
-		// 60是最左的关闭, 50是新建
-		$('#topDrag').width((width - 60 - 50) + 'px');
+		var w = width - 60 - 50;
+		w = w > 100 ? w : 100;
+		$('#topDrag').width(w + 'px');
 	}
 };
 
