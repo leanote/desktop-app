@@ -1594,7 +1594,7 @@ body.init #pageInner {
   position: absolute;
   top: 0;
   left: 60px;
-  right: auto;
+  right: 140px;
   height: 40px;
   z-index: 1000;
   cursor: move;
@@ -1602,6 +1602,7 @@ body.init #pageInner {
 #topDrag2 {
   width: 100%;
   height: 10px;
+  margin-left: 67px;
   -webkit-app-region: drag;
 }
 .no-info {
