@@ -218,7 +218,7 @@
     "Sync now": "立即同步",
 
     "Custom server": "配置服務",
-    "Host, http://leanote.com": "服務地址, 如 http://leanote.com",
+    "Host, https://leanote.com": "服務地址, 如 https://leanote.com",
     "Username or Email": "用戶名或郵箱",
     "Password": "密碼",
     "Sign up": "註冊",
