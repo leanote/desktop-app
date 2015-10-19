@@ -184,6 +184,7 @@
     "Search note": "搜索筆記",
     "Search notebook": "搜索筆記本",
 
+    "Add account": "添加帳戶",
     "Switch account": "切換帳戶",
     "Sync": "同步",
     "Loading": "正在加載",
@@ -253,7 +254,7 @@
     "Warning": "警告",
 
     "Mode": "模式",
-    "Toggle Fullscreen": "全屏切换",
+    "Toggle Fullscreen": "全屏切換",
     "Toggle Presentation": "演示切換",
     "Toggle View": "預覽切換",
 
@@ -278,4 +279,5 @@
     "Username": "用戶名",
     "User exists": "用戶已存在",
     "Local": "本地"
+
 }

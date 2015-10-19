@@ -539,8 +539,16 @@ function isAceError(val) {
 }
 
 // 有tinymce得到的content有<html>包围
-// false表示编辑器未初始化
+// 总会出现<p>&nbsp;<br></p>, 原因, setContent('<p><br data-mce-bogus="1" /></p>') 会设置成 <p> <br></p>
+// 所以, 要在getContent时, 当是<p><br data-mce-bogus="1"></p>, 返回 <p><br/></p>
 function getEditorContent(isMarkdown) {
+	var content = _getEditorContent(isMarkdown);
+	if (content === '<p><br data-mce-bogus="1"></p>') {
+		return '<p><br></p>';
+	}
+	return content;
+}
+function _getEditorContent(isMarkdown) {
 	if(!isMarkdown) {
 		var editor = tinymce.activeEditor;
 		if(editor) {
@@ -569,9 +577,9 @@ function getEditorContent(isMarkdown) {
 			// 去掉恶心的花瓣注入
 			// <pinit></pinit>
 			// 把最后的<script>..</script>全去掉
-			content.find("pinit").remove();
-			content.find(".thunderpin").remove();
-			content.find(".pin").parent().remove();
+			// content.find("pinit").remove();
+			// content.find(".thunderpin").remove();
+			// content.find(".pin").parent().remove();
 			content = $(content).html();
 			if(content) {
 				while(true) {
@@ -1664,6 +1672,7 @@ var onClose = function(afterFunc) {
 	try {
 		// 先把服务关掉
 	    Server.close();
+	    SyncService.stop();
 
 	    // 先保存之前改变的
 	    Note.curChangedSaveIt();
@@ -1679,6 +1688,14 @@ var onClose = function(afterFunc) {
 function isURL(str_url) {
     var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
     return re.test(str_url);
+}
+
+function reloadApp() {
+	onClose(function() {
+		setTimeout(function() {
+			location.reload();
+		}, isMac() ? 0 : 200);
+	});
 }
 
 ContextTips.init();

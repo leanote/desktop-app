@@ -32,13 +32,7 @@ define(function() {
 			Config.lang = langFileName;
 			var ok = Api.writeConfig(Config);
 			if(ok) {
-				Api.onClose(function() {
-					// mac下server关闭要点时间
-					var timeout = Api.isMac ? 0 : 200;
-					setTimeout(function() {
-						location.reload();
-					}, timeout);
-				});
+				Api.reloadApp();
 			} else {
 				alert(getMsg('error'));
 			}

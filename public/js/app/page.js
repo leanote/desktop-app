@@ -1437,7 +1437,11 @@ function initPage(initedCallback) {
 				});
 	 		}
 	 		$('#username').text(UserInfo.Username);
-	 		userMenu();
+
+	 		UserService.getAllUsers(function(users) {
+		 		userMenu(users);
+	 		});
+
 	 		setLayoutWidth();
 		} else {
 			switchAccount();
@@ -1901,7 +1905,7 @@ function setMacTopMenu() {
 }
 
 // user
-function userMenu() {
+function userMenu(allUsers) {
 	// ----------
 	// 全局菜单
 	var win = gui.getCurrentWindow();
@@ -1914,15 +1918,23 @@ function userMenu() {
 
 	//-------------------
 	// 右键菜单
+
+	function getShortHost(host) {
+		if (!host) {
+			host = 'https://leanote.com';
+		}
+		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
+		if(ret && ret.length == 3) {
+			host = ret[2];
+		}
+		return host;
+	}
+
 	function menu() {
 		var me = this;
 		// this.target = '';
-		UserInfo.Host = UserInfo.Host || 'http://leanote.com';
-		var shortHost = UserInfo.Host;
-		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(shortHost);
-		if(ret && ret.length == 3) {
-			shortHost = ret[2];
-		}
+		UserInfo.Host = UserInfo.Host || 'https://leanote.com';
+		var shortHost = getShortHost(UserInfo.Host);
 
 	    this.menu = new gui.Menu();
 	    this.email = new gui.MenuItem({
@@ -1932,7 +1944,7 @@ function userMenu() {
 	        }
 	    });
 	    this.switchAccount = new gui.MenuItem({
-	        label: getMsg('Switch account'),
+	        label: getMsg('Add account'),
 	        click: function(e) {
 	        	// window.open('login.html');
 	        	// win.close();
@@ -1944,6 +1956,42 @@ function userMenu() {
 	        }
 	    });
 
+	    // 所有用户
+	    var allUsersMenu;
+	    if (allUsers) {
+	    	function toggleAccount(user) {
+	    		if (!user) {
+	    			return;
+	    		}
+    			UserService.saveCurUser({UserId: user.UserId}, function () {
+					reloadApp();
+    			});
+	    	}
+		    var userMenus = new gui.Menu();
+		    for (var i = 0; i < allUsers.length; ++i) {
+		    	var user = allUsers[i];
+		    	if (user.Username && user.UserId) {
+		    		var label = user.Username;
+
+		    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
+					label += ' (' + otherLabel + ')';
+
+			    	userMenus.append(new gui.MenuItem({
+				        label: label,
+				        enabled: !user.IsActive,
+				        click: (function(user) {
+				        	return function() {
+					        	toggleAccount(user);
+				        	}
+				        })(user)
+				    }));
+			    }
+		    }
+		    allUsersMenu = new gui.MenuItem({
+		        label: getMsg('Switch account'),
+		        submenu: userMenus
+		    });
+	    }
 
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
@@ -1963,6 +2011,7 @@ function userMenu() {
 		    this.menu.append(this.blog);
 		}
 	    this.menu.append(this.switchAccount);
+	    this.menu.append(allUsersMenu); 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
 	    // themeMenu
