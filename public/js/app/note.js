@@ -37,6 +37,7 @@ Note.isReadOnly = false;
 // 定时保存信息
 Note.intervalTime = 10 * 1000; // 10秒
 Note.startInterval = function() {
+	return;
 	if(Note.interval) {
 		clearInterval(Note.interval);
 	}
@@ -80,6 +81,11 @@ Note.setNoteCache = function(content, clear) {
 	if(clear) {
 		Note.clearCacheByNotebookId(content.NotebookId);
 	}
+}
+
+// 删除缓存
+Note.deleteCache = function(noteId) {
+	delete this.cache[noteId];
 }
 
 // 得到当前的笔记
@@ -131,17 +137,18 @@ Note.getNotesByNotebookId = function(notebookId, sortBy, isAsc) {
 
 	if(Note.cacheByNotebookId[notebookId][sortBy]) {
 		return Note.cacheByNotebookId[notebookId][sortBy];
-	} else {
 	}
 
 	// 从所有的notes中找到notebookId的, 并排序之
 	var notes = [];
-	var sortBys = [];
 	for(var i in Note.cache) {
-		if(!i) {
+		if (!i) {
 			continue;
 		}
 		var note = Note.cache[i];
+		if (! ('IsMarkdown' in note)) {
+			console.error('僵尸note------');
+		}
 		// 不要trash的not, 共享的也不要
 		if(note.IsTrash || note.IsShared) {
 			continue;
@@ -247,7 +254,11 @@ Note.curHasChanged = function(force) {
 	if(force == undefined) {
 		force = true;
 	}
-	var cacheNote = Note.cache[Note.curNoteId] || {};
+	var cacheNote = Note.cache[Note.curNoteId];
+	if (!cacheNote) {
+		return false;
+	}
+
 	// 收集当前信息, 与cache比对
 	var title = $("#noteTitle").val();
 	var tags = Tag.getTags(); // TODO
@@ -465,11 +476,7 @@ Note.curChangedSaveIt = function(force, callback) {
 	}
 	*/
 
-	// console.error(">>");
-
 	var hasChanged = Note.curHasChanged(force);
-
-	// console.log(hasChanged + "---");
 
 	if(hasChanged && (hasChanged.hasChanged || hasChanged.IsNew)) {
 		// 把已改变的渲染到左边 item-list
@@ -676,18 +683,14 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var target = $(tt('[noteId="?"]', selectNoteId))
 	Note.selectTarget(target);
 
-	// 如果 inChangeNoteId == selectNoteId, 表示之前的note的content还在加载中, 此时保存笔记肯定出错
-	// if(Note.inChangeNoteId != Note.curNoteId) {
-
-		// 1 之前的note, 判断是否已改变, 改变了就要保存之
-		// 这里, 在搜索的时候总是保存, 搜索的话, 比较快, 肯定没有变化, 就不要执行该操作
-		if(needSaveChanged == undefined) {
-			needSaveChanged  = true;
-		}
-		if(needSaveChanged) {
-			var changedNote = Note.curChangedSaveIt();
-		}
-	// }
+	// 1 之前的note, 判断是否已改变, 改变了就要保存之
+	// 这里, 在搜索的时候总是保存, 搜索的话, 比较快, 肯定没有变化, 就不要执行该操作
+	if(needSaveChanged == undefined) {
+		needSaveChanged  = true;
+	}
+	if(needSaveChanged) {
+		Note.curChangedSaveIt();
+	}
 
 	// 2. 设空, 防止在内容得到之前又发生保存
 	Note.curNoteId = "";
@@ -762,8 +765,6 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 Note.reRenderNote = function(noteId) {
 	var me = this;
 
-	console.error("???")
-
 	me.showContentLoading();
 	var note = Note.getNote(noteId);
 	Note.renderNote(note);
@@ -771,7 +772,10 @@ Note.reRenderNote = function(noteId) {
 		if(noteContent) {
 			Note.setNoteCache(noteContent, false);
 			Attach.renderNoteAttachNum(noteId, true);
-			Note.renderNoteContent(noteContent);
+			// 确保重置的是当前note
+			if (Note.curNoteId === noteId) {
+				Note.renderNoteContent(noteContent);
+			}
 		}
 		me.hideContentLoading();
 	});
@@ -1347,10 +1351,8 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 
 	// 2
 	var note = Note.cache[noteId];
-	var url = "/note/deleteNote"
 	var serverFunc = NoteService.deleteNote;
 	if(note.IsTrash) {
-		url = "/note/deleteTrash";
 		serverFunc = NoteService.deleteTrash;
 	} else {
 		// 减少数量
@@ -1376,10 +1378,8 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 			$(target).remove();
 
 			// 删除缓存
-			if(note) {
-				Note.clearCacheByNotebookId(note.NotebookId);
-				delete Note.cache[noteId];
-			}
+			Note.clearCacheByNotebookId(note.NotebookId);
+			delete Note.cache[noteId];
 
 			showMsg("删除成功!", 500);
 		} else {
@@ -2774,20 +2774,24 @@ Note.setNoteBlogVisible = function(noteId, isBlog) {
 	}
 };
 
-// --> adds
+// 为了博客
+// 服务器上更新了, 前端也来更新
 // changeAdds 有了serverId
+// updates...
 Note.updateNoteCacheForServer = function(notes) {
 	if(isEmpty(notes)) {
 		return;
 	}
 	for(var i in notes) {
 		var note = notes[i];
-		// alert(note.NoteId + " " + note.IsBlog);
-		Note.setNoteCache({NoteId: note.NoteId,
-			ServerNoteId: note.ServerNoteId,
-			IsBlog: note.IsBlog,
-		});
-		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
+		if (note && !note.IsTrash && !note.IsDeleted) {
+			Note.setNoteCache({
+				NoteId: note.NoteId,
+				ServerNoteId: note.ServerNoteId,
+				IsBlog: note.IsBlog,
+			});
+			Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
+		}
 	}
 };
 
@@ -2804,11 +2808,15 @@ Note.updateSync = function(notes) {
 		var note = notes[i];
 		note.InitSync = true; // 需要重新获取内容
 		Note.addNoteCache(note);
+
 		// 如果当前修改的是本笔记, 那么重新render之
-		// console.log('->>>');
-		// console.log(Note.curNoteId);
-		if(Note.curNoteId == note.NoteId) {
-			// 这里, 如果当前就是更新的, 则重新render, 有个问题, server新内容已经在服务器上了
+		/*
+		这里是一个重大BUG
+			远程笔记sync -> 本地
+			是trash操作, 则前端先删除, delete cache, toggle next
+			但是会异步取content, 取到后, reRender现有笔记 -> renderContent, 那么重置为当前笔记
+		*/
+		if(Note.curNoteId == note.NoteId && !(!curNotebookIsTrash && note.IsTrash)) {
 			Note.reRenderNote(Note.curNoteId);
 		}
 
@@ -2819,6 +2827,10 @@ Note.updateSync = function(notes) {
 		// 如果是trash, 且当前不在trash目录下, 且有该笔记, 则删除之
 		if(!curNotebookIsTrash && note.IsTrash) {
 			var target = $(tt('[noteId="?"]', note.NoteId));
+			// 前端缓存也要删除!!
+			// 先删除, 不然changeToNext()之前会先保存现在的, 导致僵尸note
+			Note.deleteCache(note.NoteId)
+
 			if(target.length) {
 				if(Note.curNoteId == note.NoteId) {
 					Note.changeToNext(target);
@@ -2828,7 +2840,6 @@ Note.updateSync = function(notes) {
 		}
 	}
 };
-
 
 // 添加同步的notes
 // <-- server
@@ -2866,5 +2877,8 @@ Note.deleteSync = function(notes) {
 			// 如果在笔记列表中则删除
 			$(tt('[noteId="?"]', note.NoteId)).remove();
 		}
+
+		// 前端缓存也要删除!!
+		Note.deleteCache(noteId);
 	}
 }
