@@ -474,10 +474,12 @@ function pasteImage(e) {
 }
 
 // 插入本地图片
+// tinymce image插件调用
 function insertLocalImage() {
 	gui.dialog.showOpenDialog(gui.getCurrentWindow(), 
 		{
 			properties: ['openFile', 'multiSelections'],
+			defaultPath: gui.app.getPath('userDesktop'),
 			filters: [
 				{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'] }
 			]

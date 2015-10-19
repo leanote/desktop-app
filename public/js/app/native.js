@@ -118,7 +118,7 @@ function Menu() {
             		downloadImgPath = curPath;
 
             		// title不能设置
-            		gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: name, defaultPath: name}, function(targetPath) {
+            		gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: name, defaultPath: gui.app.getPath('userDesktop') + '/' + name}, function(targetPath) {
             			if(targetPath) {
 
             				FileService.download(curPath, targetPath, function(ok, msg) {

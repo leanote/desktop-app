@@ -2304,7 +2304,7 @@ var Attach = {
 			var attachId = $li.data("id");
 			var title = $li.find('.attach-title').text();
 
-			gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: title, defaultPath: title}, function(targetPath) {
+			gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: title, defaultPath: gui.app.getPath('userDesktop') + '/' + title}, function(targetPath) {
     			if(targetPath) {
 					var curAttach = me.getAttach(attachId);
 					if(curAttach) {
@@ -2364,6 +2364,7 @@ var Attach = {
 		$('#chooseFile').click(function() {
 			gui.dialog.showOpenDialog(gui.getCurrentWindow(),
 				{
+					defaultPath: gui.app.getPath('userDesktop'),
 					properties: ['openFile', 'multiSelections']
 				},
 				function(paths) {
