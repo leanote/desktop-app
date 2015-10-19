@@ -222,26 +222,24 @@ define("tinymce/pasteplugin/Clipboard", [
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
 
 		/**
-		 * Pastes the specified HTML. This means that the HTML is filtered and then
-		 * inserted at the current selection in the editor. It will also fire paste events
-		 * for custom user filtering.
-		 *
-		 * @param {String} html HTML code to paste into the current selection.
+		 * 复制外链图片, copy到本地
 		 */
-		 function copyImage(src, ids) {
-			ajaxPost("/file/copyHttpImage", {src: src}, function(ret) {
-				if(reIsOk(ret)) {
+		function copyImage(src, ids) {
+			FileService.copyOtherSiteImage(src, function(url) {
+				if (url) {
 					// 将图片替换之
-					var src = urlPrefix + "/" + ret.Item;
-					var dom = editor.dom
+					var dom = editor.dom;
 					for(var i in ids) {
 						var id = ids[i];
 						var imgElm = dom.get(id);
-						dom.setAttrib(imgElm, 'src', src);
+						if (imgElm) {
+							dom.setAttrib(imgElm, 'src', url);
+						}
 					}
 				}
 			});
 		}
+
 		// 粘贴HTML
 		// 当在pre下时不能粘贴成HTML
 		// life add text
@@ -299,15 +297,15 @@ define("tinymce/pasteplugin/Clipboard", [
 							var needCopyImages = {}; // src => [id1,id2]
 							var time = (new Date()).getTime();
 							try {
-								var $html = $("<div>" + html + "</div");
+								var $html = $("<div>" + html + "</div>");
 								var $imgs = $html.find("img");
 								for(var i = 0; i < $imgs.length; ++i) {
 									var $img = $imgs.eq(i)
 									var src = $img.attr("src");
 									// 是否是外链
-									if(src.indexOf(urlPrefix) == -1) {
+									if(src.indexOf(urlPrefix) == -1 && src.indexOf('http://127.0.0.1') == -1) {
 										time++;
-										var id = "__LEANOTE_IMAGE_" + time;
+										var id = "__LEANOTE_D_IMG_" + time;
 										$img.attr("id", id);
 										if(needCopyImages[src]) {
 											needCopyImages[src].push(id);
@@ -317,7 +315,7 @@ define("tinymce/pasteplugin/Clipboard", [
 									}
 								}
 								editor.insertContent($html.html());
-								
+
 								for(var src in needCopyImages) {
 									var ids = needCopyImages[src];
 									copyImage(src, ids);
@@ -1043,26 +1041,11 @@ define("tinymce/pasteplugin/Plugin", [
 				}
 			}
 		}
-		
-		function togglePasteCopyImage() {
-			if (clipboard.copyImage) {
-				this.active(false);
-				clipboard.copyImage = false
-			} else {
-				clipboard.copyImage = true;
-				this.active(true);
-				if (!userIsInformed2) {
-					editor.windowManager.alert(
-						"When copy other site's images (not in leanote) into editor, it will copy the image into your album."
-					);
-					userIsInformed2 = true;
-				}
-			}
-		}
 
 		self.clipboard = clipboard = new Clipboard(editor);
 		self.quirks = new Quirks(editor);
 		self.wordFilter = new WordFilter(editor);
+		clipboard.copyImage = true;
 
 		if (editor.settings.paste_as_text) {
 			self.clipboard.pasteFormat = "text";
@@ -1114,13 +1097,6 @@ define("tinymce/pasteplugin/Plugin", [
 			tooltip: 'Paste as text',
 			onclick: togglePlainTextPaste,
 			active: self.clipboard.pasteFormat == "text"
-		});
-		
-		editor.addButton('pasteCopyImage', {
-			icon: 'copy',
-			tooltip: "When Paste other site's image, copy it into my album as public image",
-			onclick: togglePasteCopyImage,
-			active: self.clipboard.copyImage === true
 		});
 
 		editor.addMenuItem('pastetext', {

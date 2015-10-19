@@ -452,7 +452,7 @@ function initEditor() {
 		// parentHeight: $("#content").height(),
 		// content_css : ["public/css/editor/editor.css"],
 		// skin : "custom",
-		language: Api.curLang == 'zh-cn' ? 'zh' : 'en', // 语言
+		language: Api.curLang.indexOf('zh') >= 0 ? 'zh' : 'en', // 语言
 		plugins : [
 				"autolink link image lists charmap hr", "paste",
 				"searchreplace leanote_nav leanote_code tabfocus",
@@ -2020,7 +2020,7 @@ function userMenu(allUsers) {
 		    this.menu.append(themeMenu);
 	    }
 
-		var height = 180;
+		var height = 210;
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -2028,7 +2028,7 @@ function userMenu(allUsers) {
 			this.menu.append(Pren.view);
 			this.menu.append(Pren.fullScreen);
 
-			height = 270;
+			height += 90;
 		}
 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
