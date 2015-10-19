@@ -13,7 +13,6 @@ min
 /atom
 /gulpfile.js
 /gulpfile_atom.js
-/package.json
 sqlite*
 tinymce_old
 node_modules/request
