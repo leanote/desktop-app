@@ -1719,13 +1719,13 @@ Note.deleteNoteTag = function(item, tag) {
 	}
 };
 
-Note.readOnly = true;
+Note.readOnly = false; // 默认为false要好?
+LEA.readOnly = false;
 // 切换只读模式
 Note.toggleReadOnly = function() {
 	var me = this;
 	var note = me.getCurNote();
 
-	// console.log('(((((((((((((((((((((((');
 	// tinymce
 	var $editor = $('#editor');
 	$editor.addClass('read-only').removeClass('all-tool'); // 不要全部的
@@ -1748,6 +1748,9 @@ Note.toggleReadOnly = function() {
 		$('#infoToolbar .created-time').html(goNowToDatetime(note.CreatedTime));
 		$('#infoToolbar .updated-time').html(goNowToDatetime(note.UpdatedTime));
 	}
+	
+	Note.readOnly = true;
+	LEA.readOnly = true;
 
 	if(note.readOnly) {
 		return;
@@ -1761,11 +1764,10 @@ Note.toggleReadOnly = function() {
 	}
 
 	note.readOnly = true;
-	Note.readOnly = true;
 };
 // 切换到编辑模式
-Note.toggleWriteable = function() {
-	var me = this;
+LEA.toggleWriteable = Note.toggleWriteable = function() {
+	var me = Note;
 
 	// $('#infoToolbar').hide();
 	$('#editor').removeClass('read-only');
@@ -1778,6 +1780,9 @@ Note.toggleWriteable = function() {
 	if(!note) {
 		return;
 	}
+
+	Note.readOnly = false;
+	LEA.readOnly = false;
 
 	if(!note.readOnly) {
 		return;
@@ -1794,9 +1799,7 @@ Note.toggleWriteable = function() {
 			MD.onResize();
 		}
 	}
-
 	note.readOnly = false;
-	Note.readOnly = false;
 };
 
 // 渲染列表
