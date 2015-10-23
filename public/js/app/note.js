@@ -37,7 +37,6 @@ Note.isReadOnly = false;
 // 定时保存信息
 Note.intervalTime = 10 * 1000; // 10秒
 Note.startInterval = function() {
-	return;
 	if(Note.interval) {
 		clearInterval(Note.interval);
 	}
