@@ -1861,19 +1861,32 @@ img::selection {
 		left: 50%;
 		margin-left: -100px;
 	}
+    .modal-dialog.modal-large {
+        width: 300px !important;
+    }
 	.modal-body {
 		text-align: center;
 		border-radius: 5px;
 	}
 	#loadingDialogBodyMsg {
-		font-size: 16px;
+		font-size: 14px;
+        margin-top: 10px;
+        height: 20px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
 	}
-
     .progress {
         margin: 0;
         margin-top: 20px;
         height: 1px;
         display: none;
+        overflow: visible;
+    }
+
+    .progress-rate {
+        clear: both;
+        font-size: 12px;
     }
 
     &.has-progress {

@@ -2319,8 +2319,14 @@ Note.initContextmenu = function() {
 		    	var menuItem = new gui.MenuItem({
 			        label: menu.label,
 			        click: function(e) {
-			        	var note = Note.getNote($(self.target).attr('noteId'));
-			        	clickBac && clickBac(note);
+			        	if (Note.inBatch) {
+			        		var noteIds = Note.getBatchNoteIds();
+			        	}
+			        	else {
+			        		var noteIds = [$(self.target).attr('noteId')];
+			        	}
+			        	// var note = Note.getNote();
+			        	clickBac && clickBac(noteIds);
 			        }
 			    });
 

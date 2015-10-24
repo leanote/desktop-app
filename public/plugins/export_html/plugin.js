@@ -11,17 +11,23 @@ define(function() {
 		langs: {
 			'en-us': {
 				'export': 'Export HTML',
+				'Exporting': 'Exporting',
+				'Exporting: ': 'Exporting: ',
 				'exportSuccess': 'HTML saved successful!',
 				'exportFailure': 'HTML saved failure!',
 				'notExists': 'Please sync your note to ther server firslty.'
 			},
 			'zh-cn': {
 				'export': '导出HTML',
+				'Exporting': '正在导出',
+				'Exporting: ': '正在导出: ',
 				'exportSuccess': 'HTML导出成功!',
 				'exportFailure': 'HTML导出失败!'
 			},
 			'zh-hk': {
 				'export': '導出HTML',
+				'Exporting': '正在導出',
+				'Exporting: ': '正在導出: ',
 				'exportSuccess': 'HTML導出成功!',
 				'exportFailure': 'HTML導出失敗!'
 			}
@@ -125,7 +131,7 @@ define(function() {
 		},
 
 		// 得到存放images, js, css的路径
-		getFilesPath: function(basePath, nameNotExt, n, cb) {
+		getAssetsPath: function(basePath, nameNotExt, n, cb) {
 			var me = this;
 			var absPath = basePath + '/' + nameNotExt + '_files';
 			if (n > 1) {
@@ -136,7 +142,7 @@ define(function() {
 					cb(absPath);
 				}
 				else {
-					me.getFilesPath(basePath, nameNotExt, n+1, cb);
+					me.getAssetsPath(basePath, nameNotExt, n+1, cb);
 				}
 			});
 		},
@@ -148,8 +154,6 @@ define(function() {
 				pathInfo.nameNotExt = pathInfo.nameNotExtRaw + '-' + n; 
 			}
 			var absPath = pathInfo.getFullPath();
-			// 总是覆盖
-			return cb(absPath);
 
 			// Api.nodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
 			// 在控制台上是可以的
@@ -163,36 +167,105 @@ define(function() {
 			});
 		},
 
-		exportHTML: function(note) {
+		loadingIsClosed: false,
+
+		exportHTML: function (noteIds) {
+			var me = this;
+			if (!noteIds || noteIds.length == 0) {
+				return;
+			}
+			// showSaveDialog 不支持property选择文件夹
+			Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+				{
+					defaultPath: Api.gui.app.getPath('userDesktop') + '/',
+					properties: ['openDirectory']
+				}, 
+				function(targetPath) {
+					if(!targetPath) {
+						return;
+					}
+
+					me.loadingIsClosed = false;
+					Api.loading.show(Api.getMsg('plugin.export_html.Exporting'), 
+						{
+							hasProgress: true, 
+							isLarge: true,
+							onClose: function () {
+								me.loadingIsClosed = true;
+								setTimeout(function() {
+									Api.loading.hide();
+							});
+					}});
+					Api.loading.setProgress(1);
+
+					var i = 0;
+					var total = noteIds.length;
+
+					async.eachSeries(noteIds, function(noteId, cb) {
+						if (me.loadingIsClosed) {
+							cb();
+							return;
+						}
+
+						// setTimeout(function () {
+
+						i++;
+						Api.loading.setProgress(100 * i / total);
+						Api.noteService.getNote(noteId, function(note) {
+			        		me._exportHTML(note, targetPath, function() {
+			        			cb();
+			        		}, i, total);
+		        		});
+
+						// }, i * 1000);
+
+					}, function () {
+						Api.loading.hide();
+						Notify.show({title: 'Info', body: getMsg('plugin.export_html.exportSuccess')});
+					});
+			});
+		},
+
+		_exportHTML: function(note, path, callback, i, total) {
 			var me = this;
 			if(!note) {
 				return;
 			}
 
+			if (me.loadingIsClosed) {
+				callback();
+				return;
+			}
+
+			setTimeout(function () {
+				Api.loading.setMsg(Api.getMsg('plugin.export_html.Exporting: ') + (note.Title || getMsg('Untitled')));
+				Api.loading.setProgressRate(i + '/' + total);
+			}, 100);
+
 			var name = note.Title ? note.Title + '.html' : getMsg('Untitled') + '.html';
 			name = me.fixFilename(name);
 
-			Api.gui.dialog.showSaveDialog(Api.gui.getCurrentWindow(), {title: name, defaultPath: name}, function(targetPath) {
-				if(targetPath) {
-					// 将路径和名字区分开
-					var pathInfo = Api.commonService.splitFile(targetPath);
-					pathInfo.nameNotExt = me.fixFilename(pathInfo.nameNotExt); // 重新修正一次
-					var nameNotExt = pathInfo.nameNotExt;
-					pathInfo.nameNotExtRaw = pathInfo.nameNotExt;
-					// 得到可用文件的绝对路径
-					me.getHtmlFilePath(pathInfo, 1, function(absHtmlFilePath) {
-						me.getFilesPath(pathInfo.path, pathInfo.nameNotExt, 1, function(absFilesPath) {
-							// alert(absHtmlFilePath + ' --- ' + absFilesPath);
-							var html = me.render(note);
-							// 写图片
-							me.writeFiles(absFilesPath, html, function(html) {
-								// 把文件写到
-								Api.commonService.writeFile(absHtmlFilePath, html);
-								Notify.show({title: 'Info', body: getMsg('plugin.export_html.exportSuccess')});
-							});
-						});
+			var targetPath = path + '/' + name;
+
+			// 将路径和名字区分开
+			var pathInfo = Api.commonService.splitFile(targetPath);
+			pathInfo.nameNotExt = me.fixFilename(pathInfo.nameNotExt); // 重新修正一次
+			var nameNotExt = pathInfo.nameNotExt;
+			pathInfo.nameNotExtRaw = pathInfo.nameNotExt;
+
+			// 得到可用文件的绝对路径
+			me.getHtmlFilePath(pathInfo, 1, function(absHtmlFilePath) {
+				// 得到存放assets的目录
+				me.getAssetsPath(pathInfo.path, pathInfo.nameNotExt, 1, function(absFilesPath) {
+					// alert(absHtmlFilePath + ' --- ' + absFilesPath);
+					var html = me.render(note);
+					// 写图片
+					me.writeFiles(absFilesPath, html, function(html) {
+						// 把html文件写到
+						Api.commonService.writeFile(absHtmlFilePath, html);
+						callback();
 					});
-				}
+				});
 			});
 		},
 
@@ -207,8 +280,8 @@ define(function() {
 		        	return true;
 		        },
 		        click: (function() {
-		        	return function(note) {
-		        		me.exportHTML(note);
+		        	return function(noteIds) {
+		        		me.exportHTML(noteIds);
 		        	}
 		        })()
 		    };

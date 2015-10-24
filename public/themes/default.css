@@ -1638,18 +1638,31 @@ img::selection {
   left: 50%;
   margin-left: -100px;
 }
+#loadingDialog .modal-dialog.modal-large {
+  width: 300px !important;
+}
 #loadingDialog .modal-body {
   text-align: center;
   border-radius: 5px;
 }
 #loadingDialog #loadingDialogBodyMsg {
-  font-size: 16px;
+  font-size: 14px;
+  margin-top: 10px;
+  height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 #loadingDialog .progress {
   margin: 0;
   margin-top: 20px;
   height: 1px;
   display: none;
+  overflow: visible;
+}
+#loadingDialog .progress-rate {
+  clear: both;
+  font-size: 12px;
 }
 #loadingDialog.has-progress .progress {
   display: block;
