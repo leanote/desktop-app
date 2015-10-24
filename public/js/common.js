@@ -435,6 +435,7 @@ function pasteImage(e) {
 	    FileService.pasteImage2(dataUrl, function(url) {
 			insertImage(url);
 		});
+		e && e.preventDefault();
 	}
 	return;
 
@@ -1481,7 +1482,7 @@ function switchAccount() {
 		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 426, show: true, frame: true, resizable: false });
+		var win = new BrowserWindow({ width: 278, height: 400, show: true, frame: true, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
