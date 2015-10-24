@@ -116,6 +116,12 @@ define(function() {
 
 		    var menu = {
 		        label: Api.getMsg('plugin.export_pdf.export'),
+		        enabled: function(noteIds) {
+		        	if (noteIds && noteIds.length == 1) {
+		        		return true;
+		        	}
+		        	return false;
+		        },
 		        click: (function() {
 		        	return function(note) {
 		        		if (UserInfo.IsLocal) {

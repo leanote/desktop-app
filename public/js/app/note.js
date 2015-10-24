@@ -1619,45 +1619,33 @@ Note.searchNote = function() {
 	// Note.lastSearch.abort();
 }
 
-//----------
+//---------------
 //设为blog/unset
-Note.setNote2Blog = function(target) {
-	var noteId = $(target).attr("noteId");
-	var note = Note.cache[noteId];
-	var isBlog = true;
-	if(note.IsBlog != undefined) {
-		isBlog = !note.IsBlog;
+
+
+Note.setNote2Blog = function(target, isBlog) {
+	var me = Note;
+
+	var noteIds;
+	if (me.inBatch) {
+		noteIds = me.getBatchNoteIds();
+	}
+	else {
+		noteIds = [$(target).attr('noteId')];
+	}
+	if (isEmpty(noteIds)) {
+		return;
 	}
 
-	// 标志添加/去掉
-	function setBlog() {
-		// alert(noteId + " => " + isBlog);
-		NoteService.setNote2Blog(noteId, isBlog, function(ret) {
+	// 是新笔记 或 当前笔记就是它的, 则先保存之
+	Note.curChangedSaveIt(true, function() {
+		NoteService.setNote2Blog(noteIds, isBlog, function(ret) {
 			if(ret) {
 				// 触发同步
 				incrSync();
-
-				// Note.setNoteCache({NoteId: noteId, IsBlog: isBlog}, false); // 不清空NotesByNotebookId缓存
-
-				// 同步后会设置
-				/*
-				if(isBlog) {
-					$(target).find(".item-blog").removeAttr('style');
-				} else {
-					$(target).find(".item-blog").hide();
-				}
-				*/
 			}
 		});
-	}
-	// 是新笔记 或 当前笔记就是它的, 则先保存之
-	if(note.IsNew || note.curNoteId == noteId) {
-		Note.curChangedSaveIt(true, function(note) {
-			setBlog();
-    	});
-	} else {
-		setBlog();
-	}
+	});
 };
 
 // 设置notebook的blog状态
@@ -1785,7 +1773,8 @@ Note.copyNote = function(target, data, isShared) {
 		var note = me.getNote(noteId);
 		if (note) {
 			// trash不能复制, 不能复制给自己
-			if (note.IsTrash || note.NotebookId == toNotebookId) {
+			// 因为contexmenu不能disable有子menu的项, 所以允许复制trash
+			if (/*note.IsTrash || */note.NotebookId == toNotebookId) {
 				continue;
 			}
 			needNoteIds.push(noteId);
@@ -2278,13 +2267,13 @@ Note.initContextmenu = function() {
 	    this.publicBlog = new gui.MenuItem({
 	        label: getMsg("Public as blog"),
 	        click: function(e) {
-	        	Note.setNote2Blog(self.target);
+	        	Note.setNote2Blog(self.target, true);
 	        }
 	    });
 	    this.unPublicBlog = new gui.MenuItem({
 	        label: getMsg("Cancel public"),
 	        click: function(e) {
-	        	Note.setNote2Blog(self.target);
+	        	Note.setNote2Blog(self.target, false);
 	        }
 	    });
 
@@ -2305,6 +2294,7 @@ Note.initContextmenu = function() {
 	        }
 	    });
 
+	    // 本地笔记不能公开为博客
 	    if (!UserInfo.IsLocal) {
 		    this.menu.append(this.publicBlog);
 		    this.menu.append(this.unPublicBlog);
@@ -2322,8 +2312,10 @@ Note.initContextmenu = function() {
 	    var exportMenus = Api.getExportMenus() || [];
 	    for(var i = 0; i < exportMenus.length; ++i) {
 	    	(function(j) {
+
 		    	var menu = exportMenus[j];
 		    	var clickBac = menu.click;
+
 		    	var menuItem = new gui.MenuItem({
 			        label: menu.label,
 			        click: function(e) {
@@ -2331,9 +2323,13 @@ Note.initContextmenu = function() {
 			        	clickBac && clickBac(note);
 			        }
 			    });
+
+			    exportMenus[i].menu = menuItem;
+
 			    exportsSubMenus.append(menuItem);
 		    })(i);
 	    }
+
 	    if(exportMenus.length > 0) {
 	    	 this.exports = new gui.MenuItem({
 		        label: getMsg('Export'),
@@ -2346,31 +2342,54 @@ Note.initContextmenu = function() {
 	    	this.menu.append(this.exports);
 	    }
 
+	    T = this;
+
 	    this.enable = function(name, ok) {
 	    	this[name].enabled = ok;
 	    }
+	    // 控制disable
 	    this.popup = function(e, target) {
 	    	self.target = target;
-	    	var noteId = $(target).attr('noteId');
-
-	    	var note = Note.getNote(noteId);
-	    	if(!note) {
-	    		return;
+	    	var noteIds;
+	    	if (Note.inBatch) {
+		    	noteIds = Note.getBatchNoteIds();
 	    	}
-	    	var notebookId = note.NotebookId;
+	    	else {
+	    		noteIds = [$(target).attr("noteId")];
+	    	}
 
-	    	if(note.IsTrash) {
-	    		this.copy.enabled = false;
-	    	} else {
+	    	// 导出的enabled
+	    	for(var i = 0; i < exportMenus.length; ++i) {
+	    		exportMenus[i].menu.enabled = exportMenus[i].enabled(noteIds);
+	    	}
+
+	    	// 批量, 除了导出pdf都可以操作
+	    	if (Note.inBatch) {
 	    		this.copy.enabled = true;
-	    	}
-
-	    	if(note.IsBlog) {
-	    		this.publicBlog.enabled = false;
+	    		this.move.enabled = true;
+	    		this.publicBlog.enabled = true;
 	    		this.unPublicBlog.enabled = true;
 	    	} else {
-	    		this.publicBlog.enabled = true;
-	    		this.unPublicBlog.enabled = false;
+	    		var note = Note.getNote(noteIds[0]);
+	    		if (!note) {
+	    			return;
+	    		}
+
+		    	if(note.IsTrash || Notebook.curNotebookIsTrash()) {
+		    		this.copy.enabled = false; // 没用
+		    		this.publicBlog.enabled = false;
+		    		this.unPublicBlog.enabled = false;
+		    	} else {
+		    		this.copy.enabled = true;
+
+			    	if(note.IsBlog) {
+			    		this.publicBlog.enabled = false;
+			    		this.unPublicBlog.enabled = true;
+			    	} else {
+			    		this.publicBlog.enabled = true;
+			    		this.unPublicBlog.enabled = false;
+			    	}
+		    	}
 	    	}
 
 			this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);

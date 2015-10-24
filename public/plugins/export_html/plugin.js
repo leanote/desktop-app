@@ -203,6 +203,9 @@ define(function() {
 
 		    var menu = {
 		        label: Api.getMsg('plugin.export_html.export'),
+		        enabled: function(noteIds) {
+		        	return true;
+		        },
 		        click: (function() {
 		        	return function(note) {
 		        		me.exportHTML(note);
