@@ -632,7 +632,8 @@ Notebook.toggleToMyNav = function(userId, notebookId) {
 	
 	// 搜索tag隐藏
 	$("#tagSearch").hide();
-}
+};
+
 Notebook.changeNotebookNav = function(notebookId) {
 	Notebook.curNotebookId = notebookId;
 	Notebook.toggleToMyNav();
@@ -651,19 +652,22 @@ Notebook.changeNotebookNav = function(notebookId) {
 	
 	// 3
 	Notebook.changeNotebookNavForNewNote(notebookId, notebook.Title);
-}
+};
 
 Notebook.isAllNotebookId = function(notebookId) {
 	return notebookId == Notebook.allNotebookId;
-}
+};
 Notebook.isTrashNotebookId = function(notebookId) {
 	return notebookId == Notebook.trashNotebookId;
-}
+};
 // 当前选中的笔记本是否是"所有"
 // called by Note
 Notebook.curActiveNotebookIsAll = function() {
-	return Notebook.isAllNotebookId($("#notebookList .active").attr("notebookId"));
-}
+	return Notebook.isAllNotebookId($("#notebookList .curSelectedNode").attr("notebookId"));
+};
+Notebook.curActiveNotebookIsTrash = function() {
+	return Notebook.isTrashNotebookId($("#notebookList .curSelectedNode").attr("notebookId"));
+};
 
 // 改变笔记本
 // 0. 改变样式

@@ -436,6 +436,19 @@ h3 {
   border-color: #ebeff2;
   box-shadow: none;
 }
+#noteItemList .item:hover .item-setting,
+#noteItemList .item:hover .item-star,
+#noteItemList .item:hover .item-blog {
+  display: block;
+}
+#noteItemList .item:hover.item-conflict .item-conflict-info {
+  display: block;
+}
+#noteItemList {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
 #noteItemList .item-setting,
 #noteItemList .item-blog,
 #noteItemList .item-star,
@@ -492,13 +505,16 @@ h3 {
 #noteItemList .item-is-star .item-star .fa {
   color: yellow !important;
 }
-#noteItemList .item:hover .item-setting,
-#noteItemList .item:hover .item-star,
-#noteItemList .item:hover .item-blog {
-  display: block;
+.batch #noteItemList .item-active .item-setting,
+.batch #noteItemList .item-active:hover .item-setting,
+.batch #noteItemList .item-active .item-star,
+.batch #noteItemList .item-active:hover .item-star,
+.batch #noteItemList .item-active .item-conflict-info,
+.batch #noteItemList .item-active:hover .item-conflict-info {
+  display: none;
 }
-#noteItemList .item:hover.item-conflict .item-conflict-info {
-  display: block;
+.batch #tool {
+  display: none;
 }
 .friend-header {
   position: relative;
@@ -1072,7 +1088,7 @@ h3 {
   top: 0px;
   bottom: 0px;
   right: 0;
-  left: 3px;
+  left: 0;
   z-index: -1;
 }
 #noteMaskForLoading {
@@ -1742,6 +1758,52 @@ img::selection {
 #notify .alert.alert-show {
   opacity: 1;
   right: 5px;
+}
+#batchMask {
+  background: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+.batch-ctn {
+  position: relative;
+  padding: 50px;
+  width: 100%;
+  height: 100%;
+}
+.batch-note {
+  display: inline-block;
+  width: 160px;
+  position: absolute;
+  left: 50%;
+  border: 1px solid #ccc;
+  height: 200px;
+  padding: 5px;
+  border-radius: 5px;
+  background: #eee;
+  overflow: hidden;
+  transition: margin 0.5s;
+  margin-left: -1000px;
+}
+.batch-note .title {
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.batch-info {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  text-align: center;
+  margin-top: 300px;
+}
+.batch-info p {
+  margin-top: 8px;
+}
+.batch-info .fa {
+  cursor: pointer;
+  font-size: 16px;
 }
 .win-tool {
   padding: 5px;

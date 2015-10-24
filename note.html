@@ -272,13 +272,13 @@ function log(o) {
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
 
-          <div id="noteMaskForLoading" class="note-mask">
+          <div id="noteMaskForLoading" class="note-mask"> <!-- z-index: 11 -->
             <img src="public/images/loading-24.gif"/>
             <br />
             <span class="lang">loading...</span>
           </div>
 
-          <div id="editorMask">
+          <div id="editorMask">  <!-- z-index: 10 -->
             <span class="lang">noNoteNewNoteTips</span>
             <br />
             <br />
@@ -288,6 +288,15 @@ function log(o) {
             </div>
             <div id="editorMaskBtnsEmpty" class="lang">canntNewNoteTips</div>
           </div>
+
+          <div id="batchMask" class="note-mask"> <!-- z-index: 99 --> 
+            <div class="batch-ctn" id="batchCtn"></div>
+            <div class="batch-info">
+              <span></span> notes selected
+              <p><i class="fa fa-cog"></i></p>
+            </div>
+          </div>
+
           <div id="noteTop">
             <!-- 左侧放tag, 右侧放按钮, 比如save, info, move, delete -->
             <div id="tool" class="clearfix">
