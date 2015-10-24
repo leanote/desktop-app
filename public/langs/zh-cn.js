@@ -203,6 +203,7 @@
 	"Delete": "删除",
 	"Remove": "移除",
 	"Export": "导出",
+    "Export note": "导出笔记",
 	"Histories": "历史记录",
     "Created": "创建",
     "Updated": "更新",
@@ -278,6 +279,8 @@
     "Confirm password": "确认密码",
     "Username": "用户名",
     "User exists": "用户已存在",
-    "Local": "本地"
+    "Local": "本地",
 
+    "Please select a note firstly.": "请先选择一个笔记",
+    "<span></span> notes selected": "当前选中了 <span></span> 篇笔记"
 }

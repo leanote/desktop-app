@@ -363,9 +363,12 @@ Note.curHasChanged = function(force) {
 
 // 由content生成desc
 // 换行不要替换
-Note.genDesc = function(content) {
+Note.genDesc = function(content, length) {
 	if(!content) {
 		return "";
+	}
+	if (!length) {
+		length = 20;
 	}
 
 	// 将</div>, </p>替换成\n
@@ -401,10 +404,10 @@ Note.genDesc = function(content) {
 	content = content.replace(/</g, "&lt;");
 	content = content.replace(/>/g, "&gt;");
 
-	if(content.length < 20) {
+	if(content.length < length) {
 		return content;
 	}
-	return content.substring(0, 20);
+	return content.substring(0, length);
 }
 
 // 得到摘要
@@ -2398,7 +2401,8 @@ Note.initContextmenu = function() {
 		    	}
 	    	}
 
-			this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);
+			// this.menu.popup(gui.getCurrentWindow(), e.originalEvent.x, e.originalEvent.y);
+			this.menu.popup(gui.getCurrentWindow(), e.pageX, e.pageY);
 	    }
 	}
 
@@ -2976,6 +2980,7 @@ Note.batch = {
     	});
 
 		me.initContextmenu();
+		me.initBatchStatus();
 	},
 
 	initContextmenu: function () {
@@ -2983,19 +2988,19 @@ Note.batch = {
 
 		me.$batchMask.on('contextmenu', function (e) {
 			e.preventDefault();
-			!Note.nowIsInShared ? Note.contextmenu.showMenu(e) : Share.contextmenu.showMenu(e);
+			Note.noteMenuSys.popup(e, null);
 		});
 
 		me.$batchMask.find('.batch-info .fa').click(function (e) {
 			e.preventDefault();
-			e.pageX -= 90;
+
+			e.pageX -= 70;
 			e.pageY += 10;
 
-			// 这导致其它dropdown不能隐藏
 			e.stopPropagation();
 			// 所以
 			$(document).click();
-			!Note.nowIsInShared ? Note.contextmenu.showMenu(e) : Share.contextmenu.showMenu(e);
+			Note.noteMenuSys.popup(e, null);
 		});
 	},
 
@@ -3087,7 +3092,12 @@ Note.batch = {
 	},
 	$batchMask: $('#batchMask'),
 	$batchCtn: $('#batchCtn'),
-	$batchNum: $('#batchMask .batch-info span'),
+
+	initBatchStatus: function () {
+		$('#batchMask .batch-status').html(getMsg('<span></span> notes selected'));
+		this.$batchNum = $('#batchMask .batch-info span');
+	},
+
 	_i: 1,
 	getRotate: function () {
 		var me = this;
@@ -3109,6 +3119,8 @@ Note.batch = {
 		var note = Note.getNote(noteId);
 		var title = note.Title || getMsg('unTitled');
 		var desc = note.Desc || '...';
+		// desc = substr(note.Content, 0, 200);
+
 		var $note = $('<div class="batch-note"><div class="title">' + title + '</div><div class="content">' + desc + '</div></div>');
 		me._notes[noteId] = $note;
 		var rotate = me.getRotate();

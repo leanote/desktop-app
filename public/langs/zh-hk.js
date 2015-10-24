@@ -203,6 +203,7 @@
     "Delete": "刪除",
     "Remove": "移除",
     "Export": "導出",
+    "Export note": "導出筆記",
     "Histories": "歷史記錄",
     "Created": "創建",
     "Updated": "更新",
@@ -278,6 +279,8 @@
     "Confirm password": "確認密碼",
     "Username": "用戶名",
     "User exists": "用戶已存在",
-    "Local": "本地"
+    "Local": "本地",
 
+    "Please select a note firstly.": "請先選擇壹個筆記",
+    "<span></span> notes selected": "當前選中了 <span></span> 篇筆記"
 }
