@@ -203,7 +203,7 @@
     "Delete": "刪除",
     "Remove": "移除",
     "Export": "導出",
-    "Export note": "導出筆記",
+    "Export notes": "導出筆記",
     "Histories": "歷史記錄",
     "Created": "創建",
     "Updated": "更新",
