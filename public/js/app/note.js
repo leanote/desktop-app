@@ -1768,94 +1768,57 @@ Note.moveNote = function(target, data) {
 
 	// 重置, 因为可能移动后笔记下没笔记了
 	me.batch.reset();
-
-	return;
-
-	var noteId = $(target).attr("noteId");
-	var note = Note.cache[noteId];
-	var notebookId = data.notebookId;
-
-	if(!note.IsTrash && note.NotebookId == notebookId) {
-		return;
-	}
-
-	// 修改数量
-	Notebook.incrNotebookNumberNotes(notebookId);
-	if(!note.IsTrash) {
-		Notebook.minusNotebookNumberNotes(note.NotebookId);
-	}
-
-	NoteService.moveNote(noteId, notebookId, function(ret) {
-	// });
-	// ajaxGet("/note/moveNote", {noteId: noteId, notebookId: notebookId}, function(ret) {
-		if(ret && ret.NoteId) {
-			if(note.IsTrash) {
-				Note.changeToNext(target);
-				$(target).remove();
-				Note.clearCacheByNotebookId(notebookId);
-			} else {
-				// 不是trash, 移动, 那么判断是当前是否是all下
-				// 不在all下, 就删除之
-				// 如果当前是active, 那么clearNoteInfo之
-				if(!Notebook.curActiveNotebookIsAll()) {
-					Note.changeToNext(target);
-					if($(target).hasClass("item-active")) {
-						Note.clearNoteInfo();
-					}
-					$(target).remove();
-				} else {
-					// 不移动, 那么要改变其notebook title
-					$(target).find(".note-notebook").html(Notebook.getNotebookTitle(notebookId));
-				}
-
-				// 重新清空cache 之前的和之后的
-				Note.clearCacheByNotebookId(note.NotebookId);
-				Note.clearCacheByNotebookId(notebookId);
-			}
-
-			// 改变缓存
-			Note.setNoteCache(ret)
-		}
-	});
 };
 
 // 复制
 // data是自动传来的, 是contextmenu数据
 Note.copyNote = function(target, data, isShared) {
-	var noteId = $(target).attr("noteId");
-	var note = Note.cache[noteId];
-	var notebookId = data.notebookId;
+	var me = Note;
 
-	// trash不能复制, 不能复制给自己
-	if(note.IsTrash || note.NotebookId == notebookId) {
+	var toNotebookId = data.notebookId;
+	var noteIds;
+	if (Note.inBatch) {
+		noteIds = me.getBatchNoteIds();
+	}
+	else {
+		noteIds = [$(target).attr('noteId')];
+	}
+
+	// 得到需要复制的
+	var needNoteIds = [];
+	for (var i = 0; i < noteIds.length; ++i) {
+		var noteId = noteIds[i];
+		var note = me.getNote(noteId);
+		if (note) {
+			// trash不能复制, 不能复制给自己
+			if (note.IsTrash || note.NotebookId == toNotebookId) {
+				continue;
+			}
+			needNoteIds.push(noteId);
+		}
+	}
+	if (needNoteIds.length == 0) {
 		return;
 	}
 
-	/*
-	var url = "/note/copyNote";
-	var data = {noteId: noteId, notebookId: notebookId};
-	if(isShared) {
-		url = "/note/copySharedNote";
-		data.fromUserId = note.UserId;
-	}
-	*/
-
-	NoteService.copyNote(noteId, notebookId, function(newNote) {
-		if(newNote && newNote.NoteId) {
+	NoteService.copyNote(needNoteIds, toNotebookId, function(notes) {
+		if(!isEmpty(notes)) {
 			// 重新清空cache 之后的
-			Note.clearCacheByNotebookId(notebookId);
-			// 改变缓存, 添加之
-			Note.setNoteCache(newNote)
+			Note.clearCacheByNotebookId(toNotebookId);
+			for (var i = 0; i < notes.length; ++i) {
+				var note = notes[i];
+				if (!note.NoteId) {
+					continue;
+				}
+				// 改变缓存, 添加之
+				Note.setNoteCache(note);
 
-			// 增加数量
-			Notebook.incrNotebookNumberNotes(notebookId)
-		} else {
-			alert('error');
+				// 增加数量
+				Notebook.incrNotebookNumberNotes(toNotebookId)
+			}
 		}
 	});
-
 };
-
 
 // 删除笔记标签
 // item = {noteId => usn}
