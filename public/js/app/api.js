@@ -138,6 +138,17 @@ var Api = {
 		return me._exportMenus;
 	},
 
+	// 导出, 笔记本下
+	_exportMenusForNotebook: [],
+	addExportMenuForNotebook: function(menu) {
+		var me = this;
+		me._exportMenusForNotebook.push(menu);
+	},
+	getExportMenusForNotebook: function() {
+		var me = this;
+		return me._exportMenusForNotebook;
+	},
+
 	// 更多菜单
 	_moreMenus: [],
 	getMoreMenus: function() {

@@ -167,13 +167,7 @@ define(function() {
 			});
 		},
 
-		loadingIsClosed: false,
-
-		exportHTML: function (noteIds) {
-			var me = this;
-			if (!noteIds || noteIds.length == 0) {
-				return;
-			}
+		getTargetPath: function(callback) {
 			// showSaveDialog 不支持property选择文件夹
 			Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 				{
@@ -181,48 +175,113 @@ define(function() {
 					properties: ['openDirectory']
 				}, 
 				function(targetPath) {
-					if(!targetPath) {
+					callback(targetPath);
+				}
+			);
+		},
+
+		loadingIsClosed: false,
+
+		exportHTMLForNotebook: function (notebookId) {
+			var me = this;
+			if (!notebookId) {
+				return;
+			}
+			me.getTargetPath(function(targetPath) {
+				if (!targetPath) {
+					return;
+				}
+
+				me.loadingIsClosed = false;
+				Api.loading.show(Api.getMsg('plugin.export_html.Exporting'), 
+					{
+						hasProgress: true, 
+						isLarge: true,
+						onClose: function () {
+							me.loadingIsClosed = true;
+							setTimeout(function() {
+								me.hideLoading();
+						});
+				}});
+				Api.loading.setProgress(1);
+
+				Api.noteService.getNotes(notebookId, function(notes) {
+					if (!notes) {
+						me.hideLoading();
 						return;
 					}
 
-					me.loadingIsClosed = false;
-					Api.loading.show(Api.getMsg('plugin.export_html.Exporting'), 
-						{
-							hasProgress: true, 
-							isLarge: true,
-							onClose: function () {
-								me.loadingIsClosed = true;
-								setTimeout(function() {
-									Api.loading.hide();
-							});
-					}});
-					Api.loading.setProgress(1);
-
+					var total = notes.length;
 					var i = 0;
-					var total = noteIds.length;
-
-					async.eachSeries(noteIds, function(noteId, cb) {
+					async.eachSeries(notes, function(note, cb) {
 						if (me.loadingIsClosed) {
 							cb();
+							me.hideLoading();
 							return;
 						}
-
-						// setTimeout(function () {
-
 						i++;
 						Api.loading.setProgress(100 * i / total);
-						Api.noteService.getNote(noteId, function(note) {
-			        		me._exportHTML(note, targetPath, function() {
-			        			cb();
-			        		}, i, total);
-		        		});
-
-						// }, i * 1000);
-
-					}, function () {
-						Api.loading.hide();
+						me._exportHTML(note, targetPath, function() {
+							cb();
+		        		}, i, total);
+					}, function() {
+						me.hideLoading();
 						Notify.show({title: 'Info', body: getMsg('plugin.export_html.exportSuccess')});
 					});
+				});
+			});
+		},
+
+		hideLoading: function () {
+			setTimeout(function () {
+				Api.loading.hide();
+			}, 1000);
+		},
+
+		exportHTML: function (noteIds) {
+			var me = this;
+			if (!noteIds || noteIds.length == 0) {
+				return;
+			}
+			me.getTargetPath(function(targetPath) {
+				if (!targetPath) {
+					return;
+				}
+
+				me.loadingIsClosed = false;
+				Api.loading.show(Api.getMsg('plugin.export_html.Exporting'), 
+					{
+						hasProgress: true, 
+						isLarge: true,
+						onClose: function () {
+							me.loadingIsClosed = true;
+							setTimeout(function() {
+								me.hideLoading();
+						});
+				}});
+				Api.loading.setProgress(1);
+
+				var i = 0;
+				var total = noteIds.length;
+
+				async.eachSeries(noteIds, function(noteId, cb) {
+					if (me.loadingIsClosed) {
+						cb();
+						return;
+					}
+
+					i++;
+					Api.loading.setProgress(100 * i / total);
+					Api.noteService.getNote(noteId, function(note) {
+		        		me._exportHTML(note, targetPath, function() {
+		        			cb();
+		        		}, i, total);
+	        		});
+
+				}, function () {
+					me.hideLoading();
+					Notify.show({title: 'Info', body: getMsg('plugin.export_html.exportSuccess')});
+				});
 			});
 		},
 
@@ -286,6 +345,18 @@ define(function() {
 		        })()
 		    };
 		    Api.addExportMenu(menu);
+
+		    Api.addExportMenuForNotebook({
+		        label: Api.getMsg('plugin.export_html.export'),
+		        enabled: function(notebookId) {
+		        	return true;
+		        },
+		        click: (function() {
+		        	return function(notebookId) {
+		        		me.exportHTMLForNotebook(notebookId);
+		        	}
+		        })()
+		    });
 		},
 		// 打开后
 		onOpenAfter: function() {
