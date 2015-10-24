@@ -2058,6 +2058,9 @@ function userMenu(allUsers) {
 
 		    mores.append(this.sync);
 		    mores.append(this.fullSync);
+		    mores.append(new gui.MenuItem({
+		        type: 'separator'
+		    }));
 		}
 
 	    // 其它的
