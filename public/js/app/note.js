@@ -1407,72 +1407,66 @@ Note.changeToNextSkipNotes = function(noteIds) {
 };
 
 // 删除笔记
-// 1. 先隐藏, 成功后再移除DOM
-// 2. ajax之 noteId
-// Share.deleteSharedNote调用
 Note.deleteNote = function(target, contextmenuItem, isShared) {
+	var me = Note;
+
+	var noteIds;
+	if (me.inBatch) {
+		noteIds = me.getBatchNoteIds();
+	}
+	else {
+		noteIds = [$(target).attr('noteId')];
+	}
+	if (isEmpty(noteIds)) {
+		return;
+	}
+
 	// 如果删除的是已选中的, 赶紧设置curNoteId = null
-	if($(target).hasClass("item-active")) {
+	if(noteIds.length == 1 && $(target).hasClass("item-active")) {
 		// -1 停止定时器
 		Note.stopInterval();
 		// 不保存
-		Note.curNoteId = null;
+		me.clearCurNoteId();
 		// 清空信息
 		Note.clearNoteInfo();
 	}
 
-	noteId = $(target).attr("noteId");
-	if(!noteId) {
-		return;
+	var $actives;
+	if(noteIds.length == 1) {
+		$actives = $(target);
 	}
-
-	// 取消star
-	Note.unStar(noteId);
+	else {
+		$actives = me.$itemList.find('.item-active');
+	}
 
 	// 1
-	$(target).hide();
-
+	$actives.hide();
 	// 2
-	var note = Note.cache[noteId];
-	var serverFunc = NoteService.deleteNote;
-	if(note.IsTrash) {
-		serverFunc = NoteService.deleteTrash;
-	} else {
-		// 减少数量
-		Notebook.minusNotebookNumberNotes(note.NotebookId);
-	}
-
-	if(note.IsNew) {
-		Note.changeToNext(target);
-		$(target).remove();
-		// 删除缓存
-		if(note) {
-			Note.clearCacheByNotebookId(note.NotebookId);
-			delete Note.cache[noteId];
-		}
-
-		return;
-	}
-
-	serverFunc.call(NoteService, noteId, function(ret) {
+	NoteService.deleteNote(noteIds, function(ret) {
 		if(ret) {
-			Note.changeToNext(target);
-
-			$(target).remove();
+			Note.changeToNextSkipNotes(noteIds);
+			$actives.remove();
 
 			// 删除缓存
-			Note.clearCacheByNotebookId(note.NotebookId);
-			delete Note.cache[noteId];
+			for (var i = 0; i < noteIds.length; ++i) {
+				var noteId = noteIds[i];
+				var note = me.getNote(noteId);
+				if (note) {
+					// 取消star
+					Note.unStar(noteId);
 
-			showMsg("删除成功!", 500);
-		} else {
-			// 弹出信息 popup 不用点确认的
-			$(target).show();
-			showMsg("删除失败!", 2000);
+					// 减少数量
+					Notebook.minusNotebookNumberNotes(note.NotebookId);
+					Note.clearCacheByNotebookId(note.NotebookId);
+					delete Note.cache[noteId];
+				}
+			}
 		}
 	});
-};
 
+	me.batch.reset();
+	return;
+};
 
 // 显示共享信息
 Note.listNoteShareUserInfo = function(target) {
