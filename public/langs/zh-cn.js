@@ -278,6 +278,8 @@
     "Confirm password": "确认密码",
     "Username": "用户名",
     "User exists": "用户已存在",
-    "Local": "本地"
+    "Local": "本地",
+
+    "Synchronizing": "正在同步"
 
 }

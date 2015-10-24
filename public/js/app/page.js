@@ -2010,6 +2010,7 @@ function userMenu(allUsers) {
 		    });
 		    this.menu.append(this.blog);
 		}
+		this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(allUsersMenu); 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -2020,7 +2021,10 @@ function userMenu(allUsers) {
 		    this.menu.append(themeMenu);
 	    }
 
-		var height = 210;
+		var height = 230;
+		if (UserInfo.IsLocal) {
+			height = 200;
+		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
