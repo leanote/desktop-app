@@ -20,7 +20,7 @@ var Import = {
    </en-note>\n'
    把<en-note>与</en-note>中间部分抽出
 
-   parsedRes = [{FileId: ""}]
+   parsedRes = {hash1: file, hash2: file}
    */
   parseEvernoteContent: function(xml, parsedRes) {
     var me = this;
@@ -39,19 +39,29 @@ var Import = {
       return '';
     }
     var reg = new RegExp("<en\-media(.*?)\/*>", "g"); // <en-media /> <en-media></en-media>
-    var i = 0;
     // console.log(content);
     while(ret = reg.exec(content)) {
       // ret[1] == type="text/html" style="cursor:pointer;" height="43" hash="bc322a11075e40f3a5b2dce3f2fffcdc"
       try {
-        var res = parsedRes[i];
-        i++;
+        var attrs = ret[1];
+
+        // 得到hash
+        var hashes = attrs.match(/hash="([0-9a-zA-Z]{32})"/);
+        var hash = '';
+        if (hashes) {
+          hash = hashes[1];
+        }
+        if (!hash) {
+          continue;
+        }
+
+        var res = parsedRes[hash];
         var fileId = res['FileId'];
         if(!fileId) {
           continue;
         }
         if(res.IsImage) {
-          var replace = '<img src="' + Evt.getImageLocalUrl(fileId) + '" ' + ret[1] + '>';
+          var replace = '<img src="' + Evt.getImageLocalUrl(fileId) + '" ' + attrs + '>';
         } else {
           var replace = '<a href="' + Evt.getAttachLocalUrl(fileId) + '">' + res['Title'] + '</a>'
         }
@@ -63,7 +73,6 @@ var Import = {
 
     // 如果是<en-media></en-media>, </en-media>匹配不到
     content = content.replace(/<\/en-media>/g, '');
-
 
     return content;
   },
@@ -87,7 +96,7 @@ var Import = {
 
     // 文件保存之
     var resources = note['resource'] || [];
-    var parsedRes = [];
+    var parsedRes = {};
     var attachs = [];
     // console.log("-----------")
     // console.log(note);
@@ -133,7 +142,8 @@ var Import = {
 
         File.writeBase64(base64Str, isImage, type, filename, function(file) {
           if(file) {
-            parsedRes.push(file);
+            parsedRes[file.hash] = file;
+            // parsedRes.push(file);
             if(!isImage) {
               attachs.push(file);
             }
@@ -147,13 +157,14 @@ var Import = {
         // 把content的替换之
         // console.log('ok, writeBase64 ok');
         try {
+          console.log('parsedRes');
           console.log(parsedRes);
           jsonNote.Content = me.parseEvernoteContent(jsonNote.Content, parsedRes);
           jsonNote.Attachs = attachs;
         } catch(e) {
           console.log(e);
         }
-        console.log(jsonNote);
+        // console.log(jsonNote);
         return callback && callback(jsonNote);
       }
     );
@@ -211,14 +222,7 @@ var Import = {
                 jsonNote.IsNew = true;
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
-
-                // jsonNote.Content = "";
-                // jsonNote.Attachs = null;
-
-                // console.log(jsonNote);
-
-                // eachCallback && eachCallback(false);
-                // return cb();
+                jsonNote.IsMarkdown = false;
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {

@@ -4,6 +4,7 @@ var Config = {
         "import_evernote",
         "export_pdf",
         "export_html",
+        "export_evernote",
         "langs"
     ],
     "langs": [

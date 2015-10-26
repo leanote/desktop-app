@@ -1031,9 +1031,9 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 
 	var tmp;
 	if(note.ImgSrc) {
-		tmp = tt(Note.itemTpl, classes, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+		tmp = tt(Note.itemTpl, classes, this.newNoteSeq(), note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	} else {
-		tmp = tt(Note.itemTplNoImg, classes, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+		tmp = tt(Note.itemTplNoImg, classes, this.newNoteSeq(), note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	}
 	// blog ?
 	if(!note.IsBlog) {
@@ -3385,6 +3385,8 @@ Note.addSync = function(notes) {
 	for(var i in notes) {
 		var note = notes[i];
 		Note.addNoteCache(note);
+
+		console.log(note);
 
 		// 很可能其笔记本也是新添加的, 此时重新render notebooks' numberNotes
 		Notebook.reRenderNotebookNumberNotesIfIsNewNotebook(note.NotebookId);

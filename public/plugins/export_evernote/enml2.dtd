@@ -1,0 +1,592 @@
+<!--
+
+   Evernote Markup Language (ENML) 2.0 DTD
+   
+   This expresses the structure of an XML document that can be used as the
+   'content' of a Note within Evernote's data model.
+   The Evernote service will reject attempts to create or update notes if
+   their contents do not validate against this DTD.
+   
+   This is based on a subset of XHTML which is intentionally broadened to
+   reject less real-world HTML, to reduce the likelihood of synchronization
+   failures.  This means that all attributes are defined as CDATA instead of
+   more-restrictive types, and every HTML element may embed every other
+   HTML element.
+
+   Copyright (c) 2007-2009 Evernote Corp.
+
+   $Date: 2007/10/15 18:00:00 $
+
+-->
+
+<!--=========== External character mnemonic entities ===================-->
+
+<!ENTITY % HTMLlat1 PUBLIC
+   "-//W3C//ENTITIES Latin 1 for XHTML//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent">
+%HTMLlat1;
+
+<!ENTITY % HTMLsymbol PUBLIC
+   "-//W3C//ENTITIES Symbols for XHTML//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml-symbol.ent">
+%HTMLsymbol;
+
+<!ENTITY % HTMLspecial PUBLIC
+   "-//W3C//ENTITIES Special for XHTML//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml-special.ent">
+%HTMLspecial;
+
+<!--=================== Generic Attributes ===============================-->
+
+<!ENTITY % coreattrs
+ "style       CDATA #IMPLIED
+  title       CDATA #IMPLIED" 
+  >
+
+<!ENTITY % i18n
+ "lang        CDATA #IMPLIED
+  xml:lang    CDATA #IMPLIED
+  dir         CDATA #IMPLIED" 
+  >
+
+<!ENTITY % focus
+ "accesskey   CDATA #IMPLIED
+  tabindex    CDATA #IMPLIED"
+  >
+
+<!ENTITY % attrs
+ "%coreattrs;
+  %i18n;"
+  >
+
+<!ENTITY % TextAlign 
+ "align       CDATA #IMPLIED" 
+  >
+
+<!ENTITY % cellhalign
+  "align      CDATA #IMPLIED
+   char       CDATA #IMPLIED
+   charoff    CDATA #IMPLIED"
+  >
+
+<!ENTITY % cellvalign
+  "valign     CDATA #IMPLIED"
+  >
+
+<!ENTITY % AnyContent
+ "( #PCDATA | 
+  a |
+  abbr |
+  acronym |
+  address |
+  area |
+  b |
+  bdo |
+  big |
+  blockquote |
+  br |
+  caption |
+  center |
+  cite |
+  code |
+  col |
+  colgroup |
+  dd |
+  del |
+  dfn |
+  div |
+  dl |
+  dt |
+  em |
+  en-crypt |
+  en-media |
+  en-todo |
+  font |
+  h1 |
+  h2 |
+  h3 |
+  h4 |
+  h5 |
+  h6 |
+  hr |
+  i |
+  img |
+  ins |
+  kbd |
+  li |
+  map |
+  ol |
+  p |
+  pre |
+  q |
+  s |
+  samp |
+  small |
+  span |
+  strike |
+  strong |
+  sub |
+  sup |
+  table |
+  tbody |
+  td |
+  tfoot |
+  th |
+  thead |
+  tr |
+  tt |
+  u |
+  ul |
+  var )*" 
+  >
+
+<!--=========== Evernote-specific Elements and Attributes ===============-->
+
+<!ELEMENT en-note %AnyContent;>
+<!ATTLIST en-note
+  %attrs;
+  bgcolor     CDATA #IMPLIED
+  text        CDATA #IMPLIED
+  xmlns       CDATA #FIXED 'http://xml.evernote.com/pub/enml2.dtd'
+  >
+
+<!ELEMENT en-crypt (#PCDATA)>
+<!ATTLIST en-crypt
+  hint        CDATA #IMPLIED
+  cipher      CDATA "RC2"
+  length      CDATA "64"
+  >
+
+<!ELEMENT en-todo EMPTY>
+<!ATTLIST en-todo
+  checked     (true|false) "false"
+  >
+
+<!ELEMENT en-media EMPTY>
+<!ATTLIST en-media
+  %attrs;
+  type        CDATA #REQUIRED
+  hash        CDATA #REQUIRED
+  height      CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  usemap      CDATA #IMPLIED
+  align       CDATA #IMPLIED
+  border      CDATA #IMPLIED
+  hspace      CDATA #IMPLIED
+  vspace      CDATA #IMPLIED
+  longdesc    CDATA #IMPLIED
+  alt         CDATA #IMPLIED
+  >
+
+<!--=========== Simplified HTML Elements and Attributes ===============-->
+
+<!ELEMENT a %AnyContent;>
+<!ATTLIST a
+  %attrs;
+  %focus;
+  charset     CDATA #IMPLIED
+  type        CDATA #IMPLIED
+  name        CDATA #IMPLIED
+  href        CDATA #IMPLIED
+  hreflang    CDATA #IMPLIED
+  rel         CDATA #IMPLIED
+  rev         CDATA #IMPLIED
+  shape       CDATA #IMPLIED
+  coords      CDATA #IMPLIED
+  target      CDATA #IMPLIED
+  >
+
+<!ELEMENT abbr %AnyContent;>
+<!ATTLIST abbr
+  %attrs;
+  >
+
+<!ELEMENT acronym %AnyContent;>
+<!ATTLIST acronym
+  %attrs;
+  >
+
+<!ELEMENT address %AnyContent;>
+<!ATTLIST address
+  %attrs; 
+  >
+
+<!ELEMENT area %AnyContent;>
+<!ATTLIST area
+  %attrs;
+  %focus;
+  shape       CDATA #IMPLIED
+  coords      CDATA #IMPLIED
+  href        CDATA #IMPLIED
+  nohref      CDATA #IMPLIED
+  alt         CDATA #IMPLIED
+  target      CDATA #IMPLIED
+  >
+
+<!ELEMENT b %AnyContent;>
+<!ATTLIST b 
+  %attrs;
+  >
+
+<!ELEMENT bdo %AnyContent;>
+<!ATTLIST bdo
+  %coreattrs;
+  lang        CDATA #IMPLIED
+  xml:lang    CDATA #IMPLIED
+  dir         CDATA #IMPLIED
+  >
+
+<!ELEMENT big %AnyContent;>
+<!ATTLIST big 
+  %attrs;
+  >
+
+<!ELEMENT blockquote %AnyContent;>
+<!ATTLIST blockquote
+  %attrs;
+  cite        CDATA #IMPLIED
+  >
+
+<!ELEMENT br %AnyContent;>
+<!ATTLIST br
+  %coreattrs;
+  clear       CDATA #IMPLIED
+  >
+
+<!ELEMENT caption %AnyContent;>
+<!ATTLIST caption
+  %attrs;
+  align       CDATA #IMPLIED
+  >
+
+<!ELEMENT center %AnyContent;>
+<!ATTLIST center 
+  %attrs;
+  >
+
+<!ELEMENT cite %AnyContent;>
+<!ATTLIST cite 
+  %attrs; 
+  >
+
+<!ELEMENT code %AnyContent;>
+<!ATTLIST code 
+  %attrs;
+  >
+
+<!ELEMENT col %AnyContent;>
+<!ATTLIST col
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  span        CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  >
+
+<!ELEMENT colgroup %AnyContent;>
+<!ATTLIST colgroup
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  span        CDATA  #IMPLIED
+  width       CDATA  #IMPLIED
+  >
+
+<!ELEMENT dd %AnyContent;>
+<!ATTLIST dd 
+  %attrs;
+  >
+
+<!ELEMENT del %AnyContent;>
+<!ATTLIST del
+  %attrs;
+  cite        CDATA #IMPLIED
+  datetime    CDATA #IMPLIED
+  >
+
+<!ELEMENT dfn %AnyContent;>
+<!ATTLIST dfn 
+  %attrs;
+  >
+
+<!ELEMENT div %AnyContent;>
+<!ATTLIST div
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT dl %AnyContent;>
+<!ATTLIST dl
+  %attrs;
+  compact     CDATA #IMPLIED
+  >
+
+<!ELEMENT dt %AnyContent;>
+<!ATTLIST dt 
+  %attrs; 
+  >
+
+<!ELEMENT em %AnyContent;>
+<!ATTLIST em 
+  %attrs;
+  >
+
+<!ELEMENT font %AnyContent;>
+<!ATTLIST font
+  %coreattrs;
+  %i18n;
+  size        CDATA #IMPLIED
+  color       CDATA #IMPLIED
+  face        CDATA #IMPLIED
+  >
+
+<!ELEMENT h1 %AnyContent;>
+<!ATTLIST h1
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT h2 %AnyContent;>
+<!ATTLIST h2
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT h3 %AnyContent;>
+<!ATTLIST h3
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT h4 %AnyContent;>
+<!ATTLIST h4
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT h5 %AnyContent;>
+<!ATTLIST h5
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT h6 %AnyContent;>
+<!ATTLIST h6
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT hr %AnyContent;>
+<!ATTLIST hr
+  %attrs;
+  align       CDATA #IMPLIED
+  noshade     CDATA #IMPLIED
+  size        CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  >
+
+<!ELEMENT i %AnyContent;>
+<!ATTLIST i 
+  %attrs;
+  >
+
+<!ELEMENT img %AnyContent;>
+<!ATTLIST img
+  %attrs;
+  src         CDATA #IMPLIED
+  alt         CDATA #IMPLIED
+  name        CDATA #IMPLIED
+  longdesc    CDATA #IMPLIED
+  height      CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  usemap      CDATA #IMPLIED
+  ismap       CDATA #IMPLIED
+  align       CDATA #IMPLIED
+  border      CDATA #IMPLIED
+  hspace      CDATA #IMPLIED
+  vspace      CDATA #IMPLIED
+  >
+
+<!ELEMENT ins %AnyContent;>
+<!ATTLIST ins
+  %attrs;
+  cite        CDATA #IMPLIED
+  datetime    CDATA #IMPLIED
+  >
+
+<!ELEMENT kbd %AnyContent;>
+<!ATTLIST kbd 
+  %attrs;
+  >
+
+<!ELEMENT li %AnyContent;>
+<!ATTLIST li
+  %attrs;
+  type        CDATA #IMPLIED
+  value       CDATA #IMPLIED
+  >
+
+<!ELEMENT map %AnyContent;>
+<!ATTLIST map
+  %i18n;
+  title       CDATA #IMPLIED
+  name        CDATA #IMPLIED
+  >
+
+<!ELEMENT ol %AnyContent;>
+<!ATTLIST ol
+  %attrs;
+  type        CDATA #IMPLIED
+  compact     CDATA #IMPLIED
+  start       CDATA #IMPLIED
+  >
+
+<!ELEMENT p %AnyContent;>
+<!ATTLIST p
+  %attrs;
+  %TextAlign;
+  >
+
+<!ELEMENT pre %AnyContent;>
+<!ATTLIST pre
+  %attrs;
+  width       CDATA #IMPLIED
+  xml:space   (preserve)    #FIXED 'preserve'
+  >
+
+<!ELEMENT q %AnyContent;>
+<!ATTLIST q
+  %attrs;
+  cite        CDATA #IMPLIED
+  >
+
+<!ELEMENT s %AnyContent;>
+<!ATTLIST s 
+  %attrs;
+  >
+
+<!ELEMENT samp %AnyContent;>
+<!ATTLIST samp
+  %attrs;
+  >
+
+<!ELEMENT small %AnyContent;>
+<!ATTLIST small
+  %attrs;
+  >
+
+<!ELEMENT span %AnyContent;>
+<!ATTLIST span
+  %attrs;
+  >
+
+<!ELEMENT strike %AnyContent;>
+<!ATTLIST strike
+  %attrs;
+  >
+
+<!ELEMENT strong %AnyContent;>
+<!ATTLIST strong
+  %attrs;
+  >
+
+<!ELEMENT sub %AnyContent;>
+<!ATTLIST sub
+  %attrs;
+  >
+
+<!ELEMENT sup %AnyContent;>
+<!ATTLIST sup
+  %attrs;
+  >
+
+<!ELEMENT table %AnyContent;>
+<!ATTLIST table
+  %attrs;
+  summary     CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  border      CDATA #IMPLIED
+  cellspacing CDATA #IMPLIED
+  cellpadding CDATA #IMPLIED
+  align       CDATA #IMPLIED
+  bgcolor     CDATA #IMPLIED
+  >
+
+<!ELEMENT tbody %AnyContent;>
+<!ATTLIST tbody
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  >
+
+<!ELEMENT td %AnyContent;>
+<!ATTLIST td
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  abbr        CDATA #IMPLIED
+  rowspan     CDATA #IMPLIED
+  colspan     CDATA #IMPLIED
+  nowrap      CDATA #IMPLIED
+  bgcolor     CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  height      CDATA #IMPLIED
+  >
+
+<!ELEMENT tfoot %AnyContent;>
+<!ATTLIST tfoot
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  >
+
+<!ELEMENT th %AnyContent;>
+<!ATTLIST th
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  abbr        CDATA #IMPLIED
+  rowspan     CDATA #IMPLIED
+  colspan     CDATA #IMPLIED
+  nowrap      CDATA #IMPLIED
+  bgcolor     CDATA #IMPLIED
+  width       CDATA #IMPLIED
+  height      CDATA #IMPLIED
+  >
+
+<!ELEMENT thead %AnyContent;>
+<!ATTLIST thead
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  >
+
+<!ELEMENT tr %AnyContent;>
+<!ATTLIST tr
+  %attrs;
+  %cellhalign;
+  %cellvalign;
+  bgcolor     CDATA #IMPLIED
+  >
+
+<!ELEMENT tt %AnyContent;>
+<!ATTLIST tt
+  %attrs;
+  >
+
+<!ELEMENT u %AnyContent;>
+<!ATTLIST u
+  %attrs;
+  >
+
+<!ELEMENT ul %AnyContent;>
+<!ATTLIST ul
+  %attrs;
+  type        CDATA #IMPLIED
+  compact     CDATA #IMPLIED
+  >
+
+<!ELEMENT var %AnyContent;>
+<!ATTLIST var
+  %attrs;
+  >
