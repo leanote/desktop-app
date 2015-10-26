@@ -265,7 +265,7 @@ define(function() {
 
 			var allMatchs = allImages.concat(allAttachs);
 
-			console.log(allMatchs);
+			// console.log(allMatchs);
 
 			if (allMatchs.length == 0) {
 				callback(content, '');
@@ -276,6 +276,7 @@ define(function() {
 			var fileIdFixed = {};
 
 			var fileInfos = {}; // fileId => 
+			var fileRendered = {};
 
 			function replaceContent () {
 				for (var i = 0; i < allMatchs.length; ++i) {
@@ -298,7 +299,7 @@ define(function() {
 						}
 					}
 					else {
-						media += ' height="43" style="cursor:pointer;"';
+						media += ' height="43"'; // style="cursor:pointer;"';
 					}
 
 					media += ' type="' + fileInfo.type + '"';
@@ -307,7 +308,11 @@ define(function() {
 					media += ' />';
 					content = content.replace(eachMatch.all, media);
 
-					resources += me.renderResource(fileInfo);
+					if (!fileRendered[fileInfo.fileId]) {
+						resources += me.renderResource(fileInfo);
+						fileRendered[fileInfo.fileId] = true;
+					}
+
 				}
 			}
 
