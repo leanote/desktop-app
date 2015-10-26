@@ -280,5 +280,8 @@
     "User exists": "用戶已存在",
     "Local": "本地",
 
-    "Synchronizing": "正在同步"
+    "Synchronizing": "正在同步",
+
+    "Hyperlink":"超鏈接","Please provide the link URL and an optional title":"請填寫鏈接和壹個可選的標題","optional title":"可選標題","Cancel":"取消","Strong":"粗體","strong text":"粗體","Emphasis":"斜體","emphasized text":"斜體","Blockquote":"引用","Code Sample":"代碼","enter code here":"代碼","Image":"圖片","Heading":"標題","Numbered List":"有序列表","Bulleted List":"無序列表","List item":"項目","Horizontal Rule":"水平線","Undo":"撤銷","Redo":"重做","enter image description here":"圖片標題","enter link description here":"鏈接標題"
+
 }
