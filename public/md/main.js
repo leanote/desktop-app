@@ -36637,6 +36637,7 @@ define('editor',[
 		});
 
 		var clearNewline = false;
+        var everPaste;
 		$contentElt
 			.on('keydown', function(evt) {
 				if(
@@ -36680,6 +36681,15 @@ define('editor',[
 			})
 			.on('mouseup', _.bind(selectionMgr.saveSelectionState, selectionMgr, true, false))
 			.on('paste', function(evt) {
+
+                // 为了解决linux下重复粘贴的问题
+                var now = (new Date()).getTime();
+                if (everPaste && now - everPaste < 100) {
+                    evt.preventDefault();
+                    return;
+                }
+                everPaste = now;
+
 				undoMgr.currentMode = 'paste';
 				evt.preventDefault();
 				var data, clipboardData = (evt.originalEvent || evt).clipboardData;
