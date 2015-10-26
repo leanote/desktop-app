@@ -14,12 +14,13 @@ define(function() {
 
 	var evernoteTpl = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE en-export SYSTEM "http://xml.evernote.com/pub/evernote-export3.dtd">
-<en-export export-date="{exportTime}" application="leanote.desktop.app.{platform}" version="{appVersion}">
+<en-export export-date="{exportedTime}" application="leanote.desktop.app.{platform}" version="{appVersion}">
 <note><title>{title}</title><content><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">
 <en-note>{content}</en-note>
 ]]></content>
     <created>{createdTime}</created>
     <updated>{updatedTime}</updated>
+    {tags}
     <note-attributes>
         <latitude></latitude>
         <longitude></longitude>
@@ -122,8 +123,8 @@ define(function() {
 
 		render: function(note, callback) {
 			var me = this;
-			var keys = ['title', 'content', 'createdTime', 'updatedTime',
-				'isMarkdown', 'exportTime', 'appVersion', 'authorEmail', 'platform', 'resources'];
+			var keys = ['title', 'content', 'createdTime', 'updatedTime', 'tags',
+				'isMarkdown', 'exportedTime', 'appVersion', 'authorEmail', 'platform', 'resources'];
 			var tpl = evernoteTpl;
 			var appVersion = Api.getCurVersion() || {version: 'unknown'};
 			var info = {
@@ -131,12 +132,13 @@ define(function() {
 				content: note.Content,
 				createdTime: me.getEvernoteTime(note.createdTime),
 				updatedTime: me.getEvernoteTime(note.updatedTime),
-				exportTime: me.getEvernoteTime(),
+				exportedTime: me.getEvernoteTime(),
 				appVersion: '1.0',
 				authorEmail: Api.userService.email || Api.userService.username,
 				platform: process.platform,
 				appVersion: appVersion.version,
-				isMarkdown: note.isMarkdown ? 'true' : 'false'
+				isMarkdown: note.isMarkdown ? 'true' : 'false',
+				tags: me.renderTags(note.Tags)
 			};
 
 			me.fixResources(note.Content, function (content, resources) {
@@ -154,6 +156,17 @@ define(function() {
 					callback(me.renderTpl(tpl, info, keys));
 				});
 			});
+		},
+
+		renderTags: function (tags) {
+			if (!tags || tags.length === 0){ 
+				return ''
+			}
+			var str = '';
+			for (var i = 0; i < tags.length; ++i) {
+				str += '<tag>' + tags[i] + '</tag>';
+			}
+			return str;
 		},
 
 		// 得到resource
