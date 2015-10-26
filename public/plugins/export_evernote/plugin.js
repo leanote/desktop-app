@@ -1,8 +1,12 @@
 /**
  * 导出Evernote插件
  * @author  life life@leanote.com
- * 选择目录, 将图片保存到文件夹中, 有个html文件(以笔记名命名)
- * 注意, fs.existsSync总返回false, readFileSync可用
+ *
+ * 注意/遗留问题:
+ *
+ * 1. 导出的文件有可能不能导入到evernote, 即使可以导入, 也有可能不能同步
+ *    原因: enml.dtd
+ * 2. 导出markdown问题, 加一个<pre>markdown content</pre>. 导出的markdown没有图片
  */
 define(function() {
 	var async = require('async');
@@ -102,6 +106,8 @@ define(function() {
 			while(filename.indexOf('--') != -1) {
 				filename = this.replaceAll(filename, '--', '-');
 			}
+			// 最后一个-
+			filename = filename.replace(/\-$/, '');
 			return filename;
 		},
 
@@ -133,11 +139,10 @@ define(function() {
 				createdTime: me.getEvernoteTime(note.createdTime),
 				updatedTime: me.getEvernoteTime(note.updatedTime),
 				exportedTime: me.getEvernoteTime(),
-				appVersion: '1.0',
 				authorEmail: Api.userService.email || Api.userService.username,
 				platform: process.platform,
 				appVersion: appVersion.version,
-				isMarkdown: note.isMarkdown ? 'true' : 'false',
+				isMarkdown: note.IsMarkdown ? 'true' : 'false',
 				tags: me.renderTags(note.Tags)
 			};
 
@@ -153,18 +158,25 @@ define(function() {
 					else {
 						info.content = ENML;
 					}
+
+					if (note.IsMarkdown) {
+						info.content = '<pre>' + info.content + '</pre>';
+					}
+
 					callback(me.renderTpl(tpl, info, keys));
 				});
 			});
 		},
 
 		renderTags: function (tags) {
-			if (!tags || tags.length === 0){ 
+			if (!tags || tags.length === 0) { 
 				return ''
 			}
 			var str = '';
 			for (var i = 0; i < tags.length; ++i) {
-				str += '<tag>' + tags[i] + '</tag>';
+				if (tags[i]) {
+					str += '<tag>' + tags[i] + '</tag>';
+				}
 			}
 			return str;
 		},
@@ -180,9 +192,8 @@ define(function() {
 			return me.renderTpl(tpl, fileInfo, keys);
 		},
 
-		fixResources: function (content, callback) {
-			var me = this;
-			var reg = new RegExp('<img.*?src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>', 'g');
+		findAllImages: function (content) {
+			var reg = new RegExp('<img[^>]*?src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>', 'g');
 			var matches = reg.exec(content);
 
 			// width="330" height="330", style="width:200px"
@@ -218,6 +229,49 @@ define(function() {
 			    matches = reg.exec(content);
 			}
 
+			return allMatchs;
+		},
+
+		findAllAttachs: function (content) {
+			var reg = new RegExp('<a[^>]*?href=["\']?' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>([^<]*)</a>', 'g');
+			var matches = reg.exec(content);
+
+			// 先找到所有的
+			var allMatchs = [];
+			while(matches) {
+			    var all = matches[0];
+
+			    var fileId = matches[1];
+			    var title = matches[2];
+
+			    allMatchs.push({
+			    	fileId: fileId,
+			    	title: title,
+			    	isAttach: true,
+			    	all: all
+			    });
+			    // 下一个
+			    matches = reg.exec(content);
+			}
+			return allMatchs;
+		},
+		
+
+		fixResources: function (content, callback) {
+			var me = this;
+			
+			var allImages = me.findAllImages(content) || [];
+			var allAttachs = me.findAllAttachs(content) || [];
+
+			var allMatchs = allImages.concat(allAttachs);
+
+			console.log(allMatchs);
+
+			if (allMatchs.length == 0) {
+				callback(content, '');
+				return;
+			}
+
 			var resources = '';
 			var fileIdFixed = {};
 
@@ -232,17 +286,22 @@ define(function() {
 					}
 
 					var media = '<en-media';
-					if (eachMatch.width) {
-						media += ' width="' + eachMatch.width + '"';
-					}
-					if (eachMatch.height) {
-						media += ' height="' + eachMatch.height + '"';
+					if (!eachMatch.isAttach) {
+						if (eachMatch.width) {
+							media += ' width="' + eachMatch.width + '"';
+						}
+						if (eachMatch.height) {
+							media += ' height="' + eachMatch.height + '"';
+						}
+						else {
+							media += ' style="height:auto"';
+						}
 					}
 					else {
-						media += ' style="height:auto"';
+						media += ' height="43" style="cursor:pointer;"';
 					}
 
-					media += 'type="' + fileInfo.type + '"';
+					media += ' type="' + fileInfo.type + '"';
 					 
 					media += ' hash="' + fileInfo.md5 + '"';
 					media += ' />';
@@ -261,14 +320,14 @@ define(function() {
 			    	return;
 			    }
 
-			    Api.fileService.getImageInfo(fileId, function(err, doc) {
+			    var server = eachMatch.isAttach ? Api.fileService.getAttachInfo : Api.fileService.getImageInfo;
+			    server.call(Api.fileService, fileId, function(err, doc) {
 					fileIdFixed[fileId] = true;
 					if(doc) {
-						var imagePath = doc.Path;
-						var base64AndMd5 = Api.fileService.getFileBase64AndMd5(imagePath);
+						var base64AndMd5 = Api.fileService.getFileBase64AndMd5(doc.Path);
 						if (base64AndMd5) {
 							base64AndMd5.createdTime = doc.CreatedTime;
-							base64AndMd5.name = doc.Name;
+							base64AndMd5.name = eachMatch.title || doc.Name;
 							base64AndMd5.type = Api.fileService.getFileType(doc.Type);
 							fileInfos[fileId] = base64AndMd5;
 						}
@@ -499,5 +558,4 @@ define(function() {
 	};
 
 	return exportEvernote;
-
 });
