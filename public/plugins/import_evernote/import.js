@@ -222,14 +222,7 @@ var Import = {
                 jsonNote.IsNew = true;
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
-
-                // jsonNote.Content = "";
-                // jsonNote.Attachs = null;
-
-                // console.log(jsonNote);
-
-                // eachCallback && eachCallback(false);
-                // return cb();
+                jsonNote.IsMarkdown = false;
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {
