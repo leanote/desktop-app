@@ -203,6 +203,7 @@
 	"Delete": "删除",
 	"Remove": "移除",
 	"Export": "导出",
+    "Export notes": "导出笔记",
 	"Histories": "历史记录",
     "Created": "创建",
     "Updated": "更新",
@@ -282,6 +283,8 @@
 
     "Synchronizing": "正在同步",
 
-    "Hyperlink":"超链接","Please provide the link URL and an optional title":"请填写链接和一个可选的标题","optional title":"可选标题","Cancel":"取消","Strong":"粗体","strong text":"粗体","Emphasis":"斜体","emphasized text":"斜体","Blockquote":"引用","Code Sample":"代码","enter code here":"代码","Image":"图片","Heading":"标题","Numbered List":"有序列表","Bulleted List":"无序列表","List item":"项目","Horizontal Rule":"水平线","Undo":"撤销","Redo":"重做","enter image description here":"图片标题","enter link description here":"链接标题"
+    "Hyperlink":"超链接","Please provide the link URL and an optional title":"请填写链接和一个可选的标题","optional title":"可选标题","Cancel":"取消","Strong":"粗体","strong text":"粗体","Emphasis":"斜体","emphasized text":"斜体","Blockquote":"引用","Code Sample":"代码","enter code here":"代码","Image":"图片","Heading":"标题","Numbered List":"有序列表","Bulleted List":"无序列表","List item":"项目","Horizontal Rule":"水平线","Undo":"撤销","Redo":"重做","enter image description here":"图片标题","enter link description here":"链接标题",
 
+    "Please select a note firstly.": "请先选择一个笔记",
+    "<span></span> notes selected": "当前选中了 <span></span> 篇笔记"
 }

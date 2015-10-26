@@ -203,6 +203,7 @@
     "Delete": "刪除",
     "Remove": "移除",
     "Export": "導出",
+    "Export notes": "導出筆記",
     "Histories": "歷史記錄",
     "Created": "創建",
     "Updated": "更新",
@@ -282,6 +283,8 @@
 
     "Synchronizing": "正在同步",
 
-    "Hyperlink":"超鏈接","Please provide the link URL and an optional title":"請填寫鏈接和壹個可選的標題","optional title":"可選標題","Cancel":"取消","Strong":"粗體","strong text":"粗體","Emphasis":"斜體","emphasized text":"斜體","Blockquote":"引用","Code Sample":"代碼","enter code here":"代碼","Image":"圖片","Heading":"標題","Numbered List":"有序列表","Bulleted List":"無序列表","List item":"項目","Horizontal Rule":"水平線","Undo":"撤銷","Redo":"重做","enter image description here":"圖片標題","enter link description here":"鏈接標題"
+    "Hyperlink":"超鏈接","Please provide the link URL and an optional title":"請填寫鏈接和壹個可選的標題","optional title":"可選標題","Cancel":"取消","Strong":"粗體","strong text":"粗體","Emphasis":"斜體","emphasized text":"斜體","Blockquote":"引用","Code Sample":"代碼","enter code here":"代碼","Image":"圖片","Heading":"標題","Numbered List":"有序列表","Bulleted List":"無序列表","List item":"項目","Horizontal Rule":"水平線","Undo":"撤銷","Redo":"重做","enter image description here":"圖片標題","enter link description here":"鏈接標題",
 
+    "Please select a note firstly.": "請先選擇壹個筆記",
+    "<span></span> notes selected": "當前選中了 <span></span> 篇筆記"
 }

@@ -272,13 +272,13 @@ function log(o) {
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
 
-          <div id="noteMaskForLoading" class="note-mask">
+          <div id="noteMaskForLoading" class="note-mask"> <!-- z-index: 11 -->
             <img src="public/images/loading-24.gif"/>
             <br />
             <span class="lang">loading...</span>
           </div>
 
-          <div id="editorMask">
+          <div id="editorMask">  <!-- z-index: 10 -->
             <span class="lang">noNoteNewNoteTips</span>
             <br />
             <br />
@@ -288,6 +288,15 @@ function log(o) {
             </div>
             <div id="editorMaskBtnsEmpty" class="lang">canntNewNoteTips</div>
           </div>
+
+          <div id="batchMask" class="note-mask"> <!-- z-index: 99 --> 
+            <div class="batch-ctn" id="batchCtn"></div>
+            <div class="batch-info">
+              <div class="batch-status"></div>
+              <p><i class="fa fa-cog"></i></p>
+            </div>
+          </div>
+
           <div id="noteTop">
             <!-- 左侧放tag, 右侧放按钮, 比如save, info, move, delete -->
             <div id="tool" class="clearfix">
@@ -565,7 +574,7 @@ function log(o) {
 
       <!-- loading -->
       <div class="modal fade bs-modal-sm" id="loadingDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-sm modal-large">
           <div class="modal-content">
           
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -578,6 +587,7 @@ function log(o) {
               <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
                 <span class="sr-only">60% Complete</span>
               </div>
+              <div class="progress-rate"></div>
             </div>
 
           </div>

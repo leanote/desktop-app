@@ -1569,12 +1569,26 @@ var trimTitle = function(title) {
 var Loading = {
 	$loadingDialog: $('#loadingDialog'),
 	$progressBar: $('#loadingDialog .progress-bar'),
+	$progressRate: $('#loadingDialog .progress-rate'),
+	$msg: $('#loadingDialogBodyMsg'),
 	// option {hasProgress: true, onClose: function}
 	inited: false,
+	setMsg: function (msg) {
+		this.$msg.html(msg);
+	},
+	setProgressRate: function (msg) {
+		this.$progressRate.html(msg);
+	},
 	show: function(msg, option) {
 		option = option || {};
 		msg || (msg = getMsg("loading..."));
-		$('#loadingDialogBodyMsg').html(msg);
+		this.$msg.html(msg);
+		if (option.isLarge) {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
+		else {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
 		this.$loadingDialog.modal({backdrop: 'static', keyboard: true});
 		if (option.hasProgress) {
 			this.$loadingDialog.addClass('has-progress');

@@ -1512,6 +1512,11 @@ var Pren = {
 	},
 	togglePren: function(isToggleView) {
 		var me = this;
+		alert(getMsg('Please select a note firstly.'));
+		// 批量操作时, 不能prenstation
+		if (Note.inBatch) {
+			return;
+		}
 		if(!isToggleView) {
 			try {
 				gui.win.setKiosk(!me._isPren);
