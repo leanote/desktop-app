@@ -150,52 +150,95 @@ define(function() {
 			});
 		},
 
-		findAllImages: function (content) {
-			var reg = new RegExp('<img([^>]*?)src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
-			var matches = reg.exec(content);
-			// 先找到所有的
+		findAllImages: function (note) {
+			var content = note.Content;
 			var allMatchs = [];
-			while(matches) {
-			    var all = matches[0];
-			    var pre = matches[1]; // img与src之间
-			    var fileId = matches[2];
-			    var back = matches[3]; // src与>之间
-			    allMatchs.push({
-			    	fileId: fileId,
-			    	pre: pre,
-			    	back: back,
-			    	all: all
-			    });
-			    // 下一个
-			    matches = reg.exec(content);
+
+			// markdown下
+			// [](http://localhost://fileId=32);
+			if (note.IsMarkdown) {
+				var reg = new RegExp('!\\[([^\\]]*?)\\]\\(' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+				var matches = reg.exec(content);
+				while(matches) {
+				    var all = matches[0];
+				    var title = matches[1]; // img与src之间
+				    var fileId = matches[2];
+				    allMatchs.push({
+				    	fileId: fileId,
+				    	title: title,
+				    	all: all
+				    });
+				    // 下一个
+				    matches = reg.exec(content);
+				}
+			}
+			else {
+				var reg = new RegExp('<img([^>]*?)src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
+				var matches = reg.exec(content);
+				while(matches) {
+				    var all = matches[0];
+				    var pre = matches[1]; // img与src之间
+				    var fileId = matches[2];
+				    var back = matches[3]; // src与>之间
+				    allMatchs.push({
+				    	fileId: fileId,
+				    	pre: pre,
+				    	back: back,
+				    	all: all
+				    });
+				    // 下一个
+				    matches = reg.exec(content);
+				}
 			}
 
 			return allMatchs;
 		},
 
-		findAllAttachs: function (content) {
-			var reg = new RegExp('<a([^>]*?)href=["\']?' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
-			var matches = reg.exec(content);
+		findAllAttachs: function (note) {
+			var content = note.Content;
 
-			// 先找到所有的
 			var allMatchs = [];
-			while(matches) {
-			    var all = matches[0];
-			    var pre = matches[1]; // a 与href之间
-			    var fileId = matches[2];
-			    var back = matches[3] // href与>之间
-			    var title = matches[4];
+			// markdown下
+			// ![](http://localhost://fileId=32);
+			if (note.IsMarkdown) {
+				var reg = new RegExp('\\[([^\\]]*?)\\]\\(' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+				var matches = reg.exec(content);
+				while(matches) {
+				    var all = matches[0];
+				    var title = matches[1]; // img与src之间
+				    var fileId = matches[2];
+				    allMatchs.push({
+				    	fileId: fileId,
+				    	title: title,
+				    	all: all,
+				    	isAttach: true
+				    });
+				    // 下一个
+				    matches = reg.exec(content);
+				}
+			}
+			else {
+				var reg = new RegExp('<a([^>]*?)href=["\']?' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
+				var matches = reg.exec(content);
 
-			    allMatchs.push({
-			    	fileId: fileId,
-			    	title: title,
-			    	pre: pre,
-			    	back: back,
-			    	isAttach: true,
-			    	all: all
-			    });
-			    // 下一个
-			    matches = reg.exec(content);
+				while(matches) {
+				    var all = matches[0];
+				    var pre = matches[1]; // a 与href之间
+				    var fileId = matches[2];
+				    var back = matches[3] // href与>之间
+				    var title = matches[4];
+
+				    allMatchs.push({
+				    	fileId: fileId,
+				    	title: title,
+				    	pre: pre,
+				    	back: back,
+				    	isAttach: true,
+				    	all: all
+				    });
+				    // 下一个
+				    matches = reg.exec(content);
+				}
 			}
 			return allMatchs;
 		},
@@ -205,8 +248,8 @@ define(function() {
 
 			var content = note.Content;
 			
-			var allImages = me.findAllImages(content) || [];
-			var allAttachs = me.findAllAttachs(content) || [];
+			var allImages = me.findAllImages(note) || [];
+			var allAttachs = me.findAllAttachs(note) || [];
 
 			var allMatchs = allImages.concat(allAttachs);
 
@@ -227,13 +270,26 @@ define(function() {
 						link = '';
 					}
 					else {
-						if (!eachMatch.isAttach) {
-							var href = 'leanote://api/file/getImage?fileId=' + eachMatch.fileId;
-							link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
+						if (note.IsMarkdown) {
+							var href;
+							if (!eachMatch.isAttach) {
+								href = 'leanote://api/file/getImage?fileId=' + eachMatch.fileId;
+								link = '![' + eachMatch.title + '](' + href + ')';
+							}
+							else {
+								href = 'leanote://api/file/getAttach?fileId=' + eachMatch.fileId;
+								link = '[' + eachMatch.title + '](' + href + ')';
+							}
 						}
 						else {
-							var href = 'leanote://api/file/getAttach?fileId=' + eachMatch.fileId;
-							link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
+							if (!eachMatch.isAttach) {
+								var href = 'leanote://api/file/getImage?fileId=' + eachMatch.fileId;
+								link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
+							}
+							else {
+								var href = 'leanote://api/file/getAttach?fileId=' + eachMatch.fileId;
+								link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
+							}
 						}
 					}
 

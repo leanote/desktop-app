@@ -87,45 +87,88 @@ var Import = {
 
     var content = note.content;
     var allMatchs = [];
-    // 图片处理后, 可以替换内容中的链接了
-    // leanote://api/file/getImage?fileId=xxxx,
-    var reg = new RegExp('<img([^>]*?)src=["\']?leanote://api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
-    var matches = reg.exec(content);
-    while(matches) {
-        var all = matches[0];
-        var pre = matches[1]; // img与src之间
-        var fileId = matches[2];
-        var back = matches[3]; // src与>之间
-        allMatchs.push({
-          fileId: fileId,
-          pre: pre,
-          back: back,
-          all: all
-        });
-        // 下一个
-        matches = reg.exec(content);
-    }
-    // 处理附件
-    var reg = new RegExp('<a([^>]*?)href=["\']?leanote://api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
-    var matches = reg.exec(content);
-    // 先找到所有的
-    while(matches) {
-        var all = matches[0];
-        var pre = matches[1]; // a 与href之间
-        var fileId = matches[2];
-        var back = matches[3] // href与>之间
-        var title = matches[4];
 
-        allMatchs.push({
-          fileId: fileId,
-          title: title,
-          pre: pre,
-          back: back,
-          isAttach: true,
-          all: all
-        });
-        // 下一个
-        matches = reg.exec(content);
+    if (note.isMarkdown) {
+
+      // image
+      var reg = new RegExp('!\\[([^\\]]*?)\\]\\(leanote://api/file/getImage\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+      var matches = reg.exec(content);
+      // 先找到所有的
+      while(matches) {
+          var all = matches[0];
+          var title = matches[1]; // img与src之间
+          var fileId = matches[2];
+          allMatchs.push({
+            fileId: fileId,
+            title: title,
+            all: all,
+            isAttach: false
+          });
+          // 下一个
+          matches = reg.exec(content);
+      }
+
+      // attach
+      var reg = new RegExp('\\[([^\\]]*?)\\]\\(leanote://api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+      var matches = reg.exec(content);
+      // 先找到所有的
+      while(matches) {
+          var all = matches[0];
+          var title = matches[1]; // img与src之间
+          var fileId = matches[2];
+          allMatchs.push({
+            fileId: fileId,
+            title: title,
+            all: all,
+            isAttach: true
+          });
+          // 下一个
+          matches = reg.exec(content);
+      }
+    }
+    else {
+
+      // 图片处理后, 可以替换内容中的链接了
+      // leanote://api/file/getImage?fileId=xxxx,
+      var reg = new RegExp('<img([^>]*?)src=["\']?leanote://api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
+      var matches = reg.exec(content);
+      while(matches) {
+          var all = matches[0];
+          var pre = matches[1]; // img与src之间
+          var fileId = matches[2];
+          var back = matches[3]; // src与>之间
+          allMatchs.push({
+            fileId: fileId,
+            pre: pre,
+            back: back,
+            all: all
+          });
+          // 下一个
+          matches = reg.exec(content);
+      }
+
+      // 处理附件
+      var reg = new RegExp('<a([^>]*?)href=["\']?leanote://api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
+      var matches = reg.exec(content);
+      // 先找到所有的
+      while(matches) {
+          var all = matches[0];
+          var pre = matches[1]; // a 与href之间
+          var fileId = matches[2];
+          var back = matches[3] // href与>之间
+          var title = matches[4];
+
+          allMatchs.push({
+            fileId: fileId,
+            title: title,
+            pre: pre,
+            back: back,
+            isAttach: true,
+            all: all
+          });
+          // 下一个
+          matches = reg.exec(content);
+      }
     }
 
     // 替换内容
@@ -138,15 +181,29 @@ var Import = {
         link = '';
       }
       else {
-        if (!eachMatch.isAttach) {
-          // 用新的FileId
-          var href = Api.evtService.localUrl + '/api/file/getImage?fileId=' + fileInfo.FileId;
-          link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
+        if (note.isMarkdown) {
+          if (!eachMatch.isAttach) {
+            // 用新的FileId
+            var href = Api.evtService.localUrl + '/api/file/getImage?fileId=' + fileInfo.FileId;
+            link = '![' + eachMatch.title + '](' + href + ')';
+          }
+          else {
+            var href = Api.evtService.localUrl + '/api/file/getAttach?fileId=' + fileInfo.FileId;
+            link = '[' + eachMatch.title + '](' + href + ')';
+          }
         }
         else {
-          var href = Api.evtService.localUrl + '/api/file/getAttach?fileId=' + fileInfo.FileId;
-          link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
+          if (!eachMatch.isAttach) {
+            // 用新的FileId
+            var href = Api.evtService.localUrl + '/api/file/getImage?fileId=' + fileInfo.FileId;
+            link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
+          }
+          else {
+            var href = Api.evtService.localUrl + '/api/file/getAttach?fileId=' + fileInfo.FileId;
+            link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
+          }
         }
+        
       }
       content = content.replace(eachMatch.all, link);
     }
