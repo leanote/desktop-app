@@ -1154,14 +1154,18 @@ Notebook.init = function() {
 	    if(importMenus && importMenus.length) {
 		    var importSubmenus = new gui.Menu();
 		    for(var i = 0; i < importMenus.length; ++i) {
-		    	var clickCallback = importMenus[i].click;
-		    	if(clickCallback) {
-			    	importMenus[i].click = function() {
-			    		var notebookId = $(me.target).attr("notebookId");
-	        			var notebook = Notebook.getNotebook(notebookId);
-			    		clickCallback(notebook);
+
+		    	(function(j) {
+		    		var clickCallback = importMenus[j].click;
+			    	if(clickCallback) {
+				    	importMenus[i].click = function() {
+				    		var notebookId = $(me.target).attr("notebookId");
+		        			var notebook = Notebook.getNotebook(notebookId);
+				    		clickCallback(notebook);
+				    	}
 			    	}
-		    	}
+		    	})(i);
+
 		    	importSubmenus.append(new gui.MenuItem(importMenus[i]));
 		    }
 		    this.imports = new gui.MenuItem({

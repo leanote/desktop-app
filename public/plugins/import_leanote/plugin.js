@@ -52,7 +52,7 @@ define(function() {
 	          <div class="modal-content">
 	          <div class="modal-header">
 	              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	              <h4 class="modal-title" class="modalTitle"><span class="lang">Import to</span> <span id="importDialogNotebook"></span></h4>
+	              <h4 class="modal-title" class="modalTitle"><span class="lang">Import to</span> <span id="importDialogNotebookLeanote"></span></h4>
 	          </div>
 	          <div class="modal-body" id="">
 	            <div role="tabpanel">
@@ -183,7 +183,7 @@ define(function() {
 			}
 			me.clear();
 
-			$('#importDialogNotebook').html(notebook.Title);
+			$('#importDialogNotebookLeanote').html(notebook.Title);
 
 			me._curNotebook = notebook;
 			var notebookId = notebook.NotebookId;
