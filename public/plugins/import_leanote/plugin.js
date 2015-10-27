@@ -1,72 +1,72 @@
 /**
- * 导入evernote, 重构
+ * 导入leanote, 重构
  * @author life@leanote.com
  * @date 2015/04/09
  */
 define(function() {
-	var importService; //  = nodeRequire('./public/plugins/import_evernote/import');
+	var importService; //  = nodeRequire('./public/plugins/import_leanote/import');
 
-	var evernote = {
+	var leanote = {
 
 		langs: {
 			'en-us': {
-				'importEvernote': 'Import Evernote',
+				'importLeanote': 'Import Leanote',
 			},
 			'zh-cn': {
-				'importEvernote': '导入Evernote',
-				'Choose Evernote files(.enex)': '选择Evernote文件(.enex)',
+				'importLeanote': '导入Leanote',
+				'Choose Leanote files(.enex)': '选择Leanote文件(.enex)',
 				'Close': "关闭",
 				'Import to': "导入至",
 				"Done! %s notes imported!": "完成, 成功导入 %s 个笔记!",
 				"Import file: %s Success!": "文件 %s 导入成功!",
-				"Import file: %s Failure, is evernote file ?": "文件 %s 导入失败! 是Evernote文件?",
+				"Import file: %s Failure, is leanote file ?": "文件 %s 导入失败! 是Leanote文件?",
 				"Import: %s Success!": "导入笔记: %s 成功!"
 			},
 			'zh-hk': {
-				'importEvernote': '導入Evernote',
-				'Choose Evernote files(.enex)': '選擇Evernote文件(.enex)',
+				'importLeanote': '導入Leanote',
+				'Choose Leanote files(.enex)': '選擇Leanote文件(.enex)',
 				'Close': "關閉",
 				"Import to": "導入至",
 				"Done! %s notes imported!": "完成, 成功導入 %s 個筆記!",
 				"Import file: %s Success!": "文件 %s 導入成功!",
-				"Import file: %s Failure, is evernote file ?": "文件 %s 導入失敗! 是Evernote文件?",
+				"Import file: %s Failure, is leanote file ?": "文件 %s 導入失敗! 是Leanote文件?",
 				"Import: %s Success!": "導入筆記: %s 成功!"
 			}
 		},
 
 		_tpl: `
 		<style>
-		#importEvernoteDialog .tab-pane {
+		#importLeanoteDialog .tab-pane {
 		  text-align: center;
 		  padding: 10px;
 		  padding-top: 20px;
 		}
-		#importEvernoteDialog .alert {
+		#importLeanoteDialog .alert {
 		  margin-top: 10px;
 		  padding: 0;
 		  border: none;
 		}
 		</style>
-	    <div class="modal fade bs-modal-sm" id="importEvernoteDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+	    <div class="modal fade bs-modal-sm" id="importLeanoteDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 	        <div class="modal-dialog modal-sm">
 	          <div class="modal-content">
 	          <div class="modal-header">
 	              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	              <h4 class="modal-title" class="modalTitle"><span class="lang">Import to</span> <span id="importDialogNotebook"></span></h4>
+	              <h4 class="modal-title" class="modalTitle"><span class="lang">Import to</span> <span id="importDialogNotebookLeanote"></span></h4>
 	          </div>
 	          <div class="modal-body" id="">
 	            <div role="tabpanel">
 
 	              <!-- Tab panes -->
 	              <div class="tab-content">
-	                <div role="tabpanel" class="tab-pane active" id="evernoteTab">
+	                <div role="tabpanel" class="tab-pane active" id="leanoteTab">
 	                    <!-- import -->
-	                    <a id="chooseEvernoteFile" class="btn btn-success btn-choose-file">
+	                    <a id="chooseLeanoteFile" class="btn btn-success btn-choose-file">
 	                      <i class="fa fa-upload"></i>
-	                      <span class="lang">Choose Evernote files(.enex)</span>
+	                      <span class="lang">Choose Leanote files(.leanote)</span>
 	                    </a>
 	                    <!-- 消息 -->
-	                    <div id="importEvernoteMsg" class="alert alert-info">
+	                    <div id="importLeanoteMsg" class="alert alert-info">
 	                        <div class="curImportFile"></div>
 	                        <div class="curImportNote"></div>
 	                        <div class="allImport"></div>
@@ -74,7 +74,7 @@ define(function() {
 	                </div>
 	                <div role="tabpanel" class="tab-pane" id="youdaoTab">
 	                	<!-- 文件选择框 -->
-				        <input id="importEvernoteInput" type="file" nwsaveas="" accept=".enex" multiple style="" style="display: none"/>
+				        <input id="importLeanoteInput" type="file" nwsaveas="" accept=".enex" multiple style="" style="display: none"/>
 	                </div>
 	              </div>
 
@@ -92,14 +92,14 @@ define(function() {
 		_inited: false,
 
 		getMsg: function(txt, data) {
-			return Api.getMsg(txt, 'plugin.import_evernote', data)
+			return Api.getMsg(txt, 'plugin.import_leanote', data)
 		},
 
 		init: function() {
 			var me = this;
 			me._inited = true;
 			$('body').append(me._tpl);
-			me._importDialog = $("#importEvernoteDialog");
+			me._importDialog = $("#importLeanoteDialog");
 
 			me._importDialog.find('.lang').each(function() {
 				var txt = $.trim($(this).text());
@@ -107,13 +107,13 @@ define(function() {
 			});
 
 			// 导入, 选择文件
-			$('#chooseEvernoteFile').click(function() {
+			$('#chooseLeanoteFile').click(function() {
 
 				Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 					{
 						properties: ['openFile', 'multiSelections'],
 						filters: [
-							{ name: 'Evernote', extensions: ['enex'] }
+							{ name: 'Leanote', extensions: ['leanote'] }
 						]
 					},
 					function(paths) {
@@ -126,32 +126,33 @@ define(function() {
 						var n = 0;
 
 						me.clear();
+
 						if (!importService) {
-							importService = nodeRequire('./public/plugins/import_evernote/import');
+							importService = nodeRequire('./public/plugins/import_leanote/import');
 						}
 
-						importService.importFromEvernote(notebookId, paths,
+						importService.importFromLeanote(notebookId, paths,
 							// 全局
 							function(ok) {
-								// $('#importEvernoteMsg .curImportFile').html("");
-								// $('#importEvernoteMsg .curImportNote').html("");
+								// $('#importLeanoteMsg .curImportFile').html("");
+								// $('#importLeanoteMsg .curImportNote').html("");
 								setTimeout(function() {
-									$('#importEvernoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
+									$('#importLeanoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
 								}, 500);
 							},
 							// 单个文件
 							function(ok, filename) {
 								if(ok) {
-									$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
+									$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
 								} else {
-									$('#importEvernoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is evernote file ?", filename));
+									$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is leanote file ?", filename));
 								}
 							},
 							// 单个笔记
 							function(note) {
 								if(note) {
 									n++;
-									$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
+									$('#importLeanoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
 
 									// 插入到当前笔记中
 									Note.addSync([note]);
@@ -165,9 +166,9 @@ define(function() {
 		},
 
 		clear: function() {
-			$('#importEvernoteMsg .curImportFile').html("");
-			$('#importEvernoteMsg .curImportNote').html("");
-			$('#importEvernoteMsg .allImport').html('');
+			$('#importLeanoteMsg .curImportFile').html("");
+			$('#importLeanoteMsg .curImportNote').html("");
+			$('#importLeanoteMsg .allImport').html('');
 		},
 
 		open: function(notebook) {
@@ -180,7 +181,7 @@ define(function() {
 			}
 			me.clear();
 
-			$('#importDialogNotebook').html(notebook.Title);
+			$('#importDialogNotebookLeanote').html(notebook.Title);
 
 			me._curNotebook = notebook;
 			var notebookId = notebook.NotebookId;
@@ -193,7 +194,7 @@ define(function() {
 			var gui = Api.gui;
 
 			Api.addImportMenu({
-		        label: Api.getMsg('plugin.import_evernote.importEvernote'),
+		        label: Api.getMsg('plugin.import_leanote.importLeanote'),
 		        click: (function() {
 		        	return function(notebook) {
 		        		me.open(notebook);
@@ -209,5 +210,5 @@ define(function() {
 		}
 	};
 
-	return evernote;
+	return leanote;
 });

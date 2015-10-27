@@ -1,9 +1,11 @@
 var Config = {
     "plugins": [
         "theme",
+        "import_leanote",
         "import_evernote",
         "export_pdf",
         "export_html",
+        "export_leanote",
         "export_evernote",
         "langs"
     ],

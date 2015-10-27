@@ -85,13 +85,38 @@ var Import = {
     });
   },
 
+  // 20150206T031506Z
+  parseEvernoteTime: function (str) {
+    // console.log('parseEvernoteTime');
+    // console.log(str);
+    if (!str || typeof str != 'string' || str.length != '20150206T031506Z'.length) {
+      return new Date();
+    }
+    var year = str.substr(0, 4);
+    var month = str.substr(4, 2);
+    var day = str.substr(6, 2);
+
+    var h = str.substr(9, 2);
+    var m = str.substr(11, 2);
+    var s = str.substr(13, 2);
+
+    var d = new Date(year + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s);
+    // invalid
+    if (isNaN(d.getTime())) {
+      return new Date();
+    }
+    return d;
+  },
+
   parseEachNote: function(note, callback) {
     var me = this;
 
     var jsonNote = {
       Title: note['title'][0],
       Tags: note['tag'] || [],
-      Content: note['content'][0]
+      Content: note['content'][0],
+      CreatedTime: me.parseEvernoteTime(note['created'][0]),
+      UpdatedTime: me.parseEvernoteTime(note['updated'][0]),
     };
 
     // 文件保存之
@@ -157,8 +182,8 @@ var Import = {
         // 把content的替换之
         // console.log('ok, writeBase64 ok');
         try {
-          console.log('parsedRes');
-          console.log(parsedRes);
+          // console.log('parsedRes');
+          // console.log(parsedRes);
           jsonNote.Content = me.parseEvernoteContent(jsonNote.Content, parsedRes);
           jsonNote.Attachs = attachs;
         } catch(e) {
@@ -223,6 +248,9 @@ var Import = {
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
                 jsonNote.IsMarkdown = false;
+
+                // console.log('----------');
+                // console.log(jsonNote);
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {

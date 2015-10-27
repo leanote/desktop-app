@@ -19,9 +19,8 @@ Before submitting HTML content over the EDAM API the client application is expec
 
  */
 define(function() {
-	var async = require('async');
-
-	var enml = nodeRequire('./public/plugins/export_evernote/enml');
+	var async; //  = require('async');
+	var enml; //  = nodeRequire('./public/plugins/export_evernote/enml');
 
 	//==============
 	// tpls
@@ -93,6 +92,12 @@ define(function() {
 		_inited: false,
 		init: function() {
 			var me = this;
+			if (me._inited) {
+				return;
+			}
+			async = require('async');
+			enml= nodeRequire('./public/plugins/export_evernote/enml');
+
 			me._inited = true;
 		},
 
@@ -547,6 +552,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(noteIds) {
+		        		me.init();
 		        		me.exportEvernote(noteIds);
 		        	}
 		        })()
@@ -560,6 +566,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(notebookId) {
+		        		me.init();
 		        		me.exportEvernoteForNotebook(notebookId);
 		        	}
 		        })()
