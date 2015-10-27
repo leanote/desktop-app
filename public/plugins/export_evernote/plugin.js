@@ -7,6 +7,16 @@
  * 1. 导出的文件有可能不能导入到evernote, 即使可以导入, 也有可能不能同步
  *    原因: enml.dtd
  * 2. 导出markdown问题, 加一个<pre>markdown content</pre>. 导出的markdown没有图片
+ *
+ * https://dev.evernote.com/doc/articles/enml.php
+
+Before submitting HTML content over the EDAM API the client application is expected to follow the following steps:
+1. Convert the document into valid XML
+2. Discard all tags that are not accepted by the ENML DTD
+3. Convert tags to the proper ENML equivalent (e.g. BODY becomes EN-NOTE)
+4. Validate against the ENML DTD
+5. Validate href and src values to be valid URLs and protocols
+
  */
 define(function() {
 	var async = require('async');
@@ -149,6 +159,7 @@ define(function() {
 			me.fixResources(note.Content, function (content, resources) {
 				content = $('<div>' + content + '</div>').html();
 				content = content.replace(/<br.*?>/g, '<br />');
+				content = content.replace(/<hr.*?>/g, '<hr />');
 				info.resources = resources;
 
 				enml.ENMLOfHTML(content, function(err, ENML) {
