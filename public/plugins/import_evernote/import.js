@@ -87,6 +87,8 @@ var Import = {
 
   // 20150206T031506Z
   parseEvernoteTime: function (str) {
+    // console.log('parseEvernoteTime');
+    // console.log(str);
     if (!str || typeof str != 'string' || str.length != '20150206T031506Z'.length) {
       return new Date();
     }
@@ -100,7 +102,7 @@ var Import = {
 
     var d = new Date(year + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s);
     // invalid
-    if (!isNaN(d.getTime())) {
+    if (isNaN(d.getTime())) {
       return new Date();
     }
     return d;
@@ -246,6 +248,9 @@ var Import = {
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
                 jsonNote.IsMarkdown = false;
+
+                // console.log('----------');
+                // console.log(jsonNote);
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {
