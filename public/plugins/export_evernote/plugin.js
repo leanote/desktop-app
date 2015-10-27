@@ -121,8 +121,10 @@ define(function() {
 			while(filename.indexOf('--') != -1) {
 				filename = this.replaceAll(filename, '--', '-');
 			}
-			// 最后一个-
-			filename = filename.replace(/\-$/, '');
+			if (filename.length > 1) {
+				// 最后一个-
+				filename = filename.replace(/\-$/, '');
+			}
 			return filename;
 		},
 
