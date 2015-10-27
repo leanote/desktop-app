@@ -4,7 +4,7 @@
  * @date 2015/04/09
  */
 define(function() {
-	var importService = nodeRequire('./public/plugins/import_leanote/import');
+	var importService; //  = nodeRequire('./public/plugins/import_leanote/import');
 
 	var leanote = {
 
@@ -56,12 +56,6 @@ define(function() {
 	          </div>
 	          <div class="modal-body" id="">
 	            <div role="tabpanel">
-
-	              <!-- Nav tabs -->
-	              <ul class="nav nav-tabs" role="tablist">
-	                <li role="presentation" class="active"><a href="#leanoteTab" aria-controls="leanoteTab" role="tab" data-toggle="tab">Leanote</a></li>
-	               
-	              </ul>
 
 	              <!-- Tab panes -->
 	              <div class="tab-content">
@@ -132,6 +126,10 @@ define(function() {
 						var n = 0;
 
 						me.clear();
+
+						if (!importService) {
+							importService = nodeRequire('./public/plugins/import_leanote/import');
+						}
 
 						importService.importFromLeanote(notebookId, paths,
 							// 全局

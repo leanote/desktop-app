@@ -5,7 +5,7 @@
  * 注意, fs.existsSync总返回false, readFileSync可用
  */
 define(function() {
-	var async = require('async');
+	var async; // = require('async');
 
 	var exportHTML = {
 		langs: {
@@ -36,6 +36,10 @@ define(function() {
 		_inited: false,
 		init: function() {
 			var me = this;
+			if (me._inited) {
+				return;
+			}
+			async = require('async');
 			me._inited = true;
 		},
 
@@ -342,6 +346,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(noteIds) {
+		        		me.init();
 		        		me.exportHTML(noteIds);
 		        	}
 		        })()
@@ -355,6 +360,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(notebookId) {
+		        		me.init();
 		        		me.exportHTMLForNotebook(notebookId);
 		        	}
 		        })()

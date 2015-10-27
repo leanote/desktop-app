@@ -6,6 +6,7 @@ var Web = require('web');
 var Tag = require('tag');
 var async = require('async');
 var Common = require('common');
+var resanitize = require('resanitize');
 
 var Import = {
   // 解析Leanote
@@ -210,6 +211,21 @@ var Import = {
     note.content = content;
   },
 
+  fixContent: function (content) {
+    // srip unsage attrs
+    var unsafeAttrs = ['id', , /on\w+/i, /data-\w+/i, 'clear', 'target'];
+      content = content.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
+
+      // strip unsafe tags
+      content = resanitize.stripUnsafeTags(content, 
+        ['wbr','style', 'comment', 'plaintext', 'xmp', 'listing',
+      'applet','base','basefont','bgsound','blink','body','button','dir','embed','fieldset','frameset','head',
+      'html','iframe','ilayer','input','isindex','label','layer','legend','link','marquee','menu','meta','noframes',
+      'noscript','object','optgroup','option','param','plaintext','script','select','style','textarea','xml']
+      );
+      return content;
+  },
+
   // 解析笔记
   parseNote: function (notebookId, note, callback) {
     var me = this;
@@ -242,7 +258,7 @@ var Import = {
         // 添加到数据库中
         var jsonNote = {
           Title: note.title,
-          Content: note.content,
+          Content: me.fixContent(note.content),
           Tags: note.tags || [],
           CreatedTime: me.parseLeanoteTime(note.createdTime),
           UpdatedTime: me.parseLeanoteTime(note.updatedTime),

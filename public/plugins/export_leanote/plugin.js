@@ -27,7 +27,8 @@
  * 
  */
 define(function() {
-	var async = require('async');
+	var async; //  = require('async');
+	var resanitize; // = require('resanitize');
 
 	//===========
 	// start
@@ -61,6 +62,13 @@ define(function() {
 		_inited: false,
 		init: function() {
 			var me = this;
+			if (me._inited) {
+				return;
+			}
+
+			async = require('async');
+			resanitize = require('resanitize');
+
 			me._inited = true;
 		},
 
@@ -87,6 +95,21 @@ define(function() {
 			// 最后一个-
 			filename = filename.replace(/\-$/, '');
 			return filename;
+		},
+
+		fixContent: function (content) {
+			// srip unsage attrs
+			var unsafeAttrs = ['id', , /on\w+/i, /data-\w+/i, 'clear', 'target'];
+		    content = content.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
+
+		    // strip unsafe tags
+		    content = resanitize.stripUnsafeTags(content, 
+		    	['wbr','style', 'comment', 'plaintext', 'xmp', 'listing',
+			  'applet','base','basefont','bgsound','blink','body','button','dir','embed','fieldset','frameset','head',
+			  'html','iframe','ilayer','input','isindex','label','layer','legend','link','marquee','menu','meta','noframes',
+			  'noscript','object','optgroup','option','param','plaintext','script','select','style','textarea','xml']
+			  );
+		    return content;
 		},
 
 		getLeanoteTime: function(t) {
@@ -121,7 +144,7 @@ define(function() {
 
 				var noteInfo = {
 					title: note.Title,
-					content: content,
+					content: me.fixContent(content),
 					tags: note.Tags,
 					author: Api.userService.email || Api.userService.username || '',
 					isMarkdown: note.IsMarkdown,
@@ -537,6 +560,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(noteIds) {
+		        		me.init();
 		        		me.exportLeanote(noteIds);
 		        	}
 		        })()
@@ -550,6 +574,7 @@ define(function() {
 		        },
 		        click: (function() {
 		        	return function(notebookId) {
+		        		me.init();
 		        		me.exportLeanoteForNotebook(notebookId);
 		        	}
 		        })()
