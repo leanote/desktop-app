@@ -16,11 +16,10 @@
 			author: 'leanote', // 作者, 没用
 			createdTime: '2015-10-12 12:00:00',
 			updatedTime: '2015-10-12 12:00:00',
-			files: {
-				// fileId => 
-				'32323': {base64: '', md5: '', type: 'png', 'isAttach': false, createdTime: '2031-12-31 12:12:32'}
-				'32323': {base64: '', md5: '', type: 'png', 'isAttach': false, createdTime: '2031-12-31 12:12:32'}
-			}
+			files: [
+				{fileId: '', base64: '', md5: '', type: 'png', 'isAttach': false, createdTime: '2031-12-31 12:12:32'}
+				{fileId: '', base64: '', md5: '', type: 'png', 'isAttach': false, createdTime: '2031-12-31 12:12:32'}
+			]
 		}
 	]
  }
@@ -110,6 +109,16 @@ define(function() {
 			}
 			me.fixFiles(note, function (content, files) {
 				content = $('<div>' + content + '</div>').html();
+
+				var filesArr = [];
+				files || (files = {});
+				for (var fileId in files) {
+					if (files.hasOwnProperty(fileId)) {
+						files[fileId].fileId = fileId;
+						filesArr.push(files[fileId]);
+					}
+				}
+
 				var noteInfo = {
 					title: note.Title,
 					content: content,
@@ -118,7 +127,7 @@ define(function() {
 					isMarkdown: note.IsMarkdown,
 					createdTime: me.getLeanoteTime(note.CreatedTime),
 					updatedTime: me.getLeanoteTime(note.UpdatedTime),
-					files: files || []
+					files: filesArr 
 				};
 				info.notes.push(noteInfo);
 				callback(JSON.stringify(info, null, 2));
