@@ -841,11 +841,11 @@ Note.renderNote = function(note) {
 // render content
 // 这一步很慢
 Note.renderNoteContent = function(content, dontNeedSetReadonly, seq2) {
-	if (seq2 != Note.contentAjaxSeq) {
+	if (seq2 && seq2 != Note.contentAjaxSeq) {
 		return;
 	}
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview, function() {
-		if (seq2 != Note.contentAjaxSeq) {
+		if (seq2 && seq2 != Note.contentAjaxSeq) {
 			return;
 		}
 		Note.setCurNoteId(content.NoteId);
@@ -1021,9 +1021,9 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 
 		var tmp;
 		if(note.ImgSrc) {
-			tmp = tt(Note.itemTpl, classes, i, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+			tmp = tt(Note.itemTpl, classes, i, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		} else {
-			tmp = tt(Note.itemTplNoImg, classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+			tmp = tt(Note.itemTplNoImg, classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		}
 		if(!note.IsBlog) {
 			tmp = $(tmp);
@@ -1082,22 +1082,25 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	switchEditor(isMarkdown);
 	Note.hideEditorMask();
 
-	// 防止从共享read only跳到添加
-	Note.hideReadOnly();
-
 	Note.stopInterval();
 	// 保存当前的笔记
 	Note.curChangedSaveIt();
 
-	var note = {NoteId: getObjectId(),
-		Title: "",
-		Tags:[], Content:"",
+	Note.batch.reset();
+
+	var note = {
+		NoteId: getObjectId(),
+		Title: '',
+		Tags:[],
+		Desc: '',
+		Content: '',
 		NotebookId: notebookId,
 		IsNew: true,
 		FromUserId: fromUserId,
 		IsMarkdown: isMarkdown,
 		CreatedTime: new Date(),
-		UpdatedTime: new Date()}; // 是新的
+		UpdatedTime: new Date()
+	}; // 是新的
 
 	// 添加到缓存中
 	Note.addNoteCache(note);
@@ -1122,11 +1125,8 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 		newItem = tt(Note.newItemTpl, baseClasses, this.newNoteSeq(), "", note.NoteId, note.Title, notebookTitle, curDate, "");
 	}
 
-	// notebook是否是Blog
-	// if(!notebook.IsBlog) {
 	newItem = $(newItem);
 	newItem.find(".item-blog").hide();
-	// }
 
 	// 是否在当前notebook下, 不是则切换过去, 并得到该notebook下所有的notes, 追加到后面!
 	if(!Notebook.isCurNotebook(notebookId)) {
@@ -1138,11 +1138,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 
 		// 改变为当前的notebookId
 		// 会得到该notebookId的其它笔记
-		if(!isShare) {
-			Notebook.changeNotebookForNewNote(notebookId);
-		} else {
-			Share.changeNotebookForNewNote(notebookId);
-		}
+		Notebook.changeNotebookForNewNote(notebookId);
 	} else {
 		// 插入到第一个位置
 		Note.noteItemListO.prepend(newItem);
@@ -2655,9 +2651,11 @@ Note.batch = {
 	
 	cancelInBatch: function () {
 		Note.inBatch = false;
+		this.$body.removeClass('batch');
 	},
 	setInBatch: function () {
 		Note.inBatch = true;
+		this.$body.addClass('batch');
 	},
 
 	// 是否是多选, 至少选了2个
@@ -2698,9 +2696,6 @@ Note.batch = {
 	},
 	selectTo: function ($to) {
 		var $start = this.getStartNoteO();
-		if (!$start) {
-			alert('nono start');
-		}
 
 		var startSeq = +$start.data('seq');
 		var toSeq = +$to.data('seq');
@@ -2936,14 +2931,11 @@ Note.batch = {
 			// 清空当前笔记, 不让自动保存
 			Note.clearCurNoteId();
 
-			me.$body.addClass('batch');
 			me.renderBatchNotes();
-
 			me.setInBatch();
 
 		// 单个处理
 		} else {
-			me.$body.removeClass('batch');
 			me.clearRender();
 			me.cancelInBatch();
 
