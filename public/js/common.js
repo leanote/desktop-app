@@ -72,6 +72,12 @@ var tt = t; // 当slimscroll滑动时t被重新赋值了
 function arrayEqual(a, b) {
 	a = a || [];
 	b = b || [];
+	// if (typeof a === 'string') {
+	// 	a = [a];
+	// }
+	// if (typeof b === 'string') {
+	// 	b = [b];
+	// }
 	return a.join(",") == b.join(",");
 }
 
