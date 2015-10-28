@@ -1512,9 +1512,9 @@ var Pren = {
 	},
 	togglePren: function(isToggleView) {
 		var me = this;
-		alert(getMsg('Please select a note firstly.'));
 		// 批量操作时, 不能prenstation
 		if (Note.inBatch) {
+			alert(getMsg('Please select a note firstly.'));
 			return;
 		}
 		if(!isToggleView) {
@@ -1677,12 +1677,13 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'),
-				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
+				accelerator: isMac_ ? 'command+t' : 'Ctrl+T',
 				click: function() {
 				me.togglePren(true);
 			}
 		});
 
+		// 全局事件
 		// Esc, <- ->
 		$("body").on('keydown', function(e) {
 			var keyCode = e.keyCode;
@@ -1716,6 +1717,10 @@ var Pren = {
 				}
 				// e
 				else if(keyCode == 69) {
+					Note.toggleWriteableAndReadOnly();
+				}
+				// t
+				else if(keyCode == 84) {
 					me.togglePren(true);
 				}
 			}
