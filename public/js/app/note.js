@@ -86,17 +86,10 @@ Note.deleteCache = function(noteId) {
 	delete this.cache[noteId];
 };
 
-Note.setCurNoteId = function (noteId) {
-	this.curNoteId = noteId;
-};
-Note.clearCurNoteId = function () {
-	this.curNoteId = null;
-};
-
 // 得到当前的笔记
 Note.getCurNote = function() {
 	var self = this;
-	if(self.curNoteId == "") {
+	if(!self.curNoteId) {
 		return null;
 	}
 	return self.cache[self.curNoteId];
@@ -244,6 +237,9 @@ Note.curHasChanged = function(force) {
 	if (!cacheNote) {
 		return false;
 	}
+	// else {
+	// 	// console.log('当前笔记为' + cacheNote.NoteId);
+	// }
 
 	// 收集当前信息, 与cache比对
 	var title = $('#noteTitle').val();
@@ -304,7 +300,13 @@ Note.curHasChanged = function(force) {
 			preview = "";
 		}
 		cacheNote.Preview = preview; // 仅仅缓存在前台
-	} else {
+	} else if (cacheNote.IsMarkdown && typeof contents === 'boolean') {
+		// 不会出现, 因为刚开始时readOnly=true, 且只有设置内容完成后才setCurNoteId
+		// markdown编辑器还没准备好
+		throw new Error('markdown编辑器还没准备好');
+		alert(3);
+	}
+	else {
 		content = contents;
 	}
 	
@@ -447,10 +449,11 @@ Note.curChangedSaveIt = function(force, callback) {
 	var me = Note;
 	// 如果当前没有笔记, 不保存
 	if(!me.curNoteId) {
-		console.log('无当前笔记');
+		// console.trace('无当前笔记!!');
 		callback && callback();
 		return;
 	}
+
 	try {
 		var hasChanged = Note.curHasChanged(force);
 	} catch(e) {
@@ -461,7 +464,8 @@ Note.curChangedSaveIt = function(force, callback) {
 	}
 
 	if(hasChanged && hasChanged.hasChanged) {
-		console.log('需要保存');
+		// console.trace('需要保存');
+		// console.log(hasChanged);
 
 		// 把已改变的渲染到左边 item-list
 		Note.renderChangedNote(hasChanged);
@@ -477,6 +481,8 @@ Note.curChangedSaveIt = function(force, callback) {
 		// 保存之
 		me.saveInProcess[hasChanged.NoteId] = true;
 
+		// console.trace('要保存了.......');
+		// console.log(hasChanged);
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
 			if(hasChanged.IsNew) {
@@ -495,9 +501,9 @@ Note.curChangedSaveIt = function(force, callback) {
 
 	} else {
 		console.log('不用保存 (^_^)');
+		callback && callback();
 	}
-
-	callback && callback();
+	// callback && callback();
 	return false;
 };
 
@@ -583,6 +589,7 @@ Note.directToNote = function(noteId) {
 // 什么时候为false, 在popstate时
 // needTargetNobook默认为false, 在点击notebook, renderfirst时为false
 Note.changeNoteForPjax = function(noteId, mustPush, needTargetNotebook) {
+	// console.trace('changeNoteForPjax');
 	var me = this;
 	if (!noteId) {
 		return;
@@ -636,9 +643,17 @@ Note.contentAjax = null;
 Note.contentAjaxSeq = 1;
 Note.inChangeNoteId = '';
 Note.setCurNoteId = function(noteId) {
+	// console.trace('setCurNoteId: ' + noteId);
 	Note.curNoteId = noteId;
 	Note.inChangeNoteId = '';
 };
+// 清空curNoteId, 
+Note.clearCurNoteId = function () {
+	// 为什么要++? 避免刚清空, 因为内容的延迟又设置回去了
+	Note.contentAjaxSeq++;
+	this.curNoteId = null;
+};
+
 Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var self = this;
 	if (!selectNoteId) {
@@ -661,7 +676,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	}
 
 	// 2. 设空, 防止在内容得到之前又发生保存
-	Note.curNoteId = "";
+	Note.clearCurNoteId();
 	Note.inChangeNoteId = selectNoteId;
 
 	// 2 得到现在的
@@ -684,13 +699,14 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	// 下面很慢
 	Note.contentAjaxSeq++;
 	var seq = Note.contentAjaxSeq;
-	function setContent(ret, fromCache) {
+
+	function setContent(ret, fromCache, seq2) {
 		if(ret) {
 			cacheNote.InitSync = false;
 		}
 		ret = ret || {};
 		Note.contentAjax = null;
-		if(seq != Note.contentAjaxSeq) {
+		if(seq2 != Note.contentAjaxSeq) {
 			return;
 		}
 		if(!fromCache) {
@@ -698,7 +714,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		}
 		// 把其它信息也带上
 		ret = Note.cache[selectNoteId]
-		Note.renderNoteContent(ret);
+		Note.renderNoteContent(ret, false, seq2);
 
 		self.hideContentLoading();
 
@@ -707,20 +723,16 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 
 	// 不是刚同步过来的, 且有内容
 	if(!cacheNote.InitSync && cacheNote.Content) {
-		setContent(cacheNote, true);
+		setContent(cacheNote, true, seq);
 		return;
 	}
 
-	var url = "/note/getNoteContent";
-	var param = {noteId: selectNoteId};
-	if(isShare) {
-		url = "/share/getShareNoteContent";
-		param.sharedUserId = cacheNote.UserId // 谁的笔记
-	}
-
 	self.showContentLoading();
-
-	Service.noteService.getNoteContent(cacheNote.NoteId, setContent);
+	Service.noteService.getNoteContent(cacheNote.NoteId, (function (seq2) {
+		return function (ret) {
+			setContent(ret, false, seq2);
+		}
+	})(seq));
 };
 
 // 重新渲染笔记, 因为sync更新了
@@ -784,7 +796,7 @@ Note.renderChangedNote = function(changedNote) {
 // 清空右侧note信息, 可能是共享的,
 // 此时需要清空只读的, 且切换到note edit模式下
 Note.clearNoteInfo = function() {
-	Note.curNoteId = "";
+	Note.clearCurNoteId();
 	Tag.clearTags();
 	$("#noteTitle").val("");
 	setEditorContent("");
@@ -806,7 +818,7 @@ Note.clearNoteList = function() {
 // 清空所有, 在转换notebook时使用
 Note.clearAll = function() {
 	// 当前的笔记清空掉
-	Note.curNoteId = "";
+	Note.clearCurNoteId();
 
 	Note.clearNoteInfo();
 	Note.clearNoteList();
@@ -828,8 +840,14 @@ Note.renderNote = function(note) {
 
 // render content
 // 这一步很慢
-Note.renderNoteContent = function(content, dontNeedSetReadonly) {
+Note.renderNoteContent = function(content, dontNeedSetReadonly, seq2) {
+	if (seq2 != Note.contentAjaxSeq) {
+		return;
+	}
 	setEditorContent(content.Content, content.IsMarkdown, content.Preview, function() {
+		if (seq2 != Note.contentAjaxSeq) {
+			return;
+		}
 		Note.setCurNoteId(content.NoteId);
 
 		if (!dontNeedSetReadonly) {
@@ -838,7 +856,7 @@ Note.renderNoteContent = function(content, dontNeedSetReadonly) {
 	});
 
 	// 只有在renderNoteContent时才设置curNoteId
-	Note.setCurNoteId(content.NoteId);
+	// Note.setCurNoteId(content.NoteId);
 
 	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
 	var $leftNoteNav = $(tt('[noteId="?"]', content.NoteId));
@@ -1732,8 +1750,8 @@ Note.deleteNoteTag = function(item, tag) {
 	}
 };
 
-Note.readOnly = false; // 默认为false要好?
-LEA.readOnly = false;
+Note.readOnly = true; // 默认为true
+LEA.readOnly = true;
 // 切换只读模式
 Note.toggleReadOnly = function(needSave) {
 	var me = this;
@@ -1867,7 +1885,6 @@ Note.renderStarNote = function(target) {
 	// 大BUG start
 	// 先保存现有的啊
 	me.curChangedSaveIt();
-	console.log('ok...');
 
 	// 把当前笔记放在第一位
 	me.clearAll();
