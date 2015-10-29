@@ -18,7 +18,7 @@ var Import = {
   notes: [
     {
       title: 'life',
-      content: 'laldfadf', // 图片, 附件链接为 leanote://api/file/getImage?fileId=xxxx, leanote://api/file/getAttach?fileId=3232323
+      content: 'laldfadf', // 图片, 附件链接为 leanote://file/getImage?fileId=xxxx, leanote://file/getAttach?fileId=3232323
       tags: [1,2,3],
       isMarkdown: true,
       author: 'leanote', // 作者, 没用
@@ -92,7 +92,7 @@ var Import = {
     if (note.isMarkdown) {
 
       // image
-      var reg = new RegExp('!\\[([^\\]]*?)\\]\\(leanote://api/file/getImage\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+      var reg = new RegExp('!\\[([^\\]]*?)\\]\\(leanote://file/getImage\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
       var matches = reg.exec(content);
       // 先找到所有的
       while(matches) {
@@ -110,7 +110,7 @@ var Import = {
       }
 
       // attach
-      var reg = new RegExp('\\[([^\\]]*?)\\]\\(leanote://api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+      var reg = new RegExp('\\[([^\\]]*?)\\]\\(leanote://file/getAttach\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
       var matches = reg.exec(content);
       // 先找到所有的
       while(matches) {
@@ -130,8 +130,8 @@ var Import = {
     else {
 
       // 图片处理后, 可以替换内容中的链接了
-      // leanote://api/file/getImage?fileId=xxxx,
-      var reg = new RegExp('<img([^>]*?)src=["\']?leanote://api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
+      // leanote://file/getImage?fileId=xxxx,
+      var reg = new RegExp('<img([^>]*?)src=["\']?leanote://file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
       var matches = reg.exec(content);
       while(matches) {
           var all = matches[0];
@@ -149,7 +149,7 @@ var Import = {
       }
 
       // 处理附件
-      var reg = new RegExp('<a([^>]*?)href=["\']?leanote://api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
+      var reg = new RegExp('<a([^>]*?)href=["\']?leanote://file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
       var matches = reg.exec(content);
       // 先找到所有的
       while(matches) {
@@ -204,7 +204,6 @@ var Import = {
             link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
           }
         }
-        
       }
       content = content.replace(eachMatch.all, link);
     }

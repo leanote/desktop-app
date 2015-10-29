@@ -10,7 +10,7 @@
 	notes: [
 		{
 			title: 'life',
-			content: 'laldfadf', // 图片, 附件链接为 leanote://api/file/getImage?fileId=xxxx, leanote://api/file/getAttach?fileId=3232323
+			content: 'laldfadf', // 图片, 附件链接为 leanote://file/getImage?fileId=xxxx, leanote://file/getAttach?fileId=3232323
 			tags: [1,2,3],
 			isMarkdown: true,
 			author: 'leanote', // 作者, 没用
@@ -298,21 +298,21 @@ define(function() {
 						if (note.IsMarkdown) {
 							var href;
 							if (!eachMatch.isAttach) {
-								href = 'leanote://api/file/getImage?fileId=' + eachMatch.fileId;
+								href = 'leanote://file/getImage?fileId=' + eachMatch.fileId;
 								link = '![' + eachMatch.title + '](' + href + ')';
 							}
 							else {
-								href = 'leanote://api/file/getAttach?fileId=' + eachMatch.fileId;
+								href = 'leanote://file/getAttach?fileId=' + eachMatch.fileId;
 								link = '[' + eachMatch.title + '](' + href + ')';
 							}
 						}
 						else {
 							if (!eachMatch.isAttach) {
-								var href = 'leanote://api/file/getImage?fileId=' + eachMatch.fileId;
+								var href = 'leanote://file/getImage?fileId=' + eachMatch.fileId;
 								link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
 							}
 							else {
-								var href = 'leanote://api/file/getAttach?fileId=' + eachMatch.fileId;
+								var href = 'leanote://file/getAttach?fileId=' + eachMatch.fileId;
 								link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
 							}
 						}
