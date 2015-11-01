@@ -130,6 +130,7 @@ define(function() {
 				exportDate: me.getLeanoteTime(),
 				app: 'leanote.desktop.app.' + process.platform,
 				appVersion: appVersion.version,
+				apiVersion: '0.1',
 				notes: []
 			}
 			me.fixFiles(note, function (content, files) {
