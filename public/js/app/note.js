@@ -745,9 +745,9 @@ Note.reRenderNote = function(noteId) {
 	NoteService.getNoteContent(noteId, function(noteContent) {
 		if(noteContent) {
 			Note.setNoteCache(noteContent, false);
-			Attach.renderNoteAttachNum(noteId, true);
 			// 确保重置的是当前note
 			if (Note.curNoteId === noteId) {
+				Attach.renderNoteAttachNum(noteId, true);
 				Note.renderNoteContent(noteContent, true);
 			}
 		}
@@ -789,9 +789,7 @@ Note.renderChangedNote = function(changedNote) {
 		$leftNoteNav.find(".item-thumb").remove(); // 以前有, 现在没有了
 		$leftNoteNav.removeClass("item-image");
 	}
-
-
-}
+};
 
 // 清空右侧note信息, 可能是共享的,
 // 此时需要清空只读的, 且切换到note edit模式下
@@ -822,7 +820,7 @@ Note.clearAll = function() {
 
 	Note.clearNoteInfo();
 	Note.clearNoteList();
-}
+};
 
 // render到编辑器
 // render note
@@ -977,6 +975,10 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 		baseClasses = "item-shared";
 	}
 	var classes = baseClasses;
+	if (note.IsDeleted) {
+		console.error('_getNoteHtmlObjct note.IsDeleted');
+		return;
+	}
 
 	var tmp;
 	if(note.ImgSrc) {
@@ -1010,6 +1012,11 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 		}
 		var note = notes[i];
 		note.Title = trimTitle(note.Title);
+
+		if (note.IsDeleted) {
+			console.error('note.IsDeleted');
+			continue;
+		}
 
 		if(note.InitSync) {
 			Note.getNoteContentLazy(note.NoteId);
@@ -3295,19 +3302,26 @@ Note.addSync = function(notes) {
 	}
 	for(var i in notes) {
 		var note = notes[i];
-		Note.addNoteCache(note);
+		// 避免trash的也加进来
+		if (!note.IsDeleted) {
+			if (
+				(note.IsTrash && Notebook.curNotebookIsTrash()) 
+				|| !note.IsTrash) {
 
-		console.log(note);
+				Note.addNoteCache(note);
 
-		// 很可能其笔记本也是新添加的, 此时重新render notebooks' numberNotes
-		Notebook.reRenderNotebookNumberNotesIfIsNewNotebook(note.NotebookId);
+				// 很可能其笔记本也是新添加的, 此时重新render notebooks' numberNotes
+				Notebook.reRenderNotebookNumberNotesIfIsNewNotebook(note.NotebookId);
 
-		// alert(note.ServerNoteId);
-		// 添加到当前的笔记列表中
-		var newHtmlObject = Note._getNoteHtmlObjct(note);
-		$('#noteItemList').prepend(newHtmlObject);
-
-		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
+				// alert(note.ServerNoteId);
+				// 添加到当前的笔记列表中
+				var newHtmlObject = Note._getNoteHtmlObjct(note);
+				if (newHtmlObject) {
+					$('#noteItemList').prepend(newHtmlObject);
+					Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
+				}
+			}
+		}
 	}
 };
 
