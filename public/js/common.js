@@ -20,7 +20,11 @@ var Notebook = {};
 var Share = {};
 var Mobile = {}; // 手机端处理
 var LeaAce = {};
-var Upgrade = {};
+var Upgrade = {
+	checkForUpdates: function () {
+		Notify.show({title: 'Info', body: getMsg('Network error!')});
+	}
+};
 
 // markdown
 var Converter;

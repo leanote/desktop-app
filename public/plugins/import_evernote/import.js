@@ -262,6 +262,8 @@ var Import = {
                   }
                 }
 
+                console.log('--- haha -- Note.updateNoteOrContent');
+
                 Note.updateNoteOrContent(jsonNote, function(insertedNote) {
                   eachCallback && eachCallback(insertedNote);
                   cb();

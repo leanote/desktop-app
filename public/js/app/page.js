@@ -1154,8 +1154,9 @@ LeaAce = {
 // 全量同步
 function fullSync(callback) {
 	log('full sync');
-	SyncService.fullSync(function(ret) {
-		callback && callback();
+	$('.loading-footer').show();
+	SyncService.fullSync(function(ret, ok) {
+		callback && callback(ok);
 	});
 }
 
@@ -1432,8 +1433,16 @@ function initPage(initedCallback) {
 			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
 				_init();
 			} else {
-				fullSync(function() {
-					_init();
+				fullSync(function(ok) {
+					if (!ok) {
+						Notify.show({title: 'Info', body: getMsg('Sync error, retry to sync after 3 seconds')});
+						setTimeout(function () {
+							reloadApp();
+						}, 3000);
+					}
+					else {
+						_init();
+					}
 				});
 	 		}
 	 		$('#username').text(UserInfo.Username);

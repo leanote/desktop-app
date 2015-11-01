@@ -534,7 +534,7 @@ define(function() {
 			var name = note.Title ? note.Title + '.leanote' : getMsg('Untitled') + '.leanote';
 			name = me.fixFilename(name);
 
-			var targetPath = path + '/' + name;
+			var targetPath = path + Api.commonService.getPathSep() + name;
 
 			// 将路径和名字区分开
 			var pathInfo = Api.commonService.splitFile(targetPath);

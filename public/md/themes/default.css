@@ -1407,7 +1407,7 @@ a.input-group-addon {
 .preview-container {
   position: absolute;
   overflow: auto;
-  right: 0;
+  right: 10px;
   left: 30px;
 }
 .wmd-prompt-background {

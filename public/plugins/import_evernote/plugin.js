@@ -153,6 +153,8 @@ define(function() {
 									n++;
 									$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
 
+									// 不要是新的, 不然切换笔记时又会保存一次
+									note.IsNew = false;
 									// 插入到当前笔记中
 									Note.addSync([note]);
 								}

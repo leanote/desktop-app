@@ -194,6 +194,7 @@
 	"Choose Files": "选择文件",
 	"Check for updates": "检查更新",
 	"Checking for udpates...": "正在检查是否有可用更新...",
+    "Current version": "当前版本",
 	"Upgrade": "升级",
 	"This note is conflicted with:": "该笔记与以下笔记冲突:",
 	"Maker as resolved": "标记已解决冲突",
@@ -286,5 +287,8 @@
     "Hyperlink":"超链接","Please provide the link URL and an optional title":"请填写链接和一个可选的标题","optional title":"可选标题","Cancel":"取消","Strong":"粗体","strong text":"粗体","Emphasis":"斜体","emphasized text":"斜体","Blockquote":"引用","Code Sample":"代码","enter code here":"代码","Image":"图片","Heading":"标题","Numbered List":"有序列表","Bulleted List":"无序列表","List item":"项目","Horizontal Rule":"水平线","Undo":"撤销","Redo":"重做","enter image description here":"图片标题","enter link description here":"链接标题",
 
     "Please select a note firstly.": "请先选择一个笔记",
-    "<span></span> notes selected": "当前选中了 <span></span> 篇笔记"
+    "<span></span> notes selected": "当前选中了 <span></span> 篇笔记",
+
+    "Sync error, retry to sync after 3 seconds": "同步失败, 3 秒后自动重新尝试同步",
+    "Network error!": "网络异常"
 }
