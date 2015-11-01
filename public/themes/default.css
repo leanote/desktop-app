@@ -890,6 +890,9 @@ h3 {
 .preview-container {
   overflow: auto;
 }
+.preview-container a {
+  text-decoration: underline !important;
+}
 .wmd-preview {
   width: 100%;
   font-size: 14px;

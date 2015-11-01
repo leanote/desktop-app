@@ -251,6 +251,7 @@ i.mce-i-backcolor {
 }
 #mdEditor .navbar-default {
   border: none !important;
+  background-color: #272626;
 }
 .btn-success:hover, .btn-success:focus, .btn-success:active {
   background-color: rgba(128, 128, 128, 0.5) !important;
@@ -274,9 +275,19 @@ code.prettyprint, pre.prettyprint {
   }
 
 }
-.preview-container code {
-  background: rgb(53, 53, 56);
-  color: rgb(164, 179, 174);
+.preview-container {
+  code {
+    background: rgb(53, 53, 56);
+    color: rgb(164, 179, 174);
+  }
+  a {
+    color: #ccc;
+    text-decoration: underline !important;
+  }
+
+  hr {
+      border-top: 1px solid #504E4E;
+  }
 }
 
 // 文档导航
@@ -339,3 +350,13 @@ body.writting #note {
   }
 }
 
+body.writting {
+  .info-toolbar {
+    line-height: 40px;
+  }
+}
+
+.batch-ctn {
+    background-color: #000;
+    color: #000;
+}

@@ -222,6 +222,7 @@ i.mce-i-backcolor {
 }
 #mdEditor .navbar-default {
   border: none !important;
+  background-color: #272626;
 }
 .btn-success:hover,
 .btn-success:focus,
@@ -257,6 +258,13 @@ pre.prettyprint .atv {
 .preview-container code {
   background: #353538;
   color: #a4b3ae;
+}
+.preview-container a {
+  color: #ccc;
+  text-decoration: underline !important;
+}
+.preview-container hr {
+  border-top: 1px solid #504E4E;
 }
 #leanoteNav,
 #leanoteNavMd {
@@ -313,4 +321,11 @@ body.writting #note #mceToolbar,
 body.writting #note #mdEditor .navbar-default,
 body.writting #note #wmd-button-bar {
   box-shadow: none;
+}
+body.writting .info-toolbar {
+  line-height: 40px;
+}
+.batch-ctn {
+  background-color: #000;
+  color: #000;
 }
