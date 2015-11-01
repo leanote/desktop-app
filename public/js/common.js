@@ -1027,13 +1027,20 @@ LEA.bookmark = null;
 LEA.hasBookmark = false;
 function saveBookmark() {
 	try {
+		/*
+		// 没有focus();
+		if (!document.activeElement || document.activeElement.getAttribute('id') != 'editorContent') {
+			LEA.hasBookmark = false;
+			console.log('not active');
+			return;
+		}
+		*/
 		LEA.bookmark = tinymce.activeEditor.selection.getBookmark(); // 光标, 为了处理后重新定位到那个位置
 		// 如果之前没有focus, 则会在文档开头设置bookmark, 添加一行, 不行.
 		// $p不是<p>, 很诡异
 		// 6-5
 		if(LEA.bookmark && LEA.bookmark.id) {
-			var $ic = $($("#editorContent_ifr").contents());
-			var $body = $ic.find("body");
+			var $body = $($("#editorContent").contents());
 			var $p = $body.children().eq(0);
 			// 找到
 			if($p.is("span")) {
