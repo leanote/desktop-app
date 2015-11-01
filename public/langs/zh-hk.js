@@ -194,6 +194,7 @@
     "Choose Files": "選擇文件",
     "Check for updates": "檢查更新",
     "Checking for udpates...": "正在檢查是否有可用更新...",
+    "Current version": "當前版本",
     "Upgrade": "升級",
     "This note is conflicted with:": "該筆記與以下筆記沖突:",
     "Maker as resolved": "標記已解決沖突",
@@ -203,6 +204,7 @@
     "Delete": "刪除",
     "Remove": "移除",
     "Export": "導出",
+    "Export notes": "導出筆記",
     "Histories": "歷史記錄",
     "Created": "創建",
     "Updated": "更新",
@@ -280,5 +282,13 @@
     "User exists": "用戶已存在",
     "Local": "本地",
 
-    "Synchronizing": "正在同步"
+    "Synchronizing": "正在同步",
+
+    "Hyperlink":"超鏈接","Please provide the link URL and an optional title":"請填寫鏈接和壹個可選的標題","optional title":"可選標題","Cancel":"取消","Strong":"粗體","strong text":"粗體","Emphasis":"斜體","emphasized text":"斜體","Blockquote":"引用","Code Sample":"代碼","enter code here":"代碼","Image":"圖片","Heading":"標題","Numbered List":"有序列表","Bulleted List":"無序列表","List item":"項目","Horizontal Rule":"水平線","Undo":"撤銷","Redo":"重做","enter image description here":"圖片標題","enter link description here":"鏈接標題",
+
+    "Please select a note firstly.": "請先選擇壹個筆記",
+    "<span></span> notes selected": "當前選中了 <span></span> 篇筆記",
+
+    "Sync error, retry to sync after 3 seconds": "同步失敗, 3 秒後自動重新嘗試同步",
+    "Network error!": "網絡異常"
 }

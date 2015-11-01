@@ -20,7 +20,11 @@ var Notebook = {};
 var Share = {};
 var Mobile = {}; // 手机端处理
 var LeaAce = {};
-var Upgrade = {};
+var Upgrade = {
+	checkForUpdates: function () {
+		Notify.show({title: 'Info', body: getMsg('Network error!')});
+	}
+};
 
 // markdown
 var Converter;
@@ -72,6 +76,12 @@ var tt = t; // 当slimscroll滑动时t被重新赋值了
 function arrayEqual(a, b) {
 	a = a || [];
 	b = b || [];
+	// if (typeof a === 'string') {
+	// 	a = [a];
+	// }
+	// if (typeof b === 'string') {
+	// 	b = [b];
+	// }
 	return a.join(",") == b.join(",");
 }
 
@@ -1021,13 +1031,20 @@ LEA.bookmark = null;
 LEA.hasBookmark = false;
 function saveBookmark() {
 	try {
+		/*
+		// 没有focus();
+		if (!document.activeElement || document.activeElement.getAttribute('id') != 'editorContent') {
+			LEA.hasBookmark = false;
+			console.log('not active');
+			return;
+		}
+		*/
 		LEA.bookmark = tinymce.activeEditor.selection.getBookmark(); // 光标, 为了处理后重新定位到那个位置
 		// 如果之前没有focus, 则会在文档开头设置bookmark, 添加一行, 不行.
 		// $p不是<p>, 很诡异
 		// 6-5
 		if(LEA.bookmark && LEA.bookmark.id) {
-			var $ic = $($("#editorContent_ifr").contents());
-			var $body = $ic.find("body");
+			var $body = $($("#editorContent").contents());
 			var $p = $body.children().eq(0);
 			// 找到
 			if($p.is("span")) {
@@ -1569,12 +1586,26 @@ var trimTitle = function(title) {
 var Loading = {
 	$loadingDialog: $('#loadingDialog'),
 	$progressBar: $('#loadingDialog .progress-bar'),
+	$progressRate: $('#loadingDialog .progress-rate'),
+	$msg: $('#loadingDialogBodyMsg'),
 	// option {hasProgress: true, onClose: function}
 	inited: false,
+	setMsg: function (msg) {
+		this.$msg.html(msg);
+	},
+	setProgressRate: function (msg) {
+		this.$progressRate.html(msg);
+	},
 	show: function(msg, option) {
 		option = option || {};
 		msg || (msg = getMsg("loading..."));
-		$('#loadingDialogBodyMsg').html(msg);
+		this.$msg.html(msg);
+		if (option.isLarge) {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
+		else {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
 		this.$loadingDialog.modal({backdrop: 'static', keyboard: true});
 		if (option.hasProgress) {
 			this.$loadingDialog.addClass('has-progress');

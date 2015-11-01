@@ -4,7 +4,7 @@
  * @date 2015/04/09
  */
 define(function() {
-	var importService = nodeRequire('./public/plugins/import_evernote/import');
+	var importService; //  = nodeRequire('./public/plugins/import_evernote/import');
 
 	var evernote = {
 
@@ -56,12 +56,6 @@ define(function() {
 	          </div>
 	          <div class="modal-body" id="">
 	            <div role="tabpanel">
-
-	              <!-- Nav tabs -->
-	              <ul class="nav nav-tabs" role="tablist">
-	                <li role="presentation" class="active"><a href="#evernoteTab" aria-controls="evernoteTab" role="tab" data-toggle="tab">Evernote</a></li>
-	               
-	              </ul>
 
 	              <!-- Tab panes -->
 	              <div class="tab-content">
@@ -132,6 +126,9 @@ define(function() {
 						var n = 0;
 
 						me.clear();
+						if (!importService) {
+							importService = nodeRequire('./public/plugins/import_evernote/import');
+						}
 
 						importService.importFromEvernote(notebookId, paths,
 							// 全局
@@ -156,6 +153,8 @@ define(function() {
 									n++;
 									$('#importEvernoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
 
+									// 不要是新的, 不然切换笔记时又会保存一次
+									note.IsNew = false;
 									// 插入到当前笔记中
 									Note.addSync([note]);
 								}

@@ -488,7 +488,7 @@ function initEditor() {
 
 	// 刷新时保存 参考autosave插件
 	window.onbeforeunload = function(e) {
-    	Note.curChangedSaveIt();
+    	Note.curChangedSaveIt(true);
 	};
 
 	// 全局ctrl + s
@@ -1154,8 +1154,9 @@ LeaAce = {
 // 全量同步
 function fullSync(callback) {
 	log('full sync');
-	SyncService.fullSync(function(ret) {
-		callback && callback();
+	$('.loading-footer').show();
+	SyncService.fullSync(function(ret, ok) {
+		callback && callback(ok);
 	});
 }
 
@@ -1432,8 +1433,16 @@ function initPage(initedCallback) {
 			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
 				_init();
 			} else {
-				fullSync(function() {
-					_init();
+				fullSync(function(ok) {
+					if (!ok) {
+						Notify.show({title: 'Info', body: getMsg('Sync error, retry to sync after 3 seconds')});
+						setTimeout(function () {
+							reloadApp();
+						}, 3000);
+					}
+					else {
+						_init();
+					}
 				});
 	 		}
 	 		$('#username').text(UserInfo.Username);
@@ -1512,6 +1521,11 @@ var Pren = {
 	},
 	togglePren: function(isToggleView) {
 		var me = this;
+		// 批量操作时, 不能prenstation
+		if (Note.inBatch) {
+			alert(getMsg('Please select a note firstly.'));
+			return;
+		}
 		if(!isToggleView) {
 			try {
 				gui.win.setKiosk(!me._isPren);
@@ -1672,12 +1686,13 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'),
-				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
+				accelerator: isMac_ ? 'command+t' : 'Ctrl+T',
 				click: function() {
 				me.togglePren(true);
 			}
 		});
 
+		// 全局事件
 		// Esc, <- ->
 		$("body").on('keydown', function(e) {
 			var keyCode = e.keyCode;
@@ -1711,6 +1726,10 @@ var Pren = {
 				}
 				// e
 				else if(keyCode == 69) {
+					Note.toggleWriteableAndReadOnly();
+				}
+				// t
+				else if(keyCode == 84) {
 					me.togglePren(true);
 				}
 			}

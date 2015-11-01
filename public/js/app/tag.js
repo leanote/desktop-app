@@ -175,10 +175,7 @@ Tag.appendTag = function(tag, save) {
 		reRenderTags();
 	}
 	
-	// 笔记已污染
 	if(save) {
-		Note.curNoteIsDirtied();
-		
 		// 如果之前不存, 则添加之
 		if(!isExists) {
 			Note.curChangedSaveIt(true, function() {

@@ -13,6 +13,20 @@ var Api = {
 	commonService: CommonService,
 	fileService: FileService,
 	noteService: NoteService,
+	userService: UserService,
+
+	// 得到当前版本
+	getCurVersion: function (callback) {
+		var me = this;
+		var vFile = me.evtService.getProjectBasePath() + '/data/version';
+		// fs.writeFileSync('./output.json',JSON.stringify({a:1,b:2}));
+		try {
+			var v = JSON.parse(fs.readFileSync(vFile));
+			return v;
+		} catch(e) {
+			return false;
+		}
+	},
 
 	getConfigFilePath: function() {
 		return __dirname + '/public/config.js';
@@ -136,6 +150,17 @@ var Api = {
 	getExportMenus: function() {
 		var me = this;
 		return me._exportMenus;
+	},
+
+	// 导出, 笔记本下
+	_exportMenusForNotebook: [],
+	addExportMenuForNotebook: function(menu) {
+		var me = this;
+		me._exportMenusForNotebook.push(menu);
+	},
+	getExportMenusForNotebook: function() {
+		var me = this;
+		return me._exportMenusForNotebook;
 	},
 
 	// 更多菜单

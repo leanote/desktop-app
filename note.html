@@ -272,13 +272,13 @@ function log(o) {
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
 
-          <div id="noteMaskForLoading" class="note-mask">
+          <div id="noteMaskForLoading" class="note-mask"> <!-- z-index: 11 -->
             <img src="public/images/loading-24.gif"/>
             <br />
             <span class="lang">loading...</span>
           </div>
 
-          <div id="editorMask">
+          <div id="editorMask">  <!-- z-index: 10 -->
             <span class="lang">noNoteNewNoteTips</span>
             <br />
             <br />
@@ -288,6 +288,15 @@ function log(o) {
             </div>
             <div id="editorMaskBtnsEmpty" class="lang">canntNewNoteTips</div>
           </div>
+
+          <div id="batchMask" class="note-mask"> <!-- z-index: 99 --> 
+            <div class="batch-ctn" id="batchCtn"></div>
+            <div class="batch-info">
+              <div class="batch-status"></div>
+              <p><i class="fa fa-cog"></i></p>
+            </div>
+          </div>
+
           <div id="noteTop">
             <!-- 左侧放tag, 右侧放按钮, 比如save, info, move, delete -->
             <div id="tool" class="clearfix">
@@ -349,7 +358,7 @@ function log(o) {
 
               <!-- 查看信息 -->
               <div id="infoToolbar" class="info-toolbar">
-                <a class="toolbar-update"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+                <a class="toolbar-update" title="ctrl/cmd + e"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
                 <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
                 <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
               </div>
@@ -390,7 +399,7 @@ function log(o) {
                     <div class="navbar navbar-default">
                         <div class="navbar-inner" id="wmd-button-bar">
                             <div id="mdInfoToolbar" class="info-toolbar">
-                              <a class="toolbar-update"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+                              <a class="toolbar-update" title="ctrl/cmd + e"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
                               <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
                               <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
                             </div>
@@ -477,33 +486,6 @@ function log(o) {
         </div>  
       </div>
       
-      <!-- mdEditor -->
-      <!-- v2 -->
-      <div class="modal fade modal-insert-link">
-          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal"
-                          aria-hidden="true">&times;</button>
-                      <h4 class="modal-title">Hyperlink</h4>
-                  </div>
-                  <div class="modal-body">
-                      <p>Please provide the link URL and an optional title:</p>
-                      <div class="input-group">
-                          <span class="input-group-addon"><i class="icon-globe"></i></span><input
-                              id="input-insert-link" type="text" class="col-sm-5 form-control"
-                              placeholder='http://example.com/ "optional title"' />
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                      <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
-                      <a href="#" class="btn btn-primary action-insert-link"
-                          data-dismiss="modal">OK</a>
-                  </div>
-              </div>
-          </div>
-      </div>
-      
       <!-- v1 -->
       <!-- Hidden Popup Modal -->
       <div class="modal fade bs-modal-sm" id="editorDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
@@ -568,7 +550,7 @@ function log(o) {
               <h4 class="modal-title modalTitle lang">Check for updates</h4>
           </div>
           <div class="modal-body" id="upgradeDialogBody">
-            <div class="cur-version-info">Current version: <span class="cur-version"></span></div>
+            <div class="cur-version-info"><span class="lang">Current version</span>: <span class="cur-version"></span></div>
 
             <div class="get-next-version-info-loading lang">
               Checking for udpates...
@@ -592,7 +574,7 @@ function log(o) {
 
       <!-- loading -->
       <div class="modal fade bs-modal-sm" id="loadingDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog modal-sm modal-large">
           <div class="modal-content">
           
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -605,6 +587,7 @@ function log(o) {
               <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
                 <span class="sr-only">60% Complete</span>
               </div>
+              <div class="progress-rate"></div>
             </div>
 
           </div>
@@ -675,7 +658,7 @@ window.require = undefined;
 <!-- 导入插件 执行 -->
 <script src="public/js/main.js"></script>
 <!-- markdown editor -->
-<script src="public/md/main.js"></script>
+<script src="public/md/main.min.js"></script>
 <!-- extra额外 -->
 <script src="public/js/dec/main.js"></script>
 
