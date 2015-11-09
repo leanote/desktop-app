@@ -344,6 +344,14 @@ function switchEditor(isMarkdown) {
 	}
 }
 
+// 将http://127.0.0.1:8912转为leanote://
+function fixContentUrl(content) {
+	if (EvtService.canUseProtocol()) {
+		return content.replace(/http:\/\/127.0.0.1:8912\/api\//g, 'leanote://');
+	}
+	return content;
+}
+
 // editor 设置内容
 // 可能是tinymce还没有渲染成功
 var previewToken = "<div style='display: none'>FORTOKEN</div>"
@@ -357,6 +365,9 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 	if(!content) {
 		content = "";
 	}
+
+	content = fixContentUrl(content);
+
 	if(clearIntervalForSetContent) {
 		clearInterval(clearIntervalForSetContent);
 	}
@@ -1704,16 +1715,16 @@ var Notify = {
 
 var onClose = function(afterFunc) {
 	try {
-		// 先把服务关掉
-	    Server.close();
-	    SyncService.stop();
-
-	    // 先保存之前改变的
-	    Note.curChangedSaveIt();
-	    // 保存状态
-	    State.saveCurState(function() {
-	        afterFunc && afterFunc();
-	    });
+		// 先把服务/协议关掉
+	    Server.close(function () {
+		    SyncService.stop();
+		    // 先保存之前改变的
+		    Note.curChangedSaveIt();
+		    // 保存状态
+		    State.saveCurState(function() {
+		        afterFunc && afterFunc();
+		    });
+		});
 	} catch(e) {
 		afterFunc && afterFunc();
 	}

@@ -422,6 +422,10 @@ Note.genAbstract = function(content, len) {
     return d.innerHTML;
 };
 
+Note.fixImageSrc = function(src) {
+	return fixContentUrl(src);
+};
+
 Note.getImgSrc = function(content) {
 	if(!content) {
 		return "";
@@ -779,9 +783,9 @@ Note.renderChangedNote = function(changedNote) {
 		$thumb = $leftNoteNav.find(".item-thumb");
 		// 有可能之前没有图片
 		if($thumb.length > 0) {
-			$thumb.find("img").attr("src", changedNote.ImgSrc);
+			$thumb.find("img").attr("src", Note.fixImageSrc(changedNote.ImgSrc));
 		} else {
-			$leftNoteNav.append(tt('<div class="item-thumb" style=""><img src="?"></div>', changedNote.ImgSrc));
+			$leftNoteNav.append(tt('<div class="item-thumb" style=""><img src="?"></div>', Note.fixImageSrc(changedNote.ImgSrc)));
 			$leftNoteNav.addClass("item-image");
 		}
 		$leftNoteNav.find(".item-desc").removeAttr("style");
@@ -982,7 +986,7 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 
 	var tmp;
 	if(note.ImgSrc) {
-		tmp = tt(Note.itemTpl, classes, this.newNoteSeq(), note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+		tmp = tt(Note.itemTpl, classes, this.newNoteSeq(), note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	} else {
 		tmp = tt(Note.itemTplNoImg, classes, this.newNoteSeq(), note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	}
@@ -1028,7 +1032,7 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 
 		var tmp;
 		if(note.ImgSrc) {
-			tmp = tt(Note.itemTpl, classes, i, note.NoteId, note.ImgSrc, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
+			tmp = tt(Note.itemTpl, classes, i, note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		} else {
 			tmp = tt(Note.itemTplNoImg, classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		}

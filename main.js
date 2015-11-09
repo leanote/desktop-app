@@ -231,6 +231,7 @@ function openIt() {
   killPort(_openIt);
 }
 
+
 function _openIt() {
   // console.log(arguments);
   // app.getPath('appData');
@@ -294,3 +295,5 @@ function _openIt() {
   // 作为调试
   debug && setMenu();
 }
+
+
