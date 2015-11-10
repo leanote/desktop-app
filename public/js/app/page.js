@@ -1931,7 +1931,7 @@ function userMenu(allUsers) {
 
 	Pren.init();
 
-	if(isMac()) {
+	if(isMac() || debug) {
 		setMacTopMenu();
 	}
 
