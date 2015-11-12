@@ -4,8 +4,6 @@ var BrowserWindow = require('browser-window');  // Module to create native brows
 // Report crashes to our server.
 require('crash-reporter').start();
 
-var debug = false;
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
@@ -45,172 +43,12 @@ app.on('activate-with-no-open-windows', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', openIt);
 
-var Menu = require('menu');
-var MenuItem = require('menu-item');
-
-function buildMenu(items) {
-  var menu = new Menu();
-  for(var i = 0; i < items.length; ++i) {
-    var item = items[i];
-    if(item.submenu) {
-      item.submenu = buildMenu(item.submenu);
-    }
-    var item = new MenuItem(item);
-
-    menu.append(item);
-  }
-  return menu;
-}
-
-function setMenu() {
-  var isMac = process.platform == 'darwin';
-  var template = [
-    {
-      label: 'Leanote',
-      submenu: [
-        {
-          label: 'About Leanote',
-          selector: 'orderFrontStandardAboutPanel:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Services',
-          submenu: []
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Hide Electron',
-          accelerator: 'Command+H',
-          selector: 'hide:'
-        },
-        {
-          label: 'Hide Others',
-          accelerator: 'Command+Shift+H',
-          selector: 'hideOtherApplications:'
-        },
-        {
-          label: 'Show All',
-          selector: 'unhideAllApplications:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Quit',
-          accelerator: 'Command+Q',
-          click: function() { app.quit(); }
-        },
-      ]
-    },
-    {
-      label: 'Edit',
-      submenu: [
-        {
-          label: 'Undo',
-          accelerator: 'Command+Z',
-          selector: 'undo:'
-        },
-        {
-          label: 'Redo',
-          accelerator: 'Shift+Command+Z',
-          selector: 'redo:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Cut',
-          accelerator: 'Command+X',
-          selector: 'cut:'
-        },
-        {
-          label: 'Copy',
-          accelerator: 'Command+C',
-          selector: 'copy:'
-        },
-        {
-          label: 'Paste',
-          accelerator: 'Command+V',
-          selector: 'paste:'
-        },
-        {
-          label: 'Select All',
-          accelerator: 'Command+A',
-          selector: 'selectAll:'
-        },
-      ]
-    },
-    {
-      label: 'View',
-      submenu: [
-        {
-          label: 'Reload',
-          accelerator: isMac ? 'Command+R' : 'Ctrl+R',
-          click: function() { BrowserWindow.getFocusedWindow().reloadIgnoringCache(); }
-        },
-        {
-          label: 'Toggle DevTools',
-          accelerator: isMac ? 'Alt+Command+I' : 'Ctrl+I',
-          click: function() { BrowserWindow.getFocusedWindow().toggleDevTools(); }
-        },
-      ]
-    },
-    {
-      label: 'Window',
-      submenu: [
-        {
-          label: 'Minimize',
-          accelerator: 'Command+M',
-          selector: 'performMiniaturize:'
-        },
-        {
-          label: 'Close',
-          accelerator: 'Command+W',
-          selector: 'performClose:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Bring All to Front',
-          selector: 'arrangeInFront:'
-        },
-      ]
-    },
-    {
-      label: 'Mode',
-      submenu: [
-        {
-          label: 'Toggle Fullscreen',
-          accelerator: 'Command+M',
-          selector: 'performMiniaturize:'
-        },
-        {
-          label: 'Toggle Presentation',
-          accelerator: 'Command+W',
-          selector: 'performClose:'
-        }
-      ]
-    },
-    {
-      label: 'Help',
-      submenu: []
-    },
-  ];
-
-  // menu = Menu.buildFromTemplate(template);
-
-  menu = buildMenu(template);
-
-  Menu.setApplicationMenu(menu); // Must be called within app.on('ready', function(){ ... });
-}
-
-var child_process = require('child_process');
 function killPort(callback) {
+  var protocol = require('protocol');
+  if (!protocol.registerFileProtocol) {
+    return;
+  }
+  var child_process = require('child_process');
   var port = '8912';
   if (process.platform.toLowerCase().indexOf('win') === 0) {
     // & EXIT 表示只循环一次
@@ -246,7 +84,7 @@ function _openIt() {
   mainWindow = new BrowserWindow({
       width: 1050, 
       height: 595, 
-      frame: debug || process.platform != 'darwin', 
+      frame: process.platform != 'darwin', 
       transparent: false
     }
   );
@@ -290,7 +128,4 @@ function _openIt() {
     mainWindow.destroy();
     mainWindow = null;
   });
-
-  // 作为调试
-  debug && setMenu();
 }
