@@ -433,6 +433,7 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 	*/
 		if(MD) {
 			MD.setContent(content);
+			MD.clearUndo();
 			callback && callback();
 		} else {
 			clearIntervalForSetContent = setTimeout(function() {

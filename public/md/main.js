@@ -31431,7 +31431,8 @@ define('editor',[
 	function highlight(section) {
 		var text = escape(section.text);
 
-		if(!window.viewerMode) {
+		// MDPureText 不用Prism
+        if(!window.LEAMDPureText) {
 			// log("pre")
 			// log(text);
 			// # lif
@@ -33873,7 +33874,15 @@ define('core',[
 	        // strings: "Markdown syntax"
 		});
 
-		MD.insertLink2 = pagedownEditor.insertLink;
+		MD.pagedownEditor = pagedownEditor;
+        // 重置undo
+        // 11/12
+        MD.clearUndo = function () {
+            MD.undoMgr.init();
+            MD.pagedownEditor.uiManager.setUndoRedoButtonStates();
+        };
+
+        MD.insertLink2 = pagedownEditor.insertLink;
 
 		// Custom insert link dialog
 		pagedownEditor.hooks.set("insertLinkDialog", function(callback) {
