@@ -1868,8 +1868,8 @@ function setMacTopMenu() {
       submenu: [
         {
           label: 'Reload',
-          // 为什么不要有accelerator, cmd+r有问题, 刷新后, 再按cmd+r就不会执行这个了
-          // accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
+          // 开启开发者模式console时, cmd+r不会走这, 关了还是会走这
+          accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
 				gui.win.reloadIgnoringCache();
