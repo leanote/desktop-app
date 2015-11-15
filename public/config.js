@@ -24,5 +24,5 @@ var Config = {
         }
     ],
     "lang": "en-us",
-    "theme": "black"
+    "theme": ""
 };
