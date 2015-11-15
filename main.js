@@ -45,7 +45,8 @@ app.on('ready', openIt);
 
 function killPort(callback) {
   var protocol = require('protocol');
-  if (!protocol.registerFileProtocol) {
+  if (protocol.registerFileProtocol) {
+    callback();
     return;
   }
   var child_process = require('child_process');
