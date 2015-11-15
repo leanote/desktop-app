@@ -1714,7 +1714,9 @@ var Notify = {
 	}
 };
 
+// 关闭当前窗口
 var onClose = function(afterFunc) {
+	console.log('on close');
 	try {
 		// 先把服务/协议关掉
 	    Server.close(function () {
@@ -1727,6 +1729,7 @@ var onClose = function(afterFunc) {
 		    });
 		});
 	} catch(e) {
+		console.error(e);
 		afterFunc && afterFunc();
 	}
 }

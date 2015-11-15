@@ -1779,7 +1779,7 @@ function checkForUpdates() {
 
 function setMacTopMenu() {
 	var isMac_ = isMac();
-  var template = [
+	var template = [
     {
       label: 'Leanote',
       submenu: [
@@ -1868,10 +1868,11 @@ function setMacTopMenu() {
       submenu: [
         {
           label: 'Reload',
-          accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
+          // 为什么不要有accelerator, cmd+r有问题, 刷新后, 再按cmd+r就不会执行这个了
+          // accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
-	          	gui.win.reloadIgnoringCache();
+				gui.win.reloadIgnoringCache();
           	});
           }
         },
