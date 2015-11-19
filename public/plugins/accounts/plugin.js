@@ -366,7 +366,7 @@ define(function() {
 					return callback();
 				}
 				async.eachSeries(notes, function (note, cb) {
-					Api.dbService.noteHistories.remove( {_id: note.NoteId}, { multi: true }, function () {
+					sourceDb.noteHistories.remove( {_id: note.NoteId}, { multi: true }, function () {
 						cb();
 					});
 				}, function () {
