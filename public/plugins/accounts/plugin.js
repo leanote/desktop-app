@@ -103,7 +103,11 @@ define(function() {
 				},
 				'open-db-dir': '',
 				'open-files-dir': '',
-				'delete': ''
+				'delete': function (userId, $targetBtn) {
+					me.deleteUser(userId);
+
+					$targetBtn.closest('tr').remove();
+				}
 			};
 
 			// 事件
@@ -114,7 +118,7 @@ define(function() {
 
 				var func = op2Func[option];
 				if (func) {
-					func(userId);
+					func(userId, $this);
 				}
 			});
 		},
@@ -199,9 +203,10 @@ define(function() {
 					return;
 				}
 
-				// 已经存在
+				// 已经存在, 合并数据文件
 				if (user.HasDB) {
-					Api.loading.hide(3000);
+					me.compactDatafile();
+					Api.loading.hide(2000);
 					Api.loading.setMsg('优化完成');
 					return;
 				}
@@ -221,6 +226,17 @@ define(function() {
 				});
 
 			});
+		},
+
+		// 合并数据
+		compactDatafile: function () {
+			var names = ['notebooks', 'notes', 'tags', 'images', 'attachs', 'noteHistories'];
+			names.forEach(function (name) {
+				if (Api.dbService[name]) {
+					Api.dbService[name].persistence.compactDatafile();
+				}
+			});
+			return true;
 		},
 
 		// 迁移历史记录
@@ -287,10 +303,13 @@ define(function() {
 			});
 			
 		},
+
+		dbNames: ['notebooks', 'notes', 'tags', 'images', 'attachs', 'noteHistories'],
+
 		// 迁移到独立目录
 		migrateAllDBs: function (userId, callback, msgCallbac) {
 			var me = this;
-			var names = ['notebooks', 'notes', 'tags', 'images', 'attachs', 'noteHistories'];
+			var names = me.dbNames;
 			// notes, notebooks, tags, attachs, images, noteHistories
 			// 判断当前db是否是全局的, 如果不是, 则初始化全局的
 			var sourceDb = {};
@@ -328,8 +347,124 @@ define(function() {
 					cb();
 				});
 			}, function () {
+				// 如果优化的是当前的用户, 则需要将db的表替换成distDb
+				if (Api.userService.getCurActiveUserId() == userId) {
+					for (var i = 0; i < names.length; ++i) {
+						var name = names[i];
+						Api.dbService[name] = distDb[name];
+					}
+				}
 				callback();
 			});
+		},
+
+		// 删除笔记历史记录
+		_deleteNoteHistories: function (sourceDb, notes, callback) {
+			var me = this;
+			sourceDb.noteHistories.loadDB(function (ok) {
+				if (!ok) {
+					return callback();
+				}
+				async.eachSeries(notes, function (note, cb) {
+					Api.dbService.noteHistories.remove( {_id: note.NoteId}, { multi: true }, function () {
+						cb();
+					});
+				}, function () {
+					callback();
+				});
+			});
+		},
+
+		_deleteDB: function (userId, callback) {
+			var me = this;
+
+			// 判断当前db是否是全局的, 如果不是, 则初始化全局的
+			var names = me.dbNames;
+			var sourceDb = {};
+			if (Api.userService.hasDB) {
+				Api.dbService.initIt(sourceDb, names, '', false);
+			}
+			else {
+				sourceDb = Api.dbService;
+			}
+
+			var names = ['notebooks', 'notes', 'tags', 'images', 'attachs'];
+			var db = sourceDb;
+			var query = {UserId: userId};
+			async.eachSeries(names, function (name, cb) {
+				var dbIt = db[name];
+				if (!dbIt) {
+					cb();
+					return;
+				}
+				// 如果是笔记, 则要删除note histories
+				if (name == 'notes') {
+					dbIt.find(query, function(err, docs) {
+						if (err || !docs) {
+							cb();
+							return;
+						}
+
+						// 删除历史记录
+						me._deleteNoteHistories(sourceDb, docs, function () {
+							// 删除自己
+							dbIt.remove(query, { multi: true },function () {
+								cb();
+							});
+						});
+					});
+				}
+				else {
+					dbIt.remove(query, { multi: true }, function () {
+						cb();
+					});
+				}
+			}, function () {
+				callback();
+			});
+
+		},
+
+		_deleteUser: function(userInfo, callback) {
+			var me = this;
+			var userId = userInfo.UserId;
+
+			// 1. 删除附件,图片
+			Api.userService.deleteUserImagesAndAttachsPath(userId);
+
+			// 2. 删除之
+			Api.userService.deleteUser(userId);
+
+			// 3. 删除其它表
+			// 如果有自己独立的表, 则把文件夹删除即可
+			if (userInfo.HasDB) {
+				var dbPath = Api.userService.getUserDBPath(userId);
+				if (dbPath) {
+					Api.commonService.deleteFolderRecursive(dbPath);
+				}
+				callback();
+			}
+			// 没有, 那就要一个个删除了
+			else {
+
+				me._deleteDB(userId, function () {
+					callback();
+				});
+			}
+		},
+
+		// 删除用户
+		deleteUser: function(userId) {
+			var me = this;
+			if (confirm(me.getMsg("Are you sure, it can't be recovered after it has been deleted"))) {
+				Api.loading.show();
+				Api.userService.getUser(userId, function (user) {
+					me._deleteUser(user, function() {
+						Api.loading.setMsg(me.getMsg('Deleted'));
+						Api.loading.hide(2000);
+					});
+				});
+			}
 		}
 	};
 
