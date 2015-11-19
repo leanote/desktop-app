@@ -223,11 +223,17 @@ var Resize = {
 	},
 
 	// mdeditor
+	resizeMDInterval: null,
 	resizeMdColumns: function(event) {
 		var self = this;
 		if (self.mdLineMove) {
 			var mdEditorWidth = event.clientX - self.leftColumn.offset().left; // self.leftNotebook.width() - self.noteList.width();
 			self.setMdColumnWidth(mdEditorWidth);
+
+			clearInterval(self.resizeMDInterval);
+			self.resizeMDInterval = setTimeout(function () {
+				MD.aceEditor && MD.aceEditor.resize();
+			}, 50);
 		}
 	},
 
@@ -2134,3 +2140,8 @@ $(function() {
 	initUploadImage();
 	Writting.init();
 });
+
+// markdown editor v2
+LEA.canSetMDModeFromStorage = function () {
+	return true;
+}
