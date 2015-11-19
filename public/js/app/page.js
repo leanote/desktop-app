@@ -1327,7 +1327,7 @@ var State = {
 	}
 };
 
-// note.html调用
+// js/main.js 在load plugin后调用
 // 实始化页面
 // 判断是否登录
 function initPage(initedCallback) {
