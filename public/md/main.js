@@ -33922,7 +33922,7 @@ define('core',[
 		$("#wmd-ulist-button").append($('<i class="fa fa-list-ul">')).appendTo($btnGroupElt);
 		$("#wmd-heading-button").append($('<i class="fa fa-header">')).appendTo($btnGroupElt);
 		$("#wmd-hr-button").append($('<i class="fa fa-ellipsis-h">')).appendTo($btnGroupElt);
-		$btnGroupElt = $('.wmd-button-group5');
+		$btnGroupElt = $('.wmd-button-group4');
 		$("#wmd-undo-button").append($('<i class="fa fa-undo">')).appendTo($btnGroupElt);
 		$("#wmd-redo-button").append($('<i class="fa fa-repeat">')).appendTo($btnGroupElt);
 		$("#wmd-help-button").show();
