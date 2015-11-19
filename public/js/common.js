@@ -1641,8 +1641,10 @@ var Loading = {
 	setProgress: function (rate) {
 		this.$progressBar.width(rate + '%');
 	},
-	hide: function() {
-		$('#loadingDialog').modal('hide');
+	hide: function(timeout) {
+		setTimeout(function () {
+			$('#loadingDialog').modal('hide');
+		}, timeout ? timeout : 0);
 	}
 };
 

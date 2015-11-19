@@ -14,6 +14,7 @@ var Api = {
 	fileService: FileService,
 	noteService: NoteService,
 	userService: UserService,
+	dbService: db,
 
 	// 得到当前版本
 	getCurVersion: function (callback) {

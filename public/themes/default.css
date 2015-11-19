@@ -2764,6 +2764,9 @@ background-position:-1px -670px
   border-top: 1px dashed #eee;
   padding: 5px 0;
 }
+#loadingDialog {
+  z-index: 999999;
+}
 #loading {
   display: inline-block;
   width: 20px;
