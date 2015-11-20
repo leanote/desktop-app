@@ -454,6 +454,7 @@ define(function() {
 		},
 
 		// 删除用户
+		// TODO 删除用户后, 要发事件, 通过menu更新切换账户的列表
 		deleteUser: function(userId) {
 			var me = this;
 			if (confirm(me.getMsg("Are you sure, it can't be recovered after it has been deleted"))) {
