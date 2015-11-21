@@ -1503,7 +1503,7 @@ function goToMainPage() {
 	win.loadUrl('file://' + __dirname + '/note.html?from=login');
 }
 
-function _switchAccount() {
+function toLogin() {
 	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
 		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
@@ -1517,14 +1517,14 @@ function _switchAccount() {
 // 添加用户
 function switchAccount() {
 	onClose(function () {
-		_switchAccount();
+		toLogin();
 	});
 }
 
 // 当没有用户时, 切换之
 function switchToLoginWhenNoUser() {
 	Server.close(function () {
-		_switchAccount();
+		toLogin();
 	});
 }
 

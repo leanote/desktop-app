@@ -88,6 +88,7 @@
     "loginSuccess": "登錄成功, 正在跳轉",
     "logining": "正在登錄",
     "logout": "退出",
+    "Logout": "註銷",
     "minLength": "長度至少為%s",
     "Move": "移動",
     "myBlog": "我的博客",

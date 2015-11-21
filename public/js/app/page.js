@@ -2010,6 +2010,20 @@ function userMenu(allUsers) {
 	        click: function(e) {
 	        }
 	    });
+
+	    // 注销
+	    this.logout = new gui.MenuItem({
+	        label: getMsg('Logout'),
+	        click: function(e) {
+	        	Loading.show();
+	        	onClose(function () {
+	        		UserService.logout(function () {
+	        			toLogin();
+	        		});
+	        	});
+	        }
+	    });
+	    
 	    this.switchAccount = new gui.MenuItem({
 	        label: getMsg('Add account'),
 	        click: function(e) {
@@ -2036,7 +2050,6 @@ function userMenu(allUsers) {
 	        }
 	    });
 
-
 	    this.menu.append(this.email);
 		if (!UserInfo.IsLocal) {//hide sync menu for local account
 		    this.blog = new gui.MenuItem({
@@ -2048,6 +2061,7 @@ function userMenu(allUsers) {
 		    this.menu.append(this.blog);
 		}
 		this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.logout);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(allUsersMenu); 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -2058,9 +2072,9 @@ function userMenu(allUsers) {
 		    this.menu.append(themeMenu);
 	    }
 
-		var height = 230;
+		var height = 260;
 		if (UserInfo.IsLocal) {
-			height = 200;
+			height = 230;
 		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));

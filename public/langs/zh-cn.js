@@ -88,6 +88,7 @@
     "loginSuccess": "登录成功, 正在跳转",
     "logining": "正在登录",
     "logout": "退出",
+    "Logout": "注销",
     "minLength": "长度至少为%s",
     "Move": "移动",
     "myBlog": "我的博客",
