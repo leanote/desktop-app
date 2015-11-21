@@ -263,7 +263,7 @@
 
 	"More...": "更多",
 	"Force full sync": "强制全量同步",
-	"ForceFullSyncMsg": "强制全量同步会从服务器上同步所有数据, 可能耗时比较久, 你确定?",
+	"ForceFullSyncMsg": "强制全量同步会先将该帐户的本地数据全部删除(包括数据库, 图片和附件), 然后从服务器上同步所有数据, 你确定?",
 
 	"Are you sure to delete it ?": "确定删除?",
 	"Are you sure ?": "你确定执行该操作?",

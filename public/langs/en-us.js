@@ -184,5 +184,5 @@
 	"Tag": "Tag",
 	"Starred": "Starred",
 
-	"ForceFullSyncMsg": "Full sync will load all data from server, are you sure ?"
+	"ForceFullSyncMsg": "Full sync will remove the current account's all local data (includes database, images and attachments) and load all data from server, are you sure ?"
 }
