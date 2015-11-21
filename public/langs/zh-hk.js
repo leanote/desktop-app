@@ -88,6 +88,7 @@
     "loginSuccess": "登錄成功, 正在跳轉",
     "logining": "正在登錄",
     "logout": "退出",
+    "Logout": "註銷",
     "minLength": "長度至少為%s",
     "Move": "移動",
     "myBlog": "我的博客",
@@ -262,7 +263,7 @@
 
     "More...": "更多",
     "Force full sync": "強制全量同步",
-    "ForceFullSyncMsg": "強制全量同步會從服務器上同步所有數據, 可能耗時比較久, 妳確定?",
+    "ForceFullSyncMsg": "強制全量同步會先將該帳戶的本地數據全部刪除(包括數據庫, 圖片和附件), 然後從服務器上同步所有數據, 妳確定?",
 
     "Are you sure to delete it ?": "確定刪除?",
     "Are you sure ?": "妳確定執行該操作?",

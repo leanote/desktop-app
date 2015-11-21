@@ -1852,6 +1852,12 @@ img::selection {
 #loadingDialog.has-progress .progress {
   display: block;
 }
+#loadingDialog.hide-loading img {
+  display: none;
+}
+#loadingDialog.hide-close .close {
+  display: none;
+}
 #loadingDialog button {
   margin: 5px;
   font-size: 14px;
@@ -2763,6 +2769,9 @@ background-position:-1px -670px
 #historyList .btns {
   border-top: 1px dashed #eee;
   padding: 5px 0;
+}
+#loadingDialog {
+  z-index: 999999;
 }
 #loading {
   display: inline-block;

@@ -12,8 +12,10 @@ if(!/login.html/.test(location.href)) {
 	Server.start();
 }
 
+// 数据库初始化
 var db = require('db');
-db.init();
+// db.init();
+db.initGlobal();
 
 // 所有service, 与数据库打交道
 var Service = {

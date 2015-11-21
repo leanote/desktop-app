@@ -621,7 +621,7 @@ $(function() {
 	});
 
 	// markdown编辑器paste
-	$('#wmd-input-sub').on('paste', function(e) {
+	$('#wmd-input').on('paste', function(e) {
 		pasteImage(e);
 	});
 });
@@ -1327,7 +1327,7 @@ var State = {
 	}
 };
 
-// note.html调用
+// js/main.js 在load plugin后调用
 // 实始化页面
 // 判断是否登录
 function initPage(initedCallback) {
@@ -1456,6 +1456,11 @@ function initPage(initedCallback) {
 	 		UserService.getAllUsers(function(users) {
 		 		userMenu(users);
 	 		});
+		    Api.on('deleteUser', function () {
+		    	UserService.getAllUsers(function(users) {
+			 		userMenu(users);
+		 		});
+		    });
 
 	 		setLayoutWidth();
 		} else {
@@ -1930,6 +1935,53 @@ function setMacTopMenu() {
 	gui.Menu.setApplicationMenu(menu);
 }
 
+function getShortHost(host) {
+	if (!host) {
+		host = 'https://leanote.com';
+	}
+	var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
+	if(ret && ret.length == 3) {
+		host = ret[2];
+	}
+	return host;
+}
+
+function toggleAccount(user) {
+	if (!user) {
+		return;
+	}
+	UserService.saveCurUser({UserId: user.UserId}, function () {
+		reloadApp();
+	});
+}
+
+function getToggleUserMenus(allUsers) {
+	if (!allUsers || !allUsers.length) {
+		return null;
+	}
+    var userMenus = new gui.Menu();
+    for (var i = 0; i < allUsers.length; ++i) {
+    	var user = allUsers[i];
+    	if (user.Username && user.UserId) {
+    		var label = user.Username;
+
+    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
+			label += ' (' + otherLabel + ')';
+
+	    	userMenus.append(new gui.MenuItem({
+		        label: label,
+		        enabled: !user.IsActive,
+		        click: (function(user) {
+		        	return function() {
+			        	toggleAccount(user);
+		        	}
+		        })(user)
+		    }));
+	    }
+    }
+    return userMenus;
+}
+
 // user
 function userMenu(allUsers) {
 	// ----------
@@ -1945,17 +1997,6 @@ function userMenu(allUsers) {
 	//-------------------
 	// 右键菜单
 
-	function getShortHost(host) {
-		if (!host) {
-			host = 'https://leanote.com';
-		}
-		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
-		if(ret && ret.length == 3) {
-			host = ret[2];
-		}
-		return host;
-	}
-
 	function menu() {
 		var me = this;
 		// this.target = '';
@@ -1969,6 +2010,20 @@ function userMenu(allUsers) {
 	        click: function(e) {
 	        }
 	    });
+
+	    // 注销
+	    this.logout = new gui.MenuItem({
+	        label: getMsg('Logout'),
+	        click: function(e) {
+	        	Loading.show();
+	        	UserService.logout(function () {
+	        		onClose(function () {
+	        			toLogin();
+		        	});
+        		});
+	        }
+	    });
+	    
 	    this.switchAccount = new gui.MenuItem({
 	        label: getMsg('Add account'),
 	        click: function(e) {
@@ -1983,41 +2038,10 @@ function userMenu(allUsers) {
 	    });
 
 	    // 所有用户
-	    var allUsersMenu;
-	    if (allUsers) {
-	    	function toggleAccount(user) {
-	    		if (!user) {
-	    			return;
-	    		}
-    			UserService.saveCurUser({UserId: user.UserId}, function () {
-					reloadApp();
-    			});
-	    	}
-		    var userMenus = new gui.Menu();
-		    for (var i = 0; i < allUsers.length; ++i) {
-		    	var user = allUsers[i];
-		    	if (user.Username && user.UserId) {
-		    		var label = user.Username;
-
-		    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
-					label += ' (' + otherLabel + ')';
-
-			    	userMenus.append(new gui.MenuItem({
-				        label: label,
-				        enabled: !user.IsActive,
-				        click: (function(user) {
-				        	return function() {
-					        	toggleAccount(user);
-				        	}
-				        })(user)
-				    }));
-			    }
-		    }
-		    allUsersMenu = new gui.MenuItem({
-		        label: getMsg('Switch account'),
-		        submenu: userMenus
-		    });
-	    }
+	    var allUsersMenu = new gui.MenuItem({
+	        label: getMsg('Switch account'),
+	        submenu: getToggleUserMenus(allUsers)
+	    });
 
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
@@ -2037,6 +2061,7 @@ function userMenu(allUsers) {
 		    this.menu.append(this.blog);
 		}
 		this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.logout);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(allUsersMenu); 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -2047,9 +2072,9 @@ function userMenu(allUsers) {
 		    this.menu.append(themeMenu);
 	    }
 
-		var height = 230;
+		var height = 260;
 		if (UserInfo.IsLocal) {
-			height = 200;
+			height = 230;
 		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -2121,9 +2146,14 @@ function userMenu(allUsers) {
 
 	var userMenuSys = new menu();
 
-	$('#myProfile').click(function(e) {
+	$('#myProfile').off().click(function(e) {
 		userMenuSys.popup(e);
 	});
+}
+
+$(function() {
+	initUploadImage();
+	Writting.init();
 
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
@@ -2134,11 +2164,6 @@ function userMenu(allUsers) {
 	  e.preventDefault();
 	  e.stopPropagation();
 	}, false);
-}
-
-$(function() {
-	initUploadImage();
-	Writting.init();
 });
 
 // markdown editor v2

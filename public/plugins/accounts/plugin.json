@@ -1,0 +1,16 @@
+{
+    "name": "accounts",
+    "author": "life",
+    "authorUrl": "http://life.leanote.com",
+    "desc": "帐户管理",
+    "langs": {
+        "en-us": {
+            "pluginName": "Accounts",
+            "pluginDesc": ""
+        },
+        "zh-cn": {
+            "pluginName": "帐户管理",
+            "pluginDesc": ""
+        }
+    }
+}

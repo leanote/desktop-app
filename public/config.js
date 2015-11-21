@@ -7,7 +7,8 @@ var Config = {
         "export_html",
         "export_leanote",
         "export_evernote",
-        "langs"
+        "langs",
+        "accounts"
     ],
     "langs": [
         {
@@ -23,6 +24,6 @@ var Config = {
             "name": "繁体中文"
         }
     ],
-    "lang": "en-us",
+    "lang": "zh-cn",
     "theme": ""
 };
