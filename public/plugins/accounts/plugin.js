@@ -24,8 +24,11 @@ define(function() {
 				"Options": "操作",
 				"Current": "当前",
 
+				"Data": "数据",
+				"Open Dir": "打开目录",
 				"Error": "错误",
-				"No such account": "无该帐户"
+				"No such account": "无该帐户",
+
 			},
 			'zh-hk': {
 				'Accounts': '帐户管理',
@@ -49,6 +52,19 @@ define(function() {
 		#accountsDialog .modal-dialog {
 			width: 750px ;
 		}
+		#accountsDialog .user-data {
+			margin: 0;
+		    padding: 0;
+		    list-style: none;
+		}
+		#accountsDialog .user-data a {
+		    color: #428bca;
+		    display: inline-block;
+		    margin: 0 3px;
+		}
+		#accountsDialog .user-data a:hover {
+			text-decoration: underline !important;
+		}
 		</style>
 	    <div class="modal fade bs-modal-sm" id="accountsDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 	        <div class="modal-dialog">
@@ -63,6 +79,7 @@ define(function() {
 				          	<tr>
 					          	<th class="lang">Username</th>
 					          	<th class="lang">Is Local</th>
+					          	<th class="lang">Data</th>
 					          	<th class="lang">Options</th>
 				          	</tr>
 			          	</thead>
@@ -113,8 +130,11 @@ define(function() {
 						Api.gui.Shell.showItemInFolder(path);
 					});
 				},
-				'open-files-dir': function (userId) {
-					Api.gui.Shell.showItemInFolder(Api.userService.getUserImagesAndAttachBasePath(userId));
+				'open-attach-dir': function (userId) {
+					Api.gui.Shell.showItemInFolder(Api.userService.getUserAttachsPath(userId));
+				},
+				'open-image-dir': function (userId) {
+					Api.gui.Shell.showItemInFolder(Api.userService.getUserImagesPath(userId));
 				},
 				'delete': function (userId, $targetBtn) {
 					me.deleteUser(userId);
@@ -124,7 +144,7 @@ define(function() {
 			};
 
 			// 事件
-			me.tbody.on('click', 'button', function () {
+			me.tbody.on('click', 'a', function () {
 				var $this = $(this);
 				var userId = $this.closest('tr').data('id');
 				var option = $this.data('op');
@@ -134,6 +154,15 @@ define(function() {
 					func(userId, $this);
 				}
 			});
+		},
+
+		fixSize: function (size) {
+			var unit = 'KB'
+			if (size > 1000) {
+				size = size / 1000;
+				unit = 'MB';
+			}
+			return size.toFixed(2) + unit;
 		},
 
 		renderUser: function(user) {
@@ -150,10 +179,28 @@ define(function() {
 
 			var disabled = user.IsActive ? 'disabled="disabled"' : '';
 
+			// 得到用户的数据统计
+			var userStats = Api.userService.getUserDataStats(user);
+
+			var dataTd = '<ul class="user-data">';
+			dataTd += '<li>数据库 '
+				+ me.fixSize(userStats.db)
+				+ '<a data-op="open-db-dir">' + me.getMsg('Open Dir') + '</a>'
+				+ '<a data-op="db">' + me.getMsg('DB Optimization') + '</a>'
+				+ ' </li>'
+			dataTd += '<li>图片 '
+				+ me.fixSize(userStats.image)
+				+ '<a data-op="open-image-dir">' + me.getMsg('Open Dir') + '</a>'
+				+ ' </li>'
+			dataTd += '<li>附件 '
+				+ me.fixSize(userStats.attach)
+				+ '<a data-op="open-attach-dir">' + me.getMsg('Open Dir') + '</a>'
+				+ ' </li>'
+			dataTd += '</ul>';
+
+			tr += '<td>' + dataTd + '</td>';
+
 			var options = '<div class="btn-group" role="group">'
-				+ '<button class="btn btn-default" data-op="db">' + me.getMsg('DB Optimization') + '</button>'
-				+ '<button class="btn btn-default" data-op="open-db-dir">' + me.getMsg('Open DB Dir') + '</button>'
-				+ '<button class="btn btn-default" data-op="open-files-dir">' + me.getMsg('Open Images/Attachs Dir') + '</button>'
 				+ '<button class="btn btn-danger" ' + disabled + ' data-op="delete">' + me.getMsg('Delete') + '</button>'
 				+ '</div>';
 			tr += '<td>' + options + '</td></tr>';
