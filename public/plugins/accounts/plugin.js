@@ -32,7 +32,7 @@ define(function() {
 
 				"Error": "错误",
 				"No such account": "无该帐户",
-				"Are you sure, it can't be recovered after it has been deleted": "确定要删除该帐户? 本地的数据将彻底删除",
+				"Are you sure, it can't be recovered after it has been deleted": "确定要删除该帐户? 本地的数据将会彻底删除",
 			},
 			'zh-hk': {
 				'Accounts': '帳戶管理',
@@ -53,7 +53,7 @@ define(function() {
 
 				"Error": "錯誤",
 				"No such account": "無該帳戶",
-				"Are you sure, it can't be recovered after it has been deleted": "確定要刪除該帳戶? 本地的數據將徹底刪除",
+				"Are you sure, it can't be recovered after it has been deleted": "確定要刪除該帳戶? 本地的數據將會徹底刪除",
 			}
 		},
 
@@ -465,101 +465,6 @@ define(function() {
 			});
 		},
 
-		// 删除笔记历史记录
-		_deleteNoteHistories: function (sourceDb, notes, callback) {
-			var me = this;
-			sourceDb.noteHistories.loadDB(function (ok) {
-				if (!ok) {
-					return callback();
-				}
-				async.eachSeries(notes, function (note, cb) {
-					sourceDb.noteHistories.remove( {_id: note.NoteId}, { multi: true }, function () {
-						cb();
-					});
-				}, function () {
-					callback();
-				});
-			});
-		},
-
-		_deleteDB: function (userId, callback) {
-			var me = this;
-
-			// 判断当前db是否是全局的, 如果不是, 则初始化全局的
-			var names = me.dbNames;
-			var sourceDb = {};
-			if (Api.userService.hasDB) {
-				Api.dbService.initIt(sourceDb, names, '', false);
-			}
-			else {
-				sourceDb = Api.dbService;
-			}
-
-			var names = ['notebooks', 'notes', 'tags', 'images', 'attachs'];
-			var db = sourceDb;
-			var query = {UserId: userId};
-			async.eachSeries(names, function (name, cb) {
-				var dbIt = db[name];
-				if (!dbIt) {
-					cb();
-					return;
-				}
-				// 如果是笔记, 则要删除note histories
-				if (name == 'notes') {
-					dbIt.find(query, function(err, docs) {
-						if (err || !docs) {
-							cb();
-							return;
-						}
-
-						// 删除历史记录
-						me._deleteNoteHistories(sourceDb, docs, function () {
-							// 删除自己
-							dbIt.remove(query, { multi: true },function () {
-								cb();
-							});
-						});
-					});
-				}
-				else {
-					dbIt.remove(query, { multi: true }, function () {
-						cb();
-					});
-				}
-			}, function () {
-				callback();
-			});
-
-		},
-
-		_deleteUser: function(userInfo, callback) {
-			var me = this;
-			var userId = userInfo.UserId;
-
-			// 1. 删除附件,图片
-			Api.userService.deleteUserImagesAndAttachsPath(userId);
-
-			// 2. 删除之
-			Api.userService.deleteUser(userId);
-
-			// 3. 删除其它表
-			// 如果有自己独立的表, 则把文件夹删除即可
-			if (userInfo.HasDB) {
-				var dbPath = Api.userService.getUserDBPath(userId);
-				if (dbPath) {
-					Api.commonService.deleteFolderRecursive(dbPath);
-				}
-				callback();
-			}
-			// 没有, 那就要一个个删除了
-			else {
-
-				me._deleteDB(userId, function () {
-					callback();
-				});
-			}
-		},
-
 		// 删除用户
 		deleteUser: function(userId, callback) {
 			var me = this;
@@ -567,27 +472,25 @@ define(function() {
 
 				Api.loading.show('', {hideClose: true});
 
-				Api.userService.getUser(userId, function (user) {
-					me._deleteUser(user, function() {
-						Api.trigger('deleteUser');
+				Api.userService.deleteUserAndAllData(userId, function () {
+					Api.trigger('deleteUser');
 
-						Api.loading.setMsg(me.getMsg('Deleted'), false);
-						Api.loading.hide(2000);
+					Api.loading.setMsg(me.getMsg('Deleted'), false);
+					Api.loading.hide(2000);
 
-						callback(true);
+					callback(true);
 
-						// 当前是活跃用户删除的, 回到登录页
-						if (user.IsActive) {
-							Api.switchToLoginWhenNoUser();
-							return;
-						}
+					me.userLength--;
 
-						me.userLength--;
-						// 当只有一个用户时, 重新renderActive行, 可以删除
-						if (me.userLength == 1) {
-							me.renderUser(me.curUser, true);
-						}
-					});
+					// 删除的是当前账户
+					if (me.curUser.UserId === userId) {
+						Api.switchToLoginWhenNoUser();
+						return;
+					}
+					// 当只有一个用户时, 重新renderActive行, 可以删除
+					if (me.userLength == 1) {
+						me.renderUser(me.curUser, true);
+					}
 				});
 			}
 			else {
