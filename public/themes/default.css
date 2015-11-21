@@ -1852,6 +1852,12 @@ img::selection {
 #loadingDialog.has-progress .progress {
   display: block;
 }
+#loadingDialog.hide-loading img {
+  display: none;
+}
+#loadingDialog.hide-close .close {
+  display: none;
+}
 #loadingDialog button {
   margin: 5px;
   font-size: 14px;

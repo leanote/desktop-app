@@ -6,6 +6,7 @@ var Api = {
 	loading: Loading,
 	gui: gui,
 	onClose: onClose,
+	switchToLoginWhenNoUser: switchToLoginWhenNoUser,
 	reloadApp: reloadApp,
 	isMac: isMac(),
 	nodeFs: NodeFs,

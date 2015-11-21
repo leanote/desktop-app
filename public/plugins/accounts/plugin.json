@@ -1,15 +1,15 @@
 {
-    "name": "langs",
+    "name": "accounts",
     "author": "life",
     "authorUrl": "http://life.leanote.com",
-    "desc": "语言",
+    "desc": "帐户管理",
     "langs": {
         "en-us": {
-            "pluginName": "Langs",
+            "pluginName": "Accounts",
             "pluginDesc": ""
         },
         "zh-cn": {
-            "pluginName": "设置语言",
+            "pluginName": "帐户管理",
             "pluginDesc": ""
         }
     }

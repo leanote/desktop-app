@@ -1,7 +1,9 @@
 /**
  *
  * 帐户管理
- *
+ * 
+ * @author life life@leante.com
+ * @date 2015/11/21
  */
 var async;
 
@@ -18,20 +20,40 @@ define(function() {
 				"Yes": "是",
 				"No": "否",
 				"DB Optimization": "数据库优化",
-				"Open DB Dir": "打开数据库目录",
-				"Open Images/Attachs Dir": "打开图片附件目录",
-				"Delete": "删除",
+				"Open Dir": "打开目录",
+				"Data": "数据",
 				"Options": "操作",
 				"Current": "当前",
+				"Delete": "删除",
+				"Close": "关闭",
 
-				"Data": "数据",
-				"Open Dir": "打开目录",
+				"Optimizing": "正在优化",
+				"Completed": "优化完成",
+
 				"Error": "错误",
 				"No such account": "无该帐户",
-
+				"Are you sure, it can't be recovered after it has been deleted": "确定要删除该帐户? 本地的数据将彻底删除",
 			},
 			'zh-hk': {
-				'Accounts': '帐户管理',
+				'Accounts': '帳戶管理',
+				"Username": "用戶名",
+				"Is Local": "本地帳戶",
+				"Yes": "是",
+				"No": "否",
+				"DB Optimization": "數據庫優化",
+				"Open Dir": "打開目錄",
+				"Data": "數據",
+				"Options": "操作",
+				"Current": "當前",
+				"Delete": "刪除",
+				"Close": "關閉",
+
+				"Optimizing": "正在優化",
+				"Completed": "優化完成",
+
+				"Error": "錯誤",
+				"No such account": "無該帳戶",
+				"Are you sure, it can't be recovered after it has been deleted": "確定要刪除該帳戶? 本地的數據將徹底刪除",
 			}
 		},
 
@@ -88,7 +110,7 @@ define(function() {
 			          </table>
 		          </div>
 		          <div class="modal-footer ">
-		            <button type="button" class="btn btn-default upgrade-cancel-btn lang" data-dismiss="modal">Close</button>
+		            <button type="button" class="btn btn-default upgrade-cancel-btn lang" data-dismiss="modal" class="lang">Close</button>
 		          </div>
 	          </div><!-- /.modal-content -->
 	        </div><!-- /.modal-dialog -->
@@ -137,14 +159,16 @@ define(function() {
 					Api.gui.Shell.showItemInFolder(Api.userService.getUserImagesPath(userId));
 				},
 				'delete': function (userId, $targetBtn) {
-					me.deleteUser(userId);
-
-					$targetBtn.closest('tr').remove();
+					me.deleteUser(userId, function (ok) {
+						if (ok) {
+							$targetBtn.closest('tr').remove();
+						}
+					});
 				}
 			};
 
 			// 事件
-			me.tbody.on('click', 'a', function () {
+			me.tbody.on('click', '.op', function () {
 				var $this = $(this);
 				var userId = $this.closest('tr').data('id');
 				var option = $this.data('op');
@@ -165,7 +189,10 @@ define(function() {
 			return size.toFixed(2) + unit;
 		},
 
-		renderUser: function(user) {
+		userLength: 0,
+		curUser: null,
+
+		renderUser: function(user, renderToExists) {
 			var me = this;
 			var username = user.Username;
 			if (user.IsActive) {
@@ -174,10 +201,17 @@ define(function() {
 			if (user.Email) {
 				username += '<br /><i>' + user.Email + '</i>';
 			}
-			var tr = '<tr data-id="' + user.UserId + '"><td>' + username + '</td>';
+			
+			var tr = '<td>' + username + '</td>';
+
 			tr += '<td>' + (user.IsLocal ? me.getMsg('Yes') : me.getMsg('No')) + '</td>';
 
-			var disabled = user.IsActive ? 'disabled="disabled"' : '';
+			// 当用户只有一个时, 也可以删除自己
+			var disabled = user.IsActive && me.userLength > 1 ? 'disabled="disabled"' : '';
+
+			if (user.IsActive) {
+				me.curUser = user;
+			}
 
 			// 得到用户的数据统计
 			var userStats = Api.userService.getUserDataStats(user);
@@ -185,26 +219,35 @@ define(function() {
 			var dataTd = '<ul class="user-data">';
 			dataTd += '<li>数据库 '
 				+ me.fixSize(userStats.db)
-				+ '<a data-op="open-db-dir">' + me.getMsg('Open Dir') + '</a>'
-				+ '<a data-op="db">' + me.getMsg('DB Optimization') + '</a>'
+				+ '<a data-op="open-db-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
+				+ '<a data-op="db" class="op">' + me.getMsg('DB Optimization') + '</a>'
 				+ ' </li>'
 			dataTd += '<li>图片 '
 				+ me.fixSize(userStats.image)
-				+ '<a data-op="open-image-dir">' + me.getMsg('Open Dir') + '</a>'
+				+ '<a data-op="open-image-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ ' </li>'
 			dataTd += '<li>附件 '
 				+ me.fixSize(userStats.attach)
-				+ '<a data-op="open-attach-dir">' + me.getMsg('Open Dir') + '</a>'
+				+ '<a data-op="open-attach-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ ' </li>'
 			dataTd += '</ul>';
 
 			tr += '<td>' + dataTd + '</td>';
 
 			var options = '<div class="btn-group" role="group">'
-				+ '<button class="btn btn-danger" ' + disabled + ' data-op="delete">' + me.getMsg('Delete') + '</button>'
+				+ '<button class="op btn btn-danger" ' + disabled + ' data-op="delete">' + me.getMsg('Delete') + '</button>'
 				+ '</div>';
-			tr += '<td>' + options + '</td></tr>';
-			return tr;
+			tr += '<td>' + options + '</td>';
+
+			if (renderToExists) {
+				me.tbody.find('[data-id="' + user.UserId + '"]').html(tr);
+				return;
+			}
+
+			var trContainer = '<tr data-id="' + user.UserId + '">'
+				+ tr
+				+ '</tr>';
+			return trContainer;
 		},
 
 		renderUsers: function (users) {
@@ -222,6 +265,7 @@ define(function() {
 			me.dialog.modal('show');
 
 			Api.userService.getAllUsers(function (users) {
+				me.userLength = users.length;
 				me.renderUsers(users);
 			});
 		},
@@ -255,7 +299,7 @@ define(function() {
 		// 2. 将数据库读写合并
 		dbOptimization: function (userId) {
 			var me = this;
-			Api.loading.show();
+			Api.loading.show('', {hideClose: true});
 			Api.userService.getUser(userId, function (user) {
 				if (!user) {
 					Api.gui.dialog.showErrorBox(me.getMsg("Error"), me.getMsg("No such account"));
@@ -267,7 +311,9 @@ define(function() {
 				if (user.HasDB) {
 					me.compactDatafile();
 					Api.loading.hide(2000);
-					Api.loading.setMsg('优化完成');
+					Api.loading.setMsg(me.getMsg('Completed'), false);
+
+					me.renderUser(user, true);
 					return;
 				}
 
@@ -278,13 +324,14 @@ define(function() {
 				me.migrateAllDBs(userId, function (ok) {
 					// 迁移成功后, 更新HasDB
 					Api.userService.setUserHasDB(userId, function () {
-						Api.loading.setMsg('优化完成');
+						Api.loading.setMsg(me.getMsg('Completed'), false);
 						Api.loading.hide(2000);
+
+						me.renderUser(user, true);
 					});
 				}, function (msg) {
-					Api.loading.setMsg(msg);
+					Api.loading.setMsg(msg, false);
 				});
-
 			});
 		},
 
@@ -388,8 +435,8 @@ define(function() {
 
 			// OK, 为每个表进行迁移
 			async.eachSeries(names, function(name, cb) {
-				msgCallbac('正在优化 ' + name);
-				console.log('正在优化 ' + name);
+				msgCallbac(me.getMsg('Optimizing') + ' ' + name);
+				// console.log('正在优化 ' + name);
 
 				if (name === 'noteHistories') {
 					cb();
@@ -398,11 +445,11 @@ define(function() {
 				
 				me.migrateEach(userId, sourceDb, distDb, name, function(ok) {
 					if (ok) {
-						console.log(name + ' Over');
-						msgCallbac(name + ' 优化完成');
+						// console.log(name + ' Over');
+						msgCallbac(name + ' ' + me.getMsg('Completed'));
 					}
 					else {
-						console.log(name + ' 迁移失败');
+						// console.log(name + ' 迁移失败');
 					}
 					cb();
 				});
@@ -514,19 +561,37 @@ define(function() {
 		},
 
 		// 删除用户
-		// TODO 删除用户后, 要发事件, 通过menu更新切换账户的列表
-		deleteUser: function(userId) {
+		deleteUser: function(userId, callback) {
 			var me = this;
 			if (confirm(me.getMsg("Are you sure, it can't be recovered after it has been deleted"))) {
-				Api.loading.show();
+
+				Api.loading.show('', {hideClose: true});
+
 				Api.userService.getUser(userId, function (user) {
 					me._deleteUser(user, function() {
 						Api.trigger('deleteUser');
 
-						Api.loading.setMsg(me.getMsg('Deleted'));
+						Api.loading.setMsg(me.getMsg('Deleted'), false);
 						Api.loading.hide(2000);
+
+						callback(true);
+
+						// 当前是活跃用户删除的, 回到登录页
+						if (user.IsActive) {
+							Api.switchToLoginWhenNoUser();
+							return;
+						}
+
+						me.userLength--;
+						// 当只有一个用户时, 重新renderActive行, 可以删除
+						if (me.userLength == 1) {
+							me.renderUser(me.curUser, true);
+						}
 					});
 				});
+			}
+			else {
+				callback(false);
 			}
 		}
 	};

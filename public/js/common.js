@@ -1503,9 +1503,7 @@ function goToMainPage() {
 	win.loadUrl('file://' + __dirname + '/note.html?from=login');
 }
 
-function switchAccount() {
-	SyncService.stop();
-	// location.href = 'login.html';
+function _switchAccount() {
 	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
 		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
@@ -1515,6 +1513,19 @@ function switchAccount() {
 		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
+}
+// 添加用户
+function switchAccount() {
+	onClose(function () {
+		_switchAccount();
+	});
+}
+
+// 当没有用户时, 切换之
+function switchToLoginWhenNoUser() {
+	Server.close(function () {
+		_switchAccount();
+	});
 }
 
 // 没有一处调用
@@ -1602,29 +1613,60 @@ var Loading = {
 	$msg: $('#loadingDialogBodyMsg'),
 	// option {hasProgress: true, onClose: function}
 	inited: false,
-	setMsg: function (msg) {
+	setMsg: function (msg, showLoading) {
+		var me = this;
 		this.$msg.html(msg);
+		if (showLoading === undefined) {
+			showLoading = true;
+		}
+		if (showLoading) {
+			me.$loadingDialog.removeClass('hide-loading');
+		}
+		else {
+			me.$loadingDialog.addClass('hide-loading');
+		}
 	},
 	setProgressRate: function (msg) {
 		this.$progressRate.html(msg);
 	},
+
+	/**
+	 * [show description]
+	 * @param  {[type]} msg    [description]
+	 * @param  {[type]} option {
+	 *                         'hasProgress': false, 是否有进度
+	 *                         'hideClose': false, // 默认为false, 是否隐藏close
+	 * }
+	 * @return {[type]}        [description]
+	 */
 	show: function(msg, option) {
 		option = option || {};
 		msg || (msg = getMsg("loading..."));
 		this.$msg.html(msg);
+
 		if (option.isLarge) {
 			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
 		}
 		else {
 			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
 		}
+
 		this.$loadingDialog.modal({backdrop: 'static', keyboard: true});
+
 		if (option.hasProgress) {
 			this.$loadingDialog.addClass('has-progress');
 		}
 		else {
 			this.$loadingDialog.removeClass('has-progress');
 		}
+
+		if (option.hideClose) {
+			this.$loadingDialog.addClass('hide-close');
+		}
+		else {
+			this.$loadingDialog.removeClass('hide-close');
+		}
+
 		this.onClose = option.onClose;
 		if (!this.inited) {
 			this.init();
