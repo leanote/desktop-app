@@ -1456,6 +1456,11 @@ function initPage(initedCallback) {
 	 		UserService.getAllUsers(function(users) {
 		 		userMenu(users);
 	 		});
+		    Api.on('deleteUser', function () {
+		    	UserService.getAllUsers(function(users) {
+			 		userMenu(users);
+		 		});
+		    });
 
 	 		setLayoutWidth();
 		} else {
@@ -1930,6 +1935,53 @@ function setMacTopMenu() {
 	gui.Menu.setApplicationMenu(menu);
 }
 
+function getShortHost(host) {
+	if (!host) {
+		host = 'https://leanote.com';
+	}
+	var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
+	if(ret && ret.length == 3) {
+		host = ret[2];
+	}
+	return host;
+}
+
+function toggleAccount(user) {
+	if (!user) {
+		return;
+	}
+	UserService.saveCurUser({UserId: user.UserId}, function () {
+		reloadApp();
+	});
+}
+
+function getToggleUserMenus(allUsers) {
+	if (!allUsers || !allUsers.length) {
+		return null;
+	}
+    var userMenus = new gui.Menu();
+    for (var i = 0; i < allUsers.length; ++i) {
+    	var user = allUsers[i];
+    	if (user.Username && user.UserId) {
+    		var label = user.Username;
+
+    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
+			label += ' (' + otherLabel + ')';
+
+	    	userMenus.append(new gui.MenuItem({
+		        label: label,
+		        enabled: !user.IsActive,
+		        click: (function(user) {
+		        	return function() {
+			        	toggleAccount(user);
+		        	}
+		        })(user)
+		    }));
+	    }
+    }
+    return userMenus;
+}
+
 // user
 function userMenu(allUsers) {
 	// ----------
@@ -1944,17 +1996,6 @@ function userMenu(allUsers) {
 
 	//-------------------
 	// 右键菜单
-
-	function getShortHost(host) {
-		if (!host) {
-			host = 'https://leanote.com';
-		}
-		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
-		if(ret && ret.length == 3) {
-			host = ret[2];
-		}
-		return host;
-	}
 
 	function menu() {
 		var me = this;
@@ -1983,41 +2024,10 @@ function userMenu(allUsers) {
 	    });
 
 	    // 所有用户
-	    var allUsersMenu;
-	    if (allUsers) {
-	    	function toggleAccount(user) {
-	    		if (!user) {
-	    			return;
-	    		}
-    			UserService.saveCurUser({UserId: user.UserId}, function () {
-					reloadApp();
-    			});
-	    	}
-		    var userMenus = new gui.Menu();
-		    for (var i = 0; i < allUsers.length; ++i) {
-		    	var user = allUsers[i];
-		    	if (user.Username && user.UserId) {
-		    		var label = user.Username;
-
-		    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
-					label += ' (' + otherLabel + ')';
-
-			    	userMenus.append(new gui.MenuItem({
-				        label: label,
-				        enabled: !user.IsActive,
-				        click: (function(user) {
-				        	return function() {
-					        	toggleAccount(user);
-				        	}
-				        })(user)
-				    }));
-			    }
-		    }
-		    allUsersMenu = new gui.MenuItem({
-		        label: getMsg('Switch account'),
-		        submenu: userMenus
-		    });
-	    }
+	    var allUsersMenu = new gui.MenuItem({
+	        label: getMsg('Switch account'),
+	        submenu: getToggleUserMenus(allUsers)
+	    });
 
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
@@ -2025,6 +2035,7 @@ function userMenu(allUsers) {
 	        	checkForUpdates();
 	        }
 	    });
+
 
 	    this.menu.append(this.email);
 		if (!UserInfo.IsLocal) {//hide sync menu for local account
@@ -2121,9 +2132,14 @@ function userMenu(allUsers) {
 
 	var userMenuSys = new menu();
 
-	$('#myProfile').click(function(e) {
+	$('#myProfile').off().click(function(e) {
 		userMenuSys.popup(e);
 	});
+}
+
+$(function() {
+	initUploadImage();
+	Writting.init();
 
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
@@ -2134,11 +2150,6 @@ function userMenu(allUsers) {
 	  e.preventDefault();
 	  e.stopPropagation();
 	}, false);
-}
-
-$(function() {
-	initUploadImage();
-	Writting.init();
 });
 
 // markdown editor v2

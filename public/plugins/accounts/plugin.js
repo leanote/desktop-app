@@ -22,7 +22,10 @@ define(function() {
 				"Open Images/Attachs Dir": "打开图片附件目录",
 				"Delete": "删除",
 				"Options": "操作",
-				"Current": "当前"
+				"Current": "当前",
+
+				"Error": "错误",
+				"No such account": "无该帐户"
 			},
 			'zh-hk': {
 				'Accounts': '帐户管理',
@@ -101,8 +104,18 @@ define(function() {
 				db: function (userId) {
 					me.dbOptimization(userId);
 				},
-				'open-db-dir': '',
-				'open-files-dir': '',
+				'open-db-dir': function (userId) {
+					Api.userService.getUserRealDBPath(userId, function(path) {
+						if (!path) {
+							Api.gui.dialog.showErrorBox(me.getMsg("Error"), me.getMsg("No such account"));
+							return;
+						}
+						Api.gui.Shell.showItemInFolder(path);
+					});
+				},
+				'open-files-dir': function (userId) {
+					Api.gui.Shell.showItemInFolder(Api.userService.getUserImagesAndAttachBasePath(userId));
+				},
 				'delete': function (userId, $targetBtn) {
 					me.deleteUser(userId);
 
@@ -198,7 +211,7 @@ define(function() {
 			Api.loading.show();
 			Api.userService.getUser(userId, function (user) {
 				if (!user) {
-					alert('Error');
+					Api.gui.dialog.showErrorBox(me.getMsg("Error"), me.getMsg("No such account"));
 					Api.loading.hide();
 					return;
 				}
@@ -461,6 +474,8 @@ define(function() {
 				Api.loading.show();
 				Api.userService.getUser(userId, function (user) {
 					me._deleteUser(user, function() {
+						Api.trigger('deleteUser');
+
 						Api.loading.setMsg(me.getMsg('Deleted'));
 						Api.loading.hide(2000);
 					});
