@@ -2016,11 +2016,11 @@ function userMenu(allUsers) {
 	        label: getMsg('Logout'),
 	        click: function(e) {
 	        	Loading.show();
-	        	onClose(function () {
-	        		UserService.logout(function () {
+	        	UserService.logout(function () {
+	        		onClose(function () {
 	        			toLogin();
-	        		});
-	        	});
+		        	});
+        		});
 	        }
 	    });
 	    

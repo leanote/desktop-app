@@ -12,7 +12,7 @@ var Service = {
 };
 
 var db = require('db');
-db.initForLogin();
+db.initGlobal();
 
 // 全局变量
 var ApiService = Service.apiService;
