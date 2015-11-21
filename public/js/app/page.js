@@ -621,7 +621,7 @@ $(function() {
 	});
 
 	// markdown编辑器paste
-	$('#wmd-input-sub').on('paste', function(e) {
+	$('#wmd-input').on('paste', function(e) {
 		pasteImage(e);
 	});
 });
