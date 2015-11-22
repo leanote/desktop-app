@@ -88,6 +88,7 @@
     "loginSuccess": "登錄成功, 正在跳轉",
     "logining": "正在登錄",
     "logout": "退出",
+    "Logout": "註銷",
     "minLength": "長度至少為%s",
     "Move": "移動",
     "myBlog": "我的博客",
@@ -194,6 +195,7 @@
     "Choose Files": "選擇文件",
     "Check for updates": "檢查更新",
     "Checking for udpates...": "正在檢查是否有可用更新...",
+    "Current version": "當前版本",
     "Upgrade": "升級",
     "This note is conflicted with:": "該筆記與以下筆記沖突:",
     "Maker as resolved": "標記已解決沖突",
@@ -203,6 +205,7 @@
     "Delete": "刪除",
     "Remove": "移除",
     "Export": "導出",
+    "Export notes": "導出筆記",
     "Histories": "歷史記錄",
     "Created": "創建",
     "Updated": "更新",
@@ -260,7 +263,7 @@
 
     "More...": "更多",
     "Force full sync": "強制全量同步",
-    "ForceFullSyncMsg": "強制全量同步會從服務器上同步所有數據, 可能耗時比較久, 妳確定?",
+    "ForceFullSyncMsg": "強制全量同步會先將該帳戶的本地數據全部刪除(包括數據庫, 圖片和附件), 然後從服務器上同步所有數據, 妳確定?",
 
     "Are you sure to delete it ?": "確定刪除?",
     "Are you sure ?": "妳確定執行該操作?",
@@ -278,6 +281,15 @@
     "Confirm password": "確認密碼",
     "Username": "用戶名",
     "User exists": "用戶已存在",
-    "Local": "本地"
+    "Local": "本地",
 
+    "Synchronizing": "正在同步",
+
+    "Hyperlink":"超鏈接","Please provide the link URL and an optional title":"請填寫鏈接和壹個可選的標題","optional title":"可選標題","Cancel":"取消","Strong":"粗體","strong text":"粗體","Emphasis":"斜體","emphasized text":"斜體","Blockquote":"引用","Code Sample":"代碼","enter code here":"代碼","Image":"圖片","Heading":"標題","Numbered List":"有序列表","Bulleted List":"無序列表","List item":"項目","Horizontal Rule":"水平線","Undo":"撤銷","Redo":"重做","enter image description here":"圖片標題","enter link description here":"鏈接標題",
+
+    "Please select a note firstly.": "請先選擇壹個筆記",
+    "<span></span> notes selected": "當前選中了 <span></span> 篇筆記",
+
+    "Sync error, retry to sync after 3 seconds": "同步失敗, 3 秒後自動重新嘗試同步",
+    "Network error!": "網絡異常"
 }

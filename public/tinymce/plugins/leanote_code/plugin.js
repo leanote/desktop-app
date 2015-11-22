@@ -331,7 +331,7 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
 	ed.addCommand('toggleCode', toggleCode);
     
     ed.addShortcut('ctrl+shift+c', '', 'toggleCode');
-	ed.addShortcut('command+shift+c', '', 'toggleCode');
+	ed.addShortcut('meta+shift+c', '', 'toggleCode');
 
 	// life
 	if(LeaAce.canAce()) {

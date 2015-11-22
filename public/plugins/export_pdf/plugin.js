@@ -116,13 +116,27 @@ define(function() {
 
 		    var menu = {
 		        label: Api.getMsg('plugin.export_pdf.export'),
+		        enabled: function(noteIds) {
+		        	if(UserInfo.IsLocal) {
+		        		return false;
+		        	}
+		        	if (noteIds && noteIds.length == 1) {
+		        		return true;
+		        	}
+		        	return false;
+		        },
 		        click: (function() {
-		        	return function(note) {
+		        	return function(noteIds) {
 		        		if (UserInfo.IsLocal) {
 		        			Notify.show({type: 'warning', title: 'Warning', body: getMsg('plugin.export_pdf.localUser')});
 		        			return;
 		        		}
-		        		me.exportPDF(note);
+		        		if (!noteIds || noteIds.length > 1) {
+		        			return;
+		        		}
+		        		Api.noteService.getNote(noteIds[0], function(note) {
+			        		me.exportPDF(note);
+		        		});
 		        	}
 		        })()
 		    };

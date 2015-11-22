@@ -223,11 +223,17 @@ var Resize = {
 	},
 
 	// mdeditor
+	resizeMDInterval: null,
 	resizeMdColumns: function(event) {
 		var self = this;
 		if (self.mdLineMove) {
 			var mdEditorWidth = event.clientX - self.leftColumn.offset().left; // self.leftNotebook.width() - self.noteList.width();
 			self.setMdColumnWidth(mdEditorWidth);
+
+			clearInterval(self.resizeMDInterval);
+			self.resizeMDInterval = setTimeout(function () {
+				MD.aceEditor && MD.aceEditor.resize();
+			}, 50);
 		}
 	},
 
@@ -488,7 +494,7 @@ function initEditor() {
 
 	// 刷新时保存 参考autosave插件
 	window.onbeforeunload = function(e) {
-    	Note.curChangedSaveIt();
+    	Note.curChangedSaveIt(true);
 	};
 
 	// 全局ctrl + s
@@ -615,7 +621,7 @@ $(function() {
 	});
 
 	// markdown编辑器paste
-	$('#wmd-input-sub').on('paste', function(e) {
+	$('#wmd-input').on('paste', function(e) {
 		pasteImage(e);
 	});
 });
@@ -1154,8 +1160,9 @@ LeaAce = {
 // 全量同步
 function fullSync(callback) {
 	log('full sync');
-	SyncService.fullSync(function(ret) {
-		callback && callback();
+	$('.loading-footer').show();
+	SyncService.fullSync(function(ret, ok) {
+		callback && callback(ok);
 	});
 }
 
@@ -1320,7 +1327,7 @@ var State = {
 	}
 };
 
-// note.html调用
+// js/main.js 在load plugin后调用
 // 实始化页面
 // 判断是否登录
 function initPage(initedCallback) {
@@ -1432,8 +1439,16 @@ function initPage(initedCallback) {
 			else if('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
 				_init();
 			} else {
-				fullSync(function() {
-					_init();
+				fullSync(function(ok) {
+					if (!ok) {
+						Notify.show({title: 'Info', body: getMsg('Sync error, retry to sync after 3 seconds')});
+						setTimeout(function () {
+							reloadApp();
+						}, 3000);
+					}
+					else {
+						_init();
+					}
 				});
 	 		}
 	 		$('#username').text(UserInfo.Username);
@@ -1441,6 +1456,11 @@ function initPage(initedCallback) {
 	 		UserService.getAllUsers(function(users) {
 		 		userMenu(users);
 	 		});
+		    Api.on('deleteUser', function () {
+		    	UserService.getAllUsers(function(users) {
+			 		userMenu(users);
+		 		});
+		    });
 
 	 		setLayoutWidth();
 		} else {
@@ -1512,6 +1532,11 @@ var Pren = {
 	},
 	togglePren: function(isToggleView) {
 		var me = this;
+		// 批量操作时, 不能prenstation
+		if (Note.inBatch) {
+			alert(getMsg('Please select a note firstly.'));
+			return;
+		}
 		if(!isToggleView) {
 			try {
 				gui.win.setKiosk(!me._isPren);
@@ -1672,12 +1697,13 @@ var Pren = {
 		me.view = new gui.MenuItem(
 			{
 				label: getMsg('Toggle View'),
-				accelerator: isMac_ ? 'command+e' : 'Ctrl+E',
+				accelerator: isMac_ ? 'command+t' : 'Ctrl+T',
 				click: function() {
 				me.togglePren(true);
 			}
 		});
 
+		// 全局事件
 		// Esc, <- ->
 		$("body").on('keydown', function(e) {
 			var keyCode = e.keyCode;
@@ -1711,6 +1737,10 @@ var Pren = {
 				}
 				// e
 				else if(keyCode == 69) {
+					Note.toggleWriteableAndReadOnly();
+				}
+				// t
+				else if(keyCode == 84) {
 					me.togglePren(true);
 				}
 			}
@@ -1760,7 +1790,7 @@ function checkForUpdates() {
 
 function setMacTopMenu() {
 	var isMac_ = isMac();
-  var template = [
+	var template = [
     {
       label: 'Leanote',
       submenu: [
@@ -1849,10 +1879,11 @@ function setMacTopMenu() {
       submenu: [
         {
           label: 'Reload',
+          // 开启开发者模式console时, cmd+r不会走这, 关了还是会走这
           accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
-	          	gui.win.reloadIgnoringCache();
+				gui.win.reloadIgnoringCache();
           	});
           }
         },
@@ -1904,6 +1935,53 @@ function setMacTopMenu() {
 	gui.Menu.setApplicationMenu(menu);
 }
 
+function getShortHost(host) {
+	if (!host) {
+		host = 'https://leanote.com';
+	}
+	var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
+	if(ret && ret.length == 3) {
+		host = ret[2];
+	}
+	return host;
+}
+
+function toggleAccount(user) {
+	if (!user) {
+		return;
+	}
+	UserService.saveCurUser({UserId: user.UserId}, function () {
+		reloadApp();
+	});
+}
+
+function getToggleUserMenus(allUsers) {
+	if (!allUsers || !allUsers.length) {
+		return null;
+	}
+    var userMenus = new gui.Menu();
+    for (var i = 0; i < allUsers.length; ++i) {
+    	var user = allUsers[i];
+    	if (user.Username && user.UserId) {
+    		var label = user.Username;
+
+    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
+			label += ' (' + otherLabel + ')';
+
+	    	userMenus.append(new gui.MenuItem({
+		        label: label,
+		        enabled: !user.IsActive,
+		        click: (function(user) {
+		        	return function() {
+			        	toggleAccount(user);
+		        	}
+		        })(user)
+		    }));
+	    }
+    }
+    return userMenus;
+}
+
 // user
 function userMenu(allUsers) {
 	// ----------
@@ -1912,23 +1990,12 @@ function userMenu(allUsers) {
 
 	Pren.init();
 
-	if(isMac()) {
+	if(isMac() || debug) {
 		setMacTopMenu();
 	}
 
 	//-------------------
 	// 右键菜单
-
-	function getShortHost(host) {
-		if (!host) {
-			host = 'https://leanote.com';
-		}
-		var ret = /http(s*):\/\/([a-zA-Z0-9\.\-]+)/.exec(host);
-		if(ret && ret.length == 3) {
-			host = ret[2];
-		}
-		return host;
-	}
 
 	function menu() {
 		var me = this;
@@ -1943,6 +2010,20 @@ function userMenu(allUsers) {
 	        click: function(e) {
 	        }
 	    });
+
+	    // 注销
+	    this.logout = new gui.MenuItem({
+	        label: getMsg('Logout'),
+	        click: function(e) {
+	        	Loading.show();
+	        	UserService.logout(function () {
+	        		onClose(function () {
+	        			toLogin();
+		        	});
+        		});
+	        }
+	    });
+	    
 	    this.switchAccount = new gui.MenuItem({
 	        label: getMsg('Add account'),
 	        click: function(e) {
@@ -1957,41 +2038,10 @@ function userMenu(allUsers) {
 	    });
 
 	    // 所有用户
-	    var allUsersMenu;
-	    if (allUsers) {
-	    	function toggleAccount(user) {
-	    		if (!user) {
-	    			return;
-	    		}
-    			UserService.saveCurUser({UserId: user.UserId}, function () {
-					reloadApp();
-    			});
-	    	}
-		    var userMenus = new gui.Menu();
-		    for (var i = 0; i < allUsers.length; ++i) {
-		    	var user = allUsers[i];
-		    	if (user.Username && user.UserId) {
-		    		var label = user.Username;
-
-		    		var otherLabel = user.IsLocal ? getMsg('Local') : getShortHost(user.Host);
-					label += ' (' + otherLabel + ')';
-
-			    	userMenus.append(new gui.MenuItem({
-				        label: label,
-				        enabled: !user.IsActive,
-				        click: (function(user) {
-				        	return function() {
-					        	toggleAccount(user);
-				        	}
-				        })(user)
-				    }));
-			    }
-		    }
-		    allUsersMenu = new gui.MenuItem({
-		        label: getMsg('Switch account'),
-		        submenu: userMenus
-		    });
-	    }
+	    var allUsersMenu = new gui.MenuItem({
+	        label: getMsg('Switch account'),
+	        submenu: getToggleUserMenus(allUsers)
+	    });
 
 	    this.checkForUpdates = new gui.MenuItem({
 	        label: getMsg('Check for updates'),
@@ -2010,6 +2060,8 @@ function userMenu(allUsers) {
 		    });
 		    this.menu.append(this.blog);
 		}
+		this.menu.append(new gui.MenuItem({ type: 'separator' }));
+	    this.menu.append(this.logout);
 	    this.menu.append(this.switchAccount);
 	    this.menu.append(allUsersMenu); 
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
@@ -2020,7 +2072,10 @@ function userMenu(allUsers) {
 		    this.menu.append(themeMenu);
 	    }
 
-		var height = 210;
+		var height = 260;
+		if (UserInfo.IsLocal) {
+			height = 230;
+		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
@@ -2054,6 +2109,9 @@ function userMenu(allUsers) {
 
 		    mores.append(this.sync);
 		    mores.append(this.fullSync);
+		    mores.append(new gui.MenuItem({
+		        type: 'separator'
+		    }));
 		}
 
 	    // 其它的
@@ -2088,9 +2146,14 @@ function userMenu(allUsers) {
 
 	var userMenuSys = new menu();
 
-	$('#myProfile').click(function(e) {
+	$('#myProfile').off().click(function(e) {
 		userMenuSys.popup(e);
 	});
+}
+
+$(function() {
+	initUploadImage();
+	Writting.init();
 
 	// disable drag & drop
 	document.body.addEventListener('dragover', function(e){
@@ -2101,9 +2164,9 @@ function userMenu(allUsers) {
 	  e.preventDefault();
 	  e.stopPropagation();
 	}, false);
-}
-
-$(function() {
-	initUploadImage();
-	Writting.init();
 });
+
+// markdown editor v2
+LEA.canSetMDModeFromStorage = function () {
+	return true;
+}

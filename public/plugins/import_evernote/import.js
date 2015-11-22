@@ -20,7 +20,7 @@ var Import = {
    </en-note>\n'
    把<en-note>与</en-note>中间部分抽出
 
-   parsedRes = [{FileId: ""}]
+   parsedRes = {hash1: file, hash2: file}
    */
   parseEvernoteContent: function(xml, parsedRes) {
     var me = this;
@@ -39,19 +39,29 @@ var Import = {
       return '';
     }
     var reg = new RegExp("<en\-media(.*?)\/*>", "g"); // <en-media /> <en-media></en-media>
-    var i = 0;
     // console.log(content);
     while(ret = reg.exec(content)) {
       // ret[1] == type="text/html" style="cursor:pointer;" height="43" hash="bc322a11075e40f3a5b2dce3f2fffcdc"
       try {
-        var res = parsedRes[i];
-        i++;
+        var attrs = ret[1];
+
+        // 得到hash
+        var hashes = attrs.match(/hash="([0-9a-zA-Z]{32})"/);
+        var hash = '';
+        if (hashes) {
+          hash = hashes[1];
+        }
+        if (!hash) {
+          continue;
+        }
+
+        var res = parsedRes[hash];
         var fileId = res['FileId'];
         if(!fileId) {
           continue;
         }
         if(res.IsImage) {
-          var replace = '<img src="' + Evt.getImageLocalUrl(fileId) + '" ' + ret[1] + '>';
+          var replace = '<img src="' + Evt.getImageLocalUrl(fileId) + '" ' + attrs + '>';
         } else {
           var replace = '<a href="' + Evt.getAttachLocalUrl(fileId) + '">' + res['Title'] + '</a>'
         }
@@ -64,7 +74,6 @@ var Import = {
     // 如果是<en-media></en-media>, </en-media>匹配不到
     content = content.replace(/<\/en-media>/g, '');
 
-
     return content;
   },
 
@@ -76,18 +85,43 @@ var Import = {
     });
   },
 
+  // 20150206T031506Z
+  parseEvernoteTime: function (str) {
+    // console.log('parseEvernoteTime');
+    // console.log(str);
+    if (!str || typeof str != 'string' || str.length != '20150206T031506Z'.length) {
+      return new Date();
+    }
+    var year = str.substr(0, 4);
+    var month = str.substr(4, 2);
+    var day = str.substr(6, 2);
+
+    var h = str.substr(9, 2);
+    var m = str.substr(11, 2);
+    var s = str.substr(13, 2);
+
+    var d = new Date(year + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s);
+    // invalid
+    if (isNaN(d.getTime())) {
+      return new Date();
+    }
+    return d;
+  },
+
   parseEachNote: function(note, callback) {
     var me = this;
 
     var jsonNote = {
       Title: note['title'][0],
       Tags: note['tag'] || [],
-      Content: note['content'][0]
+      Content: note['content'][0],
+      CreatedTime: me.parseEvernoteTime(note['created'][0]),
+      UpdatedTime: me.parseEvernoteTime(note['updated'][0]),
     };
 
     // 文件保存之
     var resources = note['resource'] || [];
-    var parsedRes = [];
+    var parsedRes = {};
     var attachs = [];
     // console.log("-----------")
     // console.log(note);
@@ -133,7 +167,8 @@ var Import = {
 
         File.writeBase64(base64Str, isImage, type, filename, function(file) {
           if(file) {
-            parsedRes.push(file);
+            parsedRes[file.hash] = file;
+            // parsedRes.push(file);
             if(!isImage) {
               attachs.push(file);
             }
@@ -147,13 +182,14 @@ var Import = {
         // 把content的替换之
         // console.log('ok, writeBase64 ok');
         try {
-          console.log(parsedRes);
+          // console.log('parsedRes');
+          // console.log(parsedRes);
           jsonNote.Content = me.parseEvernoteContent(jsonNote.Content, parsedRes);
           jsonNote.Attachs = attachs;
         } catch(e) {
           console.log(e);
         }
-        console.log(jsonNote);
+        // console.log(jsonNote);
         return callback && callback(jsonNote);
       }
     );
@@ -211,14 +247,10 @@ var Import = {
                 jsonNote.IsNew = true;
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
+                jsonNote.IsMarkdown = false;
 
-                // jsonNote.Content = "";
-                // jsonNote.Attachs = null;
-
+                // console.log('----------');
                 // console.log(jsonNote);
-
-                // eachCallback && eachCallback(false);
-                // return cb();
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {
@@ -229,6 +261,8 @@ var Import = {
                     });
                   }
                 }
+
+                console.log('--- haha -- Note.updateNoteOrContent');
 
                 Note.updateNoteOrContent(jsonNote, function(insertedNote) {
                   eachCallback && eachCallback(insertedNote);

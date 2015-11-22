@@ -72,9 +72,6 @@ define(function() {
 		    });
 
 		    // 设置
-		    Api.addMoreMenu(new gui.MenuItem({
-		        type: 'separator'
-		    }));
 		    Api.addMoreMenu(langMenu);
 		},
 		// 打开后

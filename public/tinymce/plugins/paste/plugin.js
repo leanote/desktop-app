@@ -523,10 +523,22 @@ define("tinymce/pasteplugin/Clipboard", [
 			document.body.appendChild(img);
 		}
 
+		var ever;
 		editor.on('paste', function(e) {
 			if(inAcePrevent()) {
 				return;
 			}
+
+			// start
+			// 以下只是linux需要
+			// -----
+			// 为什么要这个, 因为linux的原因, pasteImage会触发paste事件, 导致多次复制
+			if (ever && new Date().getTime() - ever < 100) {
+				e.preventDefault();
+				return;
+			}
+			ever = new Date().getTime();
+			// end
 
 			var clipboardContent = getClipboardContent(e);
 			var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 100;
@@ -583,7 +595,7 @@ define("tinymce/pasteplugin/Clipboard", [
 			// paste image
 			try {
 				// common.js
-				pasteImage();
+				pasteImage(e);
 				return;
 				/*
 				if(pasteImage(e)) {

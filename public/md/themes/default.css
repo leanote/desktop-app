@@ -1408,6 +1408,7 @@ a.input-group-addon {
   position: absolute;
   overflow: auto;
   right: 0;
+  padding-right: 10px;
   left: 30px;
 }
 .wmd-prompt-background {

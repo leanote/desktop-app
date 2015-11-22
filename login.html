@@ -182,11 +182,11 @@ $(function() {
 		}
 		UserService.login(email, pwd, host, function(ret) {
 			if (ret) {
-				setTimeout(function() {
-					$body.removeClass('loading');
-					goToMainPage();
-					gui.getCurrentWindow().close();
-				}, 2000);
+				// setTimeout(function() {
+				$body.removeClass('loading');
+				goToMainPage();
+				gui.getCurrentWindow().close();
+				// }, 2000);
 			}
 			// 不成功, 则用api登录
 			else {

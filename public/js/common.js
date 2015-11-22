@@ -20,7 +20,11 @@ var Notebook = {};
 var Share = {};
 var Mobile = {}; // 手机端处理
 var LeaAce = {};
-var Upgrade = {};
+var Upgrade = {
+	checkForUpdates: function () {
+		Notify.show({title: 'Info', body: getMsg('Network error!')});
+	}
+};
 
 // markdown
 var Converter;
@@ -72,6 +76,12 @@ var tt = t; // 当slimscroll滑动时t被重新赋值了
 function arrayEqual(a, b) {
 	a = a || [];
 	b = b || [];
+	// if (typeof a === 'string') {
+	// 	a = [a];
+	// }
+	// if (typeof b === 'string') {
+	// 	b = [b];
+	// }
 	return a.join(",") == b.join(",");
 }
 
@@ -334,6 +344,14 @@ function switchEditor(isMarkdown) {
 	}
 }
 
+// 将http://127.0.0.1:8912转为leanote://
+function fixContentUrl(content) {
+	if (EvtService.canUseProtocol()) {
+		return content.replace(/http:\/\/127.0.0.1:8912\/api\//g, 'leanote://');
+	}
+	return content;
+}
+
 // editor 设置内容
 // 可能是tinymce还没有渲染成功
 var previewToken = "<div style='display: none'>FORTOKEN</div>"
@@ -347,6 +365,9 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 	if(!content) {
 		content = "";
 	}
+
+	content = fixContentUrl(content);
+
 	if(clearIntervalForSetContent) {
 		clearInterval(clearIntervalForSetContent);
 	}
@@ -412,6 +433,7 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 	*/
 		if(MD) {
 			MD.setContent(content);
+			MD.clearUndo();
 			callback && callback();
 		} else {
 			clearIntervalForSetContent = setTimeout(function() {
@@ -435,6 +457,7 @@ function pasteImage(e) {
 	    FileService.pasteImage2(dataUrl, function(url) {
 			insertImage(url);
 		});
+		e && e.preventDefault();
 	}
 	return;
 
@@ -1020,13 +1043,20 @@ LEA.bookmark = null;
 LEA.hasBookmark = false;
 function saveBookmark() {
 	try {
+		/*
+		// 没有focus();
+		if (!document.activeElement || document.activeElement.getAttribute('id') != 'editorContent') {
+			LEA.hasBookmark = false;
+			console.log('not active');
+			return;
+		}
+		*/
 		LEA.bookmark = tinymce.activeEditor.selection.getBookmark(); // 光标, 为了处理后重新定位到那个位置
 		// 如果之前没有focus, 则会在文档开头设置bookmark, 添加一行, 不行.
 		// $p不是<p>, 很诡异
 		// 6-5
 		if(LEA.bookmark && LEA.bookmark.id) {
-			var $ic = $($("#editorContent_ifr").contents());
-			var $body = $ic.find("body");
+			var $body = $($("#editorContent").contents());
 			var $p = $body.children().eq(0);
 			// 找到
 			if($p.is("span")) {
@@ -1473,18 +1503,29 @@ function goToMainPage() {
 	win.loadUrl('file://' + __dirname + '/note.html?from=login');
 }
 
-function switchAccount() {
-	SyncService.stop();
-	// location.href = 'login.html';
+function toLogin() {
 	var BrowserWindow = gui.remote.require('browser-window');
 	if(isMac()) {
 		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 426, show: true, frame: true, resizable: false });
+		var win = new BrowserWindow({ width: 278, height: 400, show: true, frame: true, resizable: false });
 		win.loadUrl('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
+}
+// 添加用户
+function switchAccount() {
+	onClose(function () {
+		toLogin();
+	});
+}
+
+// 当没有用户时, 切换之
+function switchToLoginWhenNoUser() {
+	Server.close(function () {
+		toLogin();
+	});
 }
 
 // 没有一处调用
@@ -1568,19 +1609,64 @@ var trimTitle = function(title) {
 var Loading = {
 	$loadingDialog: $('#loadingDialog'),
 	$progressBar: $('#loadingDialog .progress-bar'),
+	$progressRate: $('#loadingDialog .progress-rate'),
+	$msg: $('#loadingDialogBodyMsg'),
 	// option {hasProgress: true, onClose: function}
 	inited: false,
+	setMsg: function (msg, showLoading) {
+		var me = this;
+		this.$msg.html(msg);
+		if (showLoading === undefined) {
+			showLoading = true;
+		}
+		if (showLoading) {
+			me.$loadingDialog.removeClass('hide-loading');
+		}
+		else {
+			me.$loadingDialog.addClass('hide-loading');
+		}
+	},
+	setProgressRate: function (msg) {
+		this.$progressRate.html(msg);
+	},
+
+	/**
+	 * [show description]
+	 * @param  {[type]} msg    [description]
+	 * @param  {[type]} option {
+	 *                         'hasProgress': false, 是否有进度
+	 *                         'hideClose': false, // 默认为false, 是否隐藏close
+	 * }
+	 * @return {[type]}        [description]
+	 */
 	show: function(msg, option) {
 		option = option || {};
 		msg || (msg = getMsg("loading..."));
-		$('#loadingDialogBodyMsg').html(msg);
+		this.$msg.html(msg);
+
+		if (option.isLarge) {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
+		else {
+			this.$loadingDialog.find('.modal-dialog').addClass('modal-large');
+		}
+
 		this.$loadingDialog.modal({backdrop: 'static', keyboard: true});
+
 		if (option.hasProgress) {
 			this.$loadingDialog.addClass('has-progress');
 		}
 		else {
 			this.$loadingDialog.removeClass('has-progress');
 		}
+
+		if (option.hideClose) {
+			this.$loadingDialog.addClass('hide-close');
+		}
+		else {
+			this.$loadingDialog.removeClass('hide-close');
+		}
+
 		this.onClose = option.onClose;
 		if (!this.inited) {
 			this.init();
@@ -1597,8 +1683,10 @@ var Loading = {
 	setProgress: function (rate) {
 		this.$progressBar.width(rate + '%');
 	},
-	hide: function() {
-		$('#loadingDialog').modal('hide');
+	hide: function(timeout) {
+		setTimeout(function () {
+			$('#loadingDialog').modal('hide');
+		}, timeout ? timeout : 0);
 	}
 };
 
@@ -1670,19 +1758,22 @@ var Notify = {
 	}
 };
 
+// 关闭当前窗口
 var onClose = function(afterFunc) {
+	console.log('on close');
 	try {
-		// 先把服务关掉
-	    Server.close();
-	    SyncService.stop();
-
-	    // 先保存之前改变的
-	    Note.curChangedSaveIt();
-	    // 保存状态
-	    State.saveCurState(function() {
-	        afterFunc && afterFunc();
-	    });
+		// 先把服务/协议关掉
+	    Server.close(function () {
+		    SyncService.stop();
+		    // 先保存之前改变的
+		    Note.curChangedSaveIt();
+		    // 保存状态
+		    State.saveCurState(function() {
+		        afterFunc && afterFunc();
+		    });
+		});
 	} catch(e) {
+		console.error(e);
 		afterFunc && afterFunc();
 	}
 }

@@ -4,6 +4,7 @@ var Evt = require('evt');
 var app = require('remote').require('app');
 var basePath = app.getPath('appData') + '/leanote'; // /Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
+var protocol = require('remote').require('protocol');
 
 if(!/login.html/.test(location.href)) {
 	// 启动服务器, 图片
@@ -11,8 +12,10 @@ if(!/login.html/.test(location.href)) {
 	Server.start();
 }
 
+// 数据库初始化
 var db = require('db');
-db.init();
+// db.init();
+db.initGlobal();
 
 // 所有service, 与数据库打交道
 var Service = {

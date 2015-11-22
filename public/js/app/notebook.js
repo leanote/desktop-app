@@ -632,7 +632,8 @@ Notebook.toggleToMyNav = function(userId, notebookId) {
 	
 	// 搜索tag隐藏
 	$("#tagSearch").hide();
-}
+};
+
 Notebook.changeNotebookNav = function(notebookId) {
 	Notebook.curNotebookId = notebookId;
 	Notebook.toggleToMyNav();
@@ -651,19 +652,22 @@ Notebook.changeNotebookNav = function(notebookId) {
 	
 	// 3
 	Notebook.changeNotebookNavForNewNote(notebookId, notebook.Title);
-}
+};
 
 Notebook.isAllNotebookId = function(notebookId) {
 	return notebookId == Notebook.allNotebookId;
-}
+};
 Notebook.isTrashNotebookId = function(notebookId) {
 	return notebookId == Notebook.trashNotebookId;
-}
+};
 // 当前选中的笔记本是否是"所有"
 // called by Note
 Notebook.curActiveNotebookIsAll = function() {
-	return Notebook.isAllNotebookId($("#notebookList .active").attr("notebookId"));
-}
+	return Notebook.isAllNotebookId($("#notebookList .curSelectedNode").attr("notebookId"));
+};
+Notebook.curActiveNotebookIsTrash = function() {
+	return Notebook.isTrashNotebookId($("#notebookList .curSelectedNode").attr("notebookId"));
+};
 
 // 改变笔记本
 // 0. 改变样式
@@ -1145,26 +1149,64 @@ Notebook.init = function() {
 	    this.menu.append(this.rename);
 	    this.menu.append(this.del);
 
-	     // 导入菜单
+	    // 导入菜单
 	    var importMenus = Api.getImportMenus();
 	    if(importMenus && importMenus.length) {
 		    var importSubmenus = new gui.Menu();
 		    for(var i = 0; i < importMenus.length; ++i) {
-		    	var clickCallback = importMenus[i].click;
-		    	if(clickCallback) {
-			    	importMenus[i].click = function() {
-			    		var notebookId = $(me.target).attr("notebookId");
-	        			var notebook = Notebook.getNotebook(notebookId);
-			    		clickCallback(notebook);
+
+		    	(function(j) {
+		    		var clickCallback = importMenus[j].click;
+			    	if(clickCallback) {
+				    	importMenus[i].click = function() {
+				    		var notebookId = $(me.target).attr("notebookId");
+		        			var notebook = Notebook.getNotebook(notebookId);
+				    		clickCallback(notebook);
+				    	}
 			    	}
-		    	}
+		    	})(i);
+
 		    	importSubmenus.append(new gui.MenuItem(importMenus[i]));
 		    }
 		    this.imports = new gui.MenuItem({
 		    	submenu: importSubmenus,
 		        label: getMsg('Import notes')
 		    });
+	    	this.menu.append(gui.getSeparatorMenu());
 		    this.menu.append(this.imports);
+	    }
+
+	    // 导出
+	    var exportsSubMenus = new gui.Menu();
+	    var exportMenus = Api.getExportMenusForNotebook() || [];
+	    for(var i = 0; i < exportMenus.length; ++i) {
+	    	(function(j) {
+
+		    	var menu = exportMenus[j];
+		    	var clickBac = menu.click;
+
+		    	var menuItem = new gui.MenuItem({
+			        label: menu.label,
+			        click: function(e) {
+		        		var notebookId = $(me.target).attr('notebookId');
+			        	clickBac && clickBac(notebookId);
+			        }
+			    });
+
+			    exportMenus[i].menu = menuItem;
+			    exportsSubMenus.append(menuItem);
+		    })(i);
+	    }
+
+	    if(exportMenus.length > 0) {
+	    	 this.exports = new gui.MenuItem({
+		        label: getMsg('Export notes'),
+		        submenu: exportsSubMenus,
+		        click: function(e) {
+		        }
+		    });
+
+	    	this.menu.append(this.exports);
 	    }
 
 	    this.enable = function(name, ok) {
