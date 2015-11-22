@@ -1377,10 +1377,9 @@ define('constants',[], function() {
     var constants = {};
     constants.EDITOR_DEFAULT_PADDING = 5;
     constants.fontSize = 14;
-    constants.fontFamily = 'Menlo, Consolas, "Courier New", Courier, monospace, "Microsoft YaHei", "微软雅黑"';
+    constants.fontFamily = "Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', 'Microsoft Yahei', sans-serif;";
     return constants;
 });
-
 /*!
  * XRegExp-All 3.0.0-pre
  * <http://xregexp.com/>
@@ -12824,9 +12823,11 @@ define('extensions/emailConverter',[
 });
 
 define('extensions/scrollLink',[
+    // "jquery",
     "underscore",
     "classes/Extension",
-], function( _, Extension) {
+    // "text!html/scrollLinkSettingsBlock.html"
+], function(_, Extension) {
 
     var scrollLink = new Extension("scrollLink", "Scroll Link", true, true);
 
@@ -12845,7 +12846,6 @@ define('extensions/scrollLink',[
         offsetBegin = offsetBeginParam;
     };
 
-    
     var $textareaElt;
     var $textareaHelperElt;
     var $previewElt;
@@ -12853,8 +12853,6 @@ define('extensions/scrollLink',[
     var htmlSectionList = [];
     var lastEditorScrollTop;
     var lastPreviewScrollTop;
-
-
     var buildSections = _.debounce(function() {
 
         mdSectionList = [];
@@ -12960,62 +12958,6 @@ define('extensions/scrollLink',[
         doScrollLink();
     }, 500);
 
-
-
-    
-    var timeoutId;
-    var currentEndCb;
-    function animate(isScrollEditor, startValue, endValue, stepCb, endCb) {
-        if(currentEndCb) {
-            clearTimeout(timeoutId);
-            currentEndCb();
-        }
-        currentEndCb = endCb;
-        var diff = endValue - startValue;
-        var startTime = Date.now();
-
-        
-        var scrollTo;
-        // console.log(isScrollEditor);
-        // console.log(startValue + ' -> ' + endValue);
-        if (isScrollEditor) {
-            scrollTo = function(to) {
-                // console.log(to);
-                // $previewElt.scrollTop(to);
-                $previewElt.get(0).scrollTop = to;
-            }
-        }
-        else {
-            scrollTo = function(to) {
-                window.lightMode || aceEditor.session.setScrollTop(lastEditorScrollTop);
-                window.lightMode && $textareaElt.scrollTop(lastEditorScrollTop);
-            }
-        }
-
-        function tick() {
-            var currentTime = Date.now();
-            var progress = (currentTime - startTime) / 200;
-            if(progress < 1) {
-                var scrollTop = startValue + diff * Math.cos((1 - progress) * Math.PI / 2);
-                scrollTo(scrollTop);
-                stepCb(scrollTop);
-                timeoutId = setTimeout(tick, 1);
-            }
-            else {
-                currentEndCb = undefined;
-                scrollTo(endValue);
-                setTimeout(endCb, 100);
-            }
-        }
-        tick();
-    }
-
-    var isScrollEditor = false;
-    var isScrollPreview = false;
-    var isEditorMoving = false;
-    var isPreviewMoving = false;
-    var scrollingHelper = $('<div>');
-
     function getDestScrollTop(srcScrollTop, srcSectionList, destSectionList) {
         // Find the section corresponding to the offset
         var sectionIndex;
@@ -13032,10 +12974,15 @@ define('extensions/scrollLink',[
         return destSection.startOffset + destSection.height * posInSection;
     }
 
+    var isScrollEditor = false;
+    var isScrollPreview = false;
+    var isEditorMoving = false;
+    var isPreviewMoving = false;
+    var scrollingHelper = $('<div>');
     var doScrollLink = _.throttle(function() {
         if(mdSectionList.length === 0 || mdSectionList.length !== htmlSectionList.length) {
             // Delay
-            // doScrollLink();
+            doScrollLink();
             return;
         }
         var editorScrollTop = window.lightMode ? $textareaElt.scrollTop() : aceEditor.renderer.getScrollTop();
@@ -13061,20 +13008,10 @@ define('extensions/scrollLink',[
                 lastPreviewScrollTop = previewScrollTop;
                 return;
             }
-
-            animate(true, previewScrollTop, destScrollTop, function(currentScrollTop) {
-                isPreviewMoving = true;
-                lastPreviewScrollTop = currentScrollTop;
-            }, function() {
-                isPreviewMoving = false;
-            });
-
-            return;
-
             scrollingHelper.stop('scrollLinkFx', true).css('value', 0).animate({
                 value: destScrollTop - previewScrollTop
             }, {
-                // easing: 'easeOutSine',
+                easing: 'linear',
                 duration: 200,
                 queue: 'scrollLinkFx',
                 step: function(now) {
@@ -13116,20 +13053,10 @@ define('extensions/scrollLink',[
                 lastEditorScrollTop = editorScrollTop;
                 return;
             }
-
-            isEditorMoving = true;
-            animate(false, editorScrollTop, destScrollTop, function(currentScrollTop) {
-                isEditorMoving = true;
-                lastEditorScrollTop = currentScrollTop;
-            }, function() {
-                isEditorMoving = false;
-            });
-            return;
-
             scrollingHelper.stop('scrollLinkFx', true).css('value', 0).animate({
                 value: destScrollTop - editorScrollTop
             }, {
-                // easing: 'easeOutSine',
+                easing: 'linear',
                 duration: 200,
                 queue: 'scrollLinkFx',
                 step: function(now) {
@@ -13159,14 +13086,12 @@ define('extensions/scrollLink',[
     var scrollAdjust = false;
     scrollLink.onReady = function() {
         $previewElt = $(".preview-container");
-        // console.log($previewElt)
         $textareaElt = $("#wmd-input");
         // This helper is used to measure sections height in light mode
         $textareaHelperElt = $('.textarea-helper');
 
-        $previewElt.scroll(function(e) {
+        $previewElt.scroll(function() {
             if(isPreviewMoving === false && scrollAdjust === false) {
-                // console.log('preview scroll');
                 isScrollPreview = true;
                 isScrollEditor = false;
                 doScrollLink();
@@ -13174,7 +13099,6 @@ define('extensions/scrollLink',[
             scrollAdjust = false;
         });
         var handleEditorScroll = function() {
-            // 只有在editor没有移动的时候才行
             if(isEditorMoving === false) {
                 isScrollEditor = true;
                 isScrollPreview = false;
@@ -13202,11 +13126,6 @@ define('extensions/scrollLink',[
             }
             var previewScrollTop = anchorElt[0].getBoundingClientRect().top - $previewElt.get(0).getBoundingClientRect().top + $previewElt.scrollTop();
             var editorScrollTop = getDestScrollTop(previewScrollTop, htmlSectionList, mdSectionList);
-
-            // console.log(htmlSectionList);
-            // console.log(mdSectionList);
-            // console.log(previewScrollTop);
-            // console.log(editorScrollTop);
 
             $previewElt.scrollTop(previewScrollTop);
             window.lightMode || aceEditor.session.setScrollTop(editorScrollTop);
