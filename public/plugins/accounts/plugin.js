@@ -29,6 +29,7 @@ define(function() {
 
 				"Optimizing": "正在优化",
 				"Completed": "优化完成",
+				"Deleted": "删除成功",
 
 				"Error": "错误",
 				"No such account": "无该帐户",
@@ -50,6 +51,7 @@ define(function() {
 
 				"Optimizing": "正在優化",
 				"Completed": "優化完成",
+				"Deleted": "刪除成功",
 
 				"Error": "錯誤",
 				"No such account": "無該帳戶",
