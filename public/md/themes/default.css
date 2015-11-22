@@ -60,7 +60,8 @@ pre.prettyprint {
 code.prettyprint,
 pre.prettyprint {
   padding: 8px;
-  background-color: #f7f7f9;
+  /*background-color: #f7f7f9;*/
+  background-color: #eee;
   border: 1px solid #e1e1e8;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
