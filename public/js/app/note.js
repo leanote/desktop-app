@@ -940,6 +940,10 @@ Note.renderNotes = function(notes, forNewNote, isShared) {
 		Note.noteItemListO.html(""); // 清空
 	}
 
+	// 重置获取内容
+	// console.trace('--------render notes-----------');
+	Note.resetGetNoteContentLazy();
+
 	// 20个一次
 	var len = notes.length;
 	var c = Math.ceil(len/20);
@@ -1022,8 +1026,9 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 			continue;
 		}
 
+		// 这里, 如果没有内容, 则添加到异步池中
 		if(note.InitSync) {
-			Note.getNoteContentLazy(note.NoteId);
+			Note.addGetNoteContentLazy(note.NoteId);
 		}
 
 		if(!note.Desc && note.Content) {
@@ -1057,22 +1062,6 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 		}
 
 		Note.noteItemListO.append(tmp);
-
-		/*
-		// 共享的note也放在Note的cache一份
-		if(isShared) {
-			note.IsShared = true; // 注明是共享的
-		}
-
-		// 不清空
-		// 之前是addNoteCache, 如果是搜索出的, 会把内容都重置了
-		Note.setNoteCache(note, false);
-
-		// 如果是共享的笔记本, 缓存也放在Share下
-		if(isShared) {
-			Share.setCache(note);
-		}
-		*/
 	}
 };
 
@@ -2088,17 +2077,105 @@ Note.contentSynced = function(noteId, content) {
 	}
 };
 
+//------------------------
+// 异步加载note content
+
+// 池, 最大10个
+Note._loadContentPool = [];
+Note._loadContentPoolSeq = 0;
+Note._startedGetNoteContentLazy = false;
+Note._stopGetNoteContentLazy = false;
+
+Note._loadContentRunSeq = 0;
+
+Note._loadContentStarted = {};
+
+// 在render notes时
 // 延迟加载内容
-Note.getNoteContentLazy = function(noteId) {
-	setTimeout(function() {
+
+// 重新render notes时, 重置pool
+Note.resetGetNoteContentLazy = function() {
+	var me = this;
+	me._loadContentPool = [];
+	me._loadContentPoolSeq = 0;
+	me._stopGetNoteContentLazy = false;
+	me._startedGetNoteContentLazy = false;
+	me._loadContentRunSeq++;
+};
+
+// 添加到池子中
+Note.addGetNoteContentLazy = function(noteId) {
+	var me = this;
+	Note._loadContentPool.push(noteId);
+	me.startGetNoteContentLazy();
+};
+
+// render notes后, 
+// 开始加载
+Note.startGetNoteContentLazy = function() {
+	var me = this;
+
+	if (me._loadContentStarted[me._loadContentRunSeq]) {
+		return;
+	}
+	me._loadContentStarted[me._loadContentRunSeq] = true;
+
+	me.getNoteContentLazy(me._loadContentRunSeq);
+};
+
+// 得到下一个要处理的noteId
+Note._getNextNoteId = function () {
+	var me = this;
+	var noteId = me._loadContentPool[me._loadContentPoolSeq];
+	me._loadContentPoolSeq++;
+	return noteId;
+};
+
+Note.getNoteContentLazy = function(runSeq) {
+	var me = this;
+
+	// // 暂停了
+	// if (me._stopGetNoteContentLazy) {
+	// 	return;
+	// }
+
+	// 不是一个时候了
+	if (runSeq != me._loadContentRunSeq) {
+		console.log('不是一个时候了 '  + runSeq + '_' + me._loadContentRunSeq);
+		return;
+	}
+
+	var noteId = me._getNextNoteId();
+	if (!noteId) {
+		return;
+	}
+
+	var note = me.getNote(noteId);
+	if (note && !note.InitSync) {
+		console.log('不用加载');
+		me.getNoteContentLazy(runSeq);
+		return;
+	}
+
+	console.log('正在加载....' + noteId);
+
+	setTimeout(function () {
 		NoteService.getNoteContent(noteId, function(contentO) {
 			if(typeof contentO == 'object') {
 				Note.contentSynced(noteId, contentO.Content);
+				me.getNoteContentLazy(runSeq);
 			}
 		});
-	}, 10);
+	}, 800);
 };
 
+Note.stopGetNoteContentLazy = function() {
+	var me = this;
+	me._stopGetNoteContentLazy = true;
+};
+
+//
+//--------------
 
 // 这里速度不慢, 很快
 Note.getContextNotebooks = function(notebooks) {
