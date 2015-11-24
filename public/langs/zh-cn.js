@@ -291,5 +291,7 @@
     "<span></span> notes selected": "当前选中了 <span></span> 篇笔记",
 
     "Sync error, retry to sync after 3 seconds": "同步失败, 3 秒后自动重新尝试同步",
-    "Network error!": "网络异常"
+    "Network error!": "网络异常",
+
+    "Load Database Error": "加载数据库出错, 请尝试在帐户管理中优化数据库"
 }

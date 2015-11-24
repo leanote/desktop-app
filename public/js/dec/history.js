@@ -115,7 +115,11 @@ define(function() {
             var note = Note.getCurNote();
             me.note = note;
             NoteService.getNoteHistories(Note.curNoteId, function(re) {
-                if(!isArray(re)) {
+                if (re === false) {
+                    alert(getMsg('Load Database Error'));
+                    return;
+                }
+                if(!isArray(re) || !re.length) {
                     alert(getMsg('noHistories'));
                     return;
                 }
@@ -154,8 +158,6 @@ define(function() {
                         info.unfold = false
                     }
                 });
-
-               
             });
         },
 

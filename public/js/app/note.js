@@ -499,7 +499,7 @@ Note.curChangedSaveIt = function(force, callback) {
 			}
 
 			callback && callback(ret);
-		});
+		}, force);
 
 		return hasChanged;
 
@@ -676,7 +676,7 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 		needSaveChanged  = true;
 	}
 	if(needSaveChanged) {
-		Note.curChangedSaveIt();
+		Note.curChangedSaveIt(true);
 	}
 
 	// 2. 设空, 防止在内容得到之前又发生保存
@@ -1095,7 +1095,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 
 	Note.stopInterval();
 	// 保存当前的笔记
-	Note.curChangedSaveIt();
+	Note.curChangedSaveIt(true);
 
 	Note.batch.reset();
 
@@ -1789,12 +1789,11 @@ Note.toggleReadOnly = function(needSave) {
 
 	// 保存之
 	if (needSave) {
-		Note.curChangedSaveIt();
+		Note.curChangedSaveIt(true);
 	}
 	
 	Note.readOnly = true;
 	LEA.readOnly = true;
-
 
 	if(!note.IsMarkdown) {
 		// 里面的pre也设为不可写

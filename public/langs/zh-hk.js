@@ -291,5 +291,7 @@
     "<span></span> notes selected": "當前選中了 <span></span> 篇筆記",
 
     "Sync error, retry to sync after 3 seconds": "同步失敗, 3 秒後自動重新嘗試同步",
-    "Network error!": "網絡異常"
+    "Network error!": "網絡異常",
+
+    "Load Database Error": "加載數據庫出錯, 請嘗試在帳戶管理中優化數據庫"
 }
