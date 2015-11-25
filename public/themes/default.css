@@ -567,6 +567,10 @@ h3 {
   visibility: hidden;
   display: block;
 }
+#tagDropdown.open > .dropdown-menu {
+  animation: none;
+  -webkit-animation: none;
+}
 .dropdown-list {
   width: 530px;
   border-radius: 3px;
