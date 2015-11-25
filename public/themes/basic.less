@@ -1184,7 +1184,7 @@ h1, h2, h3 {
 // ace 重置css, 必须
 .ace_editor, .ace_editor * {
 	// font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
+	font-family: @aceFontFamily !important; // 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
 }
 
 /* leanote nav */
@@ -1314,7 +1314,7 @@ h1, h2, h3 {
 		text-decoration: underline;
 	}
 	pre {
-		font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+		font: 12px/normal @aceFontFamily; // 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 		// background-color: #FFFFFF;
 		color: #4D4D4C;
 		// padding: 5px;

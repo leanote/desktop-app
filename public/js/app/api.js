@@ -17,6 +17,17 @@ var Api = {
 	userService: UserService,
 	dbService: db,
 
+	// 打开本地目录
+	// mac和windows下不同
+	openLocalDir: function (dir) {
+		if (isMac()) {
+			gui.Shell.showItemInFolder(dir);
+		}
+		else {
+			gui.Shell.openItem(dir);
+		}
+	},
+
 	// 得到当前版本
 	getCurVersion: function (callback) {
 		var me = this;

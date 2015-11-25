@@ -1296,7 +1296,7 @@ h3 {
 }
 .ace_editor,
 .ace_editor * {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑" !important;
 }
 /* leanote nav */
 .leanoteNav {
@@ -1399,7 +1399,7 @@ h3 {
   text-decoration: underline;
 }
 #editorContent pre {
-  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑";
   color: #4D4D4C;
 }
 #editorContent .ace-tomorrow {

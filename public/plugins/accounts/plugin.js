@@ -8,7 +8,7 @@
 var async;
 
 define(function() {
-	var setLang = {
+	var accounts = {
 		langs: {
 			'en-us': {
 				'Accounts': 'Accounts',
@@ -166,14 +166,14 @@ define(function() {
 							Api.gui.dialog.showErrorBox(me.getMsg("Error"), me.getMsg("No such account"));
 							return;
 						}
-						Api.gui.Shell.showItemInFolder(path);
+						Api.openLocalDir(path);
 					});
 				},
 				'open-attach-dir': function (userId) {
-					Api.gui.Shell.showItemInFolder(Api.userService.getUserAttachsPath(userId));
+					Api.openLocalDir(Api.userService.getUserAttachsPath(userId));
 				},
 				'open-image-dir': function (userId) {
-					Api.gui.Shell.showItemInFolder(Api.userService.getUserImagesPath(userId));
+					Api.openLocalDir(Api.userService.getUserImagesPath(userId));
 				},
 				'delete': function (userId, $targetBtn) {
 					me.deleteUser(userId, function (ok) {
@@ -521,6 +521,6 @@ define(function() {
 		}
 	};
 
-	return setLang;
+	return accounts;
 
 });
