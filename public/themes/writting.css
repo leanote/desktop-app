@@ -82,7 +82,6 @@ body.writting #editor.all-tool #editorContentWrap {
 #wmd-button-bar {
   position: relative;
   height: 40px;
-  padding: 5px 0;
   overflow: hidden;
   background-color: #fbfcf7;
   border: none;
@@ -91,7 +90,8 @@ body.writting #editor.all-tool #editorContentWrap {
 }
 #mdEditor .navbar-default,
 #wmd-button-bar {
-  height: 44px !important;
+  height: 40px !important;
+  padding: 5px 0;
 }
 #mdEditor .navbar-default,
 #wmd-button-bar {
@@ -99,7 +99,7 @@ body.writting #editor.all-tool #editorContentWrap {
 }
 #mdEditor .extension-preview-buttons,
 #mdEditor .layout-wrapper-l3 {
-  top: 50px !important;
+  top: 45px !important;
 }
 #left-column,
 #right-column,

@@ -214,7 +214,7 @@ var openContextmenu = function (e, canCut2, canPaste2) {
             canCut = false;
         }
     }
-    
+
     menu.canCopy(selectionType === 'RANGE');
 
     menu.canPaste(canPaste);
@@ -230,7 +230,7 @@ var openContextmenu = function (e, canCut2, canPaste2) {
     menu.popup(e.originalEvent.x, e.originalEvent.y);
 };
 
-$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #wmd-input, #preview-contents, #editorContent, #presentation').on('contextmenu', openContextmenu);
+$('#noteTitle, #searchNoteInput, #searchNotebookForList, #addTagInput, #left-column, #preview-contents, #editorContent, #presentation').on('contextmenu', openContextmenu);
 $('body').on('contextmenu', '.history-content', function (e) {
     openContextmenu(e, false, false);
 });

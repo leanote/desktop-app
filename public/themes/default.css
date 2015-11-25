@@ -1041,6 +1041,7 @@ h3 {
   left: 450px;
   right: 0;
   overflow: hidden;
+  z-index: 1;
 }
 .wmd-panel-editor,
 .preview-container,
@@ -2910,9 +2911,9 @@ body,
   overflow: visible;
 }
 .wmd-mode {
-  min-width: 120px;
+  min-width: 150px;
   left: 50%;
-  margin-left: -60px !important;
+  margin-left: -75px !important;
 }
 .wmd-mode:before {
   right: auto;

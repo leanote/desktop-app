@@ -839,6 +839,7 @@ function getObjectId() {
 
 //-----------------------------------------
 function resizeEditor(second) {
+	LEA.isM && MD && MD.resize && MD.resize();
 	return;
 	var h = $("#mceToolbar").height()
     $("#editorContent").css("top", h);
