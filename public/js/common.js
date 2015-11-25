@@ -1784,6 +1784,10 @@ function isURL(str_url) {
     return re.test(str_url);
 }
 
+function isOtherSiteUrl(url) {
+	return url.indexOf('http://127.0.0.1') < 0 && isURL(url);
+}
+
 function reloadApp() {
 	onClose(function() {
 		setTimeout(function() {

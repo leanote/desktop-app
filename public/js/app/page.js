@@ -613,10 +613,24 @@ $(function() {
 		return preHeight < maxHeight ? preHeight : maxHeight;
 	}
 
-	// markdown preview下的a不能点击
-	$('#preview-contents, #editorContent').on('click', 'a', function(e) {
+	// 内容下的a点击, 跳转
+	$('#editorContent').on('click', 'a', function(e) {
 		e.preventDefault();
+		if (LEA.readOnly) {
+			var url = $(this).attr('href');
+			if (isOtherSiteUrl(url)) {
+				openExternal(url);
+			}
+		}
 		return false;
+	});
+
+	$('#preview-contents').on('click', 'a', function (e) {
+		e.preventDefault();
+		var url = $(this).attr('href');
+		if (isOtherSiteUrl(url)) {
+			openExternal(url);
+		}
 	});
 
 	// markdown编辑器paste
