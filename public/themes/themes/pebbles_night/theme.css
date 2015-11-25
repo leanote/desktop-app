@@ -329,6 +329,108 @@ body.writting .info-toolbar {
   background-color: #000;
   color: #000;
 }
+textarea#wmd-input {
+  color: #c2c2c2 !important;
+}
+#wmd-input.ace_editor {
+  color: #c2c2c2;
+}
+#wmd-input.ace-tm {
+  background-color: #ffffff;
+}
+#wmd-input.ace-tm .ace_marker-layer .ace_active-line {
+  background-color: rgba(89, 128, 166, 0.05);
+}
+#wmd-input.ace-tm .ace_cursor {
+  color: #c2c2c2;
+}
+#wmd-input.insert-mode .ace_cursor {
+  border-color: #c2c2c2 !important;
+}
+#wmd-input.ace-tm .ace_print-margin {
+  background: none;
+}
+#wmd-input.ace-tm .ace_markup.ace_heading {
+  color: #c2c2c2;
+  font-weight: bold;
+}
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_1,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_2,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_3,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_4,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_5 {
+  color: rgba(87, 108, 130, 0.6);
+}
+#wmd-input.ace-tm .ace_markup.ace_list {
+  color: #c2c2c2;
+}
+#wmd-input.ace-tm .ace_constant.ace_language {
+  color: rgba(87, 108, 130, 0.6);
+  font-weight: normal;
+}
+#wmd-input.ace-tm .ace_meta.ace_tag {
+  color: #384654;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+#wmd-input.ace-tm .ace_keyword.ace_operator {
+  color: #384654;
+  background-color: transparent;
+}
+#wmd-input.ace-tm .ace_storage,
+#wmd-input.ace-tm .ace_keyword {
+  color: #384654;
+  background-color: rgba(0, 0, 0, 0.04);
+  font-weight: bold;
+}
+#wmd-input.ace-tm .ace_entity.ace_name.ace_function {
+  color: #1a2026;
+}
+#wmd-input.ace-tm .ace_string {
+  color: #384654;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+#wmd-input.ace-tm .ace_invalid {
+  color: inherit;
+  background: inherit;
+}
+#wmd-input.ace-tm .ace_strong {
+  color: #c2c2c2;
+  font-weight: bold;
+}
+#wmd-input.ace-tm .ace_emphasis {
+  color: #c2c2c2;
+}
+#wmd-input.ace-tm .ace_blockquote {
+  color: #c2c2c2;
+}
+#wmd-input.ace-tm .ace_code {
+  color: #c2c2c2;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+#wmd-input.ace-tm .ace_code_block {
+  color: #c2c2c2;
+}
+#wmd-input.ace-tm .ace_link {
+  color: #576c82;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+#wmd-input.ace-tm .ace_description {
+  color: #576c82;
+}
+#wmd-input.ace-tm .ace_constant {
+  color: #384654;
+}
+#wmd-input.ace-tm .ace_comment {
+  color: rgba(87, 108, 130, 0.6);
+  font-style: italic;
+}
+#wmd-input.normal-mode .ace_cursor {
+  background-color: #E5E5E5;
+}
+#wmd-input.emacs-mode .ace_cursor {
+  border: 2px rgba(101, 189, 119, 0.8) solid !important;
+  background-color: #65bd77;
+}
 #leftNotebook {
   background: url(images/left_bg.jpg) no-repeat !important;
   background-size: 100% auto !important;
