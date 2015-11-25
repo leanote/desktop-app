@@ -35,6 +35,10 @@ define(function() {
 				"Error": "错误",
 				"No such account": "无该帐户",
 				"Are you sure, it can't be recovered after it has been deleted": "确定要删除该帐户? 本地的数据将会彻底删除",
+
+				"Notebook": "笔记本",
+				"Note": "笔记",
+				"Tag": "标签"
 			},
 			'zh-hk': {
 				'Accounts': '帳戶管理',
@@ -58,6 +62,10 @@ define(function() {
 				"Error": "錯誤",
 				"No such account": "無該帳戶",
 				"Are you sure, it can't be recovered after it has been deleted": "確定要刪除該帳戶? 本地的數據將會徹底刪除",
+
+				"Notebook": "筆記本",
+				"Note": "筆記",
+				"Tag": "標簽"
 			}
 		},
 		_tpl: `
@@ -209,9 +217,34 @@ define(function() {
 		userLength: 0,
 		curUser: null,
 
+		_renderUserDBDataStats: function(userId, data, n) {
+			var me = this;
+			if (n > 3) {
+				return;
+			}
+			if($('#' + userId + '-stat-notebook').length) {
+				$('#' + userId + '-stat-notebook').text(data.notebook);
+				$('#' + userId + '-stat-note').text(data.note);
+				$('#' + userId + '-stat-tag').text(data.tag);
+			}
+			else {
+				setTimeout(function () {
+					me._renderUserDBDataStats(userId, data, n+1);
+				}, 100);
+			}
+		},
+
+		renderUserDBDataStats: function (user) {
+			var me = this;
+			Api.userService.getUserDBDataStats(user, function (data) {
+				me._renderUserDBDataStats(user.UserId, data, 0);
+			});
+		},
+
 		renderUser: function(user, renderToExists) {
 			var me = this;
 			var username = user.Username;
+			var userId = user.UserId;
 			if (user.IsActive) {
 				username += ' <span class="label label-success">' + me.getMsg('Current') + '</span>';
 			}
@@ -243,6 +276,10 @@ define(function() {
 				+ '</span><a data-op="open-db-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ '<a data-op="db" class="op">' + me.getMsg('DB Optimization') + '</a>'
 				+ '<a class="account-q" onclick="openExternal(\'http://leanote.leanote.com/post/desktop-app-db-optimization\')"><i class="fa fa-question-circle"></i></a>'
+				+ '<br />'
+				+ me.getMsg('Notebook') + ' <span id="' + userId + '-stat-notebook"></span><br />'
+				+ me.getMsg('Note') + ' <span id="' + userId + '-stat-note"></span><br />'
+				+ me.getMsg('Tag') + ' <span id="' + userId + '-stat-tag"></span>'
 				+ ' </li>'
 			dataTd += '<li><span class="data-text">图片 '
 				+ me.fixSize(userStats.image)
@@ -261,10 +298,15 @@ define(function() {
 				+ '</div>';
 			tr += '<td>' + options + '</td>';
 
+
 			if (renderToExists) {
 				me.tbody.find('[data-id="' + user.UserId + '"]').html(tr);
 				return;
 			}
+
+			setTimeout(function () {
+				me.renderUserDBDataStats(user);
+			}, 1000);
 
 			var trContainer = '<tr data-id="' + user.UserId + '">'
 				+ tr
