@@ -1525,3 +1525,13 @@ a.input-group-addon {
 .open #mdEditor .modal-document-manager .btn-default.dropdown-toggle {
   border-color: rgba(128, 128, 128, 0.1);
 }
+
+/*必须和wmd-input一样*/
+.textarea-helper {
+  padding: 10px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  height: 1px;
+  visibility: hidden;
+}

@@ -214,6 +214,13 @@
     "Attachments": "附件",
     "UnTitled": "無標題",
 
+    "Vim mode": "Vim模式",
+    "Emacs mode": "Emacs模式",
+    "Normal mode": "普通模式",
+    "Light editor": "輕量編輯器",
+    "Light": "輕量",
+    "Normal": "普通",
+
     "Add sub notebook": "添加子筆記本",
     "Rename": "重命名",
     "Import notes": "導入筆記",

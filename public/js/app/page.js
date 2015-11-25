@@ -232,7 +232,7 @@ var Resize = {
 
 			clearInterval(self.resizeMDInterval);
 			self.resizeMDInterval = setTimeout(function () {
-				MD.aceEditor && MD.aceEditor.resize();
+				MD.resize && MD.resize();
 			}, 50);
 		}
 	},
@@ -240,17 +240,16 @@ var Resize = {
 	// 设置宽度
 	setMdColumnWidth: function(mdEditorWidth) {
 		var self = this;
-		if(mdEditorWidth > 100) {
+		var allWidth = $('#note').width();
+		if(mdEditorWidth > 100 && mdEditorWidth < allWidth - 80) {
 			if(Writting.isWriting()) {
 				UserInfo.MdEditorWidthForWritting = mdEditorWidth;
 			} else {
 				UserInfo.MdEditorWidth = mdEditorWidth;
 			}
 
-			// log(mdEditorWidth)
 			self.leftColumn.width(mdEditorWidth);
 			self.rightColumn.css("left", mdEditorWidth);
-			// self.mdSplitter.css("left", mdEditorWidth);
 		}
 
 		// 这样, scrollPreview 才会到正确的位置
@@ -621,7 +620,7 @@ $(function() {
 	});
 
 	// markdown编辑器paste
-	$('#wmd-input').on('paste', function(e) {
+	$('#left-column').on('paste', function(e) {
 		pasteImage(e);
 	});
 });
