@@ -16485,7 +16485,8 @@ define('core',[
                 </li>
             </ul>
          */
-        $('#wmd-button-bar').html('<ul class="nav left-buttons"><li class="wmd-button-group1 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group2 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group3 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group4 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group6 btn-group"></li><li class="wmd-button btn btn-success" id="wmd-help-button" title="' + getMsg('Markdown syntax') +'" style="left:0;display:none"><span style="display:none;background-position:0 0"></span><i class="fa fa-question-circle"></i></li></ul>');
+        $('#wmd-button-row').remove();
+        $('#wmd-button-bar .wmd-button-bar-inner').html('<ul class="nav left-buttons"><li class="wmd-button-group1 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group2 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group3 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group4 btn-group"></li></ul><ul class="nav left-buttons"><li class="wmd-button-group6 btn-group"></li><li class="wmd-button btn btn-success" id="wmd-help-button" title="' + getMsg('Markdown syntax') +'" style="left:0;display:none"><span style="display:none;background-position:0 0"></span><i class="fa fa-question-circle"></i></li></ul>');
     };
 
     core._setEditorHook = function () {
