@@ -17,6 +17,7 @@ define(function() {
 				'Accounts': '帐户管理',
 				"Username": "用户名",
 				"Is Local": "本地帐户",
+				'Host': '服务',
 				"Yes": "是",
 				"No": "否",
 				"DB Optimization": "数据库优化",
@@ -41,6 +42,7 @@ define(function() {
 				"Is Local": "本地帳戶",
 				"Yes": "是",
 				"No": "否",
+				'Host': '服務',
 				"DB Optimization": "數據庫優化",
 				"Open Dir": "打開目錄",
 				"Data": "數據",
@@ -58,7 +60,6 @@ define(function() {
 				"Are you sure, it can't be recovered after it has been deleted": "確定要刪除該帳戶? 本地的數據將會徹底刪除",
 			}
 		},
-
 		_tpl: `
 		<style>
 		#accountsDialog .tab-pane {
@@ -88,6 +89,20 @@ define(function() {
 		}
 		#accountsDialog .user-data a:hover {
 			text-decoration: underline !important;
+		}
+		#accountsDialog .user-data .account-q {
+			color: #ddd;
+		}
+		#accountsDialog .user-data .account-q:hover {
+			color: #428bca;
+		}
+		#accountsDialog .data-text {
+			display: inline-block;
+			min-width: 120px;
+		}
+		#accountsDialog .user-data li {
+		    border-bottom: 1px solid #eee;
+		    padding: 5px 0;
 		}
 		</style>
 	    <div class="modal fade bs-modal-sm" id="accountsDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
@@ -201,7 +216,11 @@ define(function() {
 				username += ' <span class="label label-success">' + me.getMsg('Current') + '</span>';
 			}
 			if (user.Email) {
-				username += '<br /><i>' + user.Email + '</i>';
+				username += '<br />Email: <i>' + user.Email + '</i>';
+			}
+			if (!user.IsLocal) {
+				var host = user.Host || Api.evtService.getHost();
+				username += '<br />' + me.getMsg('Host') + ': <a onclick="openExternal(\'' + host +'\')">' + host + '</a>';
 			}
 			
 			var tr = '<td>' + username + '</td>';
@@ -219,18 +238,19 @@ define(function() {
 			var userStats = Api.userService.getUserDataStats(user);
 
 			var dataTd = '<ul class="user-data">';
-			dataTd += '<li>数据库 '
+			dataTd += '<li><span class="data-text">数据库 '
 				+ me.fixSize(userStats.db)
-				+ '<a data-op="open-db-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
+				+ '</span><a data-op="open-db-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ '<a data-op="db" class="op">' + me.getMsg('DB Optimization') + '</a>'
+				+ '<a class="account-q" onclick="openExternal(\'http://leanote.leanote.com/post/desktop-app-db-optimization\')"><i class="fa fa-question-circle"></i></a>'
 				+ ' </li>'
-			dataTd += '<li>图片 '
+			dataTd += '<li><span class="data-text">图片 '
 				+ me.fixSize(userStats.image)
-				+ '<a data-op="open-image-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
+				+ '</span><a data-op="open-image-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ ' </li>'
-			dataTd += '<li>附件 '
+			dataTd += '<li><span class="data-text">附件 '
 				+ me.fixSize(userStats.attach)
-				+ '<a data-op="open-attach-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
+				+ '</span><a data-op="open-attach-dir" class="op">' + me.getMsg('Open Dir') + '</a>'
 				+ ' </li>'
 			dataTd += '</ul>';
 
