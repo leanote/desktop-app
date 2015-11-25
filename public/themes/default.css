@@ -2085,6 +2085,7 @@ img::selection {
 #loadingLogo {
   position: relative;
   width: 100px;
+  height: 100px;
   display: block;
   margin: auto;
   border: 1px solid #4092C5;
@@ -2924,6 +2925,9 @@ body,
   font-size: 12px;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑";
   font-style: normal;
+}
+textarea#wmd-input {
+  color: #000 !important;
 }
 #wmd-input .ace_searchbtn_close {
   margin: 0px;

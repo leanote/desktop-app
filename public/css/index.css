@@ -17,6 +17,7 @@
 #loadingLogo {
   position: relative;
   width: 100px;
+  height: 100px;
   display: block;
   margin: auto;
   border: 1px solid #4092C5;
