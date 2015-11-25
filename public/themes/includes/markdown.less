@@ -28,6 +28,9 @@
 @mdAceBlockquoteColor: #003873;
 @mdAceCursorColor: #243342;
 
+@mdAceTextColor: #000;
+@mdAceTagColor: rgba(87, 108, 130, 0.6);
+
 textarea#wmd-input {
   color: #000 !important;
 }
@@ -60,14 +63,17 @@ textarea#wmd-input {
     // background-color: rgba(89, 128, 166, 0.05);
   }
   &.ace-tm .ace_markup.ace_heading {
-    color: @mdAceHeadingColor;
+    color: @mdAceTextColor;
     font-weight: bold;
+    &.ace_1,&.ace_2,&.ace_3,&.ace_4,&.ace_5 {
+      color: @mdAceTagColor;
+    }
   }
   &.ace-tm .ace_markup.ace_list {
-    color: #576c82;
+    color: @mdAceTextColor;
   }
   &.ace-tm .ace_constant.ace_language {
-    color: rgba(87, 108, 130, 0.6);
+    color: @mdAceTagColor;
     font-weight: normal;
   }
   &.ace-tm .ace_meta.ace_tag {
@@ -100,15 +106,15 @@ textarea#wmd-input {
     background: inherit;
   }
   &.ace-tm .ace_strong {
-    color: #384654;
+    color: @mdAceTextColor;
     font-weight: bold;
   }
   &.ace-tm .ace_emphasis {
-    color: #1a2026;
+    color: @mdAceTextColor;
     font-style: italic;
   }
   &.ace-tm .ace_blockquote {
-    color: @mdAceBlockquoteColor;
+    color: @mdAceTextColor;
   }
   &.ace-tm .ace_code {
     color: #1a2026;

@@ -2940,7 +2940,7 @@ textarea#wmd-input {
   padding-top: 5px;
 }
 #wmd-input.ace_editor {
-  color: #2c3e50;
+  color: #000000;
 }
 #wmd-input.ace-tm {
   background-color: #ffffff;
@@ -2961,8 +2961,15 @@ textarea#wmd-input {
   color: #000000;
   font-weight: bold;
 }
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_1,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_2,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_3,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_4,
+#wmd-input.ace-tm .ace_markup.ace_heading.ace_5 {
+  color: rgba(87, 108, 130, 0.6);
+}
 #wmd-input.ace-tm .ace_markup.ace_list {
-  color: #576c82;
+  color: #000000;
 }
 #wmd-input.ace-tm .ace_constant.ace_language {
   color: rgba(87, 108, 130, 0.6);
@@ -2998,15 +3005,15 @@ textarea#wmd-input {
   background: inherit;
 }
 #wmd-input.ace-tm .ace_strong {
-  color: #384654;
+  color: #000000;
   font-weight: bold;
 }
 #wmd-input.ace-tm .ace_emphasis {
-  color: #1a2026;
+  color: #000000;
   font-style: italic;
 }
 #wmd-input.ace-tm .ace_blockquote {
-  color: #003873;
+  color: #000000;
 }
 #wmd-input.ace-tm .ace_code {
   color: #1a2026;
