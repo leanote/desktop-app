@@ -48,7 +48,7 @@
 /** lifelife */
 /* Pretty printing styles. Used with prettify.js. */
 pre.prettyprint * {
-  font-family: Monaco, Menlo, Consolas, "Courier New", monospace, microsoft yahei;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
 }
 pre.prettyprint {
   white-space: pre-wrap;

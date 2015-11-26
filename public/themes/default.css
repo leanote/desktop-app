@@ -1300,7 +1300,7 @@ h3 {
 }
 .ace_editor,
 .ace_editor * {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑" !important;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑" !important;
 }
 /* leanote nav */
 .leanoteNav {
@@ -1403,7 +1403,7 @@ h3 {
   text-decoration: underline;
 }
 #editorContent pre {
-  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑";
+  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
   color: #4D4D4C;
 }
 #editorContent .ace-tomorrow {
@@ -2927,7 +2927,7 @@ body,
 #md-keyboard-mode {
   color: #8E8E8E;
   font-size: 12px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑";
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
   font-style: normal;
 }
 textarea#wmd-input {
