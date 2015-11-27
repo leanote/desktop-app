@@ -16855,7 +16855,7 @@ define('core',[
         // MD.insertLink = editor.insertLink;
 
         MD.focus = function () {
-            aceEditor ? aceEditor.focus() : $editorElt.focus();
+            !window.lightMode ? aceEditor.focus() : $('#wmd-input').focus();
         };
         MD.setContent = function (content) {
             var desc = {
@@ -16928,20 +16928,30 @@ define('core',[
             // 保存之
             localS.set(localSModeKey, mode);
 
+            // 之前是lightMode
             if (window.lightMode) {
+                // 要切换成ace
                 if (mode != 'light') {
                     core.initAceEditor();
                     if (!MD.defaultKeyboardMode) {
                         MD.defaultKeyboardMode = aceEditor.getKeyboardHandler();
                     }
                 }
+                // 还是ligth, 则返回
+                else {
+                    return;
+                }
             }
+            // 当前是ace
             else {
+                // 如果mode是light, 则切换之, 否则
                 if (mode == 'light') {
                     core.initLightEditor();
                     return;
                 }
             }
+
+            // ace切换成其它模式
 
             if (mode != 'vim' && mode != 'emacs') {
                 aceEditor.setKeyboardHandler(MD.defaultKeyboardMode);
@@ -16950,11 +16960,10 @@ define('core',[
             else {
                 aceEditor.setKeyboardHandler("ace/keyboard/" + mode);
             }
-            MD.setModeName(modeName);
 
-            if (mode != 'light') {
-                aceEditor.focus();
-            }
+            // if (mode != 'light') {
+            //     aceEditor.focus();
+            // }
         };
 
         // MD API end
@@ -16985,11 +16994,11 @@ define('core',[
                 var $this = $(this);
                 var mode = $this.data('mode');
                 MD.changeAceKeyboardMode(mode.toLowerCase(), mode);
+                MD.setModeName(mode);
 
-                T = $this;
-
-                $this.closest('.wmd-mode').find('i').removeClass('fa-check');
-                $this.find('i').addClass('fa-check');
+                // 切换后可能会重绘html, 所以这里重新获取
+                $('.wmd-mode').find('i').removeClass('fa-check');
+                $('.wmd-mode a[data-mode="' + mode + '"]').find('i').addClass('fa-check');
             });
 
             if (!window.LEA 
