@@ -134,7 +134,10 @@ define(function() {
 				notes: []
 			}
 			me.fixFiles(note, function (content, files) {
-				content = $('<div>' + content + '</div>').html();
+				// 非markdown才需要这样, 补全html标签
+				if (!note.IsMarkdown) {
+					content = $('<div>' + content + '</div>').html();
+				}
 
 				var filesArr = [];
 				files || (files = {});
@@ -147,7 +150,7 @@ define(function() {
 
 				var noteInfo = {
 					title: note.Title,
-					content: me.fixContent(content),
+					content: !note.IsMarkdown ? me.fixContent(content) : content,
 					tags: note.Tags,
 					author: Api.userService.email || Api.userService.username || '',
 					isMarkdown: note.IsMarkdown,
