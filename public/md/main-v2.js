@@ -16569,8 +16569,17 @@ define('core',[
         if (window.lightMode) {
             return;
         }
-        var scrollTop = aceEditor.renderer.getScrollTop();
-        var pos = aceEditor.getCursorPosition();
+
+        var scrollTop;
+        var pos;
+        if (aceEditor) {
+            scrollTop = aceEditor.renderer.getScrollTop();
+            pos = aceEditor.getCursorPosition();
+        }
+        else {
+            scrollTop = 0;
+            pos = 0;
+        }
         var content = MD.getContent();
 
         core._resetToolBar();
@@ -16597,6 +16606,7 @@ define('core',[
         $editorElt.val(content);
 
         window.lightMode = true;
+        aceEditor = null;
         MD.clearUndo();
         eventMgr.onToggleMode(editor);
         core._moveCursorTo(pos.row, pos.column);
@@ -16688,7 +16698,7 @@ define('core',[
         documentContent = undefined;
         var initDocumentContent = fileDesc.content;
 
-        if(aceEditor !== undefined) {
+        if(!window.lightMode) {
             aceEditor.setValue(initDocumentContent, -1);
             // 重新设置undo manage
             // aceEditor.getSession().setUndoManager(new ace.UndoManager());
@@ -16699,7 +16709,9 @@ define('core',[
 
         // If the editor is already created
         if(editor !== undefined) {
-            aceEditor && fileDesc.editorSelectRange && aceEditor.selection.setSelectionRange(fileDesc.editorSelectRange);
+            if(!window.lightMode) {
+                aceEditor && fileDesc.editorSelectRange && aceEditor.selection.setSelectionRange(fileDesc.editorSelectRange);
+            }
             // aceEditor ? aceEditor.focus() : $editorElt.focus();
             editor.refreshPreview();
 
@@ -16775,7 +16787,7 @@ define('core',[
 
         function checkDocumentChanges() {
             var newDocumentContent = $editorElt.val();
-            if(aceEditor !== undefined) {
+            if(!window.lightMode && aceEditor) {
                 newDocumentContent = aceEditor.getValue();
             }
             if(documentContent !== undefined && documentContent != newDocumentContent) {
