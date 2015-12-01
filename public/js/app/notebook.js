@@ -689,7 +689,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 	Notebook.curNotebookId = notebookId;
 
 	// 1
-	Note.curChangedSaveIt();
+	Note.curChangedSaveIt(true);
 	
 	// 2 先清空所有
 	Note.clearAll();
