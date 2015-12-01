@@ -1158,7 +1158,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	Notebook.incrNotebookNumberNotes(notebookId);
 
 	// 切换到写模式
-	Note.toggleWriteable();
+	Note.toggleWriteable(true);
 };
 
 // 同步
@@ -1794,7 +1794,7 @@ Note.toggleReadOnly = function(needSave) {
 };
 
 // 切换到编辑模式
-LEA.toggleWriteable = Note.toggleWriteable = function() {
+LEA.toggleWriteable = Note.toggleWriteable = function(isFromNewNote) {
 	var me = Note;
 
 	// $('#infoToolbar').hide();
@@ -1818,9 +1818,12 @@ LEA.toggleWriteable = Note.toggleWriteable = function() {
 		$('#editorContent pre').each(function() {
 			LeaAce.setAceReadOnly($(this), false);
 		});
+
+		isFromNewNote || tinymce.activeEditor.focus();
 	}
 	else {
 		if(MD) {
+			isFromNewNote || MD.focus();
 			MD.onResize();
 		}
 	}
@@ -3265,6 +3268,17 @@ $(function() {
 	// });
 	$("#editBtn").click(function() {
 		Note.toggleWriteableAndReadOnly();
+	});
+
+	// note title 里按tab, 切换到编辑区
+	$('#noteTitle').on("keydown", function(e) {
+		var keyCode = e.keyCode || e.witch;
+		// tab
+		if (keyCode == 9) {
+			// 一举两得, 即切换到了writable, 又focus了
+			Note.toggleWriteable();
+			e.preventDefault();
+		}
 	});
 
 });
