@@ -2177,6 +2177,17 @@ $(function() {
 	  e.preventDefault();
 	  e.stopPropagation();
 	}, false);
+
+    // 为了解决linux下重复粘贴的问题
+    var everPaste;
+    $('#left-column').on('paste', function (e) {
+    	var now = (new Date()).getTime();
+	    if (everPaste && now - everPaste < 100) {
+	        e.preventDefault();
+	        return;
+	    }
+	    everPaste = now;
+    });
 });
 
 // markdown editor v2
