@@ -300,5 +300,7 @@
     "Sync error, retry to sync after 3 seconds": "同步失败, 3 秒后自动重新尝试同步",
     "Network error!": "网络异常",
 
-    "Load Database Error": "加载数据库出错, 请尝试在帐户管理中优化数据库"
+    "Load Database Error": "加载数据库出错, 请尝试在帐户管理中优化数据库",
+
+    "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切换编辑与只读"
 }

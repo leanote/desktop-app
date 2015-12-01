@@ -24,6 +24,6 @@ var Config = {
             "name": "繁体中文"
         }
     ],
-    "lang": "en-us",
+    "lang": "zh-cn",
     "theme": ""
 };

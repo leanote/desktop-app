@@ -2014,6 +2014,12 @@ img::selection {
   cursor: pointer;
   font-size: 16px;
 }
+.read-only-editor #editBtn span:before {
+  content: "\f044";
+}
+#editBtn span:before {
+  content: "\f06e";
+}
 .win-tool {
   padding: 5px;
   position: absolute;

@@ -267,7 +267,7 @@ function log(o) {
         
         <div class="noteSplit" id="noteSplitter"></div>
           
-        <div id="note">
+        <div id="note" class="read-only-editor">
           
           <!-- 遮罩, 为了resize3Columns用 -->
           <div id="noteMask" class="note-mask"></div>
@@ -306,6 +306,11 @@ function log(o) {
               </div>
               
               <ul class="pull-right" id="editorTool">
+
+                <li><a class="ios7-a lang-title lang-title" id="editBtn"
+                  data-toggle="dropdown" title="ctrl/cmd+e Toggle Modify with Readonly">
+                  <span class="fa"></span>
+                  </a></li>
 
                 <li class="dropdown" id="attachDropdown">
                   <a class="ios7-a dropdown-toggle lang-title" data-toggle="dropdown" id="showAttach" title="Attachments">
@@ -358,7 +363,7 @@ function log(o) {
 
               <!-- 查看信息 -->
               <div id="infoToolbar" class="info-toolbar">
-                <a class="toolbar-update" title="ctrl/cmd + e"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+               
                 <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
                 <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
               </div>
@@ -399,7 +404,7 @@ function log(o) {
                     <div class="navbar navbar-default">
                         <div class="navbar-inner" id="wmd-button-bar">
                             <div id="mdInfoToolbar" class="info-toolbar">
-                              <a class="toolbar-update" title="ctrl/cmd + e"><i class="fa fa-pencil"></i> <span class="lang">Modify</span></a>
+                              
                               <span class="lang">Created</span>: <span class="created-time">2015-04-03</span>
                               <span class="lang">Updated</span>: <span class="updated-time">2015-05-01</span>
                             </div>

@@ -1762,6 +1762,7 @@ Note.toggleReadOnly = function(needSave) {
 
 	// markdown
 	$('#mdEditor').addClass('read-only');
+	$('#note').addClass('read-only-editor');
 
 	if(!note) {
 		return;
@@ -1798,6 +1799,7 @@ LEA.toggleWriteable = Note.toggleWriteable = function() {
 
 	// $('#infoToolbar').hide();
 	$('#editor').removeClass('read-only');
+	$('#note').removeClass('read-only-editor');
 	$('#editorContent').attr('contenteditable', true);
 
 	// markdown
@@ -3258,8 +3260,11 @@ $(function() {
 
 	// readony
 	// 修改
-	$('.toolbar-update').click(function() {
-		Note.toggleWriteable();
+	// $('.toolbar-update').click(function() {
+	// 	Note.toggleWriteable();
+	// });
+	$("#editBtn").click(function() {
+		Note.toggleWriteableAndReadOnly();
 	});
 
 });
