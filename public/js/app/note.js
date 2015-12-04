@@ -304,7 +304,6 @@ Note.curHasChanged = function(force) {
 		// 不会出现, 因为刚开始时readOnly=true, 且只有设置内容完成后才setCurNoteId
 		// markdown编辑器还没准备好
 		throw new Error('markdown编辑器还没准备好');
-		alert(3);
 	}
 	else {
 		content = contents;
@@ -443,13 +442,32 @@ Note.getImgSrc = function(content) {
 	return "";
 };
 
+// revert 历史记录时强制添加到history中
+Note.curChangedSaveItForRevertHistory = function(callback) {
+	var me = this;
+	me.curChangedSaveIt(true, function (ret) {
+		// 没有保存啊
+		if (!ret) {
+			var note = me.getCurNote();
+			var content = getEditorContent(note.IsMarkdown);
+			if (isArray(content)) {
+				content = content[0];
+			}
+			NoteService.addNoteHistory(me.curNoteId, content, callback);
+		}
+		else {
+			callback();
+		}
+	});
+};
+
 // 如果当前的改变了, 就保存它
 // 以后要定时调用
 // force , 默认是true, 表强校验内容
 // 定时保存传false
 Note.saveInProcess = {}; // noteId => bool, true表示该note正在保存到服务器, 服务器未响应
 Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
-Note.curChangedSaveIt = function(force, callback) {
+Note.curChangedSaveIt= function(force, callback) {
 	var me = Note;
 	// 如果当前没有笔记, 不保存
 	if(!me.curNoteId) {

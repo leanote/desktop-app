@@ -89,15 +89,17 @@ define(function() {
             $tpl.find('.back').click(function() {
                 if(confirm(getMsg("confirmBackup"))) {
                     // 保存当前版本
-                    Note.curChangedSaveIt(true);
+                    // 如果没有变化, 肯定不会保存的
+                    // Note.curChangedSaveIt(true);
+                    Note.curChangedSaveItForRevertHistory(function () {
+                        // 设置之
+                        note = Note.cache[Note.curNoteId];
+                        setEditorContent(me.list[me.curIndex].Content, note.IsMarkdown);
 
-                    // 设置之
-                    note = Note.cache[Note.curNoteId];
-                    setEditorContent(me.list[me.curIndex].Content, note.IsMarkdown);
-
-                    $tpl.modal('hide');
-                    // 保存
-                    Note.curChangedSaveIt(true);
+                        $tpl.modal('hide');
+                        // 保存
+                        Note.curChangedSaveIt(true);
+                    });
                 }
             });
 
