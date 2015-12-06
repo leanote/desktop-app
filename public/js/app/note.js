@@ -498,7 +498,7 @@ Note.curChangedSaveIt = function(force, callback) {
 		}, force);
 
 		return hasChanged;
-		
+
 	} else {
 		// 如果是强制的, 则要加历史, 但因笔记内容没改, 所以之前不会有
 		if (force) {
@@ -1411,8 +1411,10 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 					// 取消star
 					Note.unStar(noteId);
 
-					// 减少数量
-					Notebook.minusNotebookNumberNotes(note.NotebookId);
+					if (!note.IsTrash) {
+						// 减少数量
+						Notebook.minusNotebookNumberNotes(note.NotebookId);
+					}
 					Note.clearCacheByNotebookId(note.NotebookId);
 					delete Note.cache[noteId];
 				}
