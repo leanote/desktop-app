@@ -16879,6 +16879,8 @@ define('core',[
             // Refresh the editor (even if it's the same file)
             core.initEditor(desc);
         };
+        MD.setContent("");
+        // MD.setContent("");
         MD.getContent = function () {
             if(!window.lightMode) {
                 return aceEditor.getValue();
