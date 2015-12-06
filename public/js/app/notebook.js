@@ -29,6 +29,7 @@ Notebook.getCurNotebook = function() {
 // 还没显示到web上
 // 放在这里, 让addNote时调用
 Notebook._newNotebookNumberNotes = {}; // notebookId => count
+Notebook._subNotebookNumberNotes = {};
 Notebook.reRenderNotebookNumberNotesIfIsNewNotebook = function(notebookId) {
 	var count = Notebook._newNotebookNumberNotes[notebookId];
 	if(count) {
@@ -43,12 +44,18 @@ Notebook.reRenderNotebookNumberNotesIfIsNewNotebook = function(notebookId) {
 Notebook.updateNotebookNumberNotes = function(notebookId, count) {
 	var self = this;
 	var notebook = self.getNotebook(notebookId);
-	//  为什么可能会没有? 因为可能是新加的笔记本, 此时该笔记本又有笔记, 一起同步过来
-	//  还没显示到web上
+	// 为什么可能会没有? 因为可能是新加的笔记本, 此时该笔记本又有笔记, 一起同步过来
+	// 可能是子笔记本, 显示不出
+	// 还没显示到web上
 	if(!notebook) {
 		Notebook._newNotebookNumberNotes[notebookId] = count;
 		return;
 	}
+	if (!$("#numberNotes_" + notebookId).length) {
+		Notebook._subNotebookNumberNotes[notebookId] = count;
+		return;
+	}
+
 	notebook.NumberNotes = count;
 	$("#numberNotes_" + notebookId).html(count);
 };
@@ -142,7 +149,7 @@ Notebook.getSubNotebooks = function(parentNotebookId) {
 	return nodes;
 };
 
-Notebook.getTreeSetting = function(isSearch, isShare){ 
+Notebook.getTreeSetting = function(isSearch, isShare) { 
 	var noSearch = !isSearch;
 	
 	var self = this;
@@ -280,6 +287,22 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 			onDrop: onDrop,
 			onClick: onClick,
 			onDblClick: onDblClick,
+			onExpand: function (event, treeId, treeNode) {
+				// 展开时, 会有子笔记本, 如果之前有设置数量, 则重新设置
+				// 为了防止移动, 复制过来时没有该sub
+				if (treeNode.isParent) {
+					var childNotes = self.getSubNotebooks(treeNode.NotebookId);
+					if (childNotes) {
+						childNotes.forEach(function (node) {
+							var notebookId = node.NotebookId;
+							if (Notebook._subNotebookNumberNotes[notebookId] !== undefined) {
+								$('#numberNotes_' + notebookId).html(Notebook._subNotebookNumberNotes[notebookId]);
+								Notebook._subNotebookNumberNotes[notebookId] = undefined;
+							}
+						});
+					}
+				}
+			},
 			beforeRename: function(treeId, treeNode, newName, isCancel) {
 				if(newName == "") {
 					if(treeNode.IsNew) {
@@ -306,10 +329,6 @@ Notebook.getTreeSetting = function(isSearch, isShare){
 			}
 		}
 	};
-	
-	// 搜索不能拖拽
-	if(isSearch) {
-	}
 	
 	return setting;
 }
@@ -349,7 +368,7 @@ Notebook.renderNotebooks = function(notebooks) {
 	}, function() {
 		$(this).removeClass("showIcon");
 	});
-			
+
 	// 缓存所有notebooks信息
 	if(!isEmpty(notebooks)) {
 		Notebook.curNotebookId = notebooks[0].NotebookId;
