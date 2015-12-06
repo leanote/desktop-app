@@ -1779,6 +1779,33 @@ var onClose = function(afterFunc) {
 	}
 }
 
+// 如果是mac, 当关闭窗口时不要stop server
+var onCloseNotStopServerForMac = function(afterFunc) {
+	function o () {
+	    SyncService.stop();
+	    // 先保存之前改变的
+	    Note.curChangedSaveIt();
+	    // 保存状态
+	    State.saveCurState(function() {
+	        afterFunc && afterFunc();
+	    });
+	}
+	try {
+		if (isMac()) {
+			o();
+		}
+		else {
+			// 先把服务/协议关掉
+		    Server.close(function () {
+		    	o();
+			});
+		}
+	} catch(e) {
+		console.error(e);
+		afterFunc && afterFunc();
+	}
+}
+
 function isURL(str_url) {
     var re = new RegExp("^((https|http|ftp|rtsp|mms|emailto)://).+");
     return re.test(str_url);
