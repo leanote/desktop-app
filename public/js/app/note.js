@@ -148,11 +148,15 @@ Note.getNotesByNotebookId = function(notebookId, sortBy, isAsc) {
 			continue;
 		}
 		var note = Note.cache[i];
+		if (!note) {
+			continue;
+		}
+
 		if (! ('IsMarkdown' in note)) {
 			console.error('僵尸note------');
 		}
 		// 不要trash的not, 共享的也不要
-		if(note.IsTrash || note.IsShared) {
+		if(note.IsTrash || note.IsDeleted || note.LocalIsDelete) {
 			continue;
 		}
 		if(notebookId == "all" || note.NotebookId == notebookId) {
@@ -442,12 +446,14 @@ Note.getImgSrc = function(content) {
 	return "";
 };
 
+
 // 如果当前的改变了, 就保存它
 // 以后要定时调用
 // force , 默认是true, 表强校验内容
 // 定时保存传false
 Note.saveInProcess = {}; // noteId => bool, true表示该note正在保存到服务器, 服务器未响应
 Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
+Note.savePoolNew = {}; // 如果之前新建的保存了, 连续2次事件, 拖动笔记, 则会保存新建两次, 此时数据库中出现两个noteId一样的
 Note.curChangedSaveIt = function(force, callback) {
 	var me = Note;
 	// 如果当前没有笔记, 不保存
@@ -481,7 +487,14 @@ Note.curChangedSaveIt = function(force, callback) {
 		// 保存之
 		me.saveInProcess[hasChanged.NoteId] = true;
 
-		// console.trace('要保存了.......');
+		if (hasChanged.IsNew) {
+			if (me.savePoolNew[hasChanged.NoteId]) {
+				console.log('要保存新建两次, 被阻止')
+				return;
+			}
+			me.savePoolNew[hasChanged.NoteId] = true;
+		}
+
 		// console.log(hasChanged);
 		NoteService.updateNoteOrContent(hasChanged, function(ret) {
 			me.saveInProcess[hasChanged.NoteId] = false;
@@ -1162,7 +1175,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 		Note.setCurNoteId(note.NoteId);
 
 		// 更新数量
-		Notebook.incrNotebookNumberNotes(notebookId);
+		// Notebook.incrNotebookNumberNotes(notebookId);
 
 		// 切换到写模式
 		Note.toggleWriteable(true);
@@ -1411,11 +1424,16 @@ Note.deleteNote = function(target, contextmenuItem, isShared) {
 					// 取消star
 					Note.unStar(noteId);
 
+					/*
+					由后端到前端render
 					if (!note.IsTrash) {
 						// 减少数量
-						Notebook.minusNotebookNumberNotes(note.NotebookId);
+						// Notebook.minusNotebookNumberNotes(note.NotebookId);
 					}
+					*/
 					Note.clearCacheByNotebookId(note.NotebookId);
+
+					// 删除缓存
 					delete Note.cache[noteId];
 				}
 			}
@@ -1625,7 +1643,7 @@ Note.moveNote = function(target, data) {
 			return;
 		}
 	}
-	
+
 	NoteService.moveNote(noteIds, toNotebookId, function(ret) {
 		if(ret) {
 			me.clearCacheByNotebookId(toNotebookId);
