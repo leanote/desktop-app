@@ -89,9 +89,7 @@ define(function() {
             $tpl.find('.back').click(function() {
                 if(confirm(getMsg("confirmBackup"))) {
                     // 保存当前版本
-                    // 如果没有变化, 肯定不会保存的
-                    // Note.curChangedSaveIt(true);
-                    Note.curChangedSaveItForRevertHistory(function () {
+                    Note.curChangedSaveIt(true, function () {
                         // 设置之
                         note = Note.cache[Note.curNoteId];
                         setEditorContent(me.list[me.curIndex].Content, note.IsMarkdown);

@@ -442,32 +442,13 @@ Note.getImgSrc = function(content) {
 	return "";
 };
 
-// revert 历史记录时强制添加到history中
-Note.curChangedSaveItForRevertHistory = function(callback) {
-	var me = this;
-	me.curChangedSaveIt(true, function (ret) {
-		// 没有保存啊
-		if (!ret) {
-			var note = me.getCurNote();
-			var content = getEditorContent(note.IsMarkdown);
-			if (isArray(content)) {
-				content = content[0];
-			}
-			NoteService.addNoteHistory(me.curNoteId, content, callback);
-		}
-		else {
-			callback();
-		}
-	});
-};
-
 // 如果当前的改变了, 就保存它
 // 以后要定时调用
 // force , 默认是true, 表强校验内容
 // 定时保存传false
 Note.saveInProcess = {}; // noteId => bool, true表示该note正在保存到服务器, 服务器未响应
 Note.savePool = {}; // 保存池, 以后的保存先放在pool中, id => note
-Note.curChangedSaveIt= function(force, callback) {
+Note.curChangedSaveIt = function(force, callback) {
 	var me = Note;
 	// 如果当前没有笔记, 不保存
 	if(!me.curNoteId) {
@@ -479,16 +460,13 @@ Note.curChangedSaveIt= function(force, callback) {
 	try {
 		var hasChanged = Note.curHasChanged(force);
 	} catch(e) {
-		console.log('error curHasChanged:'); // + e.toString())
+		console.error('error curHasChanged:'); // + e.toString())
 		console.error(e);
 		callback && callback();
 		return;
 	}
 
 	if(hasChanged && hasChanged.hasChanged) {
-		// console.trace('需要保存');
-		// console.log(hasChanged);
-
 		// 把已改变的渲染到左边 item-list
 		Note.renderChangedNote(hasChanged);
 
@@ -520,10 +498,22 @@ Note.curChangedSaveIt= function(force, callback) {
 		}, force);
 
 		return hasChanged;
-
+		
 	} else {
-		console.log('不用保存 (^_^)');
-		callback && callback();
+		// 如果是强制的, 则要加历史, 但因笔记内容没改, 所以之前不会有
+		if (force) {
+			var note = me.getCurNote();
+			var content = getEditorContent(note.IsMarkdown);
+			if (isArray(content)) {
+				content = content[0];
+			}
+			NoteService.addNoteHistory(me.curNoteId, content, callback);
+			console.log('已保存到历史中')
+		}
+		else {
+			console.log('不用保存 (^_^)');
+			callback && callback();
+		}
 	}
 	// callback && callback();
 	return false;
