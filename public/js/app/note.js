@@ -1110,76 +1110,77 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	Note.batch.reset();
 
 	// 保存当前的笔记
-	Note.curChangedSaveIt(true, function () {
-		var note = {
-			NoteId: getObjectId(),
-			Title: '',
-			Tags:[],
-			Desc: '',
-			Content: '',
-			NotebookId: notebookId,
-			IsNew: true,
-			FromUserId: fromUserId,
-			IsMarkdown: isMarkdown,
-			CreatedTime: new Date(),
-			UpdatedTime: new Date()
-		}; // 是新的
+	Note.curChangedSaveIt(true);
 
-		// 添加到缓存中
-		Note.addNoteCache(note);
+	// 新笔记
+	var note = {
+		NoteId: getObjectId(),
+		Title: '',
+		Tags:[],
+		Desc: '',
+		Content: '',
+		NotebookId: notebookId,
+		IsNew: true,
+		FromUserId: fromUserId,
+		IsMarkdown: isMarkdown,
+		CreatedTime: new Date(),
+		UpdatedTime: new Date()
+	}; // 是新的
 
-		// 清空附件数
-		Attach.clearNoteAttachNum();
+	// 添加到缓存中
+	Note.addNoteCache(note);
 
-		// 是否是为共享的notebook添加笔记, 如果是, 则还要记录fromUserId
-		var newItem = "";
+	// 清空附件数
+	Attach.clearNoteAttachNum();
 
-		var baseClasses = "item-my";
-		if(isShare) {
-			baseClasses = "item-shared";
-		}
+	// 是否是为共享的notebook添加笔记, 如果是, 则还要记录fromUserId
+	var newItem = "";
 
-		var notebook = Notebook.getNotebook(notebookId);
-		var notebookTitle = notebook ? notebook.Title : "";
-		var curDate = getCurDatetime();
+	var baseClasses = "item-my";
+	if(isShare) {
+		baseClasses = "item-shared";
+	}
 
-		newItem = tt(Note.newItemTpl, baseClasses, me.newNoteSeq(), "", note.NoteId, note.Title, notebookTitle, curDate, "");
+	var notebook = Notebook.getNotebook(notebookId);
+	var notebookTitle = notebook ? notebook.Title : "";
+	var curDate = getCurDatetime();
 
-		newItem = $(newItem);
-		newItem.find(".item-blog").hide();
+	newItem = tt(Note.newItemTpl, baseClasses, me.newNoteSeq(), "", note.NoteId, note.Title, notebookTitle, curDate, "");
 
-		// 是否在当前notebook下, 不是则切换过去, 并得到该notebook下所有的notes, 追加到后面!
-		if(!Notebook.isCurNotebook(notebookId)) {
-			// 先清空所有
-			Note.clearAll();
+	newItem = $(newItem);
+	newItem.find(".item-blog").hide();
 
-			// 插入到第一个位置
-			Note.noteItemListO.prepend(newItem);
+	// 是否在当前notebook下, 不是则切换过去, 并得到该notebook下所有的notes, 追加到后面!
+	if(!Notebook.isCurNotebook(notebookId)) {
+		// 先清空所有
+		Note.clearAll();
 
-			// 改变为当前的notebookId
-			// 会得到该notebookId的其它笔记
-			Notebook.changeNotebookForNewNote(notebookId);
-		} else {
-			// 插入到第一个位置
-			Note.noteItemListO.prepend(newItem);
-		}
+		// 插入到第一个位置
+		Note.noteItemListO.prepend(newItem);
 
-		Note.selectTarget($(tt('[noteId="?"]', note.NoteId)));
+		// 改变为当前的notebookId
+		// 会得到该notebookId的其它笔记
+		Notebook.changeNotebookForNewNote(notebookId);
+	} else {
+		// 插入到第一个位置
+		Note.noteItemListO.prepend(newItem);
+	}
 
-		setTimeout(function() {
-			$("#noteTitle").focus();
-		});
+	Note.selectTarget($(tt('[noteId="?"]', note.NoteId)));
 
-		Note.renderNote(note);
-		Note.renderNoteContent(note);
-		Note.setCurNoteId(note.NoteId);
-
-		// 更新数量
-		// Notebook.incrNotebookNumberNotes(notebookId);
-
-		// 切换到写模式
-		Note.toggleWriteable(true);
+	setTimeout(function() {
+		$("#noteTitle").focus();
 	});
+
+	Note.renderNote(note);
+	Note.renderNoteContent(note);
+	Note.setCurNoteId(note.NoteId);
+
+	// 更新数量
+	// Notebook.incrNotebookNumberNotes(notebookId);
+
+	// 切换到写模式
+	Note.toggleWriteable(true);
 };
 
 // 同步
