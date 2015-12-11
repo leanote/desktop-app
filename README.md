@@ -16,7 +16,7 @@ Please see http://app.leanote.com
 See https://github.com/atom/electron
 
 
-### 2. How to run it
+### 2. Run it with electron
 
 Download this project, and run
 
@@ -24,6 +24,11 @@ Download this project, and run
 $> cd PATH-TO-LEANOTE-DESKTOP-APP
 $> Electron .
 ```
+
+## Docs
+
+Please see https://github.com/leanote/desktop-app/wiki
+
 
 ## LICENSE
 
