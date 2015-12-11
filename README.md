@@ -13,7 +13,7 @@ Please see http://app.leanote.com
 
 ### 1. Install Electron
 
-See https://github.com/atom/electron
+See https://github.com/atom/electron#downloads
 
 
 ### 2. Run it with electron
@@ -22,7 +22,7 @@ Download this project, and run
 
 ````
 $> cd PATH-TO-LEANOTE-DESKTOP-APP
-$> Electron .
+$> electron .
 ```
 
 ## Docs
