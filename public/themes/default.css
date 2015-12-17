@@ -2020,6 +2020,9 @@ img::selection {
 #editBtn span:before {
   content: "\f06e";
 }
+.m-todo-item {
+  list-style: none;
+}
 .win-tool {
   padding: 5px;
   position: absolute;

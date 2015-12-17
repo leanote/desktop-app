@@ -159,6 +159,9 @@ kbd {
   list-style-type:none;
   margin-bottom:15px
 }
+.m-todo-item {
+  list-style: none;
+}
 </style>
 <!-- 该css供自定义样式 -->
 <link href="../leanote-markdown.css" rel="stylesheet">
