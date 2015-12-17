@@ -344,35 +344,20 @@ Note.genDesc = function(content, length) {
 		length = 20;
 	}
 
-	// 将</div>, </p>替换成\n
-	/*
-	var token = "ALEALE";
-	content = content.replace(/<\/p>/g, token);
-	content = content.replace(/<\/div>/g, token);
-	content = content.replace(/<\/?.+?>/g," ");
-
-	pattern = new RegExp(token, "g");
-	content = content.replace(pattern, "<br />");
-	content = content.replace(/<br \/>( *)<br \/>/g, "<br />"); // 两个<br />之间可能有空白
-	content = content.replace(/<br \/>( *)<br \/>/g, "<br />");
-
-	// 去掉最开始的<br />或<p />
-	content = trimLeft(content, " ");
-	content = trimLeft(content, "<br />");
-	content = trimLeft(content, "</p>");
-	content = trimLeft(content, "</div>");
-	*/
-
 	// 留空格
-	content = content.replace(/<br \/>/g," <br />");
-	content = content.replace(/<\/p>/g," </p>");
-	content = content.replace(/<\/div>/g," </div>");
+	content = content.replace(/<br \/>/g," ");
+	content = content.replace(/<\/p>/g," ");
+	content = content.replace(/<\/div>/g," ");
 
+	// 非常危险, 万一markdown里, 或者code里写了<script></script>或<http meta=refresh>之类的
 	// 避免其它的<img 之类的不完全
-	content = $("<div></div>").html(content).text();
+	// 之前会将content放到<div></div>中
+	// content = $("<div></div>").html(content).text();
+	// content = $("<div>" + content + "</div>").text();
 
+	// 将html tags全部删除
+	content = content.replace(/<\/?[^>]+(>|$)/g, "");
 	content = $.trim(content);
-
 	// pre下text()会将&lt; => < &gt; => >
 	content = content.replace(/</g, "&lt;");
 	content = content.replace(/>/g, "&gt;");
@@ -380,6 +365,7 @@ Note.genDesc = function(content, length) {
 	if(content.length < length) {
 		return content;
 	}
+
 	return content.substring(0, length);
 }
 
@@ -798,7 +784,7 @@ Note.renderChangedNote = function(changedNote) {
 		Note.changeStarNoteTitle(changedNote.NoteId, trimTitle(changedNote.Title));
 	}
 	if(changedNote.Desc) {
-		$leftNoteNav.find(".desc").html(changedNote.Desc);
+		$leftNoteNav.find(".desc").html(trimTitle(changedNote.Desc));
 	}
 	if(changedNote.ImgSrc) {
 		$thumb = $leftNoteNav.find(".item-thumb");
