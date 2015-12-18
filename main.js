@@ -63,10 +63,11 @@ var DB = {
      * @param  {Object} params {
         curUser: <User> 是当前用户
         dbPath: string 是用户的dbPath
+        dataBasePath: string 所有数据的基地址
      * }
      */
     ipc.on('db-init', function (event, params) {
-      db.init(params.curUser, params.dbPath);
+      db.init(params.curUser, params.dbPath, params.dataBasePath);
     });
   }
 };
