@@ -6,12 +6,6 @@ var basePath = app.getPath('appData') + '/leanote'; // /Users/life/Library/Appli
 Evt.setDataBasePath(basePath);
 var protocol = require('remote').require('protocol');
 
-if(!/login.html/.test(location.href)) {
-	// 启动服务器, 图片
-	var Server = require('server');
-	Server.start();
-}
-
 // 数据库初始化
 var db = require('db');
 // db.init();
@@ -35,7 +29,6 @@ var NoteService = Service.noteService;
 var NotebookService = Service.notebookService;
 var TagService = Service.tagService;
 var WebService = require('web');
-var ServerService = require('server');
 var FileService = require('file');
 var EvtService = require('evt');
 var CommonService = require('common');

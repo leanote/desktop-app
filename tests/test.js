@@ -4,7 +4,6 @@ var Notebook = require('notebook');
 var Note = require('note');
 var Api = require('api');
 var User = require('user');
-var Server = require('server');
 var Evt = require('evt');
 var Common = require('common');
 
@@ -91,7 +90,6 @@ Note.getNoteByServerNoteId("54c6313799c37bdeec000008", function(ret){
 // Api.auth('c@a.com', 'abc123');
 // var content = '<img src="http://localhost:9000/api/file/getImage?fileId=54c2083f99c37bea5f000001"> <img src="http://localhost:9000/api/file/getImage?fileId=54c2083f99c37bea5f000001">' + "\n" + '<img src="http://localhost:9000/api/file/getImage?fileId=54c2083f99c37bea5f000001">';
 // var reg = new RegExp('<img *src="' + Api.leanoteUrl + '/api/file/getImage', 'g');
-// content = content.replace(reg, '<img src="' + Server.localUrl + '/api/file/getImage');
 // console.log(content);
 
 /*

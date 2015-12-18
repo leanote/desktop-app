@@ -1,5 +1,6 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
+  var ipc = require('ipc');
 
 // Report crashes to our server.
 require('crash-reporter').start();
@@ -39,47 +40,48 @@ app.on('activate-with-no-open-windows', function() {
   }
 });
 
+// DB
+var DB = {
+  init: function () {
+    var me = this;
+    var db = require('db_main');
+
+    // 前端发来消息
+    // m = {token: token, method: 'insert, findOne', dbname: 'notes', params: {username: "life"}};
+    ipc.on('db-exec', function(event, m) {
+      // me._token2Sender[m.token] = event.sender;
+      db.exec(m, function (ret) {
+        // console.log('main called ret:');
+        // console.log(ret);
+        event.sender.send('db-exec-ret', ret);
+      });
+    });
+
+    /**
+     * 前端发消息过来说可以初始化了
+     * @param  {<Event>} event
+     * @param  {Object} params {
+        curUser: <User> 是当前用户
+        dbPath: string 是用户的dbPath
+     * }
+     */
+    ipc.on('db-init', function (event, params) {
+      db.init(params.curUser, params.dbPath);
+    });
+  }
+};
+
 // This method will be called when Electron has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', openIt);
 
-function killPort(callback) {
-  var protocol = require('protocol');
-  if (protocol.registerFileProtocol) {
-    callback();
-    return;
-  }
-  var child_process = require('child_process');
-  var port = '8912';
-  if (process.platform.toLowerCase().indexOf('win') === 0) {
-    // & EXIT 表示只循环一次
-    // Leanote会有两个pid绑定端口, 另一个和electron相关, kill掉也会把自己kill掉
-    var sh1 = 'FOR /F "tokens=4 delims= " %P IN (\'netstat -a -n -o ^| findstr :' + port + '\') DO (TaskKill.exe /F /PID %P) & Exit';
-    var sh2 = 'FOR /F "tokens=5 delims= " %P IN (\'netstat -a -n -o ^| findstr :' + port + '\') DO (TaskKill.exe /F /PID %P) & Exit';
-    child_process.exec(sh1, function () {
-      child_process.exec(sh2, callback);
-    });
-  }
-  else {
-    var sh = 'kill -9 $(lsof -i:' + port + ' -t)';
-    child_process.exec(sh, callback);
-  }
-}
-
 function openIt() {
-  killPort(_openIt);
-}
+  // 数据库
+  DB.init();
 
-function _openIt() {
-  // console.log(arguments);
-  // app.getPath('appData');
-
-  // var Evt = require('evt');
-  // var basePath = '/Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
-  // Evt.setDataBasePath(basePath);
-
-  // leanote protocol
-  // require('leanote_protocol');
+  // 协议
+  var leanoteProtocol = require('leanote_protocol');
+  leanoteProtocol.init();
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -93,11 +95,6 @@ function _openIt() {
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
 
-  // 不能放在这里, 刚开始有图片, 之后添加的图片不能显示 ??
-  // // 启动服务器, 图片
-  // var Server = require('server');
-  // Server.start();
-
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -106,7 +103,6 @@ function _openIt() {
     mainWindow = null;
   });
 
-  var ipc = require('ipc');
   mainWindow.on('focus', function() {
     // ipc.send('focusWindow'); mainProcess没有该方法
     if(mainWindow && mainWindow.webContents)
@@ -123,6 +119,7 @@ function _openIt() {
     e.preventDefault();
     mainWindow.webContents.send('closeWindow');
   });
+  
   // 前端发来可以关闭了
   ipc.on('quit-app', function(event, arg) {
     console.log('get quit-app request');

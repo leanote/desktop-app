@@ -22,11 +22,9 @@ $(function() {
 	var isMacP = isMac();
     
 	$('.tool-close, .tool-close-blur').click(function() {
-		// mac下关闭才是隐藏
-        onCloseNotStopServerForMac(function() {
+        onClose(function() {
             gui.win.hide();
         });
-        // gui.win.showInactive();
 	});
 
 	// 从login.html -> note.html过来就没有reopen事件了?

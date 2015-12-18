@@ -103,7 +103,7 @@ define(function() {
 			var me = this;
 			// http://127.0.0.1:8912/api/file/getImage?fileId=5581029f6289dc3301000000
 			// 找到图片
-			var reg = new RegExp(Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})', 'g');
+			var reg = new RegExp('leanote://file/getImage\\?fileId=([0-9a-zA-Z]{24})', 'g');
 			// console.log(Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})');
 			var matches = content.match(reg);
 			// content = content.replace(reg, Evt.leanoteUrl + '/api/file/getImage');

@@ -1524,9 +1524,7 @@ function switchAccount() {
 
 // 当没有用户时, 切换之
 function switchToLoginWhenNoUser() {
-	Server.close(function () {
-		toLogin();
-	});
+	toLogin();
 }
 
 // 没有一处调用
@@ -1763,25 +1761,6 @@ var Notify = {
 var onClose = function(afterFunc) {
 	console.log('on close');
 	try {
-		// 先把服务/协议关掉
-	    Server.close(function () {
-		    SyncService.stop();
-		    // 先保存之前改变的
-		    Note.curChangedSaveIt();
-		    // 保存状态
-		    State.saveCurState(function() {
-		        afterFunc && afterFunc();
-		    });
-		});
-	} catch(e) {
-		console.error(e);
-		afterFunc && afterFunc();
-	}
-}
-
-// 如果是mac, 当关闭窗口时不要stop server
-var onCloseNotStopServerForMac = function(afterFunc) {
-	function o () {
 	    SyncService.stop();
 	    // 先保存之前改变的
 	    Note.curChangedSaveIt();
@@ -1789,17 +1768,6 @@ var onCloseNotStopServerForMac = function(afterFunc) {
 	    State.saveCurState(function() {
 	        afterFunc && afterFunc();
 	    });
-	}
-	try {
-		if (isMac()) {
-			o();
-		}
-		else {
-			// 先把服务/协议关掉
-		    Server.close(function () {
-		    	o();
-			});
-		}
 	} catch(e) {
 		console.error(e);
 		afterFunc && afterFunc();
