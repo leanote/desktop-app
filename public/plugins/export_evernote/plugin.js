@@ -134,6 +134,14 @@ define(function() {
 			if (!t) {
 				t = new Date();
 			}
+			if (typeof t != 'object' || !('getTime' in t)) {
+				try {
+					t = new Date(t);
+				}
+				catch(e) {
+					t = new Date();
+				}
+			}
 			return t.format("yyyyMMddThhmmssZ");
 		},
 
@@ -211,7 +219,7 @@ define(function() {
 		},
 
 		findAllImages: function (content) {
-			var reg = new RegExp('<img[^>]*?src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>', 'g');
+			var reg = new RegExp('<img[^>]*?src=["\']?' + Api.evtService.getImageLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>', 'g');
 			var matches = reg.exec(content);
 
 			// width="330" height="330", style="width:200px"
@@ -251,7 +259,7 @@ define(function() {
 		},
 
 		findAllAttachs: function (content) {
-			var reg = new RegExp('<a[^>]*?href=["\']?' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>([^<]*)</a>', 'g');
+			var reg = new RegExp('<a[^>]*?href=["\']?' + Api.evtService.getAttachLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})["\']?.*?>([^<]*)</a>', 'g');
 			var matches = reg.exec(content);
 
 			// 先找到所有的
@@ -326,11 +334,10 @@ define(function() {
 					media += ' />';
 					content = content.replace(eachMatch.all, media);
 
-					if (!fileRendered[fileInfo.fileId]) {
+					if (!fileRendered[eachMatch.fileId]) {
 						resources += me.renderResource(fileInfo);
-						fileRendered[fileInfo.fileId] = true;
+						fileRendered[eachMatch.fileId] = true;
 					}
-
 				}
 			}
 

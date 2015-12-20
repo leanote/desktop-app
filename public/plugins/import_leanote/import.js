@@ -185,22 +185,22 @@ var Import = {
         if (note.isMarkdown) {
           if (!eachMatch.isAttach) {
             // 用新的FileId
-            var href = Api.evtService.localUrl + '/api/file/getImage?fileId=' + fileInfo.FileId;
+            var href = Api.evtService.getImageLocalUrl(fileInfo.FileId);
             link = '![' + eachMatch.title + '](' + href + ')';
           }
           else {
-            var href = Api.evtService.localUrl + '/api/file/getAttach?fileId=' + fileInfo.FileId;
+            var href = Api.evtService.getAttachLocalUrl(fileInfo.FileId);
             link = '[' + eachMatch.title + '](' + href + ')';
           }
         }
         else {
           if (!eachMatch.isAttach) {
             // 用新的FileId
-            var href = Api.evtService.localUrl + '/api/file/getImage?fileId=' + fileInfo.FileId;
+            var href = Api.evtService.getImageLocalUrl(fileInfo.FileId);
             link = '<img ' + eachMatch.pre + 'src="' + href + '"' + eachMatch.back + '>';
           }
           else {
-            var href = Api.evtService.localUrl + '/api/file/getAttach?fileId=' + fileInfo.FileId;
+            var href = Api.evtService.getAttachLocalUrl(fileInfo.FileId);
             link = '<a ' + eachMatch.pre + 'href="' + href + '"' + eachMatch.back + '>' + eachMatch.title + '</a>';
           }
         }

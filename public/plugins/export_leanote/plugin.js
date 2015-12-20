@@ -117,8 +117,17 @@ define(function() {
 		getLeanoteTime: function(t) {
 			// 20151026T033928Z
 			// 2015 10 26 T 03 39 28 Z
+			console.log(t);
 			if (!t) {
 				t = new Date();
+			}
+			if (typeof t != 'object' || !('getTime' in t)) {
+				try {
+					t = new Date(t);
+				}
+				catch(e) {
+					t = new Date();
+				}
 			}
 			return t.format("yyyy-MM-dd hh:mm:ss");
 		},
@@ -186,7 +195,7 @@ define(function() {
 			// markdown下
 			// [](http://localhost://fileId=32);
 			if (note.IsMarkdown) {
-				var reg = new RegExp('!\\[([^\\]]*?)\\]\\(' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+				var reg = new RegExp('!\\[([^\\]]*?)\\]\\(' + Api.evtService.getImageLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
 				var matches = reg.exec(content);
 				while(matches) {
 				    var all = matches[0];
@@ -202,7 +211,7 @@ define(function() {
 				}
 			}
 			else {
-				var reg = new RegExp('<img([^>]*?)src=["\']?' + Api.evtService.localUrl + '/api/file/getImage\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
+				var reg = new RegExp('<img([^>]*?)src=["\']?' + Api.evtService.getImageLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>', 'g');
 				var matches = reg.exec(content);
 				while(matches) {
 				    var all = matches[0];
@@ -230,7 +239,7 @@ define(function() {
 			// markdown下
 			// ![](http://localhost://fileId=32);
 			if (note.IsMarkdown) {
-				var reg = new RegExp('\\[([^\\]]*?)\\]\\(' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
+				var reg = new RegExp('\\[([^\\]]*?)\\]\\(' + Api.evtService.getAttachLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})\\)', 'g');
 				var matches = reg.exec(content);
 				while(matches) {
 				    var all = matches[0];
@@ -247,7 +256,7 @@ define(function() {
 				}
 			}
 			else {
-				var reg = new RegExp('<a([^>]*?)href=["\']?' + Api.evtService.localUrl + '/api/file/getAttach\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
+				var reg = new RegExp('<a([^>]*?)href=["\']?' + Api.evtService.getAttachLocalUrlPrefix() + '\\?fileId=([0-9a-zA-Z]{24})["\']?(.*?)>([^<]*)</a>', 'g');
 				var matches = reg.exec(content);
 
 				while(matches) {

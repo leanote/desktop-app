@@ -53,6 +53,9 @@ var DB = {
       db.exec(m, function (ret) {
         // console.log('main called ret:');
         // console.log(ret);
+        if (ret && ret.ret) {
+          ret.ret = JSON.stringify(ret.ret);
+        }
         event.sender.send('db-exec-ret', ret);
       });
     });
