@@ -117,7 +117,7 @@ define(function() {
 		getLeanoteTime: function(t) {
 			// 20151026T033928Z
 			// 2015 10 26 T 03 39 28 Z
-			console.log(t);
+			// console.log(t);
 			if (!t) {
 				t = new Date();
 			}

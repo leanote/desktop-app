@@ -78,3 +78,6 @@ body,
   bottom: 0px;
   border-radius: 0px;
 }
+#noteAndEditor {
+  border-top: 1px solid #eee;
+}
