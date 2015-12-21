@@ -4,6 +4,7 @@ var Config = {
         "import_leanote",
         "import_evernote",
         "export_pdf",
+        "export_pdf2",
         "export_html",
         "export_leanote",
         "export_evernote",

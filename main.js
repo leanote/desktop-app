@@ -1,6 +1,7 @@
 var app = require('app');  // Module to control application life.
 var BrowserWindow = require('browser-window');  // Module to create native browser window.
-  var ipc = require('ipc');
+var ipc = require('ipc');
+var pdfMain = require('pdf_main');
 
 // Report crashes to our server.
 require('crash-reporter').start();
@@ -87,6 +88,7 @@ function openIt() {
   var leanoteProtocol = require('leanote_protocol');
   leanoteProtocol.init();
 
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
       width: 1050, 
@@ -95,6 +97,8 @@ function openIt() {
       transparent: false
     }
   );
+
+  console.log('load: file://' + __dirname + '/note.html');
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/note.html');
@@ -123,11 +127,13 @@ function openIt() {
     e.preventDefault();
     mainWindow.webContents.send('closeWindow');
   });
-  
+
   // 前端发来可以关闭了
   ipc.on('quit-app', function(event, arg) {
     console.log('get quit-app request');
     mainWindow.destroy();
     mainWindow = null;
   });
+
+  pdfMain.init();
 }
