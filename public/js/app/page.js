@@ -797,7 +797,7 @@ LeaAce = {
 			$pre.removeClass('ace-to-pre');
 			$pre.attr("contenteditable", false); // ? 避免tinymce编辑
 			var aceEditor = ace.edit(id);
-			
+
 			aceEditor.container.style.lineHeight = 1.5;
 			aceEditor.setTheme("ace/theme/tomorrow");
 
@@ -808,8 +808,7 @@ LeaAce = {
 					b = brush.split(':')[1];
 				} catch(e) {}
 			}
-			b = b || "javascript";
-			if (b == 'false') {
+			if (!b || b === 'false') {
 				b = 'javascript';
 			}
 			aceEditor.session.setMode("ace/mode/" + b);
@@ -821,8 +820,6 @@ LeaAce = {
 			else {
 				aceEditor.setFontSize("14px");
 			}
-
-			
 
 			aceEditor.getSession().setUseWorker(false); // 不用语法检查
 			aceEditor.setOption("showInvisibles", false); // 不显示空格, 没用
@@ -1142,6 +1139,8 @@ LeaAce = {
 	},
 	// 转换raw <-> code
 	handleEvent: function () {
+		var me = this;
+		
 		if(!this.canAce()) {
 			return;
 		}
@@ -1173,6 +1172,34 @@ LeaAce = {
 				me.preToAce($pre, true);
 			} else {
 				me.aceToPre($pre, true);
+			}
+		});
+
+		// 当ace里没有内容时, 连续删除则把ace remove掉
+		// keydown的delete事件没有
+		var lastDeleteTime;
+		$("#editorContent").on('keyup', 'pre',  function(e) {
+			var keyCode = e.keyCode;
+			// console.log('keyup');
+			if(keyCode == 8 || keyCode == 46) { // BackSpace || Delete
+				// console.log('delete');
+				if(!lastDeleteTime) {
+					lastDeleteTime = (new Date()).getTime();
+				}
+				else {
+					var now = (new Date()).getTime();
+					if(now - lastDeleteTime < 300) { // 间隔时间很短
+						var inAce = me.isInAce($(this))
+						if(inAce && !inAce[0].getValue()) {
+							// console.log('destroy');
+							inAce[0].destroy();
+							$(this).remove();
+							return;
+						}
+					}
+					lastDeleteTime = now;
+				}
+				// console.log($(this));
 			}
 		});
 	}
