@@ -1,3 +1,4 @@
+
 // 只有api的插件才能访问
 var Api = {
 	notebook: Notebook,
@@ -16,6 +17,7 @@ var Api = {
 	noteService: NoteService,
 	userService: UserService,
 	dbService: db,
+	ipc: nodeRequire('ipc'),
 
 	// 打开本地目录
 	// mac和windows下不同
