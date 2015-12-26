@@ -1352,7 +1352,7 @@ var State = {
 // 实始化页面
 // 判断是否登录
 function initPage(initedCallback) {
-	console.log('ini page');
+	console.log('init page');
 
 	// 笔记本, 事件, menu初始化
 	Notebook.init();
