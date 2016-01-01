@@ -1943,9 +1943,12 @@ img::selection {
 }
 #mdEditor.read-only #right-column {
   left: 0 !important;
+  right: 0;
+  width: auto !important;
 }
 #mdEditor.read-only .preview-container {
   left: 10px;
+  display: block !important;
 }
 #notify {
   position: fixed;

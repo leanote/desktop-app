@@ -139,12 +139,12 @@ var Resize = {
 				// 禁止split
 				$t.removeClass('open');//.addClass('close');
 				self.rightColumn.find('.layout-resizer').removeClass('open');
-				$('.preview-container').hide();
+				// $('.preview-container').hide();
 			} else {
 				$t.addClass('open');
 				self.rightColumn.find('.layout-resizer').addClass('open');
 				self.leftColumn.width(everLeftWidth);
-				$('.preview-container').show();
+				// $('.preview-container').show();
 				self.rightColumn.css('left', everLeftWidth).width('auto');
 
 				if(MD) {
