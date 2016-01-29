@@ -1,0 +1,1 @@
+ace.define("ace/snippets/ace_mode",["require","exports","module"],function(e,t,n){"use strict";t.snippetText=undefined,t.scope="ace_mode"})

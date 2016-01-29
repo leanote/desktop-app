@@ -1,0 +1,1 @@
+(function(){define("ace/mode/ace_text",["require","exports","module"],function(e,t,n){"use strict";t.load=function(e,t,n,r){n("","utf8")}})})()
