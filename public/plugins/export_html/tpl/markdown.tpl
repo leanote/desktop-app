@@ -171,7 +171,7 @@ kbd {
 
 	<div class="note-container">
 		<h1 class="title" id="leanote-title">{title}</h1>
-		<div class="content-container" id="content-container">
+		<div class="content-container html" id="content-container">
 			<!-- 切换 -->
 			<div class="tab"><a id="tab-markdown">Markdown</a><a id="tab-html">HTML</a></div>
 			<textarea id="leanote-content-markdown">{content}</textarea>
