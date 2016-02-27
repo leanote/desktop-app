@@ -140,6 +140,11 @@ var Resize = {
 				$t.removeClass('open');//.addClass('close');
 				self.rightColumn.find('.layout-resizer').removeClass('open');
 				// $('.preview-container').hide();
+
+				if(MD) {
+					MD.resize();
+				}
+				
 			} else {
 				$t.addClass('open');
 				self.rightColumn.find('.layout-resizer').addClass('open');
@@ -148,7 +153,7 @@ var Resize = {
 				self.rightColumn.css('left', everLeftWidth).width('auto');
 
 				if(MD) {
-					MD.onResize();
+					MD.resize();
 				}
 			}
 		});
