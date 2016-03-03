@@ -111,12 +111,15 @@ var Import = {
   parseEachNote: function(note, callback) {
     var me = this;
 
+    var created = note['created'] && note['created'][0];
+    var updated = note['updated'] && note['updated'][0];
+
     var jsonNote = {
       Title: note['title'][0],
       Tags: note['tag'] || [],
       Content: note['content'][0],
-      CreatedTime: me.parseEvernoteTime(note['created'][0]),
-      UpdatedTime: me.parseEvernoteTime(note['updated'][0]),
+      CreatedTime: me.parseEvernoteTime(created),
+      UpdatedTime: me.parseEvernoteTime(updated),
     };
 
     // 文件保存之
