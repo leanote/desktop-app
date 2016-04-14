@@ -27,8 +27,11 @@ if(process.platform != 'darwin') {
 	</div>
 
 	<div class="bottom">
-		<a id="customServer" class="lang customServer">Self-hosted Service</a>
-		<a id="localAccount" class="lang localAccount">Create Local Account</a>
+		<a id="localAccount" onclick="openExternal('https://leanote.com/register')"  class="lang localAccount">Sign up Leanote</a>
+
+		<a id="customServer" class="lang customServer">Sign in to Self-hosted Service</a>
+
+		<!-- <a id="localAccount" class="lang localAccount">Create Local Account</a> -->
 
 		<a id="loginWithLeanote" class="lang loginWithLeanote">Sign in to Leanote</a>
 	</div>
@@ -40,8 +43,8 @@ if(process.platform != 'darwin') {
 				<a onclick="openExternal('https://leanote.com')" id="loadingLogo" title="leanote">
 					<img src="public/images/logo/leanote_icon_blue.png">
 				</a>
+
 				<span class="lang customServer">Self-hosted Service</span>
-				<span class="lang localAccount">Create Local Account</span>
 			</h1>
 
 			<div class="alert-wrap">
@@ -92,7 +95,9 @@ if(process.platform != 'darwin') {
 
 					<div class="clearfix btns">
 						<a onclick="openExternal('https://leanote.com/findPassword')" class="pull-right m-t-xs"><small class="lang">Forget password?</small></a>
+						<!--
 						<a onclick="openExternal('https://leanote.com/register')" class="pull-right m-t-xs" style="margin-right: 10px"><small class="lang">Sign up</small></a>
+						-->
 					</div>
 				</form>
 			</div>
@@ -271,11 +276,13 @@ $(function() {
 		hideMsg();
 	});
 
+	/*
 	$('#localAccount').click(function() {
 		$body.addClass('local-account');
 		$('#username').focus();
 		hideMsg();
 	});
+	*/
 
 	$('#loginWithLeanote').click(function () {
 		$body.removeClass('local-account custom-server');

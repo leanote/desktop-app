@@ -233,6 +233,7 @@
     "Username or Email": "用戶名或郵箱",
     "Password": "密碼",
     "Sign up": "註冊",
+    "Sign up Leanote": "註冊Leanote",
     "Forget password?": "忘記密碼?",
     "Find password": "找回密碼",
 
@@ -282,7 +283,8 @@
     "Password is required": "請輸入密碼",
 
     "The minimum password length is 6": "密碼長度最少6位",
-    "Self-hosted Service": "自建服務",
+    "Sign In to Self-hosted Service": "登錄自建服務",
+    "Self-hosted Service": "登錄自建服務",
     "Create Local Account": "創建本地帳戶",
     "Sign in to Leanote": "登錄到Leanote",
     "Confirm password": "確認密碼",
