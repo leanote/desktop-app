@@ -283,7 +283,7 @@
     "Password is required": "請輸入密碼",
 
     "The minimum password length is 6": "密碼長度最少6位",
-    "Sign In to Self-hosted Service": "登錄自建服務",
+    "Sign in to Self-hosted Service": "登錄自建服務",
     "Self-hosted Service": "登錄自建服務",
     "Create Local Account": "創建本地帳戶",
     "Sign in to Leanote": "登錄到Leanote",
