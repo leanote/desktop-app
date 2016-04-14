@@ -233,6 +233,7 @@
     "Username or Email": "用戶名或郵箱",
     "Password": "密碼",
     "Sign up": "註冊",
+    "Sign up Leanote": "註冊Leanote",
     "Forget password?": "忘記密碼?",
     "Find password": "找回密碼",
 
@@ -282,7 +283,8 @@
     "Password is required": "請輸入密碼",
 
     "The minimum password length is 6": "密碼長度最少6位",
-    "Self-hosted Service": "自建服務",
+    "Sign in to Self-hosted Service": "登錄自建服務",
+    "Self-hosted Service": "登錄自建服務",
     "Create Local Account": "創建本地帳戶",
     "Sign in to Leanote": "登錄到Leanote",
     "Confirm password": "確認密碼",
@@ -299,6 +301,10 @@
 
     "Sync error, retry to sync after 3 seconds": "同步失敗, 3 秒後自動重新嘗試同步",
     "Network error!": "網絡異常",
+
+    "Local account warning": "本地離線帳戶警告",
+    "localAccountTips": "妳好, 您使用的是本地離線帳戶, 您的數據只存在本地, 不會同步到Leanote服務器, 如果您不小心刪除了數據或硬盤損壞, 您的數據將永久丟失. <br>所以我們推薦您使用Leanote帳戶來使用該客戶端, 這樣您的數據將會存儲到雲端, 以避免失誤造成的數據丟失. <br>Leanote桌面端不再支持創建本地帳戶, 但您之前創建的本地帳戶還是可以繼續使用.",
+    "Don't Show Anymore": "不再提示",
 
     "Load Database Error": "加載數據庫出錯, 請嘗試在帳戶管理中優化數據庫",
     "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切換編輯與只讀"
