@@ -302,6 +302,10 @@
     "Sync error, retry to sync after 3 seconds": "同步失敗, 3 秒後自動重新嘗試同步",
     "Network error!": "網絡異常",
 
+    "Local account warning": "本地離線帳戶警告",
+    "localAccountTips": "妳好, 您使用的是本地離線帳戶, 您的數據只存在本地, 不會同步到Leanote服務器, 如果您不小心刪除了數據或硬盤損壞, 您的數據將永久丟失. <br>所以我們推薦您使用Leanote帳戶來使用該客戶端, 這樣您的數據將會存儲到雲端, 以避免失誤造成的數據丟失. <br>Leanote桌面端不再支持創建本地帳戶, 但您之前創建的本地帳戶還是可以繼續使用.",
+    "Don't Show Anymore": "不再提示",
+
     "Load Database Error": "加載數據庫出錯, 請嘗試在帳戶管理中優化數據庫",
     "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切換編輯與只讀"
 }

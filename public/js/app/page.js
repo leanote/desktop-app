@@ -1380,6 +1380,22 @@ var State = {
 	}
 };
 
+function initLocalAccountDialogCheckboxEvent() {
+	$('#localAccountDialogCheckbox').click(function () {
+		localStorage.setItem(UserInfo.UserId + '-local', $(this).prop('checked') ? 'no': '');
+	});
+}
+function showLocalAccountWarning() {
+	if (!UserInfo || !UserInfo.IsLocal) {
+		return;
+	}
+	if (localStorage.getItem(UserInfo.UserId + '-local')) {
+		return;
+	}
+
+	$('#localAccountDialog').modal('show');
+}
+
 // js/main.js 在load plugin后调用
 // 实始化页面
 // 判断是否登录
@@ -1473,6 +1489,10 @@ function initPage(initedCallback) {
 			// init notebook后才调用
 			// initSlimScroll();
 			LeaAce.handleEvent();
+
+			//
+			showLocalAccountWarning();
+			initLocalAccountDialogCheckboxEvent();
 		});
 	};
 
