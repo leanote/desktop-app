@@ -141,7 +141,7 @@ define(function() {
 		// 得到存放images, js, css的路径
 		getAssetsPath: function(basePath, nameNotExt, n, cb) {
 			var me = this;
-			var absPath = basePath + '/' + nameNotExt + '_files';
+			var absPath = basePath + Api.commonService.getPathSep() + nameNotExt + '_files';
 			if (n > 1) {
 				absPath += '-' + n;
 			}
