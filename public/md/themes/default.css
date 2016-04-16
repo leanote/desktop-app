@@ -70,6 +70,10 @@ pre.prettyprint {
   -khtml-border-radius: 3px;
   border-radius: 3px;
   display: block;
+  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1) inset, 40px 0 0 rgba(102, 128, 153, 0.05) inset, 0 1px 0 rgba(102, 128, 153, 0.05);
+}
+#preview-contents pre ol li {
+  padding-left: 10px;
 }
 /*行号*/
 code.prettyprint .linenums,
@@ -152,65 +156,7 @@ code.prettyprint .pln,
 pre.prettyprint .pln {
   color: #48484c;
 }
-/*
-@font-face {
-  font-family: 'fontello';
-  src: url('../font/fontello.svg#fontello') format('svg'),
-       url('../font/fontello.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
 
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 300;
-    src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url("../font/SourceSansPro-Light-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Source Sans Pro'), local('SourceSansPro'), url("../font/SourceSansPro-Regular-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: normal;
-    font-weight: 700;
-    src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url("../font/SourceSansPro-Bold-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: italic;
-    font-weight: 300;
-    src: local('Source Sans Pro Light Italic'), local('SourceSansProLight-Italic'), url("../font/SourceSansPro-LightItalic-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: italic;
-    font-weight: 400;
-    src: local('Source Sans Pro Italic'), local('SourceSansPro-Italic'), url("../font/SourceSansPro-Italic-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Sans Pro';
-    font-style: italic;
-    font-weight: 700;
-    src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldItalic'), url("../font/SourceSansPro-BoldItalic-webfont.woff") format('woff');
-}
-
-@font-face {
-    font-family: 'Source Code Pro';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Source Code Pro'), local('SourceCodePro-Regular'), url("../font/SourceCodePro-Regular-webfont.woff") format('woff');
-}
-@font-face {
-    font-family: 'Source Code Pro';
-    font-style: normal;
-    font-weight: 700;
-    src: local('Source Code Pro Bold'), local('SourceCodePro-Bold'), url("../font/SourceCodePro-Bold-webfont.woff") format('woff');
-}
-*/
 .container {
   margin-bottom: 180px;
   text-align: justify;
@@ -218,19 +164,6 @@ pre.prettyprint .pln {
 a code {
   color: inherit;
 }
-/*
-h1 { font-size: @title-base-size * 2.60; }
-h2 { font-size: @title-base-size * 2.15; }
-h3 { font-size: @title-base-size * 1.70; }
-h4 { font-size: @title-base-size * 1.25; }
-h5 { font-size: @title-base-size; }
-h6 { font-size: @title-base-size * 0.85; }
-
-h1, h2, h3, h4, h5, h6 {
-	margin: 1.5em 0;
-	text-align: start;
-}
-*/
 pre {
   word-break: break-word;
 }
@@ -302,40 +235,36 @@ dd {
 dd {
   margin-left: 40px;
 }
+
 /* Table style */
-table {
+
+#preview-contents table {
   margin-bottom: 20px;
+  width: 100%;
 }
-table th,
-table td {
+#preview-contents table th,
+#preview-contents table td {
   padding: 8px;
   line-height: 20px;
   vertical-align: top;
-  border-top: 1px solid #dddddd;
+  border: 1px solid #dddddd;
 }
-table th {
+#preview-contents table th {
   font-weight: bold;
-}
-table thead th {
   vertical-align: bottom;
 }
-table caption + thead tr:first-child th,
-table caption + thead tr:first-child td,
-table colgroup + thead tr:first-child th,
-table colgroup + thead tr:first-child td,
-table thead:first-child tr:first-child th,
-table thead:first-child tr:first-child td {
-  border-top: 0;
+#preview-contents table tbody>tr:nth-child(2n+1)>td,
+#preview-contents table tbody>tr:nth-child(2n+1)>th {
+    background-color: rgba(102,128,153,.05);
 }
-table tbody + tbody {
-  border-top: 2px solid #dddddd;
-}
+
 blockquote {
   border-left-width: 10px;
-  background-color: rgba(128, 128, 128, 0.05);
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   padding: 15px 20px;
+  border-left: 10px solid #D6DBDF;
+  background: none repeat scroll 0 0 rgba(102,128,153,.05);
 }
 blockquote p {
   margin-bottom: 0.3em;
@@ -1393,6 +1322,7 @@ a.input-group-addon {
   box-shadow: inset 1px 0 rgba(128, 128, 128, 0.06);
   background-color: #f8f8f8;
   z-index: 10;
+  font-size: 16px;
 }
 .layout-animate .preview-panel {
   -webkit-transition: 350ms ease-in-out all;
