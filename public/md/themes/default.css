@@ -222,6 +222,7 @@ pre.prettyprint {
   text-align: start;
   border: 0;
   padding: 10px 20px;
+  font-size: 12px;
 }
 pre.prettyprint code {
   background-color: transparent !important;
