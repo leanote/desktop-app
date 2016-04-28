@@ -734,7 +734,7 @@ form {
 .local-account #loadingLogo {
   display: none;
 }
-.local-account #box h1 span.localAccount {
+.local-account #box h1 .localAccount {
   display: block;
 }
 .win-tool {

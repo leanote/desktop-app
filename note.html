@@ -579,6 +579,24 @@ function log(o) {
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 
+      <!-- 本地帐户警告 -->
+      <div class="modal fade bs-modal-sm" id="localAccountDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title modalTitle lang">Local account warning</h4>
+          </div>
+          <div class="modal-body lang">localAccountTips</div>
+          <div class="modal-footer ">
+            <label><input type="checkbox" id="localAccountDialogCheckbox"/> <span class="lang">Don't Show Anymore</span></label>
+            <button type="button" class="btn btn-default upgrade-cancel-btn lang" data-dismiss="modal">Close</button>
+          </div>
+            
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
       <!-- loading -->
       <div class="modal fade bs-modal-sm" id="loadingDialog" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
         <div class="modal-dialog modal-sm modal-large">

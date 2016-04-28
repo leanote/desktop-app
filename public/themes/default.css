@@ -2923,6 +2923,23 @@ body,
   padding-left: 10px;
   overflow-y: auto;
 }
+.mce-item-table,
+.mce-item-table td,
+.mce-item-table th,
+.mce-item-table caption {
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+.mce-item-table td {
+  padding: 3px;
+}
+.mce-item-table tr {
+  background-color: none;
+  border-top: 1px solid #ccc;
+}
+.mce-item-table tr:nth-child(2n) {
+  background-color: #f7f7f9;
+}
 #mdEditor .navbar-default,
 #wmd-button-bar {
   overflow: visible;

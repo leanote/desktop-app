@@ -184,5 +184,7 @@
 	"Tag": "Tag",
 	"Starred": "Starred",
 
+    "localAccountTips": "Please note that your account is local account which <b>is not the Leanote's account</b>, and your data just save onto your local disk. Once your disk is broken, the data cannot be recovered. So we recommend you to use Leanote Desktop App with Leanote account, and your data will sync to Leanote server.<p>Leanote Desktop App has disabled the feature that create a local account. You can login Leanote Desktop App with local account whitch created before. But we recommend you to use Leanote Desktop App with Leanote account.</p>",
+
 	"ForceFullSyncMsg": "Full sync will remove the current account's all local data (includes database, images and attachments) and load all data from server, are you sure ?"
 }

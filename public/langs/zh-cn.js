@@ -233,6 +233,7 @@
 	"Username or Email": "用户名或邮箱",
 	"Password": "密码",
 	"Sign up": "注册",
+    "Sign up Leanote": "注册Leanote",
 	"Forget password?": "忘记密码?",
 	"Find password": "找回密码",
 
@@ -282,6 +283,7 @@
     "Password is required": "请输入密码",
 
     "The minimum password length is 6": "密码长度最少6位",
+    "Sign in to Self-hosted Service": "登录自建服务",
     "Self-hosted Service": "自建服务",
     "Create Local Account": "创建本地帐户",
     "Sign in to Leanote": "登录到Leanote",
@@ -301,6 +303,10 @@
     "Network error!": "网络异常",
 
     "Load Database Error": "加载数据库出错, 请尝试在帐户管理中优化数据库",
+
+    "Local account warning": "本地离线帐户警告",
+    "localAccountTips": "你好, 您使用的是本地离线帐户, 您的数据只存在本地, 不会同步到Leanote服务器, 如果您不小心删除了数据或硬盘损坏, 您的数据将永久丢失. <br>所以我们推荐您使用Leanote帐户来使用该客户端, 这样您的数据将会存储到云端, 以避免失误造成的数据丢失. <br>Leanote桌面端不再支持创建本地帐户, 但您之前创建的本地帐户还是可以继续使用.",
+    "Don't Show Anymore": "不再提示",
 
     "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切换编辑与只读"
 }
