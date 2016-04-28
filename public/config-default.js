@@ -22,6 +22,10 @@ var Config = {
         {
             "filename": "zh-hk",
             "name": "繁体中文"
+        },
+        {
+            "filename": "ja-jp",
+            "name": "日本語"
         }
     ],
     "lang": "en-us",

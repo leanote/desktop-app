@@ -12,6 +12,9 @@ define(function() {
 			},
 			'zh-hk': {
 				'changeTheme': '主題設置'
+			},
+			'ja-jp': {
+				'changeTheme': '主題設定'
 			}
 		},
 
