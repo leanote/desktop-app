@@ -12,6 +12,9 @@ define(function() {
 			},
 			'zh-hk': {
 				'setLang': '語言設置',
+			},
+			'ja-jp': {
+				'setLang': '语言设置'
 			}
 		},
 		_langsMenu: {}, // // name => menu

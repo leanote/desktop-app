@@ -74,6 +74,36 @@ define(function() {
 				"Database": "數據庫",
 				"Image": "圖片",
 				"Attachment": "附件",
+			},
+			'ja-jp': {
+				'Accounts': 'アカウント管理',
+				"Username": "名前",
+				"Is Local": "ローカルアカウント",
+				'Host': 'サーバー',
+				"Yes": "はい",
+				"No": "いいえ",
+				"DB Optimization": "データベース最適化",
+				"Open Dir": "ディレクトリを開く",
+				"Data": "データ",
+				"Options": "操作",
+				"Current": "現在の",
+				"Delete": "削除",
+				"Close": "クローズ",
+
+				"Optimizing": "最適化しています",
+				"Completed": "最適化した",
+				"Deleted": "削除した",
+
+				"Error": "エラー",
+				"No such account": "本アカウントがない",
+				"Are you sure, it can't be recovered after it has been deleted": "本当にこのアカウントを削除したいですか? このアカウントについてのデータを全て削除します。",
+				"Notebook": "ノートブック",
+				"Note": "ノート",
+				"Tag": "タグ",
+
+				"Database": "データベース",
+				"Image": "イメージ",
+				"Attachment": "添付ファイル",
 			}
 		},
 		_tpl: `
@@ -88,7 +118,7 @@ define(function() {
 		}
 		#accountsDialog td button {
 			padding: 5px 8px;
-			
+
 		}
 		#accountsDialog .modal-dialog {
 			width: 830px ;
@@ -263,7 +293,7 @@ define(function() {
 				var host = user.Host || Api.evtService.getHost();
 				username += '<br />' + me.getMsg('Host') + ': <a onclick="openExternal(\'' + host +'\')">' + host + '</a>';
 			}
-			
+
 			var tr = '<td>' + username + '</td>';
 
 			tr += '<td>' + (user.IsLocal ? me.getMsg('Yes') : me.getMsg('No')) + '</td>';
@@ -459,7 +489,7 @@ define(function() {
 							// 如果是笔记, 则迁移它的笔记历史记录
 							if (name === 'notes') {
 								me.migrateNoteHistories(
-									doc.NoteId, 
+									doc.NoteId,
 									sourceDb['noteHistories'],
 									distDb['noteHistories'],
 									function () {
@@ -479,7 +509,7 @@ define(function() {
 					callback(true);
 				});
 			});
-			
+
 		},
 
 		dbNames: ['notebooks', 'notes', 'tags', 'images', 'attachs', 'noteHistories'],
@@ -513,7 +543,7 @@ define(function() {
 					cb();
 					return;
 				}
-				
+
 				me.migrateEach(userId, sourceDb, distDb, name, function(ok) {
 					if (ok) {
 						// console.log(name + ' Over');
