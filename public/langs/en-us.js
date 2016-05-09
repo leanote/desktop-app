@@ -96,6 +96,8 @@
     "moto2": "Knowledge, Sharing, Cooperation, Blog... all in leanote",
     "moto3": "Brief But Not Simple",
     "move": "Move to",
+    "doubleClick": "Please 'double-click' the desired folder!",
+    "selectNotebook": "Select Folder",
     "myBlog": "Blog",
     "myNote": "My note",
     "myNotebook": "My notebook",
