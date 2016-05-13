@@ -1,0 +1,94 @@
+<style>
+  
+</style>
+<div class="custom_template">
+<h1>周计划</h1>
+<table style="margin-left: 0px; border: 2px solid rgb(219, 219, 219); border-collapse: collapse; table-layout: fixed;width:80%;"> 
+ <tbody>
+  <tr> 
+   <td style="border: 2px solid rgb(219, 219, 219); padding: 10px;width:15%;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">日期</span></span><br clear="none">
+    </div> </td> 
+   <td style="border: 2px solid rgb(219, 219, 219); padding: 10px;width:47%;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">待办事项</span></span></div> </td> 
+   <td style="border: 2px solid rgb(219, 219, 219); padding: 10px;width:36%;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">备忘</span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="border: 1px solid rgb(219, 219, 219); padding: 10px;width:15%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">周一</span></span></div> </td> 
+   <td style="border: 1px solid rgb(219, 219, 219); padding: 10px;width:51%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div> 
+     <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    </div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.062880324543606%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">周二</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div> 
+     <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    </div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">周三</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div> 
+     <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    </div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">周四</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div> 
+     <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    </div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);">周五</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div> 
+     <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    </div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="color: rgb(0, 166, 206);"><span style="font-size: 14px;">周六</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><br clear="none"></span></span></div> </td> 
+  </tr> 
+  <tr> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div style="text-align: center"><span style="color: rgb(0, 166, 206);"><span style="font-size: 14px;">周日</span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> 
+    <div><span style="font-size: 14px;"><span style="color: rgb(101, 100, 106);"><input type="checkbox"></span></span></div> </td> 
+   <td style="padding:10px;width:33.33%;border-style:solid;border-color:rgb(219, 219, 219);border-width:2px;" colspan="1" rowspan="1"> 
+    <div>
+     <br clear="none">
+    </div> </td> 
+  </tr> 
+ </tbody>
+</table>
+</div>
