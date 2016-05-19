@@ -1,0 +1,39 @@
+<style>
+.article-entry h2 {
+    margin: 0.5em auto;
+    font-weight: bold;
+    color: #9c9;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+h2 {
+    font-size: 1.3em;
+}
+h1, h2, h3 {
+    display: block;
+}
+h2, h3, h4, h5, h6 {
+    font-family: Times, Georgia, serif, "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+}
+.article-entry p {
+    margin: 0.85em auto;
+    line-height: 1.7em;
+    font-size: 1em;
+}  
+</style>
+<div class="custom_template">
+<h1>2015年，我的改变</h1>
+<div class="article-entry" itemprop="articleBody">
+<p></p><h2 id="intro">前言</h2><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年，我从大连理工大学软件学院毕业了。<p></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;7月毕业，10月工作，至今已经工作满3个月了。这3个月中我感觉自己改变了很多，所以想在2015年即将过去之际总结一下2015年自己有哪些改变。</p>
+<a id="more"></a>
+<h2 id="u4EBA_u751F_u683C_u8A00_uFF1A_u201C_u5B66_u4F1A_u5206_u4EAB_uFF0C_u5206_u4EAB_u8D8A_u591A_uFF0C_u6536_u83B7_u8D8A_u591A_u201D"><a href="#u4EBA_u751F_u683C_u8A00_uFF1A_u201C_u5B66_u4F1A_u5206_u4EAB_uFF0C_u5206_u4EAB_u8D8A_u591A_uFF0C_u6536_u83B7_u8D8A_u591A_u201D" class="headerlink" title="人生格言：“学会分享，分享越多，收获越多”"></a>人生格言：“学会分享，分享越多，收获越多”</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我是一个非常骄傲的人，所以一直以来我的人生格言都是“I believe that I am genius”。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;但是在离开校园进入社会的3个月里，我体验到了许许多多在学校里从未有过的困难和挑战，虽然我仍然对自己保持高度的自信（也可以说“我依然很骄傲”），但是在不断地克服困难战胜挑战的过程中，我深刻地明白“在人与人紧密联系在一起的现代社会，想要成就一番大事，必须学会与人合作，一个人的力量终究有限。”那么如何得到其他人的帮助呢？只有自己努力去帮助他人，才能的到他人更多的帮助。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我希望自己将来可以成就一番事业，所以我将自己的人生格言修改为“<strong><em>学会分享，分享越多，收获越多。</em></strong>”</p>
+<h2 id="u5F00_u59CB_u8DD1_u6B65"><a href="#u5F00_u59CB_u8DD1_u6B65" class="headerlink" title="开始跑步"></a>开始跑步</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;如果从2015年往前回忆的话，最近的一次酣畅淋漓地跑步还是在2011年夏季的高三。大学期间，90%以上的时间我是在寝室度过的，4年时间里就算是去图书馆和自习室的次数估计用双手就可以数得清楚。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年大学毕业，我选择出国到日本东京工作。而我的人生中的第一家公司竟然有一个特别奇怪的惯例，那就是刚刚从大学毕业进入公司的新人必须参加当年的马拉松。这本来是一个随便跑跑凑凑数的马拉松，但是当听说来自中国的新人在第一次参加马拉松的记录中还没有人能完成全马，而日本新人却有人可以完成的时候。向来不服输的我立刻被点燃了斗志，我希望通过自己的的努力让公司同事改变对中国新人的看法。</p>
+<blockquote>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年5月，我和DAC的同事（孔哥、龙哥、礁姐）一起参加了人生中的第一次马拉松。<strong>失败</strong><br><em>这次失败让我更加了解马拉松，同时也知道如果没有练习想完成42公里的比赛是根本不可能的。</em><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年6月，我开始随便跑跑，让自己喜欢上跑步。每次大概2km～5km不等。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年10月，我开始备战12月份的「NAHA マラソン」。跑步距离也从5km逐步增加到10km，再增加到21km。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年12月，在大雨中我用时6小时09分完成了人生中的第一次全马「NAHA マラソン」。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;虽然马拉松已经过去，但是我并不想让自己停下来，我喜欢上了跑步，我希望可以一直跑。</p>
+</blockquote>
+<h2 id="u5F00_u59CB_iOS__u5F00_u53D1"><a href="#u5F00_u59CB_iOS__u5F00_u53D1" class="headerlink" title="开始 iOS 开发"></a>开始 iOS 开发</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;大学期间，在朱老师的牵线下我认识另外两个特别 nice 的学长（小朱学长、占伟学长），并且开始了我的 Windows Phone 开发。期间写过一些简单的博客，发布过4个App。但是在 iOS 和 Android 的强大垄断下，Windows Phone 的市场始终不算好。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;并且因为对服务器端开发充满兴趣，大三时我开始学习 Java Web 开发。这里真的非常感谢我的两位恩师（姜老师、蒋老师），两位老师不仅仅教会了我很多开发方面的技术，也对我的生活上的很多习惯产生了影响。还有比较重要的是，通过老师我结识了几个特别靠谱的朋友。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年，我重新开始移动开发，只不过这次我又选择了一个新的技术 iOS 开发。没办法，我就是喜欢学习新的知识，接触新的事物。</p>
+<h2 id="u4E00_u4E2A_u4EBA_u751F_u6D3B"><a href="#u4E00_u4E2A_u4EBA_u751F_u6D3B" class="headerlink" title="一个人生活"></a>一个人生活</h2><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2015年，我23岁，第一次一个人自己生活。自己买菜、自己做饭、自己打扫房间、自己拿着熨斗熨衣服，所有的事情都是自己来做。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我很高兴自己选择来东京工作，我喜欢东京。工作方面，现在的公司虽然是一个只有一百多人的公司，但是管理和制度上都给我非常正规的感觉，我学会了很多职场中的能力；生活方面，心情好的时候，我可以去新宿、涩谷体验大都市的繁华，心情差的时候我喜欢去荒川跑步，去公园看高中生打棒球。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;东京既让我体验了大都市的繁华，也让我感受了小乡村的宁静。</p>
+</div>
+</div>

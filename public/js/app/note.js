@@ -2313,16 +2313,38 @@ Note.initContextmenu = function() {
 
 	    this.move = new gui.MenuItem({
 	        label: getMsg("Move"),
-	        submenu: ms[0], // 必须要放这里, 之后不能赋值
 	        click: function(e) {
+	        	dialogOperateNotes({notebooks: notebooks, func: 'move'});
 	        }
 	    });
 	    this.copy = new gui.MenuItem({
 	        label: getMsg("Copy"),
-	        submenu: ms[1],
 	        click: function(e) {
+	        	dialogOperateNotes({notebooks: notebooks, func: 'copy'});
 	        }
 	    });
+	    function dialogOperateNotes(options) {
+	    	$("#leanoteDialog #modalTitle").html(getMsg("selectNotebook"));
+	    	
+	    	$("#leanoteDialog .modal-body").html('<p><font color="red">'+getMsg("doubleClick")+'</font></p><ul id="notebookTree" class="ztree showIcon"></ul>');
+	    	$("#leanoteDialog .modal-footer").html('\
+            	<button type="button" class="btn btn-default" data-dismiss="modal">'+getMsg("Colse")+'</button>\
+            	');
+	    	var callback;
+	    	if ('move' == options.func) {
+	    		callback = function(notebookId){
+					Note.moveNote(Note.target, {notebookId: notebookId});
+				}
+	    	} else if ('copy' == options.func) {
+	    		callback = function(notebookId){
+					Note.copyNote(Note.target, {notebookId: notebookId});
+				}
+	    	}
+	    	var notebookTree = $.fn.zTree.init($("#notebookTree"), Notebook.getSimpleTreeSetting({callback: callback}), options.notebooks);
+			delete options.title;
+			options.show = true;
+			$("#leanoteDialog").modal(options);
+	    }
 
 	    // 本地笔记不能公开为博客
 	    if (!UserInfo.IsLocal) {

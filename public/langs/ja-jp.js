@@ -91,6 +91,8 @@
   "Logout": "ログオフ",
   "minLength": "最小長さが%s",
   "Move": "移動",
+  "doubleClick": "気にいるフォルダを「ダブルクリック」してください",
+  "selectNotebook": "フォルダを選択します",
   "myBlog": "マイブログ",
   "myNote": "マイノート",
   "myNotebook": "マイノートブック",

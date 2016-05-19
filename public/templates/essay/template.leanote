@@ -1,0 +1,26 @@
+<style>
+.m-post .ctc .ttl {
+    margin: 0 0 16px;
+    font-size: 16px;
+}
+.m-post .ctc p, .m-post .ctc ul, .m-post .ctc ol, .m-post .ctc blockquote, .m-post .ctc .text, .m-post .ctc .digest {
+    margin: 0 0 20px;
+}
+</style>
+<div class="custom_template">
+  <div class="ct">
+    <div class="ctc box">
+      <h2 class="ttl"><a href="http://thaddeusjiang.lofter.com/post/1cd3e299_4b87b6a">Scorpion</a></h2>
+
+      <div class="txtcont">  
+        <p>I hope someday I can say "we are scorpion".</p> 
+
+        <p>Scorpion is a good team,it consists of a group of genius and can solve any problems.</p> 
+
+        <p>This team is pure genius.</p> 
+        
+        <p><img src="public/templates/essay/images/Scorpion.jpg"><br></p>
+      </div>
+    </div>
+  </div>
+</div>
