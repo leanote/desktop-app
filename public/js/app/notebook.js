@@ -148,6 +148,48 @@ Notebook.getSubNotebooks = function(parentNotebookId) {
 	}
 	return nodes;
 };
+/**
+ * Simple Tree Setting(基本版)
+ * 笔记移动、复制时使用
+ */
+Notebook.getSimpleTreeSetting = function(options) {
+	// 添加自定义dom
+	function addDiyDom(treeId, treeNode) {
+		var spaceWidth = 5;
+		var switchObj = $("#" + treeId + " #" + treeNode.tId + "_switch"),
+		icoObj = $("#" + treeId + " #" + treeNode.tId + "_ico");
+		switchObj.remove();
+		icoObj.before(switchObj);
+
+		if (treeNode.level > 1) {
+			var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
+			switchObj.before(spaceStr);
+		}
+	}
+	var onDblClick =  function(e, treeId, treeNode) {
+		var notebookId = treeNode.NotebookId;
+		options.callback(notebookId);
+		$("#leanoteDialog").modal('hide');
+	};
+	var setting = {
+		view: {
+			showLine: false,
+			showIcon: false,
+			selectedMulti: false,
+			addDiyDom: addDiyDom
+		},
+		data: {
+			key: {
+				name: "Title",
+				children: "Subs",
+			}
+		},
+		callback: {
+			onDblClick: onDblClick
+		}
+	};
+	return setting;
+}
 
 Notebook.getTreeSetting = function(isSearch, isShare) { 
 	var noSearch = !isSearch;

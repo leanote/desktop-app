@@ -91,6 +91,8 @@
     "Logout": "登出",
     "minLength": "長度至少為%s",
     "Move": "移動",
+    "doubleClick": "請“雙擊”期望的文件夾！",
+    "selectNotebook": "選擇文件夾",
     "myBlog": "我的部落格",
     "myNote": "我的筆記",
     "myNotebook": "我的記事本",
