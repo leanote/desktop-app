@@ -1435,15 +1435,15 @@ function initPage(initedCallback) {
 	// var ipc = require('ipc');
 	const {ipcRenderer} = require('electron');
 	ipc = ipcRenderer;
-	ipc.on('focusWindow', function(arg) {
+	ipc.on('focusWindow', function(event, arg) {
 		$('body').removeClass('blur');
 	});
 
-	ipc.on('blurWindow', function(arg) {
+	ipc.on('blurWindow', function(event, arg) {
 		$('body').addClass('blur');
 	});
 	// 后端发来event, 告诉要关闭了, 处理好后发送给后端说可以关闭了
-	ipc.on('closeWindow', function(arg) {
+	ipc.on('closeWindow', function(event, arg) {
 		console.log('Front get closeWindow message')
 		onClose(function() {
 			ipc.sendSync('quit-app');
@@ -1800,8 +1800,8 @@ var Pren = {
 				me.preOrNext();
 			}
 
-			// windows下需要
-			if(e.ctrlKey || e.metaKey) {
+			// linux,windows下需要
+			if(!isMac() && e.ctrlKey) {
 				// p
 				if(keyCode == 80) {
 					me.togglePren();
@@ -1958,7 +1958,7 @@ function setMacTopMenu() {
           accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
-				gui.win.reloadIgnoringCache();
+				gui.win.reload();
           	});
           }
         },
