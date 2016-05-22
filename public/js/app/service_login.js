@@ -1,7 +1,7 @@
 var Common = require('common');
 
 var Evt = require('evt');
-var app = require('electron').app; // .require('app');
+var app = require('electron').remote.app; // .require('app');
 var basePath = app.getPath('appData') + '/leanote'; // /Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
 

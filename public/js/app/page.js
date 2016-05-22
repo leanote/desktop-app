@@ -1309,7 +1309,7 @@ var State = {
 		var me = this;
 		me.recoverEnd = true;
 		// 先隐藏, 再resize, 再显示
-		$('body').hide();
+		// $('body').hide();
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
@@ -1320,7 +1320,7 @@ var State = {
 				}
 			}
 			setTimeout(function() {
-				$('body').show();
+				// $('body').show();
 				$('body').removeClass('init');
 				$("#mainMask").html("");
 				$("#mainMask").hide(0);
@@ -1800,8 +1800,17 @@ var Pren = {
 				me.preOrNext();
 			}
 
+			// 各个平台都要
+
+			// e切换只读和可写
+			if(keyCode == 69) {
+				if ( (isMac() && e.metaKey) || (!isMac() && e.ctrlKey)) {
+					Note.toggleWriteableAndReadOnly();
+				}
+			}
+
 			// linux,windows下需要
-			if(!isMac() && e.ctrlKey) {
+			else if(!isMac() && e.ctrlKey) {
 				// p
 				if(keyCode == 80) {
 					me.togglePren();
@@ -1810,10 +1819,7 @@ var Pren = {
 				else if(keyCode == 187) {
 					me.toggleFullscreen();
 				}
-				// e
-				else if(keyCode == 69) {
-					Note.toggleWriteableAndReadOnly();
-				}
+				
 				// t
 				else if(keyCode == 84) {
 					me.togglePren(true);

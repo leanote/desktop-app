@@ -33,7 +33,8 @@ app.on('open-file', function(e) {
 });
 
 // var appIsReady = false;
-app.on('activate-with-no-open-windows', function() { 
+app.on('activate', function() {
+  console.log('activate');
   if(mainWindow) {
     mainWindow.show();
   }
@@ -110,6 +111,7 @@ function openIt() {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
+    console.log('closed');
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -117,17 +119,20 @@ function openIt() {
   });
 
   mainWindow.on('focus', function() {
+    console.log('focus');
     // ipc.send('focusWindow'); mainProcess没有该方法
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('focusWindow');
   });
   mainWindow.on('blur', function() {
+    console.log('blur');
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('blurWindow');
   });
   
   // 关闭,先保存数据
   mainWindow.on('close', function(e) {
+    console.log('close');
     mainWindow.hide();
     e.preventDefault();
     mainWindow.webContents.send('closeWindow');

@@ -1507,10 +1507,14 @@ function goToMainPage() {
 function toLogin() {
 	var BrowserWindow = gui.remote.BrowserWindow;
 	if(isMac()) {
-		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
+		var win = new BrowserWindow(
+			{ width: 278, height: 370, show: true, frame: false, resizable: false }
+		);
 		win.loadURL('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 400, show: true, frame: true, resizable: false });
+		var win = new BrowserWindow(
+			{ width: 278, height: 400, show: true, frame: true, resizable: false }
+		);
 		win.loadURL('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
