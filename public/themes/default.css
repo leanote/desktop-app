@@ -2809,6 +2809,10 @@ background-position:-1px -670px
 #notebookList {
   border-top: 1px dashed #eee;
 }
+#notebookTree {
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
 body {
   border: none;
   border-shadow: none;
