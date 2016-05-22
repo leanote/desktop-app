@@ -1,10 +1,15 @@
-var app = require('app');  // Module to control application life.
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
-var ipc = require('ipc');
+// var app = require('electron').app;  // Module to control application life.
+const {app, BrowserWindow, crashReporter} = require('electron');
+var ipc = require('electron').ipcMain;
 var pdfMain = require('pdf_main');
 
 // Report crashes to our server.
-require('crash-reporter').start();
+crashReporter.start({
+  productName: 'YourName',
+  companyName: 'YourCompany',
+  submitURL: 'https://your-domain.com/url-to-submit',
+  autoSubmit: true
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
@@ -101,7 +106,7 @@ function openIt() {
   console.log('load: file://' + __dirname + '/note.html');
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/note.html');
+  mainWindow.loadURL('file://' + __dirname + '/note.html');
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

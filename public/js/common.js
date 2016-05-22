@@ -445,7 +445,7 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 
 // 复制图片
 // 在web端得到图片
-var clipboard = require('clipboard');
+const {clipboard} = require('electron');
 function pasteImage(e) {
 	var image = clipboard.readImage();
 	if(image) {

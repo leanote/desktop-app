@@ -1432,7 +1432,9 @@ function initPage(initedCallback) {
 	gui.win.on('blur', function() {
 	});
 	*/
-	var ipc = require('ipc');
+	// var ipc = require('ipc');
+	const {ipcRenderer} = require('electron');
+	ipc = ipcRenderer;
 	ipc.on('focusWindow', function(arg) {
 		$('body').removeClass('blur');
 	});
