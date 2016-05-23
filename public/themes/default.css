@@ -1298,9 +1298,11 @@ h3 {
 .dropdown-menu .divider {
   margin: 3px 0;
 }
-.ace_editor,
+.ace_editor {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
 .ace_editor * {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑" !important;
+  font-family: inherit;
 }
 /* leanote nav */
 .leanoteNav {
@@ -1403,7 +1405,7 @@ h3 {
   text-decoration: underline;
 }
 #editorContent pre {
-  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+  font: 12px / normal Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
   color: #4D4D4C;
 }
 #editorContent .ace-tomorrow {
@@ -2964,7 +2966,7 @@ body,
 #md-keyboard-mode {
   color: #8E8E8E;
   font-size: 12px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+  font-family: Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
   font-style: normal;
 }
 /*
