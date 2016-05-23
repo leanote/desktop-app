@@ -1298,8 +1298,11 @@ h3 {
 .dropdown-menu .divider {
   margin: 3px 0;
 }
-.ace_editor {
+#left-column {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+.ace_editor {
+  font-family: Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
 }
 .ace_editor * {
   font-family: inherit;
@@ -2949,6 +2952,15 @@ body,
 }
 .mce-item-table tr:nth-child(2n) {
   background-color: #f7f7f9;
+}
+.init-loading {
+  display: none;
+}
+.init-loading img {
+  width: 20px;
+}
+.init .init-loading {
+  display: block;
 }
 #mdEditor .navbar-default,
 #wmd-button-bar {
