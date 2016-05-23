@@ -1,7 +1,6 @@
 var Config = {
     "plugins": [
         "theme",
-        "template",
         "import_leanote",
         "import_evernote",
         "export_pdf",
@@ -26,7 +25,7 @@ var Config = {
         },
         {
             "filename": "ja-jp",
-            "name": "日本語"
+            "name": "日語"
         }
     ],
     "lang": "en-us",

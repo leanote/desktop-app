@@ -25,7 +25,7 @@ var Config = {
         },
         {
             "filename": "ja-jp",
-            "name": "日本語"
+            "name": "日語"
         }
     ],
     "lang": "en-us",
