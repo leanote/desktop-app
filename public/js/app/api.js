@@ -17,7 +17,7 @@ var Api = {
 	noteService: NoteService,
 	userService: UserService,
 	dbService: db,
-	ipc: nodeRequire('ipc'),
+	ipc: nodeRequire('electron').ipcRenderer,
 
 	// 打开本地目录
 	// mac和windows下不同

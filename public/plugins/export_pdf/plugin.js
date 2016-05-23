@@ -48,7 +48,8 @@ define(function() {
 		_exportPdfCallback: {},
 		_initExportPdf: function () {
 			var me = this;
-			Api.ipc.on('export-pdf-ret', function(arg) {
+			// console.log('_initExportPdf');
+			Api.ipc.on('export-pdf-ret', function(event, arg) {
 				var seq = arg.seq;
 				// console.log('export-pdf-ret');
 				// console.log(arg);

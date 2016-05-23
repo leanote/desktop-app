@@ -1,10 +1,15 @@
-var app = require('app');  // Module to control application life.
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
-var ipc = require('ipc');
+// var app = require('electron').app;  // Module to control application life.
+const {app, BrowserWindow, crashReporter} = require('electron');
+var ipc = require('electron').ipcMain;
 var pdfMain = require('pdf_main');
 
 // Report crashes to our server.
-require('crash-reporter').start();
+crashReporter.start({
+  productName: 'YourName',
+  companyName: 'YourCompany',
+  submitURL: 'https://your-domain.com/url-to-submit',
+  autoSubmit: true
+});
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
@@ -28,7 +33,8 @@ app.on('open-file', function(e) {
 });
 
 // var appIsReady = false;
-app.on('activate-with-no-open-windows', function() { 
+app.on('activate', function() {
+  console.log('activate');
   if(mainWindow) {
     mainWindow.show();
   }
@@ -101,10 +107,11 @@ function openIt() {
   console.log('load: file://' + __dirname + '/note.html');
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/note.html');
+  mainWindow.loadURL('file://' + __dirname + '/note.html');
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
+    console.log('closed');
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
@@ -112,17 +119,20 @@ function openIt() {
   });
 
   mainWindow.on('focus', function() {
+    console.log('focus');
     // ipc.send('focusWindow'); mainProcess没有该方法
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('focusWindow');
   });
   mainWindow.on('blur', function() {
+    console.log('blur');
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('blurWindow');
   });
   
   // 关闭,先保存数据
   mainWindow.on('close', function(e) {
+    console.log('close');
     mainWindow.hide();
     e.preventDefault();
     mainWindow.webContents.send('closeWindow');

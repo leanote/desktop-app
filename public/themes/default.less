@@ -778,6 +778,11 @@ background-position:-1px -670px
 	border-top: 1px dashed #eee;
 }
 
+#notebookTree {
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
+
 // @import "mobile.less";
 
 //----------------------
@@ -925,6 +930,16 @@ html, body, #page, #pageInner, #noteList, #notebook, #leftNotebook {
 }
 .mce-item-table tr:nth-child(2n) {
   background-color: #f7f7f9;
+}
+
+.init-loading {
+  display: none;
+  img {
+    width: 20px;
+  }
+}
+.init .init-loading {
+  display: block;
 }
 
 @import 'includes/markdown.less';

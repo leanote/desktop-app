@@ -3,6 +3,7 @@
 @fontFamily: 'Open Sans', 'Helvetica Neue',Arial,'Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei', "WenQuanYi Micro Hei", "Droid Sans Mono", "Droid Sans Fallback",sans-serif;
 // @aceFontFamily: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', "Microsoft YaHei", "微软雅黑";
 @aceFontFamily: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+@aceFontFamily: Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
 
 // font
 @font-face {
@@ -1188,9 +1189,15 @@ h1, h2, h3 {
 }
 
 // ace 重置css, 必须
-.ace_editor, .ace_editor * {
-	// font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-	font-family: @aceFontFamily !important; // 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
+#left-column {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+.ace_editor {
+    font-family: @aceFontFamily;
+	// font-family: @aceFontFamily !important; // 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro';
+}
+.ace_editor *  {
+    font-family: inherit;
 }
 
 /* leanote nav */

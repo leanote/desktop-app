@@ -602,7 +602,9 @@ define("tinymce/pasteplugin/Clipboard", [
 					return;
 				}
 				*/
-			} catch(e) {};
+			} catch(e) {
+				console.error(e);
+			};
 
 		});
 		

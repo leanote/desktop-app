@@ -2326,9 +2326,9 @@ Note.initContextmenu = function() {
 	    function dialogOperateNotes(options) {
 	    	$("#leanoteDialog #modalTitle").html(getMsg("selectNotebook"));
 	    	
-	    	$("#leanoteDialog .modal-body").html('<p><font color="red">'+getMsg("doubleClick")+'</font></p><ul id="notebookTree" class="ztree showIcon"></ul>');
+	    	$("#leanoteDialog .modal-body").html('<p><strong>'+getMsg("doubleClick")+'</strong></p><ul id="notebookTree" class="ztree showIcon"></ul>');
 	    	$("#leanoteDialog .modal-footer").html('\
-            	<button type="button" class="btn btn-default" data-dismiss="modal">'+getMsg("Colse")+'</button>\
+            	<button type="button" class="btn btn-default" data-dismiss="modal">'+getMsg("Close")+'</button>\
             	');
 	    	var callback;
 	    	if ('move' == options.func) {
