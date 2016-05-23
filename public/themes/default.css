@@ -1298,9 +1298,14 @@ h3 {
 .dropdown-menu .divider {
   margin: 3px 0;
 }
-.ace_editor,
+#left-column {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+.ace_editor {
+  font-family: Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
+}
 .ace_editor * {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑" !important;
+  font-family: inherit;
 }
 /* leanote nav */
 .leanoteNav {
@@ -1403,7 +1408,7 @@ h3 {
   text-decoration: underline;
 }
 #editorContent pre {
-  font: 12px / normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+  font: 12px / normal Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
   color: #4D4D4C;
 }
 #editorContent .ace-tomorrow {
@@ -2100,20 +2105,24 @@ img::selection {
 }
 #loadingLogo {
   position: relative;
-  width: 100px;
-  height: 100px;
   display: block;
   margin: auto;
-  border: 1px solid #4092C5;
-  border-radius: 50%;
 }
-#loadingLogo img {
-  width: 100px;
-  padding: 20px;
+#loadingLogo .logo {
+  display: inline-block;
+  background-image: url('../images/logo/leanote-icon-en.png');
+  height: 50px;
+  width: 200px;
+  background-repeat: no-repeat;
+  background-size: auto 50px;
 }
 #loadingLogo.loading {
   animation: rond 2s infinite;
   -webkit-animation: rond 2s infinite;
+}
+.lang-zh-cn #loadingLogo .logo {
+  width: 170px;
+  background-image: url('../images/logo/leanote-icon-zh.png');
 }
 .loading-spin {
   animation: rond 2s infinite;
@@ -2805,6 +2814,10 @@ background-position:-1px -670px
 #notebookList {
   border-top: 1px dashed #eee;
 }
+#notebookTree {
+  border: 1px solid #eee;
+  border-radius: 5px;
+}
 body {
   border: none;
   border-shadow: none;
@@ -2940,6 +2953,15 @@ body,
 .mce-item-table tr:nth-child(2n) {
   background-color: #f7f7f9;
 }
+.init-loading {
+  display: none;
+}
+.init-loading img {
+  width: 20px;
+}
+.init .init-loading {
+  display: block;
+}
 #mdEditor .navbar-default,
 #wmd-button-bar {
   overflow: visible;
@@ -2956,7 +2978,7 @@ body,
 #md-keyboard-mode {
   color: #8E8E8E;
   font-size: 12px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+  font-family: Menlo, 'Ubuntu Mono', Consolas, 'Courier New', 'Microsoft Yahei', 'Hiragino Sans GB', 'WenQuanYi Micro Hei', sans-serif;
   font-style: normal;
 }
 /*

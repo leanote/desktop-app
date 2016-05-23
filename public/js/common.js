@@ -445,11 +445,11 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 
 // 复制图片
 // 在web端得到图片
-var clipboard = require('clipboard');
+const {clipboard} = require('electron');
 function pasteImage(e) {
 	var image = clipboard.readImage();
 	if(image) {
-		var dataUrl = image.toDataUrl();
+		var dataUrl = image.toDataURL();
 		// 空图片
 	    if(dataUrl == "data:image/png;base64,") {
 		    return;
@@ -1499,19 +1499,23 @@ var ContextTips = {
 };
 
 function goToMainPage() {
-	var BrowserWindow = gui.remote.require('browser-window');
+	var BrowserWindow = gui.remote.BrowserWindow;
 	var win = new BrowserWindow(getMainWinParams());
-	win.loadUrl('file://' + __dirname + '/note.html?from=login');
+	win.loadURL('file://' + __dirname + '/note.html?from=login');
 }
 
 function toLogin() {
-	var BrowserWindow = gui.remote.require('browser-window');
+	var BrowserWindow = gui.remote.BrowserWindow;
 	if(isMac()) {
-		var win = new BrowserWindow({ width: 278, height: 326, show: true, frame: false, resizable: false });
-		win.loadUrl('file://' + __dirname + '/login.html');
+		var win = new BrowserWindow(
+			{ width: 278, height: 370, show: true, frame: false, resizable: false }
+		);
+		win.loadURL('file://' + __dirname + '/login.html');
 	} else {
-		var win = new BrowserWindow({ width: 278, height: 400, show: true, frame: true, resizable: false });
-		win.loadUrl('file://' + __dirname + '/login.html');
+		var win = new BrowserWindow(
+			{ width: 278, height: 400, show: true, frame: true, resizable: false }
+		);
+		win.loadURL('file://' + __dirname + '/login.html');
 	}
 	gui.getCurrentWindow().close();
 }

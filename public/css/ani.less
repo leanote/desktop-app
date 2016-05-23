@@ -10,15 +10,20 @@
 
 #loadingLogo {
 	position: relative;
-	width: 100px;
-	height: 100px;
+	// width: 100px;
+	// height: 100px;
 	display: block;
 	margin: auto;
-	border: 1px solid #4092C5;
-	border-radius: 50%;
-	img {
-		width: 100px;
-		padding: 20px;
+	// border: 1px solid #4092C5;
+	// border-radius: 50%;
+	
+	.logo {
+		display: inline-block;
+		background-image: url('../images/logo/leanote-icon-en.png');
+	    height: 50px;
+	    width: 200px;
+	    background-repeat: no-repeat;
+	    background-size: auto 50px;
 	}
 
 	&.loading {
@@ -26,6 +31,11 @@
 		-webkit-animation: rond 2s infinite;
 	}
 }
+.lang-zh-cn #loadingLogo .logo {
+	width: 170px;
+	background-image: url('../images/logo/leanote-icon-zh.png');
+}
+
 .loading-spin {
 	animation: rond 2s infinite;
 	-webkit-animation: rond 2s infinite;

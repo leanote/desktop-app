@@ -1309,7 +1309,7 @@ var State = {
 		var me = this;
 		me.recoverEnd = true;
 		// 先隐藏, 再resize, 再显示
-		$('body').hide();
+		// $('body').hide();
 		// 延迟, 让body先隐藏, 效果先显示出来
 		setTimeout(function() {
 			if(isMac()) {
@@ -1320,7 +1320,7 @@ var State = {
 				}
 			}
 			setTimeout(function() {
-				$('body').show();
+				// $('body').show();
 				$('body').removeClass('init');
 				$("#mainMask").html("");
 				$("#mainMask").hide(0);
@@ -1432,16 +1432,18 @@ function initPage(initedCallback) {
 	gui.win.on('blur', function() {
 	});
 	*/
-	var ipc = require('ipc');
-	ipc.on('focusWindow', function(arg) {
+	// var ipc = require('ipc');
+	const {ipcRenderer} = require('electron');
+	ipc = ipcRenderer;
+	ipc.on('focusWindow', function(event, arg) {
 		$('body').removeClass('blur');
 	});
 
-	ipc.on('blurWindow', function(arg) {
+	ipc.on('blurWindow', function(event, arg) {
 		$('body').addClass('blur');
 	});
 	// 后端发来event, 告诉要关闭了, 处理好后发送给后端说可以关闭了
-	ipc.on('closeWindow', function(arg) {
+	ipc.on('closeWindow', function(event, arg) {
 		console.log('Front get closeWindow message')
 		onClose(function() {
 			ipc.sendSync('quit-app');
@@ -1798,8 +1800,17 @@ var Pren = {
 				me.preOrNext();
 			}
 
-			// windows下需要
-			if(e.ctrlKey || e.metaKey) {
+			// 各个平台都要
+
+			// e切换只读和可写
+			if(keyCode == 69) {
+				if ( (isMac() && e.metaKey) || (!isMac() && e.ctrlKey)) {
+					Note.toggleWriteableAndReadOnly();
+				}
+			}
+
+			// linux,windows下需要
+			else if(!isMac() && e.ctrlKey) {
 				// p
 				if(keyCode == 80) {
 					me.togglePren();
@@ -1808,10 +1819,7 @@ var Pren = {
 				else if(keyCode == 187) {
 					me.toggleFullscreen();
 				}
-				// e
-				else if(keyCode == 69) {
-					Note.toggleWriteableAndReadOnly();
-				}
+				
 				// t
 				else if(keyCode == 84) {
 					me.togglePren(true);
@@ -1956,7 +1964,7 @@ function setMacTopMenu() {
           accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
-				gui.win.reloadIgnoringCache();
+				gui.win.reload();
           	});
           }
         },

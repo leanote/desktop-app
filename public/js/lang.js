@@ -24,6 +24,8 @@ var lang = {
 		window.curLang = curLang;
 		window.langData = langData;
 
+		$('body').addClass('lang-' + curLang);
+
 		me.renderHtml();
 	},
 
