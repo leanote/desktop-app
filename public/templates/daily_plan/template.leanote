@@ -1,8 +1,8 @@
 <style>
-  
+
 </style>
-<div class="custom_template">
-<h1>日计划</h1>
+<div class="daily_plan">
+<h2>每日计划</h2>
 <table cellspacing="0" cellpadding="0" style="border-collapse: collapse;table-layout:fixed;width:100%;"> 
  <tbody>
   <tr> 

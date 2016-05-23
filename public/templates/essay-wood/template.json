@@ -1,20 +1,20 @@
 {
-    "name": "Daily-Plan",
+    "name": "Essay-Wood",
     "desc": "",
-    "author": "Thaddeus Jiang",
+    "author": "Thaddeus",
     "authorUrl": "http://thaddeusjiang.github.io",
     "langs": {
         "en-us": {
-            "name": "Daily-Plan"
+            "name": "Essay-Wood"
         },
         "zh-cn": {
-            "name": "日计划"
+            "name": "随笔-木纹"
         },
         "zh-hk": {
-            "name": "日計劃"
+            "name": "隨筆-木紋"
         },
         "ja-jp": {
-            "name": "毎日予定"
+            "name": "エッセイ-ウッド"
         }
     }
 }

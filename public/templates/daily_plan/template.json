@@ -1,20 +1,20 @@
 {
-    "name": "Weekly-Plan",
+    "name": "Daily Plan",
     "desc": "",
     "author": "Thaddeus Jiang",
     "authorUrl": "http://thaddeusjiang.github.io",
     "langs": {
         "en-us": {
-            "name": "Weekly-Plan"
+            "name": "Daily Plan"
         },
         "zh-cn": {
-            "name": "周计划"
+            "name": "每日计划"
         },
         "zh-hk": {
-            "name": "週計劃"
+            "name": "每日計劃"
         },
         "ja-jp": {
-            "name": "週計画"
+            "name": "毎日予定"
         }
     }
 }
