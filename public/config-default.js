@@ -16,6 +16,10 @@ var Config = {
             "name": "English"
         },
         {
+            "filename": "de-de",
+            "name": "Deutsch"
+        },
+        {
             "filename": "zh-cn",
             "name": "简体中文"
         },
