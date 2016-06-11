@@ -1,0 +1,69 @@
+<style>
+
+</style>
+<div class="java_note">
+<h2 style="color: #4078c0;">Java String trim()</h2>
+
+功能：去除字符串前后的空白符。
+<br>
+源码：
+<div class="highlight highlight-source-java">
+  <pre>
+  public String trim() {
+      int len = value.length;
+      int st = 0;
+      char[] val = value;    /* avoid getfield opcode */
+      while ((st < len) && (val[st] <= ' ')) {
+          st++;
+      }
+      while ((st < len) && (val[len - 1] <= ' ')) {
+          len--;
+      }
+      return ((st > 0) || (len < value.length)) ? substring(st, len) : this;
+  }
+  </pre>
+</div>
+
+<h3 style="color: #0F9FB4;">疑问 1: 这种写法，可以去除 /t(制表符) 吗？</h3>
+答：可以。Java 中把 /t(制表符) 转换成了4个空格（space）
+<div class="highlight highlight-source-java">
+  <pre>
+  public static void main(String[] args) {
+      String lastname = "     jiang    ";         // jiang 前一个空格一个制表符，后一个制表符
+      System.out.println("start" + lastname.trim() + "end");
+  }
+  </pre>
+</div>
+单步到 trim() 方法中 
+<p><img src="public/plugins/template/templates/java_note/images/20160407-java-trim.png"><br></p>
+
+<h3 style="color: #0F9FB4;">疑问 2: trim() 返回新对象，还是将原对象截取返回？</h3>
+
+源码中可以看出，如果截取部分字符串调用substring(beginIndex, endIndex)，否则返回原对象。 那么问题就到了substring(beginIndex, endIndex) 是返回新对象，还是将原对象截取返回。 答：如果截取部分，则返回新对象。如果未进行截取，则返回原对象。 
+
+<br>源码：
+<div class="highlight highlight-source-java">
+  <pre>
+  public String substring(int beginIndex, int endIndex) {
+      if (beginIndex < 0) {
+          throw new StringIndexOutOfBoundsException(beginIndex);
+      }
+      if (endIndex > value.length) {
+          throw new StringIndexOutOfBoundsException(endIndex);
+      }
+      int subLen = endIndex - beginIndex;
+      if (subLen < 0) {
+          throw new StringIndexOutOfBoundsException(subLen);
+      }
+      return ((beginIndex == 0) && (endIndex == value.length)) ? this
+              : new String(value, beginIndex, subLen);
+  }
+  </pre>
+</div>
+
+<p></p><br>
+<p></p><br>
+<p></p><br>
+<p></p><br>
+
+</div>

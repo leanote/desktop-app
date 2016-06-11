@@ -1,0 +1,59 @@
+<style>
+
+</style>
+<div class="swot">
+  <table border="2" width="90%" style="margin-left:auto; margin-right:auto;">
+    <tbody>
+	  <tr>
+	    <td colspan="3" style="background-color: #CFEC3F; ">
+		  <p style="font-size:250%; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">SWOT 分析</p>
+		</td>
+	  </tr>
+	  <tr>
+	    <td width="20%" style="background-color: #CFEC3F; "></td>
+		<td width="40%" style="background-color: #CFEC3F; ">
+		  <p style="font-size:150%; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">有害的</p>
+		</td>
+		<td width="40%" style="background-color: #CFEC3F; ">
+		  <p style="font-size:150%; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">有利的</p>
+		</td>
+	  </tr>
+	  <tr>
+	    <td style="background-color: #CFEC3F; ">
+	      <p style="white-space:nowrap; font-size:150%; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">内部因素</p>
+	    </td>
+	    <td>
+		  <p style="font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">劣势</p>
+	      <p>1、...</p>
+	      <p>2、...</p>
+	      <p>3、...</p>
+		</td>
+	    <td>
+		  <p style="font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">优势</p>
+	      <p>1、...</p>
+	      <p>2、...</p>
+	      <p>3、...</p>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td style="background-color: #CFEC3F; ">
+	      <p style="white-space:nowrap; font-size:150%; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">外部因素</p>
+		</td>
+		<td>
+		  <p style="font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">挑战</p>
+	      <p>1、...</p>
+	      <p>2、...</p>
+	      <p>3、...</p>		
+		</td>
+		<td>
+		  <p style="font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">机会</p>	
+	      <p>1、...</p>
+	      <p>2、...</p>
+	      <p>3、...</p>
+		</td>
+	  </tr>
+    </tbody>
+  </table>
+
+<p></p><br>
+</div>

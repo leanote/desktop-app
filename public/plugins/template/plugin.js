@@ -111,7 +111,7 @@ define(function() {
             var ul = '<ul id="template_ul">'
 
             // 遍历模版目录，得到模版
-            var templateBasePath = __dirname + "/public/templates";
+            var templateBasePath = __dirname + "/public/plugins/template/templates";
             var dirs = Api.nodeFs.readdirSync(templateBasePath);
             for (index in dirs) {
                 var dir = dirs[index];
@@ -190,7 +190,7 @@ define(function() {
         },
         // 获取模版
         getTemplate: function(template_name) {
-            var templateBasePath = __dirname + "/public/templates";
+            var templateBasePath = __dirname + "/public/plugins/template/templates";
             var dir = templateBasePath + '/' + template_name + '/template.leanote';
             var templateFormat = fs.readFileSync(dir,'UTF-8');
             return templateFormat;

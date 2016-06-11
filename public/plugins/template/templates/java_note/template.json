@@ -1,20 +1,20 @@
 {
-    "name": "Annual-Summary",
+    "name": "Java Note",
     "desc": "",
-    "author": "Thaddeus Jiang",
+    "author": "Thaddeus",
     "authorUrl": "http://thaddeusjiang.github.io",
     "langs": {
         "en-us": {
-            "name": "Annual-Summary"
+            "name": "Java Note"
         },
         "zh-cn": {
-            "name": "年度总结"
+            "name": "Java 笔记"
         },
         "zh-hk": {
-            "name": "年度總結"
+            "name": "Java 筆記"
         },
         "ja-jp": {
-            "name": "年中大事件"
+            "name": "Java ノート"
         }
     }
 }
