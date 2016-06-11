@@ -2,7 +2,7 @@
 
 </style>
 <div class="essay">
-  <div >
+  <div style="background-image: url(public/plugins/template/templates/essay-wood/images/Wood.jpg);" >
       <h2 style="color: #4078c0; font-family: Times, TimesNR, 'New Century Schoolbook', Georgia, 'New York', serif;">Scorpion</h2>
 
       <div>  
@@ -12,7 +12,7 @@
         <br>
         <p>This team is pure genius.</p> 
         <br>
-        <p style="padding: 2px 2px 2px 3px;"><img src="public/templates/essay/images/Scorpion.jpg"><br></p>
+        <p style="padding: 2px 2px 2px 3px;"><img src="public/plugins/template/templates/essay/images/Scorpion.jpg"><br></p>
         <p></p><br>
       </div>
   </div>

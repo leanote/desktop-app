@@ -35,7 +35,7 @@
   </pre>
 </div>
 单步到 trim() 方法中 
-<p><img src="public/templates/java_note/images/20160407-java-trim.png"><br></p>
+<p><img src="public/plugins/template/templates/java_note/images/20160407-java-trim.png"><br></p>
 
 <h3 style="color: #0F9FB4;">疑问 2: trim() 返回新对象，还是将原对象截取返回？</h3>
 
