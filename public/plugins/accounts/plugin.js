@@ -13,6 +13,37 @@ define(function() {
 			'en-us': {
 				'Accounts': 'Accounts',
 			},
+			'de-de': {
+				'Accounts': 'Benutzerkonten',
+				"Username": "Benutzername",
+				"Is Local": "lokal",
+				'Host': 'Server',
+				"Yes": "Ja",
+				"No": "Nein",
+				"DB Optimization": "DB Optimierung",
+				"Open Dir": "Ordner",
+				"Data": "Daten",
+				"Options": "Optionen",
+				"Current": "Aktuell",
+				"Delete": "Löschen",
+				"Close": "Schliessen",
+
+				"Optimizing": "Optimiere",
+				"Completed": "Abgeschlossen",
+				"Deleted": "Gelöscht",
+
+				"Error": "Fehler",
+				"No such account": "Konto existiert nicht",
+				"Are you sure, it can't be recovered after it has been deleted": "Sind Sie sicher, nachdem es gelöscht wurde kann es nicht wiederhergestellt werden",
+
+				"Notebook": "Notizbücher",
+				"Note": "Notizen",
+				"Tag": "Tags",
+
+				"Database": "Datenbank",
+				"Image": "Bilder",
+				"Attachment": "Anhänge",
+			},
 			'zh-cn': {
 				'Accounts': '帐户管理',
 				"Username": "用户名",

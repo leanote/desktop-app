@@ -43,6 +43,14 @@ define(function() {
 				'exportFailure': 'Leanote saved failure!',
 				'notExists': 'Please sync your note to ther server firslty.'
 			},
+			'de-de': {
+				'export': 'Als Leanote exportieren',
+				'Exporting': 'Exportiere',
+				'Exporting: ': 'Exportiere: ',
+				'exportSuccess': 'Leanote erfolgreich gespeichert!',
+				'exportFailure': 'Leanote speichern fehlgeschlagen!',
+				'notExists': 'Bitte Notizen zuerst mit dem Server synchronisieren.'
+			},
 			'zh-cn': {
 				'export': '导出Leanote',
 				'Exporting': '正在导出',

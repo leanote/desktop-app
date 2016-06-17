@@ -73,6 +73,14 @@ define(function() {
 				'exportFailure': 'Evernote saved failure!',
 				'notExists': 'Please sync your note to ther server firslty.'
 			},
+			'de-de': {
+				'export': 'Als Evernote exportieren',
+				'Exporting': 'Exportiere',
+				'Exporting: ': 'Exportiere: ',
+				'exportSuccess': 'Evernote erfolgreich gespeichert!',
+				'exportFailure': 'Evernote speichern fehlgeschlagen!',
+				'notExists': 'Bitte Notizen zuerst mit dem Server synchronisieren.'
+			},
 			'zh-cn': {
 				'export': '导出Evernote',
 				'Exporting': '正在导出',

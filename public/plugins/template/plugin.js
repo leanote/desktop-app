@@ -13,6 +13,15 @@ define(function() {
                 'select-template': 'Select Template Please.',
                 'new-note-fail': 'New note fail. ',
             },
+            'de-de': {
+                'newNoteByTemplate': 'Neue Notiz aus Vorlage',
+                'template': 'Vorlage',
+                'close': 'Schliessen',
+                'newNote': 'Neue Notiz',
+                'warning': 'Warnung',
+                'select-template': 'Bitte Vorlage auswählen.',
+                'new-note-fail': 'Notiz erstellen fehlgeschlagen. ',
+            },
             'zh-cn': {
                 'newNoteByTemplate': '通过模版创建笔记',
                 'template': '模版',

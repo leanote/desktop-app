@@ -6,6 +6,9 @@
         "en-us": {
             "name": "Wheat"
         },
+        "de-de": {
+            "name": "Weizenfeld"
+        },
         "zh-cn": {
             "name": "小麦"
         },
