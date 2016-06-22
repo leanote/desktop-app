@@ -8,6 +8,10 @@
             "pluginName": "Accounts",
             "pluginDesc": ""
         },
+        "de-de": {
+            "pluginName": "Benutzerkonten",
+            "pluginDesc": ""
+        },
         "zh-cn": {
             "pluginName": "帐户管理",
             "pluginDesc": ""

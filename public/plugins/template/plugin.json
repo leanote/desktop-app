@@ -8,6 +8,10 @@
             "pluginName": "Template",
             "pluginDesc": ""
         },
+        "de-de": {
+            "pluginName": "Vorlage",
+            "pluginDesc": ""
+        },
         "zh-cn": {
             "pluginName": "模版",
             "pluginDesc": ""
