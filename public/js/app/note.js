@@ -1819,7 +1819,7 @@ LEA.toggleWriteable = Note.toggleWriteable = function(isFromNewNote) {
 	var note = me.getCurNote();
 	if (note) {
 		if (note.InitSync) {
-			alert('Waiting for lading content from server');
+			alert('Waiting for loading content from server');
 			return;
 		}
 	}
