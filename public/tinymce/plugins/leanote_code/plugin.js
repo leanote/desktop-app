@@ -272,7 +272,7 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
             "Latex:latex",
             "Xml:xml",
             "ActionScript:actionScript",
-            "Matalab:matalab",
+            "Matlab:matlab",
             "Scala:scala",
             "Sql:sql"
          ];
