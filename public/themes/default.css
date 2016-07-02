@@ -2818,6 +2818,9 @@ background-position:-1px -670px
   border: 1px solid #eee;
   border-radius: 5px;
 }
+#notebookTree.ztree li a {
+  color: #000;
+}
 body {
   border: none;
   border-shadow: none;
