@@ -37,7 +37,7 @@ Please see https://github.com/leanote/desktop-app/wiki
 ```
 LEANOTE - NOT JUST A NOTEPAD!
 
-Copyright 2015 by the contributors.
+Copyright by the contributors.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
