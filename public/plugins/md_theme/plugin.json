@@ -1,0 +1,15 @@
+{
+  "name": "markdown theme",
+  "author": "Lucas Yu",
+  "desc": "Markdown主题设置",
+  "langs": {
+      "en-us": {
+          "pluginName": "Markdown theme",
+          "pluginDesc": ""
+      },
+      "zh-cn": {
+          "pluginName": "Markdown主题",
+          "pluginDesc": ""
+      }
+  }
+}
