@@ -144,7 +144,7 @@ var Resize = {
 				if(MD) {
 					MD.resize();
 				}
-				
+
 			} else {
 				$t.addClass('open');
 				self.rightColumn.find('.layout-resizer').addClass('open');
@@ -1145,7 +1145,7 @@ LeaAce = {
 	// 转换raw <-> code
 	handleEvent: function () {
 		var me = this;
-		
+
 		if(!this.canAce()) {
 			return;
 		}
@@ -1819,7 +1819,7 @@ var Pren = {
 				else if(keyCode == 187) {
 					me.toggleFullscreen();
 				}
-				
+
 				// t
 				else if(keyCode == 84) {
 					me.togglePren(true);
@@ -2104,7 +2104,7 @@ function userMenu(allUsers) {
         		});
 	        }
 	    });
-	    
+
 	    this.switchAccount = new gui.MenuItem({
 	        label: getMsg('Add account'),
 	        click: function(e) {
@@ -2144,7 +2144,7 @@ function userMenu(allUsers) {
 		this.menu.append(new gui.MenuItem({ type: 'separator' }));
 	    this.menu.append(this.logout);
 	    this.menu.append(this.switchAccount);
-	    this.menu.append(allUsersMenu); 
+	    this.menu.append(allUsersMenu);
 	    this.menu.append(new gui.MenuItem({ type: 'separator' }));
 
 	    // themeMenu
@@ -2152,6 +2152,12 @@ function userMenu(allUsers) {
 	    if(themeMenu) {
 		    this.menu.append(themeMenu);
 	    }
+
+      // markdownThemeMenu
+      var mdThemeMenu = Api.getMdThemeMenu();
+      if(mdThemeMenu) {
+        this.menu.append(mdThemeMenu);
+      }
 
 		var height = 260;
 		if (UserInfo.IsLocal) {
