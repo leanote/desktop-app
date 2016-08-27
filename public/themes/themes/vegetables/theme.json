@@ -6,6 +6,9 @@
         "en-us": {
             "name": "Vegetables"
         },
+        "de-de": {
+            "name": "Gemüse"
+        },
         "zh-cn": {
             "name": "蔬菜"
         },

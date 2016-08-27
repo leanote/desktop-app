@@ -12,6 +12,16 @@ define(function() {
 			'en-us': {
 				'importEvernote': 'Import Evernote',
 			},
+			'de-de': {
+				'importEvernote': 'Evernote Datei importieren',
+				'Choose Evernote files(.enex)': 'Evernote Dateien (.enex) auswählen',
+				'Close': "Schliessen",
+				'Import to': "Importiere in Notizbuch",
+				"Done! %s notes imported!": "Abgeschlossen! Es wurden %s Notizen importiert!",
+				"Import file: %s Success!": "Datei importieren: %s erfolgreich!",
+				"Import file: %s Failure, is evernote file ?": "Datei importieren: %s fehlgeschlagen! Ist das eine Evernote Datei?",
+				"Import: %s Success!": "Import: %s erfolgreich!"
+			},
 			'zh-cn': {
 				'importEvernote': '导入Evernote',
 				'Choose Evernote files(.enex)': '选择Evernote文件(.enex)',

@@ -16,6 +16,13 @@ define(function() {
 				'exportSuccess': 'PDF saved successful!',
 				'exportFailure': 'PDF saved failure!',
 			},
+			'de-de': {
+				'export': 'Als PDF exportieren',
+				'Exporting': 'Exportiere',
+				'Exporting: ': 'Exportiere: ',
+				'exportSuccess': 'PDF erfolgreich gespeichert!',
+				'exportFailure': 'PDF speichern fehlgeschlagen!',
+			},
 			'zh-cn': {
 				'export': '导出PDF',
 				'Exporting': '正在导出',

@@ -1,0 +1,212 @@
+/* default markdown style */
+/** lifelife */
+/* Pretty printing styles. Used with prettify.js. */
+pre.prettyprint * {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', Hiragino Sans GB, "Microsoft YaHei", "微软雅黑";
+}
+pre.prettyprint {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+code.prettyprint,
+pre.prettyprint {
+  padding: 8px;
+  /*background-color: #f7f7f9;*/
+  background-color: #f0f0f0;
+  border: 1px solid #e1e1e8;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  display: block;
+  box-shadow: 0 1px 2px rgba(255, 255, 255, 0.1) inset, 40px 0 0 rgba(102, 128, 153, 0.05) inset, 0 1px 0 rgba(102, 128, 153, 0.05);
+}
+#preview-contents pre ol li {
+  padding-left: 10px;
+}
+/*行号*/
+code.prettyprint .linenums,
+pre.prettyprint .linenums {
+  /*
+    -webkit-box-shadow: inset 0px 0 0 #f7f7f9,inset 0px 0 0 #ececf0;
+    -moz-box-shadow: inset 0px 0 0 #f7f7f9,inset 0px 0 0 #ececf0;
+    box-shadow: inset 0px 0 0 #f7f7f9,inset 0px 0 0 #ececf0
+    */
+}
+code.prettyprint ol.linenums,
+pre.prettyprint ol.linenums {
+  padding: 0 0 0 30px;
+  margin: 0;
+}
+code.prettyprint ol.linenums li,
+pre.prettyprint ol.linenums li {
+  padding-left: 0;
+  color: #bebec5;
+  line-height: 20px;
+}
+code.prettyprint .com,
+pre.prettyprint .com {
+  color: #93a1a1;
+  font-style: italic;
+}
+code.prettyprint .lit,
+pre.prettyprint .lit {
+  color: #195f91;
+}
+code.prettyprint .pun,
+pre.prettyprint .pun {
+  color: #93a1a1;
+}
+code.prettyprint .opn,
+pre.prettyprint .opn {
+  color: #93a1a1;
+}
+code.prettyprint .clo,
+pre.prettyprint .clo {
+  color: #93a1a1;
+}
+code.prettyprint .fun,
+pre.prettyprint .fun {
+  color: #dc322f;
+}
+code.prettyprint .str,
+pre.prettyprint .str {
+  color: #dd1144;
+}
+code.prettyprint .atv,
+pre.prettyprint .atv {
+  color: #dd1144;
+}
+code.prettyprint .kwd,
+pre.prettyprint .kwd {
+  color: #1e347b;
+}
+code.prettyprint .tag,
+pre.prettyprint .tag {
+  color: #1e347b;
+}
+code.prettyprint .typ,
+pre.prettyprint .typ {
+  color: #008080;
+}
+code.prettyprint .atn,
+pre.prettyprint .atn {
+  color: #008080;
+}
+code.prettyprint .dec,
+pre.prettyprint .dec {
+  color: #008080;
+}
+code.prettyprint .var,
+pre.prettyprint .var {
+  color: #008080;
+}
+code.prettyprint .pln,
+pre.prettyprint .pln {
+  color: #48484c;
+}
+a code {
+  color: inherit;
+}
+pre {
+  word-break: break-word;
+}
+p,
+blockquote {
+  margin: 0 0 0.3em;
+}
+hr {
+  margin: 2em 0;
+}
+img {
+  max-width: 100%;
+}
+code,
+pre {
+  font-family: "Source Code Pro", monospace;
+  font-size: 0.9em;
+}
+code {
+  white-space: normal;
+}
+pre {
+  border-radius: 5px;
+}
+pre.prettyprint {
+  text-align: start;
+  border: 0;
+  padding: 10px 20px;
+  font-size: 12px;
+}
+pre.prettyprint code {
+  background-color: transparent !important;
+}
+/* Definition list */
+dt,
+dd {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+dd {
+  margin-left: 40px;
+}
+
+/* Table style */
+
+#preview-contents table {
+  margin-bottom: 20px;
+  width: 100%;
+}
+#preview-contents table th,
+#preview-contents table td {
+  padding: 8px;
+  line-height: 20px;
+  vertical-align: top;
+  border: 1px solid #dddddd;
+}
+#preview-contents table th {
+  font-weight: bold;
+  vertical-align: bottom;
+}
+#preview-contents table tbody>tr:nth-child(2n+1)>td,
+#preview-contents table tbody>tr:nth-child(2n+1)>th {
+    background-color: rgba(102,128,153,.05);
+}
+
+blockquote {
+  border-left-width: 10px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 15px 20px;
+  border-left: 10px solid #D6DBDF;
+  background: none repeat scroll 0 0 rgba(102,128,153,.05);
+}
+blockquote p {
+  margin-bottom: 0.3em;
+  font-size: 1em;
+  line-height: 1.45;
+}
+blockquote ul:last-child,
+blockquote ol:last-child {
+  margin-bottom: 0;
+}
+ul,
+ol {
+  margin-bottom: 0.3em;
+}
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+  margin-bottom: 0.3em;
+}
+
+/* Preview */
+.preview-panel {
+  background-color: #f8f8f8;
+}

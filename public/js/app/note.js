@@ -238,7 +238,7 @@ Note.alertWeb = function(msg) {
 // 返回已改变的信息
 Note.curHasChanged = function(force) {
 	var cacheNote = Note.getCurNote();
-	if (!cacheNote) {
+	if (!cacheNote || cacheNote.InitSync) { // 还没有同步的, 不能保存
 		return false;
 	}
 	// else {
@@ -712,9 +712,14 @@ Note.changeNote = function(selectNoteId, isShare, needSaveChanged, callback) {
 	var seq = Note.contentAjaxSeq;
 
 	function setContent(ret, fromCache, seq2) {
-		if(ret) {
-			cacheNote.InitSync = false;
+		// 找不到内容, 就一直loading
+		if (!ret) {
+			console.error('取不到内容');
+			return;
 		}
+
+		cacheNote.InitSync = false;
+
 		ret = ret || {};
 		Note.contentAjax = null;
 		if(seq2 != Note.contentAjaxSeq) {
@@ -1811,6 +1816,13 @@ Note.toggleReadOnly = function(needSave) {
 // 切换到编辑模式
 LEA.toggleWriteable = Note.toggleWriteable = function(isFromNewNote) {
 	var me = Note;
+	var note = me.getCurNote();
+	if (note) {
+		if (note.InitSync) {
+			alert('Waiting for loading content from server');
+			return;
+		}
+	}
 
 	// $('#infoToolbar').hide();
 	$('#editor').removeClass('read-only');
@@ -1820,8 +1832,7 @@ LEA.toggleWriteable = Note.toggleWriteable = function(isFromNewNote) {
 	// markdown
 	$('#mdEditor').removeClass('read-only');
 
-	var note = me.getCurNote();
-	if(!note) {
+	if (!note) {
 		return;
 	}
 

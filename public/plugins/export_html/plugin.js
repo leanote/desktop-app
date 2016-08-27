@@ -17,6 +17,14 @@ define(function() {
 				'exportFailure': 'HTML saved failure!',
 				'notExists': 'Please sync your note to ther server firslty.'
 			},
+			'de-de': {
+				'export': 'Als HTML exportieren',
+				'Exporting': 'Exportiere',
+				'Exporting: ': 'Exportiere: ',
+				'exportSuccess': 'HTML erfolgreich gespeichert!',
+				'exportFailure': 'HTML speichern fehlgeschlagen!',
+				'notExists': 'Bitte Notizen zuerst mit dem Server synchronisieren.'
+			},
 			'zh-cn': {
 				'export': '导出HTML',
 				'Exporting': '正在导出',

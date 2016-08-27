@@ -8,6 +8,10 @@
             "pluginName": "Langs",
             "pluginDesc": ""
         },
+        "de-de": {
+            "pluginName": "Sprache",
+            "pluginDesc": ""
+        },
         "zh-cn": {
             "pluginName": "设置语言",
             "pluginDesc": ""
