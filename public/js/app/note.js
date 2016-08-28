@@ -11,21 +11,6 @@ Note.curNoteId = "";
 
 Note.interval = ""; // 定时器
 
-// 这里, settings, blog, star
-Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
-
-// for render
-Note.itemTplNoImg = '<li href="#" class="item ?" data-seq="?" noteId="?">'
-Note.itemTplNoImg += Note.itemIsBlog +'<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-
-// 有image
-Note.itemTpl = '<li href="#" class="item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>'
-Note.itemTpl +=Note.itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-
-// for new
-Note.newItemTpl = '<li href="#" class="item item-active ?" data-seq="?" fromUserId="?" noteId="?">'
-Note.newItemTpl += Note.itemIsBlog + '<div class="item-desc" style="right: 0px;"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-
 Note.noteItemListO = $("#noteItemList");
 Note.$itemList = $('#noteItemList');
 
@@ -33,6 +18,31 @@ Note.$itemList = $('#noteItemList');
 // 一旦某notebook改变了就清空, 重新排序之. (用js排)
 Note.cacheByNotebookId = {all: {}};
 Note.notebookIds = {}; // notebookId => true
+
+
+// 切换笔记视图
+Note.setViewMode = function(mode) {
+  // blog, star, settings
+  Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
+  if(mode === "list") { //list view
+    Note.itemTplNoImg = '<li href="#" class="item list-item ?" data-seq="?" noteId="?">';
+    Note.itemTplNoImg += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
+
+    Note.itemTpl = '<li href="#" class="item list-item ?" data-seq="?" noteId="?"><p class="hidden">?</p>';
+    Note.itemTpl += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
+  }
+  else {  // summary view
+    // 无image
+    Note.itemTplNoImg = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
+    Note.itemTplNoImg += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+
+    // 有image
+    Note.itemTpl = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
+    Note.itemTpl += Note.itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+  }
+}
+
+Note.setViewMode(Config.view || "summary");
 
 // 定时保存信息
 Note.intervalTime = 10 * 1000; // 10秒
@@ -266,7 +276,7 @@ Note.curHasChanged = function(force) {
 		hasChanged.hasChanged = true; // 本页使用用小写
 		hasChanged.Title = title; // 要传到后台的用大写
 	}
-	
+
 	if(!arrayEqual(cacheNote.Tags, tags)) {
 		hasChanged.hasChanged = true;
 		hasChanged.Tags = tags;
@@ -312,14 +322,14 @@ Note.curHasChanged = function(force) {
 	else {
 		content = contents;
 	}
-	
+
 	if (cacheNote.Content != content) {
 		hasChanged.hasChanged = true;
 		hasChanged.Content = content;
-		
+
 		// 从html中得到...
 		var c = preview || content;
-		
+
 		// 不是博客或没有自定义设置的
 		if(!cacheNote.HasSelfDefined || !cacheNote.IsBlog) {
 			hasChanged.Desc = Note.genDesc(c);
@@ -658,7 +668,7 @@ Note.setCurNoteId = function(noteId) {
 	Note.curNoteId = noteId;
 	Note.inChangeNoteId = '';
 };
-// 清空curNoteId, 
+// 清空curNoteId,
 Note.clearCurNoteId = function () {
 	// 为什么要++? 避免刚清空, 因为内容的延迟又设置回去了
 	Note.contentAjaxSeq++;
@@ -771,8 +781,6 @@ Note.reRenderNote = function(noteId) {
 	});
 };
 
-// 渲染
-
 // 更改信息到左侧
 // 定时更改 当前正在编辑的信息到左侧导航
 // 或change select. 之前的note, 已经改变了
@@ -788,6 +796,9 @@ Note.renderChangedNote = function(changedNote) {
 		// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
 		Note.changeStarNoteTitle(changedNote.NoteId, trimTitle(changedNote.Title));
 	}
+  if($leftNoteNav.hasClass("list-item")) {
+    return; //list view只需要更新title
+  }
 	if(changedNote.Desc) {
 		$leftNoteNav.find(".desc").html(trimTitle(changedNote.Desc));
 	}
@@ -869,7 +880,7 @@ Note.renderNoteContent = function(content, dontNeedSetReadonly, seq2) {
 		}
 	});
 
-	// 只有在renderNoteContent时才设置curNoteId
+  // 只有在renderNoteContent时才设置curNoteId
 	// Note.setCurNoteId(content.NoteId);
 
 	// 重新渲染到左侧 desc, 因为笔记传过来是没有desc的
@@ -886,25 +897,6 @@ Note.renderNoteDesc = function(note) {
 	note.ImgSrc = Note.getImgSrc(note.Content);
 	Note.renderChangedNote(note);
 };
-
-// 初始化时渲染最初的notes
-/**
-    <div id="noteItemList">
-	  <!--
-      <div href="#" class="item">
-        <div class="item-thumb" style="">
-          <img src="images/a.gif"/>
-        </div>
-
-        <div class="item-desc" style="">
-            <p class="item-title">?</p>
-            <p class="item-text">
-            	?
-            </p>
-        </div>
-      </div>
-      -->
-*/
 
 Note.showEditorMask = function() {
 	$("#editorMask").css("z-index", 10).show();
@@ -1127,7 +1119,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	// 是否是为共享的notebook添加笔记, 如果是, 则还要记录fromUserId
 	var newItem = "";
 
-	var baseClasses = "item-my";
+	var baseClasses = "item-my item-active";
 	if(isShare) {
 		baseClasses = "item-shared";
 	}
@@ -1136,7 +1128,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	var notebookTitle = notebook ? notebook.Title : "";
 	var curDate = getCurDatetime();
 
-	newItem = tt(Note.newItemTpl, baseClasses, me.newNoteSeq(), "", note.NoteId, note.Title, notebookTitle, curDate, "");
+	newItem = tt(Note.itemTplNoImg, baseClasses, me.newNoteSeq(), note.NoteId, note.Title, notebookTitle, curDate, "");
 
 	newItem = $(newItem);
 	newItem.find(".item-blog").hide();
@@ -1801,7 +1793,7 @@ Note.toggleReadOnly = function(needSave) {
 	if (needSave) {
 		Note.curChangedSaveIt(true);
 	}
-	
+
 	Note.readOnly = true;
 	LEA.readOnly = true;
 
@@ -2141,7 +2133,7 @@ Note.addGetNoteContentLazy = function(noteId) {
 	me.startGetNoteContentLazy();
 };
 
-// render notes后, 
+// render notes后,
 // 开始加载
 Note.startGetNoteContentLazy = function() {
 	var me = this;
@@ -2336,7 +2328,7 @@ Note.initContextmenu = function() {
 	    });
 	    function dialogOperateNotes(options) {
 	    	$("#leanoteDialog #modalTitle").html(getMsg("selectNotebook"));
-	    	
+
 	    	$("#leanoteDialog .modal-body").html('<p><strong>'+getMsg("doubleClick")+'</strong></p><ul id="notebookTree" class="ztree showIcon"></ul>');
 	    	$("#leanoteDialog .modal-footer").html('\
             	<button type="button" class="btn btn-default" data-dismiss="modal">'+getMsg("Close")+'</button>\
@@ -2788,7 +2780,7 @@ Note.getBatchNoteIds = function () {
 };
 Note.batch = {
 	$noteItemList: $("#noteItemList"),
-	
+
 	cancelInBatch: function () {
 		Note.inBatch = false;
 		this.$body.removeClass('batch');
@@ -2947,7 +2939,7 @@ Note.batch = {
 			//----------
 			// 多选操作
 			//----------
-			
+
 			if (isMulti || isConti) {
 				Note.curChangedSaveIt();
 			}
@@ -2955,7 +2947,7 @@ Note.batch = {
 			// 多选
 			if (isMulti) {
 				me.select($this);
-				
+
 			// 连续选
 			} else if (isConti) {
 				// 选择 开始位置到结束位置
@@ -2974,7 +2966,7 @@ Note.batch = {
 
 			me.finalFix();
 		});
-		
+
 		//----------
 
 		// 鼠标拖动开始
@@ -3452,7 +3444,7 @@ Note.addSync = function(notes) {
 		// 避免trash的也加进来
 		if (!note.IsDeleted) {
 			if (
-				(note.IsTrash && Notebook.curNotebookIsTrash()) 
+				(note.IsTrash && Notebook.curNotebookIsTrash())
 				|| !note.IsTrash) {
 
 				Note.addNoteCache(note);
