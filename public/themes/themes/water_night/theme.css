@@ -102,12 +102,19 @@
   /* 不显示图片 */
 }
 #noteItemList .item {
-  height: 69px;
   border: none;
   border-bottom: 1px solid #363636;
   background-color: transparent;
   color: #c2c2c2;
   overflow: hidden;
+}
+#noteItemList .summary-item {
+  /*summary view*/
+  height: 69px;
+}
+#noteItemList .list-item {
+  /*list view*/
+  height: 29px;
 }
 #noteItemList .item-title {
   color: #c2c2c2;
