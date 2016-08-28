@@ -19,30 +19,33 @@ Note.$itemList = $('#noteItemList');
 Note.cacheByNotebookId = {all: {}};
 Note.notebookIds = {}; // notebookId => true
 
-
-// 切换笔记视图
-Note.setViewMode = function(mode) {
+// 初始化模版字符串
+(function() {
+  Note.itemTpl = {};
+  Note.itemTplNoImg = {};
   // blog, star, settings
-  Note.itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
-  if(mode === "list") { //list view
-    Note.itemTplNoImg = '<li href="#" class="item list-item ?" data-seq="?" noteId="?">';
-    Note.itemTplNoImg += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
+  var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
 
-    Note.itemTpl = '<li href="#" class="item list-item ?" data-seq="?" noteId="?"><p class="hidden">?</p>';
-    Note.itemTpl += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
-  }
-  else {  // summary view
-    // 无image
-    Note.itemTplNoImg = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
-    Note.itemTplNoImg += Note.itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+  // list view
+  Note.itemTplNoImg.list = '<li href="#" class="item list-item ?" data-seq="?" noteId="?">';
+  Note.itemTplNoImg.list += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
+  Note.itemTpl.list = '<li href="#" class="item list-item ?" data-seq="?" noteId="?"><p class="hidden">?</p>';
+  Note.itemTpl.list += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
 
-    // 有image
-    Note.itemTpl = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
-    Note.itemTpl += Note.itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-  }
+  // summary view
+  Note.itemTplNoImg.summary = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
+  Note.itemTplNoImg.summary += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+  Note.itemTpl.summary = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
+  Note.itemTpl.summary += itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+})();
+
+Note.getItemTpl = function() {
+  return Note.itemTpl[Config.view || 'summary'];
 }
 
-Note.setViewMode(Config.view || "summary");
+Note.getItemTplNoImg = function() {
+  return Note.itemTplNoImg[Config.view ||'summary'];
+}
 
 // 定时保存信息
 Note.intervalTime = 10 * 1000; // 10秒
@@ -994,9 +997,9 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 
 	var tmp;
 	if(note.ImgSrc) {
-		tmp = tt(Note.itemTpl, classes, this.newNoteSeq(), note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+		tmp = tt(Note.getItemTpl(), classes, this.newNoteSeq(), note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	} else {
-		tmp = tt(Note.itemTplNoImg, classes, this.newNoteSeq(), note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
+		tmp = tt(Note.getItemTplNoImg(), classes, this.newNoteSeq(), note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
 	}
 	// blog ?
 	if(!note.IsBlog) {
@@ -1041,9 +1044,9 @@ Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 
 		var tmp;
 		if(note.ImgSrc) {
-			tmp = tt(Note.itemTpl, classes, i, note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
+			tmp = tt(Note.getItemTpl(), classes, i, note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		} else {
-			tmp = tt(Note.itemTplNoImg, classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
+			tmp = tt(Note.getItemTplNoImg(), classes, i, note.NoteId, note.Title, Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
 		}
 		if(!note.IsBlog) {
 			tmp = $(tmp);
@@ -1128,7 +1131,7 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	var notebookTitle = notebook ? notebook.Title : "";
 	var curDate = getCurDatetime();
 
-	newItem = tt(Note.itemTplNoImg, baseClasses, me.newNoteSeq(), note.NoteId, note.Title, notebookTitle, curDate, "");
+	newItem = tt(Note.getItemTplNoImg(), baseClasses, me.newNoteSeq(), note.NoteId, note.Title, notebookTitle, curDate, "");
 
 	newItem = $(newItem);
 	newItem.find(".item-blog").hide();

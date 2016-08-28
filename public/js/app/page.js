@@ -1979,18 +1979,16 @@ function setMacTopMenu() {
         {
           label: 'Summary View',
           click: function() {
-            Note.setViewMode("summary");
+            Config.view = 'summary';
             Notebook.renderCurNotebook();
-            Config.view = "summary";
             Api.writeConfig(Config);
           },
         },
         {
           label: 'List View',
           click: function() {
-            Note.setViewMode("list");
+            Config.view = 'list';
             Notebook.renderCurNotebook();
-            Config.view = "list";
             Api.writeConfig(Config);
           },
         },
