@@ -1448,6 +1448,15 @@ h3 {
 .close:focus {
   outline: none;
 }
+#viewModeDropdown {
+  width: 30px;
+  height:35px;
+  line-height: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 10000;
+  cursor: pointer;
+}
 #newMyNote {
   position: absolute;
   right: 3px;

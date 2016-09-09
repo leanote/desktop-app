@@ -3221,6 +3221,38 @@ $(function() {
 		Notebook.searchNotebookForList(key);
 	});
 
+  // 切换列表视图
+  $("#viewModeDropdown").click(function() {
+    console.log("*******");
+    var themeSubmenus = new gui.Menu();
+    themeSubmenus.append(new gui.MenuItem({
+      checked: Config.view === "summary",
+      label: "摘要视图",
+      type: "checkbox",
+      click: function() {
+        Config.view = 'summary';
+        Notebook.renderCurNotebook();
+        Api.writeConfig(Config);
+      }
+    }));
+    themeSubmenus.append(new gui.MenuItem({
+      checked: Config.view === "list",
+      label: "列表视图",
+      type: "checkbox",
+      click: function() {
+        Config.view = 'list';
+        Notebook.renderCurNotebook();
+        Api.writeConfig(Config);
+      }
+    }));
+    
+    var $this = $(this);
+    var x = $this.offset().left;
+    var y = $this.offset().top + $this.height();
+    themeSubmenus.popup(gui.getCurrentWindow(), Math.round(x), Math.round(y));
+  });
+ 
+
 	//---------------------------
 	// 搜索, 按enter才搜索
 	/*
