@@ -34,7 +34,7 @@ var Config = {
         }
     ],
     "lang": "en-us",
-    "theme": "",
+    "theme": "black",
     "mdTheme": "github2",
     "view": "list"
 };
