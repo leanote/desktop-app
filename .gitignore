@@ -19,3 +19,6 @@ node_modules/request
 node_modules/fs.extra
 /updates
 /old
+
+
+public/config.js
