@@ -1,7 +1,5 @@
 // Tag
 
-// 蓝色, 红色怎么存到数据库中? 直接存蓝色
-
 Tag.classes = {
 	"蓝色": "label label-blue",
 	"红色": "label label-red",
@@ -37,7 +35,6 @@ Tag.getTags = function() {
 	var tags = [];
 	Tag.t.children().each(function(){
 		var text = $(this).data('tag');
-		// text = text.substring(0, text.length - 1); // 把X去掉
 		text = Tag.mapCn2En[text] || text;
 		tags.push(text);
 	});
@@ -64,13 +61,6 @@ Tag.renderTags = function(tags) {
 	}
 };
 
-// tag最初状态
-function revertTagStatus() {
-	$("#addTagTrigger").show();
-	$("#addTagInput").hide();
-	// hideTagList();
-}
-
 function hideTagList(event) {
 	$("#tagDropdown").removeClass("open");
 	if (event) {
@@ -81,39 +71,6 @@ function showTagList(event) {
 	$("#tagDropdown").addClass("open");
 	if (event) {
 		event.stopPropagation()
-	}
-}
-
-// 只读模式下显示tags
-// called by Note
-Tag.renderReadOnlyTags = function(tags) {
-	// 先清空
-	$("#noteReadTags").html("");
-	if(isEmpty(tags)) {
-		$("#noteReadTags").html(getMsg("noTag"));
-	}
-	
-	var i = true;
-	function getNextDefaultClasses() {
-		if (i) {
-			return "label label-default";
-			i = false
-		} else {
-			i = true;
-			return "label label-info";
-		}
-	}
-	
-	for(var i in tags) {
-		var text = tags[i];
-		text = Tag.mapEn2Cn[text] || text;
-		var classes = Tag.classes[text];
-		if(!classes) {
-			classes = getNextDefaultClasses();
-		}
-		tag = tt('<span class="?">?</span>', classes, text);
-		
-		$("#noteReadTags").append(tag);
 	}
 }
 
@@ -265,7 +222,6 @@ Tag.renderTagNav = function(tags) {
 };
 
 // 添加的标签重新render到左边, 放在第一个位置
-// 重新render
 Tag.addTagNav = function(newTag) {
 	var me = this;
 	for(var i in me.tags) {
@@ -312,7 +268,7 @@ Tag.searchTag = function(tag, noteId) {
 
 // 事件
 $(function() {
-	// tag
+	// tag input box
 	$("#addTagTrigger").click(function() {
 		$(this).hide();
 		$("#addTagInput").show().focus().val("");
@@ -358,29 +314,17 @@ $(function() {
 			text : a.text()
 		}, true);
 	});
-	// 这是个问题, 为什么? 捕获不了事件?, input的blur造成
-	/*
-	$(".label").click(function(event) {
-		var a = $(this);
-		Tag.appendTag({
-			classes : a.attr("class"),
-			text : a.text()
-		});
-		// event.stopPropagation();
-	});
-	*/
 	
 	$("#tags").on("click", "i", function() {
 		Tag.removeTag($(this).parent());
 	});
-	//----------
-	// 
+  
+	// tag nav
 	function deleteTag() {
 		$li = $(this).closest('li');
 		var tag = $.trim($li.data("tag"));
 		if(confirm(getMsg("Are you sure ?"))) {
 			TagService.deleteTag(tag, function(re) {
-				// re = {NoteId => note}
 				if(typeof re == "object" && re.Ok !== false) {
 					Note.deleteNoteTag(re, tag);
 					$li.remove();
@@ -389,52 +333,12 @@ $(function() {
 		};
 	}
 	
-	//-------------
-	// nav 标签搜索
 	function searchTag() {
 		var $li = $(this).closest('li');
 		var tag = $.trim($li.data("tag"));
-
 		Tag.searchTag(tag);
-		/*
-
-		// tag = Tag.mapCn2En[tag] || tag;
-		
-		// 学习changeNotebook
-		
-		// 1
-		Note.curChangedSaveIt();
-		
-		// 2 先清空所有
-		// 也会把curNoteId清空
-		Note.clearAll();
-		
-		// $("#tagSearch").html($li.html()).show();
-
-		var h = $li.html();
-		Notebook.changeCurNotebookTitle(h, false, '', true);
-		Tag.curTag = h;
-		$('#curNotebookForListNote').find('i, em').remove();
-		// $("#tagSearch .tag-delete").remove();
-		
-		showLoading();
-		NoteService.searchNoteByTag(tag, function(notes) {
-			hideLoading();
-			if(notes) {
-				// 和note搜索一样
-				// 设空, 防止发生上述情况
-				// Note.curNoteId = "";
-				Note.renderNotes(notes);
-				if(!isEmpty(notes)) {
-					Note.changeNote(notes[0].NoteId);
-				}
-			}
-		});
-		*/
 	};
 
-	$("#myTag .folderBody").on("click", "li .label", searchTag);
-	// $("#minTagNav").on("click", "li", searchTag);
-	
-	$("#myTag .folderBody").on("click", "li .tag-delete", deleteTag);
+	$("#tagNav").on("click", "li .label", searchTag);	
+	$("#tagNav").on("click", "li .tag-delete", deleteTag);
 });

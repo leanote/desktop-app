@@ -247,7 +247,7 @@ Note.curHasChanged = function(force) {
 
 	// 收集当前信息, 与cache比对
 	var title = $('#noteTitle').val();
-	var tags = Tag.getTags();
+	var tags = Tag.input.getTags();
 
 	var hasChanged = {
 		hasChanged: false, // 总的是否有改变
@@ -811,7 +811,7 @@ Note.renderChangedNote = function(changedNote) {
 // 此时需要清空只读的, 且切换到note edit模式下
 Note.clearNoteInfo = function() {
 	Note.clearCurNoteId();
-	Tag.clearTags();
+	Tag.input.clearTags();
 	$("#noteTitle").val("");
 	setEditorContent("");
 
@@ -849,7 +849,7 @@ Note.renderNote = function(note) {
 
 	// 当前正在编辑的
 	// tags
-	Tag.renderTags(note.Tags);
+	Tag.input.setTags(note.Tags);
 };
 
 // render content
@@ -1760,7 +1760,7 @@ Note.deleteNoteTag = function(item, tag) {
 			}
 			// 如果当前笔记是展示的笔记, 则重新renderTags
 			if(noteId == Note.curNoteId) {
-				Tag.renderTags(note.Tags);
+				Tag.input.setTags(note.Tags);
 			}
 		}
 	}

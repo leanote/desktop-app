@@ -317,16 +317,32 @@ h3 {
   border-bottom: 1px solid #ddd;
   height: 36px;
 }
-#tag {
-  height: 36px;
-  line-height: 36px;
+#tagInputBox {
+  height: 30px;
+  line-height: 30px;
+}
+#tagInputBox > * {
+  float: left;
+  height: 30px;
+  line-height: 30px;
+}
+#tagIcon {
+  display: block;
+  text-align: center;
+  margin-right: 4px;
 }
 #tags {
   display: block;
+  padding: 0;
+  margin: 0;
+  list-style: none;  
+}
+#tags li {
   float: left;
-  line-height: 25px;
-  height: 25px;
-  margin-top: 0;
+  height: 20px;
+  line-height: 20px;
+  margin-top: 5px;
+  margin-right: 2px;
 }
 #tags .label {
   margin-right: 2px;
@@ -993,7 +1009,7 @@ h3 {
   height: 30px;
   border-top: 1px solid #eee;
 }
-#tag {
+#tagInputBox {
   position: absolute;
   right: 0;
   top: 0;
