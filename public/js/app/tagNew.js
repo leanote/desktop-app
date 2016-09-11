@@ -4,7 +4,7 @@
 var TagNav = function() {
   this.tags = [];
   this.curTag = null;
-  this.$element = $("tagNav");
+  this.$element = $("#tagNav");
   this.$element.on("click", "li .label", function() {
     var tagValue = $(this).closest('li').data("tag").trim();
     this._searchByTag(tagValue);
@@ -58,7 +58,7 @@ TagNav.prototype = {
   // called by node: web.js
   // 添加标签，并重绘到左侧
   addTags: function(tags) {
-    console.warn("nav addtags", tags);
+    // console.warn("nav addtags", tags);
     tags = tags || [];
     // 去重，将添加的标签放在第一个位置
     for(var i = 0; i < tags.length; ++i) {
@@ -76,7 +76,7 @@ TagNav.prototype = {
   // called by page.js
   // 更新tags，并重绘到左侧
   setTags: function(tags) {
-    console.warn("nav settags", tags);
+    // console.warn("nav settags", tags);
   	this.tags = tags || [];
   	$("#tagNav").html('');
   	for(var i in this.tags) {
@@ -96,6 +96,7 @@ TagNav.prototype = {
   },
 };
 
+
 /**
  * tag edit area of editor
  */
@@ -104,43 +105,54 @@ var TagInput = function() {
   var me = this;
   this.$tags = $("#tags");
   this.$input = $("#tagInput");
-  this.$inputTrigger = $("#tagInputTrigger");
+  this.$inputPrompt = $("#tagInputPrompt");
   this.$suggestion = $("#tagSuggestion");
-  this.$suggestion.hide();
+  this._hideSuggestion();
   
-  this.$inputTrigger.click(function() {
-    me.$inputTrigger.hide();
+  this.$inputPrompt.click(function(e) {
+    me.$inputPrompt.hide();
     me.$input.show().focus().val("");
+    e.preventDefault();
   });
   
+  // 保存tag
   this.$input.blur(function() {
     var val = me.$input.val();
     if(val) {
+      me.$input.val("");
       me._addTag(val, true);
+      me._hideSuggestion();
     }
   });
   
   this.$input.keydown(function(e) {
     if (e.keyCode == 13) {
-      me._hideSuggestion();
       $(this).trigger("blur");
+      e.preventDefault();
     }
-    else {
-      me._showSuggestion(me.$input.val());
-    }
+    // TODO tag颜色调淡
+    // TODO 目前不能选取suggested tag
+    // TODO arrow key up
+    // TODO arrow key down
+    // TODO delete
   });
-  // 点击下拉时也会触发input的blur事件
-  $("#tagColor li").click(function(event) {
-    var a;
-    if($(this).attr("role")) {
-      a = $(this).find("span");
-    } else {
-      a = $(this);
-    }
-    Tag.appendTag({
-      classes : a.attr("class"),
-      text : a.text()
-    }, true);
+  
+  this.$input.on("input", function(e) {
+    me.timer = setTimeout(function() {
+      const val = me.$input.val();
+      if(val) {
+        me._showSuggestion(val);
+      }
+      else {
+        me._hideSuggestion();
+      }
+    }, 200);
+  });
+
+  this.$suggestion.delegate("click", "li", function(event) {
+    var $li = $(this);
+    console.error($li);
+    me._addTag($li.text(), true);
   });
   
   this.$tags.on("click", "i", function() {
@@ -172,7 +184,7 @@ TagInput.prototype = {
   	if(isEmpty(tags) || !Array.isArray(tags)) {
   		return;
   	}
-    console.warn("input settags", tags);
+    // console.warn("input settags", tags);
     this.$tags.html("");
   	for(var i = 0; i < tags.length; ++i) {
   		this._addTag(tags[i]);
@@ -197,7 +209,6 @@ TagInput.prototype = {
       }
     });
 
-    this._hideSuggestion();
     this.$tags.append(tt('<span class="?" data-tag="?">?<i title="' + getMsg("delete") + '">X</i></span>', classes, text, escapedText));
         
     if(save && !duplicate) {
@@ -218,11 +229,11 @@ TagInput.prototype = {
   
   // 删除tag
   _removeTag: function($target) {
+    // TODO 这里调的服务不对吧
     var tag = $target.data('tag');
     $target.remove();
     Note.curChangedSaveIt(true, function() {
       TagService.addOrUpdateTag(tag, function(ret) {
-        console.error("delete ret", ret);
         if(typeof ret == 'object' && ret.Ok !== false) {
           Tag.nav.addTags([ret]);
         }
@@ -231,11 +242,36 @@ TagInput.prototype = {
   },
   
   _showSuggestion: function(keyword) {
-    this.$suggestion.show();
+    if(!keyword) {
+      return;
+    }
+    var me = this;
+    this.$suggestion.html('');
+    TagService.getTags(function(tags) {
+      var texts = tags
+        .map(function(tag) {
+          return tag.Tag + ''; 
+        })
+        .filter(function(text) {
+          return text.startsWith(keyword);
+        })
+        .slice(0, 6)
+        .sort();
+      texts.forEach(function(text) {
+        me.$suggestion.prepend($('<li>' + text + '</li>'));
+      });
+      me.$suggestion.children().last().addClass("selected");
+      if(texts.length > 0) {
+        $('#tagInputGroup').addClass('open');      
+      }
+      else {
+        $('#tagInputGroup').removeClass('open');      
+      }      
+    });
   },
   
   _hideSuggestion: function() {
-    this.$suggestion.hide();
+    $("#tagInputGroup").removeClass("open");
   },
 };
 

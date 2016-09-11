@@ -465,19 +465,16 @@ function log(o) {
           <div id="editorBottom">
             <div id="tagInputBox" class="clearfix">
               <i class="fa fa-bookmark-o" id="tagIcon"></i>
-              <!-- TODO use ul here -->
               <div id="tags">
               </div>
-              <div class="dropdown" id="tagInputGroup">
+              <!-- TODO use dropup -->
+              <div class="dropup" id="tagInputGroup">
                 <a
                   class="metro-a dropdown-toggle" data-toggle="dropdown"
-                  id="tagInputTrigger" style="cursor: text; padding-left: 0">
-                  <span class="add-tag-text lang">
-                    clickAddTag
-                  </span>
+                  id="dropdownTrigger" aria-expanded="false" style="display:none">
                 </a>
+                <span class="add-tag-text lang" id="tagInputPrompt">clickAddTag</span>
                 <input type="text" id="tagInput" />
-                <!-- TODO delete this -->
                 <ul class="dropdown-menu" role="menu" id="tagSuggestion">
                 </ul>
               </div>

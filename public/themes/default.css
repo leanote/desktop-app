@@ -347,9 +347,10 @@ h3 {
 #tags .label {
   margin-right: 2px;
 }
-#tagDropdown {
+#tagInputGroup {
   float: left;
 }
+
 #editor,
 #mdEditor {
   position: absolute;
@@ -583,7 +584,7 @@ h3 {
   visibility: hidden;
   display: block;
 }
-#tagDropdown.open > .dropdown-menu {
+#tagInputGroup.open > .dropdown-menu {
   animation: none;
   -webkit-animation: none;
 }
@@ -1016,15 +1017,24 @@ h3 {
   left: 5px;
   bottom: 0;
 }
-#tagColor {
-  left: 10px;
-  top: -130px;
+
+#tagSuggestion {
+  left: unset;
+  right: unset;
 }
-#tagColor:before {
+#tagSuggestion li {
+  line-height: 20px;
+  height: 20px;
+}
+#tagSuggestion li.selected {
+  background-color: #4d9cfb;
+  color: white;
+}
+#tagSuggestion:before {
   content: "";
   background-image: none;
 }
-#addTagInput {
+#tagInput {
   width: 100px;
 }
 #notesAndSort {
@@ -2596,14 +2606,14 @@ a.raw:hover {
 }
 /*标签与其它工具*/
 /* tag */
-#addTagInput {
+#tagInput {
   line-height: 25px;
   display: none;
   padding: 0;
   border: none;
   background-color: #ffffff;
 }
-#addTagInput:focus {
+#tagInput:focus {
   outline: none;
 }
 .label-default {
