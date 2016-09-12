@@ -467,15 +467,11 @@ function log(o) {
               <i class="fa fa-bookmark-o" id="tagIcon"></i>
               <div id="tags">
               </div>
-              <!-- TODO use dropup -->
               <div class="dropup" id="tagInputGroup">
-                <a
-                  class="metro-a dropdown-toggle" data-toggle="dropdown"
-                  id="dropdownTrigger" aria-expanded="false" style="display:none">
-                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" id="dropdownTrigger"></a>
                 <span class="add-tag-text lang" id="tagInputPrompt">clickAddTag</span>
                 <input type="text" id="tagInput" />
-                <ul class="dropdown-menu" role="menu" id="tagSuggestion">
+                <ul class="dropdown-menu" id="tagSuggestion">
                 </ul>
               </div>
             </div>
@@ -664,7 +660,6 @@ window.debug = false;
 <script src="public/js/app/page.js"></script>
 <script src="public/js/bootstrap-min.js"></script>
 <script src="public/js/app/note.js"></script>
-<script src="public/js/app/tag.js"></script>
 <script src="public/js/app/tagNew.js"></script>
 <script src="public/js/app/notebook.js"></script>
 <script src="public/js/app/share.js"></script>

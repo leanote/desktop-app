@@ -4,12 +4,12 @@
 var TagNav = function() {
   this.tags = [];
   this.curTag = null;
-  this.$element = $("#tagNav");
-  this.$element.on("click", "li .label", function() {
-    var tagValue = $(this).closest('li').data("tag").trim();
+  this.$element = $('#tagNav');
+  this.$element.on('click', 'li .label', function() {
+    var tagValue = $(this).closest('li').data('tag').trim();
     this._searchByTag(tagValue);
   });
-  this.$element.on("click", "li .tag-delete", this._deleteTag);    
+  this.$element.on('click', 'li .tag-delete', this._deleteTag);    
 };
 
 TagNav.prototype = {
@@ -35,10 +35,10 @@ TagNav.prototype = {
   
   _deleteTag: function() {
     $li = $(this).closest('li');
-    var tag = $.trim($li.data("tag"));
-    if(confirm(getMsg("Are you sure ?"))) {
+    var tag = $.trim($li.data('tag'));
+    if(confirm(getMsg('Are you sure ?'))) {
       TagService.deleteTag(tag, function(re) {
-        if(typeof re == "object" && re.Ok !== false) {
+        if(typeof re == 'object' && re.Ok !== false) {
           Note.deleteNoteTag(re, tag);
           $li.remove();
         }
@@ -58,7 +58,6 @@ TagNav.prototype = {
   // called by node: web.js
   // 添加标签，并重绘到左侧
   addTags: function(tags) {
-    // console.warn("nav addtags", tags);
     tags = tags || [];
     // 去重，将添加的标签放在第一个位置
     for(var i = 0; i < tags.length; ++i) {
@@ -76,22 +75,21 @@ TagNav.prototype = {
   // called by page.js
   // 更新tags，并重绘到左侧
   setTags: function(tags) {
-    // console.warn("nav settags", tags);
   	this.tags = tags || [];
-  	$("#tagNav").html('');
+  	$('#tagNav').html('');
   	for(var i in this.tags) {
   		var noteTag = this.tags[i];
   		var tag = noteTag.Tag;
   		var text = tag;
   		
   		text = trimTitle(text);
-  		var classes = "label label-default";
+  		var classes = 'label label-default';
   		// 笔记数量先隐藏, 不准确
-  		$("#tagNav").append(tt('<li data-tag="?"><a> <span class="?">? <em style="display: none">(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
+  		$('#tagNav').append(tt('<li data-tag="?"><a> <span class="?">? <em style="display: none">(?)</em></span> <i class="tag-delete">X</i></li>', tag, classes, text, noteTag.Count));
   	}
 
   	if(this.tags.length == 0) {
-  		$("#tagNav").html('<p class="no-info">' + getMsg('No tag') + '</p>');
+  		$('#tagNav').html('<p class="no-info">' + getMsg('No tag') + '</p>');
   	}
   },
 };
@@ -101,22 +99,22 @@ TagNav.prototype = {
  * tag edit area of editor
  */
 var TagInput = function() {
-  this.tags = []; //array of strings
   var me = this;
-  this.$tags = $("#tags");
-  this.$input = $("#tagInput");
-  this.$inputPrompt = $("#tagInputPrompt");
-  this.$suggestion = $("#tagSuggestion");
-  this._hideSuggestion();
+  me.tags = []; //array of strings
+  me.$tags = $("#tags");
+  me.$input = $("#tagInput");
+  me.$inputPrompt = $("#tagInputPrompt");
+  me.$suggestion = $("#tagSuggestion");
+  me._hideSuggestion();
   
-  this.$inputPrompt.click(function(e) {
+  me.$inputPrompt.click(function(e) {
     me.$inputPrompt.hide();
     me.$input.show().focus().val("");
     e.preventDefault();
   });
   
   // 保存tag
-  this.$input.blur(function() {
+  me.$input.blur(function() {
     var val = me.$input.val();
     if(val) {
       me.$input.val("");
@@ -125,19 +123,18 @@ var TagInput = function() {
     }
   });
   
-  this.$input.keydown(function(e) {
+  me.$input.keydown(function(e) {
     if (e.keyCode == 13) {
       $(this).trigger("blur");
       e.preventDefault();
     }
     // TODO tag颜色调淡
-    // TODO 目前不能选取suggested tag
     // TODO arrow key up
     // TODO arrow key down
-    // TODO delete
+    // TODO delete with backspace
   });
   
-  this.$input.on("input", function(e) {
+  me.$input.on('input', function(e) {
     me.timer = setTimeout(function() {
       const val = me.$input.val();
       if(val) {
@@ -148,15 +145,17 @@ var TagInput = function() {
       }
     }, 200);
   });
-
-  this.$suggestion.delegate("click", "li", function(event) {
-    var $li = $(this);
-    console.error($li);
-    me._addTag($li.text(), true);
-  });
   
-  this.$tags.on("click", "i", function() {
+  me.$tags.on('click', 'i', function() {
     me._removeTag($(this).parent());
+  });
+
+  // 不能使用click事件，否则会在input的blur事件之后触发
+  me.$suggestion.on('mousedown', 'li', function(e) {
+    var $li = $(this);
+    me._addTag($li.text(), true);
+    e.preventDefault();
+    me.$input.val('');
   });
 }
 
@@ -176,7 +175,7 @@ TagInput.prototype = {
   
   // called by Note
   clearTags: function() {
-  	this.$tags.html("");
+  	this.$tags.html('');
   },
 
   // called by Note
@@ -184,8 +183,7 @@ TagInput.prototype = {
   	if(isEmpty(tags) || !Array.isArray(tags)) {
   		return;
   	}
-    // console.warn("input settags", tags);
-    this.$tags.html("");
+    this.$tags.html('');
   	for(var i = 0; i < tags.length; ++i) {
   		this._addTag(tags[i]);
   	}
@@ -242,10 +240,10 @@ TagInput.prototype = {
   },
   
   _showSuggestion: function(keyword) {
+    var me = this;
     if(!keyword) {
       return;
     }
-    var me = this;
     this.$suggestion.html('');
     TagService.getTags(function(tags) {
       var texts = tags
@@ -255,12 +253,13 @@ TagInput.prototype = {
         .filter(function(text) {
           return text.startsWith(keyword);
         })
-        .slice(0, 6)
-        .sort();
+        .sort()
+        .slice(0, 6);
       texts.forEach(function(text) {
         me.$suggestion.prepend($('<li>' + text + '</li>'));
       });
       me.$suggestion.children().last().addClass("selected");
+
       if(texts.length > 0) {
         $('#tagInputGroup').addClass('open');      
       }
@@ -271,7 +270,7 @@ TagInput.prototype = {
   },
   
   _hideSuggestion: function() {
-    $("#tagInputGroup").removeClass("open");
+    $('#tagInputGroup').removeClass('open');
   },
 };
 
