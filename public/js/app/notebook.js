@@ -730,6 +730,9 @@ Notebook.curActiveNotebookIsTrash = function() {
 	return Notebook.isTrashNotebookId($("#notebookList .curSelectedNode").attr("notebookId"));
 };
 
+Notebook.renderCurNotebook = function() {
+  Notebook.changeNotebook(Notebook.curNotebookId);
+}
 // 改变笔记本
 // 0. 改变样式
 // 1. 改变note, 此时需要先保存

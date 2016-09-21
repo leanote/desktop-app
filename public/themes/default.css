@@ -1176,7 +1176,6 @@ h3 {
 }
 #noteItemList .item {
   position: relative;
-  height: 70px;
   overflow: hidden;
   cursor: default;
   border: 1px solid #ebeff2;
@@ -1185,7 +1184,7 @@ h3 {
   background-color: #fff;
 }
 /*
-#noteItemList .item:hover, 
+#noteItemList .item:hover,
 #noteItemList .contextmenu-hover {
   background-color: #ddd !important;
   //color: @aBlackColor;
@@ -1226,16 +1225,18 @@ h3 {
   border-radius: 3px;
   text-align: center;
 }
-.item-thumb img {
+#noteItemList .item-thumb img {
   max-width: 66px;
 }
-.item-title {
+#noteItemList .item-title {
+  /*font-weight: 400;*/
   font-size: 16px;
   height: 22px;
   line-height: 20px;
   overflow: hidden;
   margin-bottom: 0px;
   border-bottom: dashed 1px #ebeff2;
+  color: #000000;
 }
 #noteItemList .item-desc {
   position: absolute;
@@ -1250,19 +1251,29 @@ h3 {
 #noteItemList .item-image .item-desc {
   right: 70px;
 }
-.item-info {
+#noteItemList .item-info {
   margin: 0;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.desc {
+#noteItemList .desc {
   margin: 0;
   word-wrap: break-word;
   text-overflow: ellipsis;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
+}
+/*list view & summary view*/
+#noteItemList .summary-item {
+  height: 70px;
+}
+#noteItemList .list-item {
+  height: 30px;
+}
+#noteItemList .summary-item .item-title {
+  border-bottom: dashed 1px #ebeff2;
 }
 #editorMask {
   position: absolute;
@@ -1456,6 +1467,15 @@ h3 {
 }
 .close:focus {
   outline: none;
+}
+#viewModeDropdown {
+  width: 30px;
+  height:35px;
+  line-height: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 10000;
+  cursor: pointer;
 }
 #newMyNote {
   position: absolute;
@@ -1908,9 +1928,9 @@ img::selection {
   margin-top: -2px;
 }
 /*
-#starNotes li a, 
-.ztree li a, 
-.ztree li span.button, 
+#starNotes li a,
+.ztree li a,
+.ztree li span.button,
 .folderHeader,
 #myProfile .dropdown-toggle,
 #tagNav li a {
@@ -2676,7 +2696,7 @@ a.raw:hover {
 ::-webkit-scrollbar-thumb {
   background-color: @sbc;
   border:1px solid #dadada;
-  border-radius: 5px; 
+  border-radius: 5px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color:#dadada

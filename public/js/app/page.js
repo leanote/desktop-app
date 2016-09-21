@@ -1964,7 +1964,7 @@ function setMacTopMenu() {
           accelerator: isMac_ ? 'Command+R' : 'Ctrl+R',
           click: function() {
           	onClose(function() {
-				gui.win.reload();
+				      gui.win.reload();
           	});
           }
         },
@@ -1972,6 +1972,25 @@ function setMacTopMenu() {
           label: 'Toggle DevTools',
           accelerator: isMac_ ? 'Alt+Command+I' : 'Ctrl+I',
           click: function() { gui.win.toggleDevTools(); }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Summary View',
+          click: function() {
+            Config.view = 'summary';
+            Notebook.renderCurNotebook();
+            Api.writeConfig(Config);
+          },
+        },
+        {
+          label: 'List View',
+          click: function() {
+            Config.view = 'list';
+            Notebook.renderCurNotebook();
+            Api.writeConfig(Config);
+          },
         },
       ]
     },
