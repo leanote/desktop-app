@@ -24,7 +24,7 @@
   font-weight: bold;
 }
 .ztree li a.curSelectedNode {
-  color: #eeeeee;
+  color: #fff;
 }
 .ztree li a.curSelectedNode,
 #starNotes li.selected {
@@ -41,7 +41,7 @@
 }
 #starNotes li a,
 .ztree li a {
-  color: #eeeeee;
+  color: #fff;
 }
 .sync-icon,
 #myProfile a {

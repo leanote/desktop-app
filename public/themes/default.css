@@ -1211,13 +1211,11 @@ h3 {
   max-width: 66px;
 }
 .item-title {
-  /*font-weight: 400;*/
   font-size: 16px;
   height: 22px;
   line-height: 20px;
   overflow: hidden;
   margin-bottom: 0px;
-  color: #000000;
   border-bottom: dashed 1px #ebeff2;
 }
 #noteItemList .item-desc {
@@ -2141,12 +2139,12 @@ img::selection {
   color: #ffffff;
 }
 a {
-  color: #000000;
+  color: #333;
   cursor: pointer;
 }
 a:hover {
+  color: #333;
   text-decoration: none !important;
-  color: #000000;
 }
 a.raw {
   color: #428bca;
@@ -2165,9 +2163,6 @@ a.raw:hover {
   /* 还不知 */
   -webkit-app-region: drag;
   /* -webkit-app-region: no-drag; */
-}
-#header {
-  color: #000000;
 }
 #logo,
 #logo span {
@@ -2385,7 +2380,6 @@ a.raw:hover {
 .folderHeader span {
   display: inline-block;
   line-height: 35px;
-  color: #000;
   font-size: 16px;
 }
 .folderHeader .fa-left,
@@ -2396,7 +2390,6 @@ a.raw:hover {
   width: 35px;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
   text-align: center;
-  color: #000;
 }
 .each-user div {
   cursor: pointer;
