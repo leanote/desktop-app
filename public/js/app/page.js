@@ -1283,7 +1283,7 @@ var State = {
 		if(Notebook.isStarred) {
 			CurIsStarred = true;
 		} else if(Notebook.isTag) {
-			CurTag = Tag.curTag;
+			CurTag = Tag.nav.curTag;
 		}
 		CurNotebookId = Notebook.curNotebookId;
 
@@ -1363,7 +1363,7 @@ var State = {
 		}
 		// 搜索标签
 		else if(state.CurTag) {
-			Tag.searchTag(state.CurTag, state.CurNoteId);
+			Tag.nav.searchByTag(state.CurTag, state.CurNoteId);
 		}
 		// 搜索笔记
 		else if(state.CurSearchKey) {
@@ -1484,7 +1484,7 @@ function initPage(initedCallback) {
 
 			// 标签
 			TagService.getTags(function(tags) {
-				Tag.renderTagNav(tags);
+        Tag.nav.setTags(tags);
 				ok();
 			});
 

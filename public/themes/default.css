@@ -317,23 +317,33 @@ h3 {
   border-bottom: 1px solid #ddd;
   height: 36px;
 }
-#tag {
-  height: 36px;
-  line-height: 36px;
+#tagInputBox {
+  height: 30px;
+  line-height: 30px;
+}
+#tagInputBox > * {
+  float: left;
+  height: 30px;
+  line-height: 30px;
+}
+#tagIcon {
+  display: block;
+  text-align: center;
+  margin-right: 4px;
 }
 #tags {
+  /*magical height to vertically center label*/
+  /*height: 36px;*/
   display: block;
-  float: left;
-  line-height: 25px;
-  height: 25px;
-  margin-top: 0;
+  padding: 0;
+  margin: 0;
+  margin-top: -2px;
 }
 #tags .label {
+  /*line-height: 26;*/
   margin-right: 2px;
 }
-#tagDropdown {
-  float: left;
-}
+
 #editor,
 #mdEditor {
   position: absolute;
@@ -567,7 +577,7 @@ h3 {
   visibility: hidden;
   display: block;
 }
-#tagDropdown.open > .dropdown-menu {
+#tagInputGroup.open > .dropdown-menu {
   animation: none;
   -webkit-animation: none;
 }
@@ -993,22 +1003,31 @@ h3 {
   height: 30px;
   border-top: 1px solid #eee;
 }
-#tag {
+#tagInputBox {
   position: absolute;
   right: 0;
   top: 0;
   left: 5px;
   bottom: 0;
 }
-#tagColor {
-  left: 10px;
-  top: -130px;
+
+#tagSuggestion {
+  left: unset;
+  right: unset;  
 }
-#tagColor:before {
+#tagSuggestion li {
+  line-height: 20px;
+  height: 20px;
+}
+#tagSuggestion li.selected {
+  background-color: #4d9cfb;
+  color: white;
+}
+#tagSuggestion:before {
   content: "";
   background-image: none;
 }
-#addTagInput {
+#tagInput {
   width: 100px;
 }
 #notesAndSort {
@@ -2573,14 +2592,14 @@ a.raw:hover {
 }
 /*标签与其它工具*/
 /* tag */
-#addTagInput {
+#tagInput {
   line-height: 25px;
   display: none;
   padding: 0;
   border: none;
   background-color: #ffffff;
 }
-#addTagInput:focus {
+#tagInput:focus {
   outline: none;
 }
 .label-default {

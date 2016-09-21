@@ -182,10 +182,6 @@ function log(o) {
               </div>
 
               <ul class="folderBody clearfix" id="tagNav">
-                <li data-tag="red"><a> <span class="label label-red">red</span></a></li>
-                <li data-tag="blue"><a> <span class="label label-blue">blue</span></a></li>
-                <li data-tag="yellow"><a> <span class="label label-yellow">yellow</span></a></li>
-                <li data-tag="green"><a> <span class="label label-green">green</span></a></li>
               </ul>
             </div>
 
@@ -468,26 +464,15 @@ function log(o) {
           </div>
 
           <div id="editorBottom">
-            <div id="tag" class="clearfix">
+            <div id="tagInputBox" class="clearfix">
+              <i class="fa fa-bookmark-o" id="tagIcon"></i>
               <div id="tags">
               </div>
-              <div class="dropdown" style="" id="tagDropdown">
-                <i class="fa fa-bookmark-o"></i>
-                <a
-                  class="metro-a dropdown-toggle" data-toggle="dropdown"
-                  id="addTagTrigger" style="cursor: text; padding-left: 0">
-                  <span class="add-tag-text lang">
-                    clickAddTag
-                  </span>
-                </a>
-                <input type="text" id="addTagInput" />
-                <ul class="dropdown-menu" role="menu" id="tagColor">
-                  <li role="presentation"><span class="label label-red lang">red</span>
-                  </li>
-                  <li role="presentation"><span class="label label-blue lang">blue</span>
-                  </li>
-                  <li role="presentation"><span class="label label-yellow lang">yellow</span></li>
-                  <li role="presentation"><span class="label label-green lang">green</span></li>
+              <div class="dropup" id="tagInputGroup">
+                <a class="dropdown-toggle" data-toggle="dropdown" id="dropdownTrigger"></a>
+                <span class="add-tag-text lang" id="tagInputPrompt">clickAddTag</span>
+                <input type="text" id="tagInput" />
+                <ul class="dropdown-menu" id="tagSuggestion">
                 </ul>
               </div>
             </div>
