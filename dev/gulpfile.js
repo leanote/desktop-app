@@ -32,3 +32,5 @@ gulp.task('dev', ['less'], function() {
     gulp.watch(styleDir + '/**/*.less', ['less']);
     gulp.watch(styleDir2 + '/**/*.less', ['less']);
 });
+
+gulp.task('default', ['dev']);
