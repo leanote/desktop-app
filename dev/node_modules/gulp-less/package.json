@@ -1,0 +1,80 @@
+{
+  "name": "gulp-less",
+  "version": "3.3.0",
+  "description": "Less for Gulp",
+  "main": "index.js",
+  "scripts": {
+    "test": "jshint index.js && node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/plus3network/gulp-less.git"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "keywords": [
+    "gulpplugin",
+    "gulp",
+    "less"
+  ],
+  "author": {
+    "name": "Chris Cowan"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "accord": "^0.26.3",
+    "gulp-util": "^3.0.7",
+    "less": "2.6.x || ^2.7.1",
+    "object-assign": "^4.0.1",
+    "through2": "^2.0.0",
+    "vinyl-sourcemaps-apply": "^0.2.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.4.1",
+    "mocha": "^3.0.2",
+    "should": "^11.1.0"
+  },
+  "gitHead": "18d0880ec3d65d76d581b54a7040dd3e65b6c975",
+  "bugs": {
+    "url": "https://github.com/plus3network/gulp-less/issues"
+  },
+  "homepage": "https://github.com/plus3network/gulp-less#readme",
+  "_id": "gulp-less@3.3.0",
+  "_shasum": "d085565da3c810307fde7c7874e86520dc503234",
+  "_from": "gulp-less@latest",
+  "_npmVersion": "3.10.6",
+  "_nodeVersion": "6.2.0",
+  "_npmUser": {
+    "name": "stevelacy",
+    "email": "me@slacy.me"
+  },
+  "maintainers": [
+    {
+      "name": "ccowan",
+      "email": "chris@chriscowan.us"
+    },
+    {
+      "name": "contra",
+      "email": "contra@wearefractal.com"
+    },
+    {
+      "name": "fractal",
+      "email": "contact@wearefractal.com"
+    },
+    {
+      "name": "stevelacy",
+      "email": "me@slacy.me"
+    }
+  ],
+  "dist": {
+    "shasum": "d085565da3c810307fde7c7874e86520dc503234",
+    "tarball": "https://registry.npmjs.org/gulp-less/-/gulp-less-3.3.0.tgz"
+  },
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/gulp-less-3.3.0.tgz_1478883932833_0.4416041907388717"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/gulp-less/-/gulp-less-3.3.0.tgz"
+}
