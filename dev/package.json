@@ -1,0 +1,19 @@
+{
+  "name": "leanote-desktop-app-dev-package",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.3.2",
+    "gulp-concat": "",
+    "gulp-less": "^3.3.0",
+    "gulp-rename": "^1.0",
+    "gulp-uglify": "^1.0.0",
+    "gulp-util": "^3.0.1"
+  },
+  "author": "life(http://life.leanote.com)",
+  "license": "GPL v2",
+  "bugs": {
+    "url": "https://github.com/leanote/desktop-app/issues"
+  }
+}
