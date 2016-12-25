@@ -332,18 +332,14 @@ h3 {
   margin-right: 4px;
 }
 #tags {
-  /*magical height to vertically center label*/
-  /*height: 36px;*/
   display: block;
   padding: 0;
   margin: 0;
   margin-top: -2px;
 }
 #tags .label {
-  /*line-height: 26;*/
   margin-right: 2px;
 }
-
 #editor,
 #mdEditor {
   position: absolute;
@@ -1010,10 +1006,13 @@ h3 {
   left: 5px;
   bottom: 0;
 }
-
 #tagSuggestion {
   left: unset;
-  right: unset;  
+  right: unset;
+}
+#tagSuggestion:before {
+  content: "";
+  background-image: none;
 }
 #tagSuggestion li {
   line-height: 20px;
@@ -1022,10 +1021,6 @@ h3 {
 #tagSuggestion li.selected {
   background-color: #4d9cfb;
   color: white;
-}
-#tagSuggestion:before {
-  content: "";
-  background-image: none;
 }
 #tagInput {
   width: 100px;
@@ -1183,31 +1178,20 @@ h3 {
   margin-top: 5px;
   background-color: #fff;
 }
-/*
-#noteItemList .item:hover,
-#noteItemList .contextmenu-hover {
-  background-color: #ddd !important;
-  //color: @aBlackColor;
-  .item-title {
-    //color: @aBlackColor;
-    //font-weight: 800;
-  }
-}
-*/
-.item-active,
+#noteItemList .item-active,
 #noteItemList .item-active:hover {
   background-color: #65bd77 !important;
   color: #fff;
 }
-.item-active .fa,
+#noteItemList .item-active .fa,
 #noteItemList .item-active:hover .fa {
   color: #eee;
 }
-.item-active .item-info .fa,
+#noteItemList .item-active .item-info .fa,
 #noteItemList .item-active:hover .item-info .fa {
   color: #eee !important;
 }
-.item-active .item-title,
+#noteItemList .item-active .item-title,
 #noteItemList .item-active:hover .item-title {
   color: #fff;
 }
@@ -1235,8 +1219,8 @@ h3 {
   line-height: 20px;
   overflow: hidden;
   margin-bottom: 0px;
-  border-bottom: dashed 1px #ebeff2;
   color: #000000;
+  border-bottom: dashed 1px #ebeff2;
 }
 #noteItemList .item-desc {
   position: absolute;
@@ -1265,15 +1249,22 @@ h3 {
   overflow: hidden;
   white-space: nowrap;
 }
-/*list view & summary view*/
 #noteItemList .summary-item {
   height: 70px;
 }
-#noteItemList .list-item {
-  height: 30px;
-}
 #noteItemList .summary-item .item-title {
   border-bottom: dashed 1px #ebeff2;
+}
+#noteItemList .list-item {
+  margin-top: 0;
+  height: 30px;
+  border: none;
+  border-radius: 0;
+  border-top: 1px solid #ebeff2;
+  margin: 0 -5px;
+}
+#noteItemList .list-item .item-title {
+  border-bottom: none;
 }
 #editorMask {
   position: absolute;
@@ -1467,15 +1458,6 @@ h3 {
 }
 .close:focus {
   outline: none;
-}
-#viewModeDropdown {
-  width: 30px;
-  height:35px;
-  line-height: 30px;
-  text-align: center;
-  position: relative;
-  z-index: 10000;
-  cursor: pointer;
 }
 #newMyNote {
   position: absolute;
@@ -1690,10 +1672,10 @@ body,
 }
 /*
 .modal-backdrop {
-	right: 5px;
-	left: 5px;
-	bottom: 5px;
-	border-radius: 5px;
+    right: 5px;
+    left: 5px;
+    bottom: 5px;
+    border-radius: 5px;
 }
 */
 #mainContainer,
@@ -1928,13 +1910,13 @@ img::selection {
   margin-top: -2px;
 }
 /*
-#starNotes li a,
-.ztree li a,
-.ztree li span.button,
+#starNotes li a, 
+.ztree li a, 
+.ztree li span.button, 
 .folderHeader,
 #myProfile .dropdown-toggle,
 #tagNav li a {
-	cursor: default !important;
+    cursor: default !important;
 }
 */
 #moreBtn {
@@ -2178,12 +2160,12 @@ img::selection {
   color: #ffffff;
 }
 a {
-  color: #333;
+  color: #000000;
   cursor: pointer;
 }
 a:hover {
-  color: #333;
   text-decoration: none !important;
+  color: #000000;
 }
 a.raw {
   color: #428bca;
@@ -2202,6 +2184,9 @@ a.raw:hover {
   /* 还不知 */
   -webkit-app-region: drag;
   /* -webkit-app-region: no-drag; */
+}
+#header {
+  color: #000000;
 }
 #logo,
 #logo span {
@@ -2419,6 +2404,7 @@ a.raw:hover {
 .folderHeader span {
   display: inline-block;
   line-height: 35px;
+  color: #000;
   font-size: 16px;
 }
 .folderHeader .fa-left,
@@ -2429,6 +2415,7 @@ a.raw:hover {
   width: 35px;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
   text-align: center;
+  color: #000;
 }
 .each-user div {
   cursor: pointer;
@@ -2445,12 +2432,6 @@ a.raw:hover {
 .each-user div .fa {
   width: 20px;
   border-right: none;
-}
-#myNotebooks.opened .fa-left {
-  /*
-	background-color: #65bd77;
-	color: #e2f3e5;
-*/
 }
 #addNotebookPlus {
   padding-right: 10px;
@@ -2687,99 +2668,6 @@ a.raw:hover {
   overflow: auto;
   padding: 3px;
 }
-/*
-::-webkit-scrollbar {
-  width: 5px;
-  height: 8px;
-  background-color: @sbc;
-}
-::-webkit-scrollbar-thumb {
-  background-color: @sbc;
-  border:1px solid #dadada;
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color:#dadada
-}
-::-webkit-scrollbar-thumb:active {
-  background-color:#606060
-}
-::-webkit-scrollbar-thumb:disabled {
-  background-color:#f9f9f9
-}
-::-webkit-scrollbar-corner {
-  background-color:#f0f0f0
-}
-::-webkit-scrollbar-button {
-  height: 0;
-  background-color:#f0f0f0;
-  background-repeat:no-repeat
-}
-::-webkit-scrollbar-button:vertical {
-  height:0px
-}
-::-webkit-scrollbar-button:horizontal {
-  width:33px
-}
-::-webkit-scrollbar-button:horizontal:increment {
-  background-position:0 -444px
-}
-::-webkit-scrollbar-button:horizontal:decrement {
-  background-position:12px -425px
-}
-::-webkit-scrollbar-button:vertical:increment {
-  background-position:-1px -391px
-}
-::-webkit-scrollbar-button:vertical:decrement {
-  background-position:-1px -358px
-}
-::-webkit-scrollbar-button:hover {
-  background-color:#dadada
-}
-::-webkit-scrollbar-button:horizontal:increment:hover {
-  background-position:0 -548px
-}
-::-webkit-scrollbar-button:horizontal:decrement:hover {
-  background-position:12px -529px
-}
-::-webkit-scrollbar-button:vertical:increment:hover {
-  background-position:-1px -495px
-}
-::-webkit-scrollbar-button:vertical:decrement:hover {
-  background-position:-1px -462px
-}
-::-webkit-scrollbar-button:active {
-  background-color:#606060
-}
-::-webkit-scrollbar-button:horizontal:increment:active {
-  background-position:0 -652px
-}
-::-webkit-scrollbar-button:horizontal:decrement:active {
-background-position:12px -633px
-}
-::-webkit-scrollbar-button:vertical:increment:active {
-background-position:-1px -599px
-}
-::-webkit-scrollbar-button:vertical:decrement:active {
-background-position:-1px -566px
-}
-::-webkit-scrollbar-button:disabled {
-background-color:#f9f9f9
-}
-::-webkit-scrollbar-button:horizontal:increment:disabled {
-background-position:0 -756px
-}
-::-webkit-scrollbar-button:horizontal:decrement:disabled {
-background-position:12px -737px
-}
-::-webkit-scrollbar-button:vertical:increment:disabled {
-background-position:-1px -703px
-}
-::-webkit-scrollbar-button:vertical:decrement:disabled {
-background-position:-1px -670px
-}
-
-*/
 .fa-calendar {
   color: #666;
 }
@@ -2996,6 +2884,15 @@ body,
 }
 .init .init-loading {
   display: block;
+}
+#viewModeDropdown {
+  width: 30px;
+  height: 35px;
+  line-height: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 10000;
+  cursor: pointer;
 }
 #mdEditor .navbar-default,
 #wmd-button-bar {
