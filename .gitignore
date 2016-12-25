@@ -20,5 +20,6 @@ node_modules/fs.extra
 /updates
 /old
 
-
-public/config.js
+/public/themes/**/*.css
+/public/css/**/*.css
+/dev/node_modules
