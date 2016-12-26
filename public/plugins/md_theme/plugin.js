@@ -27,20 +27,19 @@ define(function() {
 		_themes: [],
 		getThemes: function() {
 			var me = this;
-
-			// 遍历主题目录, 得到主题
-			var themeBasePath = __dirname + "/public/md/themes/themes";
-			var dirs = Api.nodeFs.readdirSync(themeBasePath);
-			for(var i = 0; i < dirs.length; ++i) {
-				var dir = dirs[i]; // 名称
-
-				me._themeMap[dir] = {
-					name: dir, // 主题名称
-					dir: dir
-				};
-
-				me._themes.push(me._themeMap[dir]);
-			}
+			// 遍历主题目录, 得到主题列表 
+			var themeFolder = __dirname + "/public/themes/markdown";
+			Api.nodeFs.readdirSync(themeFolder)
+                .filter(function(theme) {
+                    return Api.nodeFs.statSync(themeFolder + "/" + theme).isDirectory();
+                })
+                .forEach(function(theme) {
+    				me._themeMap[theme] = {
+    					name: theme, // 主题名称
+    					dir: theme
+    				};
+    				me._themes.push(me._themeMap[theme]);                    
+                });
 		},
 
 		// 改变主题
@@ -48,7 +47,7 @@ define(function() {
 			var me  = this;
 			themeDir || (themeDir = 'default');
 			themeDir = themeDir.toLowerCase();
-			$('#md-theme').attr('href', 'public/md/themes/themes/' + themeDir + '/theme.css');
+			$('#md-theme').attr('href', 'public/themes/markdown/' + themeDir + '/index.css');
 
 			Config.mdTheme = themeDir;
 			var ok = Api.writeConfig(Config);
