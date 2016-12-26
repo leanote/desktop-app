@@ -21,27 +21,12 @@ $(function() {
 
 	var isMacP = isMac();
     
+    // mac上才会自己控制
 	$('.tool-close, .tool-close-blur').click(function() {
         onClose(function() {
             gui.win.hide();
         });
 	});
-
-	// 从login.html -> note.html过来就没有reopen事件了?
-	// note.html -> login.html -> note.html, 使得两次bind
-	/*
-	if(gui.App._events) {
-		gui.App._events.reopen = function() {
-		    win.show();
-		    win.focus();
-		}
-	} else {
-		gui.App.on('reopen', function() {
-		    win.show();
-		    win.focus();
-		});
-	}
-	*/
 
 	$('.tool-min, .tool-min-blur').click(function() {
 		gui.win.minimize();
@@ -55,6 +40,29 @@ $(function() {
             gui.win.maximize();
         }
 	});
+
+    // Tray
+    /*
+
+    var electron = nodeRequire('electron');
+    var Menu = electron.remote.Menu;
+    var Tray = electron.remote.Tray;
+    var appIcon = new Tray(projectPath + '/public/images/logo/tray.png')
+    var contextMenu = Menu.buildFromTemplate([
+        {
+            label: '打开', click: function () {
+                alert(3);
+            }
+        },
+        {
+            label: '关闭', click: function () {
+                alert(3);
+            }
+        },
+    ]);
+    appIcon.setToolTip('This is my application.')
+    appIcon.setContextMenu(contextMenu)
+    */
 
 });
 
@@ -73,6 +81,7 @@ function Menu() {
                 document.execCommand('cut');
             } else {
                 /*
+                // 不知道什么原因, 可能是Chrome的原因
                 We don't execute document.execCommand() this time, because it is called recursively.
                 console.log('tinymce中没用');
                 setTimeout(function() {

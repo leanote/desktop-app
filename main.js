@@ -1,7 +1,11 @@
 // var app = require('electron').app;  // Module to control application life.
 const {app, BrowserWindow, crashReporter} = require('electron');
 var ipc = require('electron').ipcMain;
+const electron = require('electron');
+const Menu = electron.Menu
+const Tray = electron.Tray
 var pdfMain = require('pdf_main');
+var appIcon;
 
 // Report crashes to our server.
 crashReporter.start({
@@ -10,6 +14,7 @@ crashReporter.start({
   submitURL: 'https://your-domain.com/url-to-submit',
   autoSubmit: true
 });
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
@@ -94,7 +99,6 @@ function openIt() {
   var leanoteProtocol = require('leanote_protocol');
   leanoteProtocol.init();
 
-
   // Create the browser window.
   mainWindow = new BrowserWindow({
       width: 1050, 
@@ -129,13 +133,27 @@ function openIt() {
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('blurWindow');
   });
+
+  function close (e, force) {
+    console.log('close:', force);
+    mainWindow.hide();
+    e && e.preventDefault();
+    mainWindow.webContents.send('closeWindow');
+  }
   
+  // 以前的关闭是真关闭, 现是是假关闭了
   // 关闭,先保存数据
   mainWindow.on('close', function(e) {
-    console.log('close');
-    mainWindow.hide();
-    e.preventDefault();
-    mainWindow.webContents.send('closeWindow');
+    // windows支持tray, 点close就是隐藏
+    if (process.platform.toLowerCase().indexOf('win') === 0) { // win32
+      mainWindow.hide();
+      e.preventDefault();
+      return;
+    }
+
+    // mac 在docker下quit;
+    // linux直接点x linux不支持Tray
+    close(e, false);
   });
 
   // 前端发来可以关闭了
@@ -146,4 +164,51 @@ function openIt() {
   });
 
   pdfMain.init();
+
+  function show () {
+    mainWindow.show();
+    mainWindow.restore();
+    mainWindow.focus();
+    mainWindow.webContents.send('focusWindow');
+  }
+
+  var trayShowed = false;
+  ipc.on('show-tray', function(event, arg) {
+    if (trayShowed) {
+      return;
+    }
+    trayShowed = true;
+
+    if (process.platform == 'linux') {
+      return;
+    }
+
+    // 打开一次就自动关了
+    appIcon = new Tray(__dirname + '/public/images/tray/' + ( process.platform == 'darwin' ? 'trayTemplate.png' : 'tray.png'))
+    var contextMenu = Menu.buildFromTemplate([
+      {
+        label: arg.Open, click: function () {
+          show();
+        }
+      },
+      {
+        label: arg.Close, click: function () {
+          close(null, true);
+        }
+      },
+    ]);
+    appIcon.setToolTip('Leanote');
+    // appIcon.setTitle('Leanote');
+    // appIcon.setContextMenu(contextMenu);
+
+    appIcon.on('click', function (e) {
+      show();
+      e.preventDefault();
+    });
+    appIcon.on('right-click', function () {
+      appIcon.popUpContextMenu(contextMenu);
+    });
+
+  });
+
 }

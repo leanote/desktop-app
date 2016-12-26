@@ -310,5 +310,8 @@
     "localAccountTips": "你好, 您使用的是本地离线帐户, 您的数据只存在本地, 不会同步到Leanote服务器, 如果您不小心删除了数据或硬盘损坏, 您的数据将永久丢失. <br>所以我们推荐您使用Leanote帐户来使用该客户端, 这样您的数据将会存储到云端, 以避免失误造成的数据丢失. <br>Leanote桌面端不再支持创建本地帐户, 但您之前创建的本地帐户还是可以继续使用.",
     "Don't Show Anymore": "不再提示",
 
-    "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切换编辑与只读"
+    "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切换编辑与只读",
+
+    "Open": "打开",
+    "Close": "关闭"
 }

@@ -39,3 +39,5 @@ var NodeFs = require('fs');
 Service.dispatch = function() {};
 var gui = require('gui');
 // var remote = require('remote');
+
+var projectPath = __dirname;
