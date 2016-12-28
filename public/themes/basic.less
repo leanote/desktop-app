@@ -1154,6 +1154,48 @@ h3 {
 
 /* item list */
 
+// 视图相关
+#noteItemList {
+    // 摘要视图
+    // 列表视图    
+    &.snippet-view {
+        .item {
+            height: 70px;
+            .item-title {
+                border-bottom: dashed 1px #ebeff2;
+            }
+        }
+    }
+    
+    &.list-view {
+        .item {
+            margin-top: 0;
+            height: 30px;
+            border: none;
+            border-radius: 0;
+            border-top: 1px solid #ebeff2;
+            margin: 0 -5px;
+
+            .item-thumb {
+                display: none !important;
+            }
+            .item-desc {
+                .item-title {
+                    border-bottom: none;
+                }
+               .item-info {
+                   display: none !important;
+               }
+               .desc {
+                   display: none !important;
+               }
+           }
+        }
+    }
+
+}
+
+
 #noteItemList {
     position: absolute;
     top: 0;
@@ -1162,7 +1204,7 @@ h3 {
     bottom: 0;
     width: 100%;
     overflow-y: scroll;
-    padding: 0 5px;
+    padding: 0 5px;    
 }
 
 #noteItemList .item {
@@ -1250,28 +1292,6 @@ h3 {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
-}
-
-#noteItemList {
-    // 摘要视图
-    .summary-item {
-        height: 70px;
-        .item-title {
-            border-bottom: dashed 1px #ebeff2;
-        }
-    }
-    // 列表视图
-    .list-item {
-        margin-top: 0;
-        height: 30px;
-        border: none;
-        border-radius: 0;
-        border-top: 1px solid #ebeff2;
-        margin: 0 -5px;
-        .item-title {
-            border-bottom: none;
-        }
-    }
 }
 
 //--------
