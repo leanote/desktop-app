@@ -2,19 +2,34 @@
  * tag navigator
  */
 var TagNav = function() {
+  var me = this;
   this.tags = [];
   this.curTag = null;
   this.$element = $('#tagNav');
   this.$element.on('click', 'li .label', function() {
     var tagValue = $(this).closest('li').data('tag').trim();
-    this._searchByTag(tagValue);
+    me.searchByTag(tagValue);
   });
-  this.$element.on('click', 'li .tag-delete', this._deleteTag);    
+  this.$element.on('click', 'li .tag-delete', function () {
+    var $li = $(this).closest('li');
+    var tag = $.trim($li.data('tag'));
+    if(confirm(getMsg('Are you sure ?'))) {
+      TagService.deleteTag(tag, function(re) {
+        if(typeof re == 'object' && re.Ok !== false) {
+          Note.deleteNoteTag(re, tag);
+          $li.remove();
+          me._deleteTag(tag);
+        }
+      });
+    }
+  });
 };
 
 TagNav.prototype = {
   constructor: TagNav,
-  _searchByTag: function(tag, noteId) {
+
+  // 通过tag搜索
+  searchByTag: function(tag, noteId) {
   	Note.curChangedSaveIt();
   	// 清空所有，也会把curNoteId清空
   	Note.clearAll();
@@ -32,18 +47,16 @@ TagNav.prototype = {
   		}
   	});
   },
-  
-  _deleteTag: function() {
-    $li = $(this).closest('li');
-    var tag = $.trim($li.data('tag'));
-    if(confirm(getMsg('Are you sure ?'))) {
-      TagService.deleteTag(tag, function(re) {
-        if(typeof re == 'object' && re.Ok !== false) {
-          Note.deleteNoteTag(re, tag);
-          $li.remove();
+
+  _deleteTag: function (title) {
+    var me = this;
+    if (me.tags) {
+      for(var i = me.tags.length - 1; i >= 0; --i) {
+        if (me.tags[i].Tag == title) {
+          me.tags.splice(i, 1);
         }
-      });
-    };
+      }
+    }
   },
   
   // called by node: web.js
@@ -52,6 +65,7 @@ TagNav.prototype = {
     for(var i = 0; i < tags.length; ++i) {
       var title = tags[i];
       $('#myTag li[data-tag="' + title + '"]').remove();
+      this._deleteTag(title);
     }
   },
 
