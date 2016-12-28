@@ -20,12 +20,29 @@ crashReporter.start({
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
+// single instance
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    mainWindow.show();
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+    mainWindow.focus();
+  }
+})
+
+if (shouldQuit) {
+  app.quit()
+}
+
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
   // if (process.platform != 'darwin')
     app.quit();
 });
 
+// 仅MAC
 // 避免可以启动多个app
 app.on('open-file', function(e) {
   // console.log('reopen');
@@ -37,6 +54,7 @@ app.on('open-file', function(e) {
   }
 });
 
+// 仅MAC
 // var appIsReady = false;
 app.on('activate', function() {
   console.log('activate');
@@ -183,7 +201,6 @@ function openIt() {
       return;
     }
 
-    // 打开一次就自动关了
     appIcon = new Tray(__dirname + '/public/images/tray/' + ( process.platform == 'darwin' ? 'trayTemplate.png' : 'tray.png'))
     var contextMenu = Menu.buildFromTemplate([
       {
