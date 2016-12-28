@@ -22,22 +22,22 @@ Note.notebookIds = {}; // notebookId => true
 // 初始化模版字符串
 // blog, star, settings
 var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
-Note.itemTplNoImg = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
+Note.itemTplNoImg = '<li href="#" class="item ?" data-seq="?" noteId="?">';
 Note.itemTplNoImg += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-Note.itemTpl = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
+Note.itemTpl = '<li href="#" class="item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
 Note.itemTpl += itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
 
 Note.switchView = function(view) {
-    if (view === 'list') {
-        $('#noteItemList').removeClass('snippet-view');
-        $('#noteItemList').addClass('list-view');
-    }
-    else if (view === 'snippet') {
-        $('#noteItemList').removeClass('list-view');
-        $('#noteItemList').addClass('snippet-view');        
-    }
+    const viewList = ['snippet', 'list'];
+    if (viewList.indexOf(view) === -1) return;
+    viewList.forEach(function(name) {
+        $('#noteItemList').removeClass(name + '-view');
+    });
+    $('#noteItemList').addClass(view + '-view');
+    Config.view = view;
+    Api.writeConfig(Config);
 }
-Note.switchView(Config.view || 'summary');
+Note.switchView(Config.view || 'snippet');
 
 Note.getItemTpl = function() {
   return Note.itemTpl;
@@ -3229,9 +3229,7 @@ $(function() {
       label: "摘要视图",
       type: "checkbox",
       click: function() {
-        Config.view = 'snippet';
         Note.switchView('snippet');
-        Api.writeConfig(Config);
       }
     }));
     themeSubmenus.append(new gui.MenuItem({
@@ -3239,9 +3237,7 @@ $(function() {
       label: "列表视图",
       type: "checkbox",
       click: function() {
-        Config.view = 'list';
         Note.switchView('list');
-        Api.writeConfig(Config);
       }
     }));
     
