@@ -1977,19 +1977,17 @@ function setMacTopMenu() {
           type: 'separator'
         },
         {
-          label: 'Summary View',
+          label: Api.getMsg('snippetView'),
+          type: "checkbox",
           click: function() {
-            Config.view = 'summary';
-            Notebook.renderCurNotebook();
-            Api.writeConfig(Config);
+            Note.switchView('snippet');
           },
         },
         {
-          label: 'List View',
+          label: Api.getMsg('listView'),
+          type: "checkbox",
           click: function() {
-            Config.view = 'list';
-            Notebook.renderCurNotebook();
-            Api.writeConfig(Config);
+            Note.switchView('list');
           },
         },
       ]

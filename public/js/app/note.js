@@ -40,11 +40,11 @@ Note.switchView = function(view) {
 Note.switchView(Config.view || 'snippet');
 
 Note.getItemTpl = function() {
-  return Note.itemTpl;
+    return Note.itemTpl;
 }
 
 Note.getItemTplNoImg = function() {
-  return Note.itemTplNoImg;
+    return Note.itemTplNoImg;
 }
 
 // 定时保存信息
@@ -3226,7 +3226,7 @@ $(function() {
     var themeSubmenus = new gui.Menu();
     themeSubmenus.append(new gui.MenuItem({
       checked: Config.view === "snippet",
-      label: "摘要视图",
+      label: Api.getMsg("snippetView"),
       type: "checkbox",
       click: function() {
         Note.switchView('snippet');
@@ -3234,7 +3234,7 @@ $(function() {
     }));
     themeSubmenus.append(new gui.MenuItem({
       checked: Config.view === "list",
-      label: "列表视图",
+      label: Api.getMsg("listView"),
       type: "checkbox",
       click: function() {
         Note.switchView('list');
