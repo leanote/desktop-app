@@ -20,31 +20,31 @@ Note.cacheByNotebookId = {all: {}};
 Note.notebookIds = {}; // notebookId => true
 
 // 初始化模版字符串
-(function() {
-  Note.itemTpl = {};
-  Note.itemTplNoImg = {};
-  // blog, star, settings
-  var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
+// blog, star, settings
+var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
+Note.itemTplNoImg = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
+Note.itemTplNoImg += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
+Note.itemTpl = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
+Note.itemTpl += itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
 
-  // list view
-  Note.itemTplNoImg.list = '<li href="#" class="item list-item ?" data-seq="?" noteId="?">';
-  Note.itemTplNoImg.list += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
-  Note.itemTpl.list = '<li href="#" class="item list-item ?" data-seq="?" noteId="?"><p class="hidden">?</p>';
-  Note.itemTpl.list += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="hidden">?</p><p class="hidden">?</p><p class="hidden">?</p></div></li>';
-
-  // summary view
-  Note.itemTplNoImg.summary = '<li href="#" class="item summary-item ?" data-seq="?" noteId="?">';
-  Note.itemTplNoImg.summary += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-  Note.itemTpl.summary = '<li href="#" class="item summary-item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
-  Note.itemTpl.summary += itemIsBlog + '<div class="item-desc" style=""><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
-})();
+Note.switchView = function(view) {
+    if (view === 'list') {
+        $('#noteItemList').removeClass('snippet-view');
+        $('#noteItemList').addClass('list-view');
+    }
+    else if (view === 'snippet') {
+        $('#noteItemList').removeClass('list-view');
+        $('#noteItemList').addClass('snippet-view');        
+    }
+}
+Note.switchView(Config.view || 'summary');
 
 Note.getItemTpl = function() {
-  return Note.itemTpl[Config.view || 'summary'];
+  return Note.itemTpl;
 }
 
 Note.getItemTplNoImg = function() {
-  return Note.itemTplNoImg[Config.view ||'summary'];
+  return Note.itemTplNoImg;
 }
 
 // 定时保存信息
@@ -3223,15 +3223,14 @@ $(function() {
 
   // 切换列表视图
   $("#viewModeDropdown").click(function() {
-    console.log("*******");
     var themeSubmenus = new gui.Menu();
     themeSubmenus.append(new gui.MenuItem({
-      checked: Config.view === "summary",
+      checked: Config.view === "snippet",
       label: "摘要视图",
       type: "checkbox",
       click: function() {
-        Config.view = 'summary';
-        Notebook.renderCurNotebook();
+        Config.view = 'snippet';
+        Note.switchView('snippet');
         Api.writeConfig(Config);
       }
     }));
@@ -3241,7 +3240,7 @@ $(function() {
       type: "checkbox",
       click: function() {
         Config.view = 'list';
-        Notebook.renderCurNotebook();
+        Note.switchView('list');
         Api.writeConfig(Config);
       }
     }));
