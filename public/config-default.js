@@ -35,5 +35,6 @@ var Config = {
         }
     ],
     "lang": "en-us",
-    "theme": ""
+    "theme": "",
+    "view": "snippet"
 };
