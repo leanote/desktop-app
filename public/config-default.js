@@ -3,6 +3,7 @@ var Config = {
         "theme",
         "import_leanote",
         "import_evernote",
+        "import_html",
         "export_pdf",
         "export_html",
         "export_leanote",

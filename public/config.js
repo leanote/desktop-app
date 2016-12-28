@@ -34,7 +34,7 @@ var Config = {
             "name": "日本語"
         }
     ],
-    "lang": "zh-cn",
+    "lang": "en-us",
     "theme": "",
     "view": "summary"
 };

@@ -8,11 +8,9 @@ var async = require('async');
 var Common = require('common');
 var path = require('path');
 var resanitize = require('resanitize');
+var iconv = require('iconv-lite');
 
 var Import = {
-  /*
-  
-   */
  
   // callback 是全局的
   // eachFileCallback是每一个文件的
@@ -29,8 +27,8 @@ var Import = {
     async.eachSeries(filePaths, function(path, cb) {
 
       try {
-        var data = fs.readFileSync(path, 'utf-8');
-        me.parseHTML(notebookId, data, path, function(ret) {
+        // 可能不是utf-8文件
+        me.parseHTML(notebookId, path, function(ret) {
           // 单个文件完成
           eachFileCallback(ret, path);
           cb();
@@ -40,6 +38,7 @@ var Import = {
           eachNoteCallback(ret);
         });
       } catch(e) {
+        console.error(e);
         cb();
         return false;
       }
@@ -79,22 +78,35 @@ var Import = {
     return pathInfo.nameNotExt;
   },
 
-  parseHTML: function (notebookId, htmlData, filename, callback, eachCallback) {
+  parseHTML: function (notebookId, filename, callback, eachCallback) {
     var me = this;
     try {
-      var body = htmlData.match(/<body[^>]*>([\s\S]*?)<\/body>/i)[1];
-      if (!body) {
-        console.log('没有body');
+      var data = fs.readFileSync(filename);
+      var htmlData = iconv.decode(data, 'utf-8');
+      if (!htmlData) {
         return callback(false);
       }
+      // utf-16
+      if (htmlData.indexOf('�') != -1) {
+        htmlData = iconv.decode(fs.readFileSync(filename), 'utf-16');
+      }
+      // gbk
+      if (htmlData.indexOf('�') != -1) {
+        htmlData = iconv.decode(fs.readFileSync(filename), 'gbk');
+      }
+      var body = htmlData.match(/<body[^>]*>([\s\S]*?)<\/body>/i)[1];
+      if (!body) {
+        return callback(false);
+      }
+      // Leanote导出为html后会自动加h1
+      body = body.replace(/<h1 class="title" id="leanote-title">.*?<\/h1>/, '');
       var title = this.getTitle(htmlData, filename) || getMsg('Untitled');
-
       // 解析里面的图片
       var reg = /<img[^>]*?( src=(?:["'])([^>]+?)(?:["']))[^>]*?>/gi;
       var ret;
       var imagePaths = [];
       while(ret = reg.exec(body)) {
-        console.log(ret);
+        // console.log(ret);
         /*
         "<img id="wiz_todo_1429010269089_521433" class="wiz-todo-img wiz-img-cannot-drag" state="unchecked" _src="wiz测试笔记_files/unchecked.png" src="wiz测试笔记_files/unchecked.png" />"
         " src="wiz测试笔记_files/unchecked.png""
@@ -108,6 +120,7 @@ var Import = {
         }
       }
       var dirname = path.dirname(filename);
+      // console.log('??', dirname)
       var imagePath2ImageInfo = {}; // imagePath => imageInfo
       async.eachSeries(imagePaths, function(imagePath, cb) {
 
@@ -135,7 +148,7 @@ var Import = {
         }
       }, function () {
         // 替换图片
-        console.log(imagePath2ImageInfo);
+        // console.log(imagePath2ImageInfo);
         while(ret = reg.exec(body)) {
           // console.log('=====');
           // console.log(ret);
@@ -175,7 +188,7 @@ var Import = {
       });
 
     } catch(e) {
-      console.error(e);
+      console.trace(e);
       callback(false);
     }
   },
