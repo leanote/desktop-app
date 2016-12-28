@@ -1,6 +1,7 @@
 var Config = {
     "plugins": [
         "theme",
+        "md_theme",
         "import_leanote",
         "import_evernote",
         "export_pdf",
