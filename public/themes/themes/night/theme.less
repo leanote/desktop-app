@@ -102,7 +102,6 @@
 }
 
 #searchNote {
-  border-bottom: @noteBgLessDeep 1px solid;
   padding-bottom: 5px;
   input {
       background: @itemHoverBg; 
@@ -120,10 +119,14 @@
   .item {
     height: 69px;
     border: none;
-    border-bottom: 1px solid @noteBgLessDeep;
+    border-bottom: 1px solid @noteBgLessDeep !important;
     background-color: transparent;
     color: @txtcolor;
     overflow: hidden;
+    
+    &:first-child {
+      border-top: 1px solid @noteBgLessDeep !important;
+    }
   }
   .item-title {
     color: @txtcolor;
