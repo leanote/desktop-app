@@ -1450,6 +1450,11 @@ function initPage(initedCallback) {
 		});
 	});
 
+	ipc.send('show-tray', {
+		Open: getMsg('Open'),
+		Close: getMsg('Close')
+	});
+
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
 

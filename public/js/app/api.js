@@ -18,6 +18,7 @@ var Api = {
 	userService: UserService,
 	dbService: db,
 	ipc: nodeRequire('electron').ipcRenderer,
+    projectPath: projectPath,
 
 	// 打开本地目录
 	// mac和windows下不同
