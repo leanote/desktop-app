@@ -1155,14 +1155,15 @@ h3 {
 /* item list */
 
 // 视图相关
-#noteItemList {
+#noteItemList {  
+    // 默认主题需要有自己的css文件，否则和默认主题相关的css必须在其他主题中reset掉
+    .item-title {
+        border-bottom: dashed 1px #ebeff2;
+    }
+
     &.snippet-view {
         .item {
             height: 70px;
-
-            .item-title {
-                border-bottom: dashed 1px #ebeff2;
-            }
         }
     }
     
