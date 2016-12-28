@@ -1156,11 +1156,10 @@ h3 {
 
 // 视图相关
 #noteItemList {
-    // 摘要视图
-    // 列表视图    
     &.snippet-view {
         .item {
             height: 70px;
+
             .item-title {
                 border-bottom: dashed 1px #ebeff2;
             }
@@ -1173,9 +1172,12 @@ h3 {
             height: 30px;
             border: none;
             border-radius: 0;
-            border-top: 1px solid #ebeff2;
+            border-bottom: 1px solid #ebeff2;
             margin: 0 -5px;
 
+            &:first-child {
+              border-top: 1px solid #ebeff2;
+            }
             .item-thumb {
                 display: none !important;
             }
@@ -1192,7 +1194,6 @@ h3 {
            }
         }
     }
-
 }
 
 
