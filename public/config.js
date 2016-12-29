@@ -1,7 +1,7 @@
 var Config = {
     "plugins": [
         "theme",
-        "template",
+        "md_theme",
         "import_leanote",
         "import_evernote",
         "import_html",
@@ -36,5 +36,6 @@ var Config = {
     ],
     "lang": "en-us",
     "theme": "",
-    "view": "snippet"
+    "view": "snippet",
+    "mdTheme": "github2"
 };
