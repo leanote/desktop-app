@@ -1,7 +1,6 @@
 var Config = {
     "plugins": [
         "theme",
-        "md_theme",
         "import_leanote",
         "import_evernote",
         "import_html",
@@ -34,8 +33,8 @@ var Config = {
             "name": "日本語"
         }
     ],
-    "lang": "en-us",
-    "theme": "",
-    "view": "snippet",
+    "lang": "zh-cn",
+    "theme": "night",
+    "view": "list",
     "mdTheme": "github2"
 };

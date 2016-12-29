@@ -84,7 +84,6 @@
     "leanoteBlog": "官方博客",
     "leftHidden": "隐藏左侧",
     "leftShow": "展开左侧",
-    "listView": "列表视图",
     "login": "登录",
     "loginSuccess": "登录成功, 正在跳转",
     "logining": "正在登录",
@@ -141,7 +140,7 @@
     "shareInfo": "你也可以将知识分享给你的好友.",
     "shareToFriends": "分享给好友",
     "simple": "简约",
-    "snippetView": "摘要视图",
+    
     "submit": "提交",
     "suggestions": "建议",
     "suggestionsInfo": "帮助我们完善leanote",
@@ -315,5 +314,8 @@
     "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切换编辑与只读",
 
     "Open": "打开",
-    "Close": "关闭"
+    "Close": "关闭",
+
+    "Snippet view": "摘要视图",
+    "List view": "列表视图"
 }

@@ -154,9 +154,13 @@ function openIt() {
 
   function close (e, force) {
     console.log('close:', force);
-    mainWindow.hide();
-    e && e.preventDefault();
-    mainWindow.webContents.send('closeWindow');
+    if (mainWindow) {
+      mainWindow.hide();
+      e && e.preventDefault();
+      mainWindow.webContents.send('closeWindow');
+    } else {
+      app.quit();
+    }
   }
   
   // 以前的关闭是真关闭, 现是是假关闭了
@@ -177,17 +181,25 @@ function openIt() {
   // 前端发来可以关闭了
   ipc.on('quit-app', function(event, arg) {
     console.log('get quit-app request');
-    mainWindow.destroy();
-    mainWindow = null;
+    if (mainWindow) {
+      mainWindow.destroy();
+      mainWindow = null;
+    } else {
+      app.quit();
+    }
   });
 
   pdfMain.init();
 
   function show () {
-    mainWindow.show();
-    mainWindow.restore();
-    mainWindow.focus();
-    mainWindow.webContents.send('focusWindow');
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.restore();
+      mainWindow.focus();
+      mainWindow.webContents.send('focusWindow');
+    } else {
+      app.quit();
+    }
   }
 
   var trayShowed = false;

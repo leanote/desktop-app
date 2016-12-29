@@ -3226,7 +3226,7 @@ $(function() {
     var themeSubmenus = new gui.Menu();
     themeSubmenus.append(new gui.MenuItem({
       checked: Config.view === "snippet",
-      label: Api.getMsg("snippetView"),
+      label: Api.getMsg("Snippet view"),
       type: "checkbox",
       click: function() {
         Note.switchView('snippet');
@@ -3234,7 +3234,7 @@ $(function() {
     }));
     themeSubmenus.append(new gui.MenuItem({
       checked: Config.view === "list",
-      label: Api.getMsg("listView"),
+      label: Api.getMsg("List view"),
       type: "checkbox",
       click: function() {
         Note.switchView('list');

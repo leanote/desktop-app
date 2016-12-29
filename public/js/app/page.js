@@ -1982,15 +1982,15 @@ function setMacTopMenu() {
           type: 'separator'
         },
         {
-          label: Api.getMsg('snippetView'),
-          type: "checkbox",
+          label: Api.getMsg('Snippet view'),
+          // type: "checkbox",
           click: function() {
             Note.switchView('snippet');
           },
         },
         {
-          label: Api.getMsg('listView'),
-          type: "checkbox",
+          label: Api.getMsg('List view'),
+          // type: "checkbox",
           click: function() {
             Note.switchView('list');
           },
@@ -2181,9 +2181,9 @@ function userMenu(allUsers) {
         this.menu.append(mdThemeMenu);
       }
 
-		var height = 260;
+		var height = 235;
 		if (UserInfo.IsLocal) {
-			height = 230;
+			height = 215;
 		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));
