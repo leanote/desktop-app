@@ -1,9 +1,9 @@
 var Config = {
     "plugins": [
         "theme",
-        "template",
         "import_leanote",
         "import_evernote",
+        "import_html",
         "export_pdf",
         "export_html",
         "export_leanote",
@@ -33,6 +33,8 @@ var Config = {
             "name": "日本語"
         }
     ],
-    "lang": "en-us",
-    "theme": ""
+    "lang": "zh-cn",
+    "theme": "night",
+    "view": "list",
+    "mdTheme": "github2"
 };

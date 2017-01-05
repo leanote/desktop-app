@@ -20,7 +20,13 @@ See https://github.com/atom/electron#downloads
 
 Download this project, and run
 
-````
+````shell
+# 1. use gulp to parse less
+$> cd PATH-TO-LEANOTE-DESKTOP-APP/dev
+$> npm install
+$> gulp dev
+
+# 2. run with electron
 $> cd PATH-TO-LEANOTE-DESKTOP-APP
 $> electron .
 ```

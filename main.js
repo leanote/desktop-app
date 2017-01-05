@@ -1,7 +1,11 @@
 // var app = require('electron').app;  // Module to control application life.
 const {app, BrowserWindow, crashReporter} = require('electron');
 var ipc = require('electron').ipcMain;
+const electron = require('electron');
+const Menu = electron.Menu
+const Tray = electron.Tray
 var pdfMain = require('pdf_main');
+var appIcon;
 
 // Report crashes to our server.
 crashReporter.start({
@@ -11,9 +15,26 @@ crashReporter.start({
   autoSubmit: true
 });
 
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
+
+// single instance
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    mainWindow.show();
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+    mainWindow.focus();
+  }
+})
+
+if (shouldQuit) {
+  app.quit()
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -21,6 +42,7 @@ app.on('window-all-closed', function() {
     app.quit();
 });
 
+// 仅MAC
 // 避免可以启动多个app
 app.on('open-file', function(e) {
   // console.log('reopen');
@@ -32,6 +54,7 @@ app.on('open-file', function(e) {
   }
 });
 
+// 仅MAC
 // var appIsReady = false;
 app.on('activate', function() {
   console.log('activate');
@@ -94,7 +117,6 @@ function openIt() {
   var leanoteProtocol = require('leanote_protocol');
   leanoteProtocol.init();
 
-
   // Create the browser window.
   mainWindow = new BrowserWindow({
       width: 1050, 
@@ -129,21 +151,93 @@ function openIt() {
     if(mainWindow && mainWindow.webContents)
       mainWindow.webContents.send('blurWindow');
   });
+
+  function close (e, force) {
+    console.log('close:', force);
+    if (mainWindow) {
+      mainWindow.hide();
+      e && e.preventDefault();
+      mainWindow.webContents.send('closeWindow');
+    } else {
+      app.quit();
+    }
+  }
   
+  // 以前的关闭是真关闭, 现是是假关闭了
   // 关闭,先保存数据
   mainWindow.on('close', function(e) {
-    console.log('close');
-    mainWindow.hide();
-    e.preventDefault();
-    mainWindow.webContents.send('closeWindow');
+    // windows支持tray, 点close就是隐藏
+    if (process.platform.toLowerCase().indexOf('win') === 0) { // win32
+      mainWindow.hide();
+      e.preventDefault();
+      return;
+    }
+
+    // mac 在docker下quit;
+    // linux直接点x linux不支持Tray
+    close(e, false);
   });
 
   // 前端发来可以关闭了
   ipc.on('quit-app', function(event, arg) {
     console.log('get quit-app request');
-    mainWindow.destroy();
-    mainWindow = null;
+    if (mainWindow) {
+      mainWindow.destroy();
+      mainWindow = null;
+    } else {
+      app.quit();
+    }
   });
 
   pdfMain.init();
+
+  function show () {
+    if (mainWindow) {
+      mainWindow.show();
+      mainWindow.restore();
+      mainWindow.focus();
+      mainWindow.webContents.send('focusWindow');
+    } else {
+      app.quit();
+    }
+  }
+
+  var trayShowed = false;
+  ipc.on('show-tray', function(event, arg) {
+    if (trayShowed) {
+      return;
+    }
+    trayShowed = true;
+
+    if (process.platform == 'linux') {
+      return;
+    }
+
+    appIcon = new Tray(__dirname + '/public/images/tray/' + ( process.platform == 'darwin' ? 'trayTemplate.png' : 'tray.png'))
+    var contextMenu = Menu.buildFromTemplate([
+      {
+        label: arg.Open, click: function () {
+          show();
+        }
+      },
+      {
+        label: arg.Close, click: function () {
+          close(null, true);
+        }
+      },
+    ]);
+    appIcon.setToolTip('Leanote');
+    // appIcon.setTitle('Leanote');
+    // appIcon.setContextMenu(contextMenu);
+
+    appIcon.on('click', function (e) {
+      show();
+      e.preventDefault();
+    });
+    appIcon.on('right-click', function () {
+      appIcon.popUpContextMenu(contextMenu);
+    });
+
+  });
+
 }

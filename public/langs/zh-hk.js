@@ -309,5 +309,11 @@
     "Don't Show Anymore": "不再提示",
 
     "Load Database Error": "載入資料庫出錯, 請嘗試在帳戶管理中優化資料庫",
-    "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切換編輯與唯讀"
+    "ctrl/cmd+e Toggle Modify with Readonly": "ctrl/cmd+e 切換編輯與唯讀",
+
+    "Open": "打開",
+    "Close": "關閉",
+
+    "Snippet view": "摘要視圖",
+    "List view": "列表視圖"
 }

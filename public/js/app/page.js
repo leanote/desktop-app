@@ -1450,6 +1450,11 @@ function initPage(initedCallback) {
 		});
 	});
 
+	ipc.send('show-tray', {
+		Open: getMsg('Open'),
+		Close: getMsg('Close')
+	});
+
 	// 注入前端变量#
 	WebService.set(Notebook, Note, Attach, Tag);
 
@@ -1977,19 +1982,17 @@ function setMacTopMenu() {
           type: 'separator'
         },
         {
-          label: 'Summary View',
+          label: Api.getMsg('Snippet view'),
+          // type: "checkbox",
           click: function() {
-            Config.view = 'summary';
-            Notebook.renderCurNotebook();
-            Api.writeConfig(Config);
+            Note.switchView('snippet');
           },
         },
         {
-          label: 'List View',
+          label: Api.getMsg('List view'),
+          // type: "checkbox",
           click: function() {
-            Config.view = 'list';
-            Notebook.renderCurNotebook();
-            Api.writeConfig(Config);
+            Note.switchView('list');
           },
         },
       ]
@@ -2178,9 +2181,9 @@ function userMenu(allUsers) {
         this.menu.append(mdThemeMenu);
       }
 
-		var height = 260;
+		var height = 235;
 		if (UserInfo.IsLocal) {
-			height = 230;
+			height = 215;
 		}
 		if(!isMac()) {
 			this.menu.append(new gui.MenuItem({ type: 'separator' }));

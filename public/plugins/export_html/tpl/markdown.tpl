@@ -162,6 +162,13 @@ kbd {
 .m-todo-item {
   list-style: none;
 }
+pre code {
+  padding: 0;
+  color: inherit;
+  white-space: pre-wrap;
+  background-color: inherit;
+  border-radius: 0;
+}
 </style>
 <!-- 该css供自定义样式 -->
 <link href="../leanote-markdown.css" rel="stylesheet">
