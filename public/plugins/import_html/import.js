@@ -102,7 +102,7 @@ var Import = {
       body = body.replace(/<h1 class="title" id="leanote-title">.*?<\/h1>/, '');
       var title = this.getTitle(htmlData, filename) || getMsg('Untitled');
       // 解析里面的图片
-      var reg = /<img[^>]*?( src=(?:["'])([^>]+?)(?:["']))[^>]*?>/gi;
+      var reg = /<img[^>]*?(src=(?:["'])([^>]+?)(?:["']))[^>]*?>/gi;
       var ret;
       var imagePaths = [];
       while(ret = reg.exec(body)) {
@@ -133,6 +133,10 @@ var Import = {
         // 绝对路径
         if (imagePath.indexOf('file://') == 0) {
           absImagePath = imagePath.substr('file://'.length);
+          // file:///c:/a/b
+          if (process.platform.toLowerCase().substr(0, 3) == 'win') {
+            absImagePath = absImagePath.substr(1, absImagePath.length-1);
+          }
         } else {
           absImagePath = path.join(dirname, imagePath);
         }
