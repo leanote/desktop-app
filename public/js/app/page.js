@@ -2260,19 +2260,70 @@ function userMenu(allUsers) {
 	});
 }
 
+function InitDragAndDropImages(){
+
+	// disable default drag & drop
+	document.body.addEventListener('dragover', function(e){
+	  e.preventDefault();
+	}, false);
+
+	document.body.addEventListener('drop', function(e){
+
+		var note = Note.getCurNote();
+		if(note)
+		{
+			if(!Note.readOnly)
+			{
+				var files =  e.dataTransfer.files;
+				var imageTypes = ['image/png', 'image/gif', 'image/bmp', 'image/jpg', 'image/jpeg'];
+
+				for(var i=0;i<files.length; i++){
+					if (e.dataTransfer && e.dataTransfer.files) {
+						var fileType = files[i].type;
+						if (imageTypes.includes(fileType)) {
+							console.log(e.dataTransfer.files[i].path);
+							var imagePath = e.dataTransfer.files[i].path;
+
+							FileService.uploadImage(imagePath, function(newImage, msg) {
+								if(newImage) {
+									var note = Note.getCurNote();
+									var url = EvtService.getImageLocalUrl(newImage.FileId);
+									if(!note.IsMarkdown) {
+										tinymce.activeEditor.insertContent('<img src="' + url + '">');
+									} else {
+										MD.insertLink(url, '', true);
+									}
+								} else {
+									alert(msg || "error");
+								}
+							});
+
+
+						} else {
+							console.log('dropped file is not an image', files[i]);
+						}
+					}
+				}
+			}
+			else{
+				console.log("note is read only");
+			}
+		}
+		else{
+			console.log("no note...:)");
+		}
+
+
+	  e.preventDefault();
+	  e.stopPropagation();
+	}, false);
+}
+
 $(function() {
 	initUploadImage();
 	Writting.init();
 
-	// disable drag & drop
-	document.body.addEventListener('dragover', function(e){
-	  e.preventDefault();
-	  e.stopPropagation();
-	}, false);
-	document.body.addEventListener('drop', function(e){
-	  e.preventDefault();
-	  e.stopPropagation();
-	}, false);
+	InitDragAndDropImages();
 
     // 为了解决linux下重复粘贴的问题
     var everPaste;
