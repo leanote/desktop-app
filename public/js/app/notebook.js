@@ -267,6 +267,14 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 		// {siblings: [id1, id2], parentNotebookId: 'xx', curNotebookId: 'yy'}
 		NotebookService.dragNotebooks(ajaxData.curNotebookId, ajaxData.parentNotebookId, ajaxData.siblings);
 
+		// 设置dirty状态
+		// 不需要设置parentNotebookId
+		var ids = [ajaxData.curNotebookId].concat(ajaxData.siblings || []);
+		ids.forEach(function (notebookId) {
+			if (notebookId) {
+				Notebook.setDirtyOrNew(notebookId, true);
+			}
+		});
 		setTimeout(function() {
 			Notebook.changeNav();
 		}, 100);
