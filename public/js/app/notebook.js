@@ -382,7 +382,8 @@ Notebook.curNotebookIsTrashOrAll = function() {
 Notebook.curNotebookIsTrash = function() {
 	return Notebook.curNotebookId == Notebook.trashNotebookId;
 };
-Notebook.renderNotebooks = function(notebooks) {
+// reload 是否再一次load
+Notebook.renderNotebooks = function(notebooks, reload) {
 	var self = this;
 
 	if(!notebooks || typeof notebooks != "object" || notebooks.length < 0) {
@@ -416,12 +417,17 @@ Notebook.renderNotebooks = function(notebooks) {
 		Notebook.curNotebookId = notebooks[0].NotebookId;
 		self.cacheAllNotebooks(notebooks);
 	}
-	
-	// 渲染nav
-	Notebook.renderNav();
-	
-	// 渲染第一个notebook作为当前
-	Notebook.changeNotebookNavForNewNote(notebooks[0].NotebookId);
+
+	if (!reload) {
+		// 渲染nav
+		Notebook.renderNav();
+		
+		// 渲染第一个notebook作为当前
+		Notebook.changeNotebookNavForNewNote(notebooks[0].NotebookId);
+	}
+	else {
+		console.log('	reload notebook ok');
+	}
 }
 
 Notebook.cacheAllNotebooks = function(notebooks) {
@@ -1111,27 +1117,43 @@ Notebook.fixSyncConflict = function(note, newNote) {
 	*/
 };
 
+// 本地 -> 添加到服务器上的
+// 不用做任何操作
+Notebook.addChange = function(notebooks) {
+	return;
+};
+
+// 服务器adds/updates后, 一起渲染
+Notebook.reload = function() {
+	var me = this;
+	var curNotebookId = Notebook.curNotebookId;
+	NotebookService.getNotebooks(function(notebooks) {
+		me.renderNotebooks(notebooks, true);
+
+		// 定位到某个笔记本下
+		Notebook.expandNotebookTo(curNotebookId);
+	});
+};
+
+// 弃用, 一起渲染
 // notebooks
 // <- server 服务器端添加过来的
+// ? 如果是子先添加了, 再父添加呢?
 Notebook.addSync = function(notebooks) {
 	var me = this;
 	if(isEmpty(notebooks)) { 
 		return;
 	}
 	console.log('web add sync notebook');
-	for(var i in notebooks) {
+	for(var i = 0; i < notebooks.length; ++i) {
 		var notebook = notebooks[i];
 		Notebook.setCache(notebook);
 		me.tree.addNodes(me.tree.getNodeByTId(notebook.ParentNotebookId), 
 			{Title: notebook.Title, NotebookId: notebook.NotebookId, IsNew: false},  // IsNew: false啊!!!
 			true, true, false);
 	}
-}
-// 本地 -> 添加到服务器上的
-// 不用做任何操作
-Notebook.addChange = function(notebooks) {
-	return;
 };
+// 弃用, 一起渲染
 // 更新
 // 不对移动做修改, 只修改标题
 Notebook.updateSync = function(notebooks) {

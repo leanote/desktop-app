@@ -1489,7 +1489,7 @@ function initPage(initedCallback) {
 
 			// 标签
 			TagService.getTags(function(tags) {
-        Tag.nav.setTags(tags);
+        	Tag.nav.setTags(tags);
 				ok();
 			});
 
