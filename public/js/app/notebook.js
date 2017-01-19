@@ -3,7 +3,6 @@ Notebook.cache = {}; // notebookId => {};
 Notebook.notebooks = []; // 按次序
 // <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CSS</a></li>	
 Notebook.notebookNavForListNote = ""; // html 为了note list上面和新建时的ul
-Notebook.notebookNavForNewNote = ""; // html 为了note list上面和新建时的ul
 
 // 设置缓存
 Notebook.setCache = function(notebook) {
@@ -148,6 +147,7 @@ Notebook.getSubNotebooks = function(parentNotebookId) {
 	}
 	return nodes;
 };
+
 /**
  * Simple Tree Setting(基本版)
  * 笔记移动、复制时使用
@@ -202,16 +202,13 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 		icoObj = $("#" + treeId + " #" + treeNode.tId + "_ico");
 		switchObj.remove();
 		icoObj.before(switchObj);
-		if(!isShare) {
-			if(!Notebook.isAllNotebookId(treeNode.NotebookId) && !Notebook.isTrashNotebookId(treeNode.NotebookId)) {
-				icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + (treeNode.NumberNotes || 0) + '</span>'));
-				icoObj.after($('<span class="fa notebook-setting" title="' + getMsg('Setting') + '"></span>'));
-			}
-		} else {
-			if(!Share.isDefaultNotebookId(treeNode.NotebookId)) {
-				icoObj.after($('<span class="fa notebook-setting" title="' + getMsg('Setting') + '"></span>'));
-			}
+
+		if(!Notebook.isAllNotebookId(treeNode.NotebookId) && !Notebook.isTrashNotebookId(treeNode.NotebookId)) {
+			icoObj.after($('<span class="notebook-number-notes" id="numberNotes_' + treeNode.NotebookId + '">' + (treeNode.NumberNotes || 0) + '</span>'));
+			// icoObj.after($('<span class="notebook-dirty" id="notebookDirty_' + treeNode.NotebookId + '"></span>'));
+			icoObj.after($('<span class="fa notebook-setting" title="' + getMsg('Setting') + '"></span>'));
 		}
+		
 		if (treeNode.level > 1) {
 			var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
 			switchObj.before(spaceStr);
@@ -270,34 +267,22 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 		// {siblings: [id1, id2], parentNotebookId: 'xx', curNotebookId: 'yy'}
 		NotebookService.dragNotebooks(ajaxData.curNotebookId, ajaxData.parentNotebookId, ajaxData.siblings);
 
-		// ajaxPost("/notebook/dragNotebooks", {data: JSON.stringify(ajaxData)});
-		
-		// 这里慢!
 		setTimeout(function() {
 			Notebook.changeNav();
 		}, 100);
 	}
 	
-	if(!isShare) {
-		var onClick =  function(e, treeId, treeNode) {
-			var notebookId = treeNode.NotebookId;
-			Notebook.changeNotebook(notebookId);
-		};
-		var onDblClick = function(e) {
-			var notebookId = $(e.target).attr("notebookId");
-			if(!Notebook.isAllNotebookId(notebookId) && !Notebook.isTrashNotebookId(notebookId)) {
-				self.updateNotebookTitle(e.target);
-			}
+	var onClick =  function(e, treeId, treeNode) {
+		var notebookId = treeNode.NotebookId;
+		Notebook.changeNotebook(notebookId);
+	};
+	var onDblClick = function(e) {
+		var notebookId = $(e.target).attr("notebookId");
+		if(!Notebook.isAllNotebookId(notebookId) && !Notebook.isTrashNotebookId(notebookId)) {
+			self.updateNotebookTitle(e.target);
 		}
-	} else {
-		var onClick =  function(e, treeId, treeNode) {
-			var notebookId = treeNode.NotebookId;
-			var fromUserId = $(e.target).closest('.friend-notebooks').attr("fromUserId");
-			Share.changeNotebook(fromUserId, notebookId);
-		};
-		var onDblClick = null;
-	}
-	
+	};
+
 	var setting = {
 		view: {
 			showLine: false,
@@ -341,6 +326,8 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 								$('#numberNotes_' + notebookId).html(Notebook._subNotebookNumberNotes[notebookId]);
 								Notebook._subNotebookNumberNotes[notebookId] = undefined;
 							}
+							// 子的dirty, new状态
+							Notebook.setDirtyOrNewForSub(notebookId);
 						});
 					}
 				}
@@ -373,7 +360,8 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 	};
 	
 	return setting;
-}
+};
+
 Notebook.allNotebookId = "0";
 Notebook.trashNotebookId = "-1";
 Notebook.curNotebookIsTrashOrAll = function() {
@@ -499,13 +487,6 @@ Notebook.searchNotebookForAddNote = function(key) {
 				notebooks2.push(notebooks[i]);
 			}
 		}
-		if(isEmpty(notebooks2)) {
-			$("#notebookNavForNewNote").html("");
-		} else {
-			$("#notebookNavForNewNote").html(self.getChangedNotebooks(notebooks2));
-		}
-	} else {
-		$("#notebookNavForNewNote").html(self.everNavForNewNote);
 	}
 }
 
@@ -531,42 +512,9 @@ Notebook.searchNotebookForList = function(key) {
 		self.tree2 = null;
 		$search.hide();
 		$notebookList.show();
-		$("#notebookNavForNewNote").html(self.everNavForNewNote);
 	}
-}
-
-
-// 修改,添加,删除notebook后调用
-// 改变nav
-// 直接从html中取!
-Notebook.getChangedNotebooks = function(notebooks) {
-	var self = this;
-	var navForNewNote = "";
-	
-	var len = notebooks.length;
-	for(var i = 0; i < len; ++i) {
-		var notebook = notebooks[i];
-		
-		var classes = "";
-		if(!isEmpty(notebook.Subs)) {
-			classes = "dropdown-submenu";
-		}
-		var eachForNew = tt('<li role="presentation" class="clearfix ?"><div class="new-note-left pull-left" title="为该笔记本新建笔记" href="#" notebookId="?">?</div><div title="为该笔记本新建markdown笔记" class="new-note-right pull-left" notebookId="?">M</div>', classes, notebook.NotebookId, notebook.Title, notebook.NotebookId);
-		
-		if(!isEmpty(notebook.Subs)) {
-			eachForNew  += "<ul class='dropdown-menu'>";
-			eachForNew  += self.getChangedNotebooks(notebook.Subs);
-			eachForNew  += "</ul>";
-		}
-		
-		eachForNew  += '</li>';
-		
-		navForNewNote += eachForNew;
-	}
-	return navForNewNote;
 };
 
-Notebook.everNavForNewNote = "";
 Notebook.everNotebooks = [];
 Notebook.changeNav = function() {
 	var self = Notebook;
@@ -579,21 +527,10 @@ Notebook.changeNav = function() {
 			pureNotebooks.push(notebooks[i]);
 		}
 	}
-	var html = self.getChangedNotebooks(pureNotebooks);
-	
-	self.everNavForNewNote = html;
 	self.everNotebooks = pureNotebooks;
-	
-	$("#notebookNavForNewNote").html(html);
-	
 	// 移动, 复制重新来, 因为nav变了, 移动至-----的notebook导航也变了
-	// 这里速度很慢
-	// var t1 = (new Date()).getTime();
 	Note.initContextmenu();
-	// Share.initContextmenu(Note.notebooksCopy);
-	// var t2 = (new Date()).getTime();
-	// log(t2-t1);
-}
+};
 
 /**
  * 我的共享notebooks	    
@@ -949,6 +886,37 @@ Notebook.updateNotebookTitle = function(target) {
 		self.tree.editName(self.tree.getNodeByTId(notebookId));
 	}
 };
+Notebook.subNotebookDirtyOrNew = {}; // notebookId => {dirty: new: }
+Notebook.setDirtyOrNew = function (notebookId, isDirty, isNew) {
+	if (this._setDirtyOrNew(notebookId, isDirty, isNew)) {
+		if (this.subNotebookDirtyOrNew[notebookId]) {
+			delete this.subNotebookDirtyOrNew[notebookId];
+		}
+	}
+	// 没找到, 可能是子笔记本, 还没展开
+	else {
+		this.subNotebookDirtyOrNew[notebookId] = {isDirty: isDirty, isNew: isNew};
+	}
+};
+
+Notebook.setDirtyOrNewForSub = function (notebookId, isDirty, isNew) {
+	var d = this.subNotebookDirtyOrNew[notebookId];
+	if (!d) {
+		return;
+	}
+	this._setDirtyOrNew(notebookId, d.isDirty, d.isNew);
+};
+
+Notebook._setDirtyOrNew = function (notebookId, isDirty, isNew) {
+	var $o = $('#' + notebookId + '_a');
+	if ($o.length) {
+		isDirty ? $o.addClass('nb-dirty') : $o.removeClass('nb-dirty');
+		isNew ? $o.addClass('nb-new') : $o.removeClass('nb-new');
+		return true;
+	}
+	return false;
+};
+
 Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 	var self = Notebook;
 	newTitle = trimTitle(newTitle);
@@ -957,13 +925,15 @@ Notebook.doUpdateNotebookTitle = function(notebookId, newTitle) {
 		Notebook.cache[notebookId].Title = newTitle;
 		// 改变nav
 		Notebook.changeNav();
-		
+
 		// 同步
 		if(self.tree2) {
 			var notebook = self.tree.getNodeByTId(notebookId);
 			notebook.Title = newTitle;
 			self.tree.updateNode(notebook);  // 同步到对方
 		}
+
+		self.setDirtyOrNew(notebookId, true);
 	});
 };
 
@@ -1117,10 +1087,21 @@ Notebook.fixSyncConflict = function(note, newNote) {
 	*/
 };
 
+// push
 // 本地 -> 添加到服务器上的
-// 不用做任何操作
-Notebook.addChange = function(notebooks) {
-	return;
+// 前端取消dirty
+Notebook.addChanges = function(notebooks) {
+	var me = this;
+	if(isEmpty(notebooks)) { 
+		return;
+	}
+	for(var i = 0; i < notebooks.length; ++i) {
+		var notebook = notebooks[i];
+		me.setDirtyOrNew(notebook.NotebookId, false, false);
+	}
+};
+Notebook.updateChanges = function(notebooks) {
+	this.addChanges(notebooks);
 };
 
 // 服务器adds/updates后, 一起渲染
@@ -1132,10 +1113,13 @@ Notebook.reload = function() {
 
 		// 定位到某个笔记本下
 		Notebook.expandNotebookTo(curNotebookId);
+
+		// 为了移动/复制笔记
+		me.changeNav();
 	});
 };
 
-// 弃用, 一起渲染
+// 弃用, 一起渲染 reload
 // notebooks
 // <- server 服务器端添加过来的
 // ? 如果是子先添加了, 再父添加呢?
@@ -1153,7 +1137,7 @@ Notebook.addSync = function(notebooks) {
 			true, true, false);
 	}
 };
-// 弃用, 一起渲染
+// 弃用, 一起渲染 reload
 // 更新
 // 不对移动做修改, 只修改标题
 Notebook.updateSync = function(notebooks) {

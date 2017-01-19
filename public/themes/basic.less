@@ -524,32 +524,6 @@ h3 {
     }
 }
 
-.item-dirty {
-    .dirty-bg {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        width: 0;
-        height: 0;
-        border-top: 29px solid transparent;
-        border-right: 23px solid #040421;
-    }
-
-    &::after {
-        content: "\f093";
-        position: absolute;
-        right: 1px;
-        bottom: 1px;
-        z-index: 2;
-        color: #FFF;
-        /* font-size: 5px; */
-        font: normal normal normal 14px/1 FontAwesome;
-        /* font-size: inherit; */
-        text-rendering: auto;
-        -webkit-font-smoothing: antialiased;
-    }
-}
 
 #noteItemList {
     user-select: none;
@@ -671,6 +645,7 @@ h3 {
     margin-top: 5px;
     padding: 0 3px;
 }
+
 
 // 设置
 .notebook-setting {
@@ -2324,6 +2299,55 @@ img::selection {
 // markdown todo list
 .m-todo-item {
     list-style: none;
+}
+
+// dirty
+
+.nb-dirty:after,
+.nb-new:after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background: #FF6363;
+    position: absolute;
+    right: 4px;
+    top: 11px;
+    border-radius: 50%;
+}
+
+.item-dirty {
+    &::after {
+        content: "";
+        width: 7px;
+        height: 7px;
+        background: #FF6363;
+        position: absolute;
+        right: 7px;
+        bottom: 6px;
+        border-radius: 50%;
+    }
+    // .dirty-bg {
+    //     position: absolute;
+    //     right: 0;
+    //     bottom: 0;
+    //     z-index: 1;
+    //     width: 0;
+    //     height: 0;
+    //     border-top: 29px solid transparent;
+    //     border-right: 23px solid #040421;
+    // }
+
+    // &::after {
+    //     content: "\f093";
+    //     position: absolute;
+    //     right: 1px;
+    //     bottom: 1px;
+    //     z-index: 2;
+    //     color: #FFF;
+    //     font: normal normal normal 14px/1 FontAwesome;
+    //     text-rendering: auto;
+    //     -webkit-font-smoothing: antialiased;
+    // }
 }
 
 @import '../css/includes/traffic.less';

@@ -2336,7 +2336,7 @@ Note.initContextmenu = function() {
 	        }
 	    });
 
-	    var ms = Note.getContextNotebooksSys(notebooks);
+	    // var ms = Note.getContextNotebooksSys(notebooks);
 	    // this.move.submenu = ms[0];
 	    // this.copy.submenu = ms[1];
 
