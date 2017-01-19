@@ -524,6 +524,33 @@ h3 {
     }
 }
 
+.item-dirty {
+    .dirty-bg {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 0;
+        height: 0;
+        border-top: 29px solid transparent;
+        border-right: 23px solid #040421;
+    }
+
+    &::after {
+        content: "\f093";
+        position: absolute;
+        right: 1px;
+        bottom: 1px;
+        z-index: 2;
+        color: #FFF;
+        /* font-size: 5px; */
+        font: normal normal normal 14px/1 FontAwesome;
+        /* font-size: inherit; */
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
 #noteItemList {
     user-select: none;
     -webkit-user-select: none;
@@ -560,6 +587,7 @@ h3 {
     .item-setting {
         bottom: 0;
         display: none;
+        z-index: 3;
     }
     .item-star {
         bottom: 0;

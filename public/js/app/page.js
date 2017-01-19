@@ -2153,6 +2153,13 @@ function userMenu(allUsers) {
 	        }
 	    });
 
+	    this.debug = new gui.MenuItem({
+	        label: getMsg('Toggle DevTools'),
+	        click: function(e) {
+	        	gui.win.toggleDevTools();
+	        }
+	    });
+
 	    this.menu.append(this.email);
 		if (!UserInfo.IsLocal) {//hide sync menu for local account
 		    this.blog = new gui.MenuItem({
@@ -2230,6 +2237,11 @@ function userMenu(allUsers) {
 	    		mores.append(otherMoreMenus[i]);
 	    	}
 	    }
+
+	    // debug
+	    mores.append(new gui.MenuItem({ type: 'separator' }));
+	    mores.append(this.debug);
+
 
 	    // 更多
 	    this.more = new gui.MenuItem({

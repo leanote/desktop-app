@@ -21,7 +21,7 @@ Note.notebookIds = {}; // notebookId => true
 
 // 初始化模版字符串
 // blog, star, settings
-var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div>';
+var itemIsBlog = '<div class="item-blog"><i class="fa fa-bold" title="' + getMsg('Blog') + '"></i></div><div class="item-conflict-info"><i class="fa fa-bug" title="' + getMsg('Conflict') + '!!"></i></div><div class="item-star"><i class="fa fa-star-o" title="' + getMsg('Star') + '"></i></div><div class="item-setting"><i class="fa fa-cog" title="' +  getMsg('Setting') + '"></i></div><span class="dirty-bg"></span>';
 Note.itemTplNoImg = '<li href="#" class="item ?" data-seq="?" noteId="?">';
 Note.itemTplNoImg += itemIsBlog + '<div class="item-desc"><p class="item-title">?</p><p class="item-info"><i class="fa fa-book"></i> <span class="note-notebook">?</span> <i class="fa fa-clock-o"></i> <span class="updated-time">?</span></p><p class="desc">?</p></div></li>';
 Note.itemTpl = '<li href="#" class="item ? item-image" data-seq="?" noteId="?"><div class="item-thumb" style=""><img src="?"/></div>';
@@ -445,6 +445,10 @@ Note.getImgSrc = function(content) {
 	return "";
 };
 
+Note.setNoteDirty = function (noteId) {
+	var $leftNoteNav = $(tt('[noteId="?"]', noteId));
+	$leftNoteNav.addClass('item-dirty');
+};
 
 // 如果当前的改变了, 就保存它
 // 以后要定时调用
@@ -505,6 +509,8 @@ Note.curChangedSaveIt = function(force, callback) {
 				// 新建笔记也要change history
 				Pjax.changeNote(ret);
 			}
+
+			me.setNoteDirty(hasChanged.NoteId);
 
 			callback && callback(ret);
 		}, force);
@@ -799,9 +805,13 @@ Note.renderChangedNote = function(changedNote) {
 		// 如果标题改了, 如果也在star列表中, 那也要改star的标题啊
 		Note.changeStarNoteTitle(changedNote.NoteId, trimTitle(changedNote.Title));
 	}
-  if($leftNoteNav.hasClass("list-item")) {
-    return; //list view只需要更新title
-  }
+
+	// $leftNoteNav.addClass('item-dirty');
+
+	if($leftNoteNav.hasClass("list-item")) {
+	    return; //list view只需要更新title
+	}
+
 	if(changedNote.Desc) {
 		$leftNoteNav.find(".desc").html(trimTitle(changedNote.Desc));
 	}
@@ -986,9 +996,6 @@ Note.renderNotes = function(notes, forNewNote, isShared) {
 
 Note._getNoteHtmlObjct = function(note, isShared) {
 	var baseClasses = "item-my";
-	if(isShared) {
-		baseClasses = "item-shared";
-	}
 	var classes = baseClasses;
 	if (note.IsDeleted) {
 		console.error('_getNoteHtmlObjct note.IsDeleted');
@@ -1015,19 +1022,20 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 },
 Note._renderNotes = function(notes, forNewNote, isShared, tang) { // 第几趟
 	var baseClasses = "item-my";
-	if(isShared) {
-		baseClasses = "item-shared";
-	}
+
 
 	var len = notes.length;
 	for(var i = (tang-1)*20; i < len && i < tang*20; ++i) {
 		var classes = baseClasses;
+
 		if(!forNewNote && i == 0) {
 			classes += " item-active";
 		}
 		var note = notes[i];
 		note.Title = trimTitle(note.Title);
-
+		if (note.IsDirty) {
+			classes += " item-dirty";
+		}
 		if (note.IsDeleted) {
 			console.error('note.IsDeleted');
 			continue;
@@ -1123,9 +1131,6 @@ Note.newNote = function(notebookId, isShare, fromUserId, isMarkdown) {
 	var newItem = "";
 
 	var baseClasses = "item-my item-active";
-	if(isShare) {
-		baseClasses = "item-shared";
-	}
 
 	var notebook = Notebook.getNotebook(notebookId);
 	var notebookTitle = notebook ? notebook.Title : "";
@@ -1177,12 +1182,14 @@ Note.showSpin = function() {
 	me._syncRefreshE.addClass('fa-spin');
 
 	// 如果超过30秒还在转, 证明有问题了
+	/*
 	setTimeout(function() {
 		if(me._syncRefreshE.hasClass('fa-spin')) {
 			me._syncRefreshE.removeClass('fa-spin');
 			Note.hideSyncProgress();
 		}
 	}, 30 * 1000);
+	*/
 
 	// 禁止自动保存
 	me.stopInterval(true);
@@ -1243,17 +1250,33 @@ Note.notLogin = function() {
 	me.hideSpin();
 	SyncService.setSyncFinished();
 	me._syncWarningE.data('reason', 'notLogin');
-	me._syncWarningE.attr('title', 'You need sign in leanote');
+	me._syncWarningE.attr('title', getMsg('You need to sign in Leanote'));
+};
+Note.needUpgradeAccount = function () {
+	var me = this;
+	me._syncWarningE.show();
+	me.hideSpin();
+	SyncService.setSyncFinished();
+	me._syncWarningE.data('reason', 'NEED-UPGRADE-ACCOUNT');
+	me._syncWarningE.attr('title', getMsg('You need to upgrade Leanote account'));
 };
 // 点击感叹号, 处理错误
 Note.fixNetOrAuthError = function() {
 	var me = this;
 	var reason = me._syncWarningE.data('reason');
-	if(reason == 'unConnected') {
-		alert('Network error, please check out your network.');
+
+	if (reason == 'unConnected') {
+		alert(getMsg('Network error, please check out your network.'));
+
 	} else if(reason == 'notLogin') {
+		alert(getMsg('You need to sign in Leanote'));
 		// 弹出登录框登录之, 重新弹出
 		window.open('login.html?ref=needLogin');
+
+	// 需要升级Leanote
+	} else if (reason == 'NEED-UPGRADE-ACCOUNT') {
+		alert(getMsg('You need to upgrade Leanote account'));
+		openExternal('https://leanote.com/pricing#buy');
 	}
 };
 
@@ -3426,7 +3449,7 @@ Note.updateSync = function(notes) {
 
 	var curNotebookIsTrash = Notebook.curNotebookIsTrash();
 
-	for(var i in notes) {
+	for(var i = 0; i < notes.length; ++i) {
 		var note = notes[i];
 		note.InitSync = true; // 需要重新获取内容
 		Note.addNoteCache(note);
@@ -3442,13 +3465,17 @@ Note.updateSync = function(notes) {
 			Note.reRenderNote(Note.curNoteId);
 		}
 
+		var target = $(tt('[noteId="?"]', note.NoteId));
+		if(target.length) {
+			target.removeClass('item-dirty');
+		}
+
 		// 设置当前是否是博客
 		// alert(note.NoteId + " " + note.IsBlog);
 		Note.setNoteBlogVisible(note.NoteId, note.IsBlog);
 
 		// 如果是trash, 且当前不在trash目录下, 且有该笔记, 则删除之
 		if(!curNotebookIsTrash && note.IsTrash) {
-			var target = $(tt('[noteId="?"]', note.NoteId));
 			// 前端缓存也要删除!!
 			// 先删除, 不然changeToNext()之前会先保存现在的, 导致僵尸note
 			Note.deleteCache(note.NoteId)
@@ -3512,4 +3539,18 @@ Note.deleteSync = function(notes) {
 		// 前端缓存也要删除!!
 		Note.deleteCache(noteId);
 	}
-}
+};
+
+// 发送改变成功了的
+Note.updateChangeUpdates = function (notes) {
+	if(isEmpty(notes)) {
+		return;
+	}
+	for(var i in notes) {
+		var note = notes[i];
+		var target = $(tt('[noteId="?"]', note.NoteId));
+		if(target.length) {
+			target.removeClass('item-dirty');
+		}
+	}
+};
