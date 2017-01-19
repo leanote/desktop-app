@@ -263,7 +263,7 @@ Notebook.getTreeSetting = function(isSearch, isShare) {
 				ajaxData.siblings.push(notebookId);
 			}
 		}
-		
+
 		// {siblings: [id1, id2], parentNotebookId: 'xx', curNotebookId: 'yy'}
 		NotebookService.dragNotebooks(ajaxData.curNotebookId, ajaxData.parentNotebookId, ajaxData.siblings);
 

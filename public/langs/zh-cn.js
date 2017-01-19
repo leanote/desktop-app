@@ -321,6 +321,11 @@
 
     "Network error, please check out your network.": "网络异常, 请检查网络或稍后再试",
     "You need to sign in Leanote": "您需要重新登录Leanote",
-    "You need to upgrade Leanote account": "同步失败, 帐户已到期或流量已用完, 您需要升级Leanote帐户"
+    "You need to upgrade Leanote account": "同步失败, 帐户已到期或流量已用完, 您需要升级Leanote帐户",
 
+    "It will not be synced before fixed.": "该笔记未解决前将不会同步",
+    "Sync error": "同步失败",
+    "Message": "信息",
+    "notExists": "服务端笔记不存在",
+    "fileUploadError": "图片/附件上传失败"
 }  
