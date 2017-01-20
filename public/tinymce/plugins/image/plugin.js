@@ -20,7 +20,7 @@ tinymce.PluginManager.add('image', function(editor, url) {
 		icon: 'image',
 		tooltip: 'Insert image',
 		onclick: showDialog,
-		stateSelector: 'img:not([data-mce-object])'
+		stateSelector: 'img:not([data-mind-json])'
 	});
 
 	// 为解决在editor里拖动图片问题
