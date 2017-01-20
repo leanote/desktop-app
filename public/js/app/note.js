@@ -450,6 +450,7 @@ Note.setNoteDirty = function (noteId, isDirty) {
 	if (!isDirty) {
 		$leftNoteNav.removeClass('item-err');
 	}
+	this.setNoteCache({NoteId: noteId, IsDirty: isDirty}, false);
 	isDirty ? $leftNoteNav.addClass('item-dirty') : $leftNoteNav.removeClass('item-dirty');
 };
 
@@ -1778,11 +1779,12 @@ Note.deleteNoteTag = function(item, tag) {
 	if(!item) {
 		return;
 	}
+	// noteId => note
 	for(var noteId in item) {
 		var note = Note.getNote(noteId);
 		if(note) {
 			note.Tags = note.Tags || [];
-			for(var i in note.Tags) {
+			for(var i = 0; i < note.Tags.length; ++i) {
 				if(note.Tags[i] == tag) {
 					note.Tags.splice(i, 1);
 					continue;
@@ -1792,6 +1794,8 @@ Note.deleteNoteTag = function(item, tag) {
 			if(noteId == Note.curNoteId) {
 				Tag.input.setTags(note.Tags);
 			}
+
+			Note.setNoteDirty(noteId, true);
 		}
 	}
 };
@@ -3510,6 +3514,8 @@ Note.updateSync = function(notes) {
 			// 前端缓存也要删除!!
 			// 先删除, 不然changeToNext()之前会先保存现在的, 导致僵尸note
 			Note.deleteCache(note.NoteId);
+
+			var target = $(tt('#noteItemList [noteId="?"]', note.NoteId));
 
 			// 当前笔记要删除了, 如果有多个笔记要删除, 这就有问题了
 			// 刚一切换到下一个, 就被删除了, 导致没有被选中

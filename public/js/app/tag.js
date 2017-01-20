@@ -6,17 +6,26 @@ var TagNav = function() {
   this.tags = [];
   this.curTag = null;
   this.$element = $('#tagNav');
+
+  // 搜索
   this.$element.on('click', 'li .label', function() {
     var tagValue = $(this).closest('li').data('tag').trim();
     me.searchByTag(tagValue);
   });
+
+  // 删除
   this.$element.on('click', 'li .tag-delete', function () {
     var $li = $(this).closest('li');
     var tag = $.trim($li.data('tag'));
     if(confirm(getMsg('Are you sure ?'))) {
       TagService.deleteTag(tag, function(re) {
+        console.log(' delete tag', re);
         if(typeof re == 'object' && re.Ok !== false) {
+          // re == {noteId => note}
+          // 笔记删除标签
           Note.deleteNoteTag(re, tag);
+
+          // 导航删除
           $li.remove();
           me._deleteTag(tag);
         }
@@ -175,7 +184,7 @@ var TagInput = function() {
       }
     }, 200);
   });
-  
+
   me.$tags.on('click', 'i', function() {
     me._removeTag($(this).parent());
   });
@@ -244,18 +253,21 @@ TagInput.prototype = {
     }
   },
 
-  // 保存tag
+  // 保存tag, 到数据库
   _saveTag(text) {
-    if(text)
-    {
-      Note.curChangedSaveIt(true, function() {
-        TagService.addOrUpdateTag(text, function(ret) {
-          if(typeof ret == 'object' && ret.Ok !== false) {
-            Tag.nav.addTags([ret]);
-          }
-        });
-      });
+    if (!text) {
+      return;
     }
+    console.log('save tag to db', text);
+    Note.curChangedSaveIt(true, function() {
+      console.log('save tag to db yes!!');
+      TagService.addOrUpdateTag(text, function(ret) {
+        console.log(ret);
+        if(typeof ret == 'object' && ret.Ok !== false) {
+          Tag.nav.addTags([ret]);
+        }
+      });
+    });
   },
   
   // 删除tag
