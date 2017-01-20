@@ -33,8 +33,8 @@ var Config = {
             "name": "日本語"
         }
     ],
-    "lang": "zh-cn",
-    "theme": "night",
+    "lang": "en-us",
+    "theme": "",
     "view": "list",
     "mdTheme": "github2"
 };
