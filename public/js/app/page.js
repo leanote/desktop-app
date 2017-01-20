@@ -1,6 +1,7 @@
 // 主页渲染
 //-------------
 
+var noCharCodes = [37, 38, 39, 40, 16, 17, 18, 91];
 var Resize;
 
 // 写作模式
@@ -421,9 +422,8 @@ function initEditor() {
 			ed.on('keydown', function(e) {
 				var num = e.which ? e.which : e.keyCode;
 				// 如果是readony, 则不能做任何操作, 除了v, x, z
-				if(Note.readOnly && (
-						(e.ctrlKey || e.metaKey) && (num == 88 || num == 86 || num == 90)
-					)
+				if(Note.readOnly
+					&& ( (e.ctrlKey || e.metaKey) && (num == 88 || num == 86 || num == 90) )
 				) {
 					console.log('keydown preventDefault')
 					e.preventDefault();
@@ -436,6 +436,13 @@ function initEditor() {
 					console.log('keydown preventDefault')
 					e.preventDefault();
 					return;
+				}
+
+				// 设置dirty, ctrl+c都设了
+				if (!Note.readOnly) {
+					if (noCharCodes.indexOf(num) >= 0) {
+						setEditorIsDirty(true);
+					}
 				}
 
 				/*
@@ -1183,7 +1190,13 @@ LeaAce = {
 		// 当ace里没有内容时, 连续删除则把ace remove掉
 		// keydown的delete事件没有
 		var lastDeleteTime;
+
+		// 上38下40左37右39
+		// shift16,ctrl17,option18,meta91 
 		$("#editorContent").on('keyup', 'pre',  function(e) {
+			if (LEA.readOnly) {
+				return;
+			}
 			var keyCode = e.keyCode;
 			// console.log('keyup');
 			if(keyCode == 8 || keyCode == 46) { // BackSpace || Delete
@@ -1205,6 +1218,12 @@ LeaAce = {
 					lastDeleteTime = now;
 				}
 				// console.log($(this));
+			}
+			if (noCharCodes.indexOf(keyCode) < 0) {
+				console.log('ace setEditorIsDirty')
+				setEditorIsDirty(true);
+			} else {
+				console.log('noCharCodes');
 			}
 		});
 	}

@@ -303,42 +303,52 @@ Note.curHasChanged = function(force) {
 	//===========
 	// 内容的比较
 
-	// 如果是markdown返回[content, preview]
-	var contents = getEditorContent(cacheNote.IsMarkdown);
-	var content, preview;
-	if (isArray(contents)) {
-		content = contents[0];
-		preview = contents[1];
-		// preview可能没来得到及解析
-		if (content && previewIsEmpty(preview) && Converter) {
-			preview = Converter.makeHtml(content);
-		}
-		if(!content) {
-			preview = "";
-		}
-		cacheNote.Preview = preview; // 仅仅缓存在前台
-	} else if (cacheNote.IsMarkdown && typeof contents === 'boolean') {
-		// 不会出现, 因为刚开始时readOnly=true, 且只有设置内容完成后才setCurNoteId
-		// markdown编辑器还没准备好
-		throw new Error('markdown编辑器还没准备好');
-	}
-	else {
-		content = contents;
-	}
+	// 是mardown编辑器, 或者富文本编辑器已Dirty
+	if (cacheNote.IsMarkdown || editorIsDirty()) {
 
-	if (cacheNote.Content != content) {
-		hasChanged.hasChanged = true;
-		hasChanged.Content = content;
-
-		// 从html中得到...
-		var c = preview || content;
-
-		// 不是博客或没有自定义设置的
-		if(!cacheNote.HasSelfDefined || !cacheNote.IsBlog) {
-			hasChanged.Desc = Note.genDesc(c);
-			hasChanged.ImgSrc = Note.getImgSrc(c);
-			hasChanged.Abstract = Note.genAbstract(c);
+		// 如果是markdown返回[content, preview]
+		var contents = getEditorContent(cacheNote.IsMarkdown);
+		var content, preview;
+		if (isArray(contents)) {
+			content = contents[0];
+			preview = contents[1];
+			// preview可能没来得到及解析
+			if (content && previewIsEmpty(preview) && Converter) {
+				preview = Converter.makeHtml(content);
+			}
+			if(!content) {
+				preview = "";
+			}
+			cacheNote.Preview = preview; // 仅仅缓存在前台
+		} else if (cacheNote.IsMarkdown && typeof contents === 'boolean') {
+			// 不会出现, 因为刚开始时readOnly=true, 且只有设置内容完成后才setCurNoteId
+			// markdown编辑器还没准备好
+			throw new Error('markdown编辑器还没准备好');
 		}
+		// 富文本编辑器
+		else {
+			content = contents;
+		}
+
+		if (cacheNote.Content != content) {
+			hasChanged.hasChanged = true;
+			hasChanged.Content = content;
+
+			// 从html中得到...
+			var c = preview || content;
+
+			// 不是博客或没有自定义设置的
+			if(!cacheNote.HasSelfDefined || !cacheNote.IsBlog) {
+				hasChanged.Desc = Note.genDesc(c);
+				hasChanged.ImgSrc = Note.getImgSrc(c);
+				hasChanged.Abstract = Note.genAbstract(c);
+			}
+		}
+
+		// 已保存了, 不再Dirty
+		setEditorIsDirty(false);
+	} else {
+		console.log('内容无修改', 'isMarkdown:' + cacheNote.IsMarkdown, 'isDirty:' + editorIsDirty());
 	}
 
 	if (hasChanged.hasChanged) {
@@ -446,6 +456,7 @@ Note.getImgSrc = function(content) {
 };
 
 Note.setNoteDirty = function (noteId, isDirty) {
+	console.trace('setNoteDirty');
 	var $leftNoteNav = $(tt('#noteItemList [noteId="?"]', noteId));
 	if (!isDirty) {
 		$leftNoteNav.removeClass('item-err');
@@ -533,7 +544,7 @@ Note.curChangedSaveIt = function(force, callback) {
 				content = content[0];
 			}
 			NoteService.addNoteHistory(me.curNoteId, content, callback);
-			console.log('已保存到历史中')
+			// console.log('已保存到历史中')
 		}
 		else {
 			console.log('不用保存 (^_^)');
@@ -2575,30 +2586,11 @@ var Attach = {
 			var src = EvtService.getAttachLocalUrl(attachId); // + "/attach/download?attachId=" + attachId;
 			// http://leanote.com/attach/download?attachId=54f7481638f4112ff000170f
 
+			Note.toggleWriteable();
 			if(LEA.isMarkdownEditor() && MD) {
 				MD.insertLink(src, attach.Title);
 			} else {
 				tinymce.activeEditor.insertContent('<a target="_blank" href="' + src + '">' + attach.Title + '</a>');
-			}
-		});
-
-		// make all link
-		self.linkAllBtnO.on("click",function(e) {
-			// 暂不支持
-			return;
-			e.stopPropagation();
-			var note = Note.getCurNote();
-			if(!note) {
-				return;
-			}
-			var src = EvtService.getAllAttachLocalUrl(note.NoteId); // UrlPrefix +  "/attach/downloadAll?noteId=" + Note.curNoteId
-			// src = 'http://leanote.com/attach/downloadAll?noteId=' + note.NoteId;
-			var title = note.Title ? note.Title + ".tar.gz" : "all.tar.gz";
-
-			if(LEA.isMarkdownEditor() && MD) {
-				MD.insertLink(src, title);
-			} else {
-				tinymce.activeEditor.insertContent('<a target="_blank" href="' + src + '">' + title + '</a>');
 			}
 		});
 

@@ -361,6 +361,12 @@ function setEditorContent(content, isMarkdown, preview, callback) {
 		_setEditorContent(content, isMarkdown, preview, callback);
 	// });
 }
+function setEditorIsDirty(isDirty) {
+	tinymce.activeEditor.isNotDirty = !isDirty; // isDirty = false
+}
+function editorIsDirty() {
+	return !LEA.readOnly && tinymce.activeEditor.isDirty();
+}
 function _setEditorContent(content, isMarkdown, preview, callback) {
 	if(!content) {
 		content = "";
@@ -387,6 +393,8 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 		if(typeof tinymce != "undefined" && tinymce.activeEditor) {
 			var editor = tinymce.activeEditor;
 			editor.setContent(content);
+			setEditorIsDirty(false);
+			// editor.isNotDirty = true; // isDirty = false
 
 			callback && callback(); // Note.toggleReadOnly();
 
