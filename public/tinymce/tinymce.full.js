@@ -39788,229 +39788,50 @@ tinymce.PluginManager.add('link', function(editor) {
 	});
 });
 /**
- * leaui album image manager plugin
- * copyright leaui
- * leaui.com
+ * plugin.js
+ *
+ * Copyright, Moxiecode Systems AB
+ * Released under LGPL License.
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
  */
-var LEAUI_DATAS = [];
-tinymce.PluginManager.add('leaui_image', function(editor, url) {
-	//当url改变时, 得到图片的大小
-	function getImageSize(url, callback) {
-		var img = document.createElement('img');
-	
-		function done(width, height) {
-			img.parentNode.removeChild(img);
-			callback({width: width, height: height});
-		}
-	
-		img.onload = function() {
-			done(img.clientWidth, img.clientHeight);
-		};
-	
-		img.onerror = function() {
-			done();
-		};
-	
-		img.src = url;
-	
-		var style = img.style;
-		style.visibility = 'hidden';
-		style.position = 'fixed';
-		style.bottom = style.left = 0;
-		style.width = style.height = 'auto';
-	
-		document.body.appendChild(img);
-	}
 
+/*global tinymce:true */
+
+tinymce.PluginManager.add('image', function(editor, url) {
+	// 弹框
 	function showDialog() {
-		var dom = editor.dom;
-
-		var content = editor.selection.getContent();
-		// get images and attrs
-		var p = /<img.*?\/>/g;
-		var images = content.match(p);
-		var newNode = document.createElement("p");
-		var datas = [];
-		for(var i in images) {
-			newNode.innerHTML = images[i];
-			var imgElm = newNode.firstChild;
-			if(imgElm && imgElm.nodeName == "IMG") {
-				var data = {};
-				data.src = dom.getAttrib(imgElm, 'data-src') || dom.getAttrib(imgElm, 'src');
-				data.width = dom.getAttrib(imgElm, 'width');
-				data.height = dom.getAttrib(imgElm, 'height');
-				data.title = dom.getAttrib(imgElm, 'title');
-				datas.push(data);
-			}
-		}
-		LEAUI_DATAS = datas;
-
-		function GetTheHtml(){
-			var html = '<iframe id="leauiIfr" src="'+ url + '/index.html'+ '?' + new Date().getTime() + '" frameborder="0"></iframe>';
-			return html;
-		}
-		
-		var w = $(document).width() - 10;
-		if(w > 805) {
-			w = 805;
-		}
-		var h = $(document).height() - 100;
-		if(h > 365) {
-			h = 365;
-		}
-		win = editor.windowManager.open({
-			title: "Image",
-			width : w,
-			height : h,
-			html: GetTheHtml(),
-			buttons: [
-				{
-					text: 'Cancel',
-					onclick: function() {
-						this.parent().parent().close();
-					}
-				},
-				{
-				text: 'Insert Image',
-				subtype: 'primary',
-				onclick: function(e) {
-					var _iframe = document.getElementById('leauiIfr').contentWindow;
-					var _div =_iframe.document.getElementById('preview');
-					var ii = _div.childNodes; 
-					//console.log(ii);
-					var datas = [];
-					for(var i = 0; i < ii.length; ++i) {
-						var e = ii[i]; 
-						//console.log(e);
-						// 有些没有image
-						if(e.firstChild && e.firstChild.nodeName == "IMG") {
-							var img = e.firstChild;
-							var d = {};
-							d.src = img.getAttribute("src");
-							d.width = img.getAttribute("data-width");
-							d.height = img.getAttribute("data-height");
-							d.title = img.getAttribute("data-title");
-
-							datas.push(d);
-						}
-					};
-
-					for(var i in datas) {
-						var data = datas[i];
-						var src = data.src;
-						// the network image
-						var trueSrc;
-						if(src.indexOf("http://") != -1 || src.indexOf("https://") != -1) {
-							trueSrc = src;
-						} else {
-							trueSrc = url + "/" + src;
-						}
-						data.src = trueSrc;
-						
-						var renderImage = function(data) {
-							// 这里, 如果图片宽度过大, 这里设置成500px
-							var back = (function(data2, i) {
-								var d = {};
-								var imgElm;
-								// 先显示loading...
-								d.id = '__mcenew' + i;
-								d.src = "http://leanote.com/images/loading-24.gif";
-								imgElm = dom.createHTML('img', d);
-								editor.insertContent(imgElm);
-								imgElm = dom.get(d.id);
-								
-								return function(wh) {
-									if(wh && wh.width) {
-										if(wh.width > 600) {
-											wh.width = 600;
-										}
-										data2.width = wh.width;
-									}
-									dom.setAttrib(imgElm, 'src', data2.src);
-									// dom.setAttrib(imgElm, 'width', data2.width);
-									dom.setAttrib(imgElm, 'title', data2.title);
-									
-									dom.setAttrib(imgElm, 'id', null);
-								}
-							})(data, i);
-							getImageSize(data.src, back);
-						}
-						
-						// outputImage?fileId=123232323
-						var fileId = "";
-						fileIds = trueSrc.split("fileId=")
-						if(fileIds.length == 2 && fileIds[1].length == "53aecf8a8a039a43c8036282".length) {
-							fileId = fileIds[1];
-						}
-						if(fileId) {
-							// 得到fileId, 如果这个笔记不是我的, 那么肯定是协作的笔记, 那么需要将图片copy给原note owner
-							// 博客设置中不用没有Note
-							var curNote;
-							if(Note && Note.getCurNote) {
-								curNote = Note.getCurNote();
-							}
-							if(curNote && curNote.UserId != UserInfo.UserId) {
-								(function(data) {
-									ajaxPost("/file/copyImage", {userId: UserInfo.UserId, fileId: fileId, toUserId: curNote.UserId}, function(re) {
-										if(reIsOk(re) && re.Id) {
-											var urlPrefix = UrlPrefix; // window.location.protocol + "//" + window.location.host;
-											data.src = urlPrefix + "/file/outputImage?fileId=" + re.Id;
-										}
-										renderImage(data);
-									});
-								})(data);
-							} else {
-								renderImage(data);
-							}
-						} else {
-							renderImage(data);
-						}
-						
-					} // end for
-					
-					this.parent().parent().close();
-				}
-				}]
-		});
+		insertLocalImage();
 	}
-	
-	editor.addButton('leaui_image', {
+	// 添加按钮
+	editor.addButton('image', {
 		icon: 'image',
-		tooltip: 'Insert/edit image',
+		tooltip: 'Insert image',
 		onclick: showDialog,
 		stateSelector: 'img:not([data-mind-json])'
 	});
 
-	editor.addMenuItem('leaui_image', {
-		icon: 'image',
-		text: 'Insert image',
-		onclick: showDialog,
-		context: 'insert',
-		prependToContext: true
-	});
-	
 	// 为解决在editor里拖动图片问题
-	// 2014/7/8 21:43 浮躁的一天终有收获
     var dragStart = false;
     editor.on("dragstart", function(e) {
-    	dragStart = true;
-    });
-    editor.on("dragend", function(e) {
-    	dragStart = false;
-    });
-	editor.on("dragover", function(e) {
-		if(!dragStart) {
-    		$("body").trigger("dragover");
+    	// 只读模式下不能拖动
+    	if (LEA.readOnly) {
+	    	e.preventDefault();
+	    	e.stopPropagation();
     	}
     });
-});
-/**
- * leaui album image manager plugin
+    editor.on("dragend", function(e) {
+    });
+	editor.on("dragover", function(e) {
+    });
+});/**
+ * leaui mind map plugin
  * copyright leaui
  * leaui.com
  */
 var LEAUI_MIND = {};
-tinymce.PluginManager.add('leaui_mind', function(editor, url) {
+tinymce.PluginManager.add('leaui_mindmap', function(editor, url) {
 	
 	function showDialog() {
 		var dom = editor.dom;
@@ -40032,15 +39853,14 @@ tinymce.PluginManager.add('leaui_mind', function(editor, url) {
 
 		function GetTheHtml(){
 			var lang = editor.settings.language;
-			var u = '//leanote.com/public/libs/mind/edit.html';
-			// u = 'http://localhost:9000/public/libs/mind/edit.html';
-			var html = '<iframe id="leauiIfr" src="'+ u + '?' + new Date().getTime() + '&lang=' + lang + '" frameborder="0"></iframe>';
+			var u = url + '/mindmap/index.html?i=1';
+			var html = '<iframe id="leauiMindMapIfr" src="'+ u + '?' + new Date().getTime() + '&lang=' + lang + '" frameborder="0"></iframe>';
 			return html;
 		}
-		
-		var w = $(document).width() - 10;
-		var h = $(document).height() - 100;
-		
+
+		var w = window.innerWidth - 10;
+		var h = window.innerHeight - 150;
+
 		win = editor.windowManager.open({
 			title: "Mind Map",
 			width : w,
@@ -40054,122 +39874,30 @@ tinymce.PluginManager.add('leaui_mind', function(editor, url) {
 					}
 				},
 				{
-				text: 'Insert Mind Map',
+				text: 'Insert',
 				subtype: 'primary',
 				onclick: function(e) {
 					var me = this;
-					var _iframe = document.getElementById('leauiIfr').contentWindow;
+					var _iframe = document.getElementById('leauiMindMapIfr').contentWindow;
 					var km = _iframe.km;
+					// window.km= km;
+					// return
 					km.exportData('png').then(function(data) {
 						var json = JSON.stringify(km.exportJson());
 						// console.log(json);
-						var img = '<img src="' + data + '" data-mce-src="-" data-mind-json=\'' + json + '\'>';
+						var img = '<img src="' + data + '" data-mind-json=\'' + json + '\'>';
 						editor.insertContent(img);
-						
+
 						me.parent().parent().close();
 					});
 					return;
-					
-					var _div =_iframe.document.getElementById('preview');
-					var ii = _div.childNodes; 
-					//console.log(ii);
-					var datas = [];
-					for(var i = 0; i < ii.length; ++i) {
-						var e = ii[i]; 
-						//console.log(e);
-						// 有些没有image
-						if(e.firstChild && e.firstChild.nodeName == "IMG") {
-							var img = e.firstChild;
-							var d = {};
-							d.src = img.getAttribute("src");
-							d.width = img.getAttribute("data-width");
-							d.height = img.getAttribute("data-height");
-							d.title = img.getAttribute("data-title");
-
-							datas.push(d);
-						}
-					};
-
-					for(var i in datas) {
-						var data = datas[i];
-						var src = data.src;
-						// the network image
-						var trueSrc;
-						if(src.indexOf("http://") != -1 || src.indexOf("https://") != -1) {
-							trueSrc = src;
-						} else {
-							trueSrc = url + "/" + src;
-						}
-						data.src = trueSrc;
-						
-						var renderImage = function(data) {
-							// 这里, 如果图片宽度过大, 这里设置成500px
-							var back = (function(data2, i) {
-								var d = {};
-								var imgElm;
-								// 先显示loading...
-								d.id = '__mcenew' + i;
-								d.src = "http://leanote.com/images/loading-24.gif";
-								imgElm = dom.createHTML('img', d);
-								editor.insertContent(imgElm);
-								imgElm = dom.get(d.id);
-								
-								return function(wh) {
-									if(wh && wh.width) {
-										if(wh.width > 600) {
-											wh.width = 600;
-										}
-										data2.width = wh.width;
-									}
-									dom.setAttrib(imgElm, 'src', data2.src);
-									// dom.setAttrib(imgElm, 'width', data2.width);
-									dom.setAttrib(imgElm, 'title', data2.title);
-									
-									dom.setAttrib(imgElm, 'id', null);
-								}
-							})(data, i);
-							getImageSize(data.src, back);
-						}
-						
-						// outputImage?fileId=123232323
-						var fileId = "";
-						fileIds = trueSrc.split("fileId=")
-						if(fileIds.length == 2 && fileIds[1].length == "53aecf8a8a039a43c8036282".length) {
-							fileId = fileIds[1];
-						}
-						if(fileId) {
-							// 得到fileId, 如果这个笔记不是我的, 那么肯定是协作的笔记, 那么需要将图片copy给原note owner
-							// 博客设置中不用没有Note
-							var curNote;
-							if(Note && Note.getCurNote) {
-								curNote = Note.getCurNote();
-							}
-							if(curNote && curNote.UserId != UserInfo.UserId) {
-								(function(data) {
-									ajaxPost("/file/copyImage", {userId: UserInfo.UserId, fileId: fileId, toUserId: curNote.UserId}, function(re) {
-										if(reIsOk(re) && re.Id) {
-											var urlPrefix = UrlPrefix; // window.location.protocol + "//" + window.location.host;
-											data.src = urlPrefix + "/file/outputImage?fileId=" + re.Id;
-										}
-										renderImage(data);
-									});
-								})(data);
-							} else {
-								renderImage(data);
-							}
-						} else {
-							renderImage(data);
-						}
-						
-					} // end for
-					
-					this.parent().parent().close();
 				}
 				}]
 		});
 	}
 	
-	editor.addButton('leaui_mind', {
+	editor.addButton('leaui_mindmap', {
+		// image: url + '/icon.png',
 		icon: 'mind',
 		tooltip: 'Insert/edit mind map',
 		onclick: showDialog,
@@ -41243,26 +40971,24 @@ define("tinymce/pasteplugin/Clipboard", [
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
 
 		/**
-		 * Pastes the specified HTML. This means that the HTML is filtered and then
-		 * inserted at the current selection in the editor. It will also fire paste events
-		 * for custom user filtering.
-		 *
-		 * @param {String} html HTML code to paste into the current selection.
+		 * 复制外链图片, copy到本地
 		 */
-		 function copyImage(src, ids) {
-			ajaxPost("/file/copyHttpImage", {src: src}, function(ret) {
-				if(reIsOk(ret)) {
+		function copyImage(src, ids) {
+			FileService.copyOtherSiteImage(src, function(url) {
+				if (url) {
 					// 将图片替换之
-					var src = urlPrefix + "/" + ret.Item;
-					var dom = editor.dom
+					var dom = editor.dom;
 					for(var i in ids) {
 						var id = ids[i];
 						var imgElm = dom.get(id);
-						dom.setAttrib(imgElm, 'src', src);
+						if (imgElm) {
+							dom.setAttrib(imgElm, 'src', url);
+						}
 					}
 				}
 			});
 		}
+
 		// 粘贴HTML
 		// 当在pre下时不能粘贴成HTML
 		// life add text
@@ -41320,15 +41046,15 @@ define("tinymce/pasteplugin/Clipboard", [
 							var needCopyImages = {}; // src => [id1,id2]
 							var time = (new Date()).getTime();
 							try {
-								var $html = $("<div>" + html + "</div");
+								var $html = $("<div>" + html + "</div>");
 								var $imgs = $html.find("img");
 								for(var i = 0; i < $imgs.length; ++i) {
 									var $img = $imgs.eq(i)
 									var src = $img.attr("src");
 									// 是否是外链
-									if(src.indexOf(urlPrefix) == -1) {
+									if(src.indexOf(urlPrefix) == -1 && src.indexOf('http://127.0.0.1') == -1) {
 										time++;
-										var id = "__LEANOTE_IMAGE_" + time;
+										var id = "__LEANOTE_D_IMG_" + time;
 										$img.attr("id", id);
 										if(needCopyImages[src]) {
 											needCopyImages[src].push(id);
@@ -41338,7 +41064,7 @@ define("tinymce/pasteplugin/Clipboard", [
 									}
 								}
 								editor.insertContent($html.html());
-								
+
 								for(var src in needCopyImages) {
 									var ids = needCopyImages[src];
 									copyImage(src, ids);
@@ -41545,74 +41271,23 @@ define("tinymce/pasteplugin/Clipboard", [
 		
 			document.body.appendChild(img);
 		}
-		
-		// 上传图片
-		function pasteImage(event) {
-			// use event.originalEvent.clipboard for newer chrome versions
-			  var items = (event.clipboardData  || event.originalEvent.clipboardData).items; // 可能有多个file, 找到属于图片的file
-			  log(JSON.stringify(items)); // will give you the mime types
-			  // find pasted image among pasted items
-			  var blob;
-			  for (var i = 0; i < items.length; i++) {
-			    if (items[i].type.indexOf("image") === 0) {
-			      blob = items[i].getAsFile();
-			    }
-			  }
-			  // load image if there is a pasted image
-			  if (blob) {
-			    var reader = new FileReader();
-			    reader.onload = function(event) {
-			      	// 上传之
-			      	var c = new FormData;
-				    c.append("from", "pasteImage");
-				    c.append("file", blob);
-				    c.append("noteId", Note.curNoteId); // life
-				    // var d;
-				    // d = $.ajaxSettings.xhr();
-				    // d.withCredentials = i;var d = {};
-				    
-					// 先显示loading...
-					var editor = tinymce.EditorManager.activeEditor; 
-					var dom = editor.dom;
-					var d = {};						
-					d.id = '__mcenew';
-					d.src = "http://leanote.com/images/loading-24.gif"; // 写死了
-					editor.insertContent(dom.createHTML('img', d));
-					var imgElm = dom.get('__mcenew');
-				    $.ajax({url: "/file/pasteImage", contentType:false, processData:false , data: c, type: "POST"}
-				    	).done(function(re) {
-				    		if(!re || typeof re != "object" || !re.Ok) {
-				    			// 删除
-				    			dom.remove(imgElm);
-				    			return;
-				    		}
-				    		// 这里, 如果图片宽度过大, 这里设置成500px
-							var urlPrefix = UrlPrefix; // window.location.protocol + "//" + window.location.host;
-							var src = urlPrefix + "/file/outputImage?fileId=" + re.Id;
-							getImageSize(src, function(wh) {
-								// life 4/25
-								if(wh && wh.width) {
-									if(wh.width > 600) {
-										wh.width = 600;
-									}
-									d.width = wh.width;
-									dom.setAttrib(imgElm, 'width', d.width);
-								}
-								dom.setAttrib(imgElm, 'src', src);
-							});
-							dom.setAttrib(imgElm, 'id', null);
-				    	});
-			    };
-			    reader.readAsDataURL(blob);
-			    return true;
-			  }
-			  return false;
-		}
 
+		var ever;
 		editor.on('paste', function(e) {
 			if(inAcePrevent()) {
 				return;
 			}
+
+			// start
+			// 以下只是linux需要
+			// -----
+			// 为什么要这个, 因为linux的原因, pasteImage会触发paste事件, 导致多次复制
+			if (ever && new Date().getTime() - ever < 100) {
+				e.preventDefault();
+				return;
+			}
+			ever = new Date().getTime();
+			// end
 
 			var clipboardContent = getClipboardContent(e);
 			var isKeyBoardPaste = new Date().getTime() - keyboardPasteTimeStamp < 100;
@@ -41668,12 +41343,17 @@ define("tinymce/pasteplugin/Clipboard", [
 			//-----------
 			// paste image
 			try {
+				// common.js
+				pasteImage(e);
+				return;
 				/*
 				if(pasteImage(e)) {
 					return;
 				}
 				*/
-			} catch(e) {};
+			} catch(e) {
+				console.error(e);
+			};
 
 		});
 		
@@ -42124,26 +41804,11 @@ define("tinymce/pasteplugin/Plugin", [
 				}
 			}
 		}
-		
-		function togglePasteCopyImage() {
-			if (clipboard.copyImage) {
-				this.active(false);
-				clipboard.copyImage = false
-			} else {
-				clipboard.copyImage = true;
-				this.active(true);
-				if (!userIsInformed2) {
-					editor.windowManager.alert(
-						"When copy other site's images (not in leanote) into editor, it will copy the image into your album."
-					);
-					userIsInformed2 = true;
-				}
-			}
-		}
 
 		self.clipboard = clipboard = new Clipboard(editor);
 		self.quirks = new Quirks(editor);
 		self.wordFilter = new WordFilter(editor);
+		clipboard.copyImage = true;
 
 		if (editor.settings.paste_as_text) {
 			self.clipboard.pasteFormat = "text";
@@ -42196,13 +41861,6 @@ define("tinymce/pasteplugin/Plugin", [
 			onclick: togglePlainTextPaste,
 			active: self.clipboard.pasteFormat == "text"
 		});
-		
-		editor.addButton('pasteCopyImage', {
-			icon: 'copy',
-			tooltip: "When Paste other site's image, copy it into my album as public image",
-			onclick: togglePasteCopyImage,
-			active: self.clipboard.copyImage === true
-		});
 
 		editor.addMenuItem('pastetext', {
 			text: 'Paste as text',
@@ -42214,7 +41872,8 @@ define("tinymce/pasteplugin/Plugin", [
 });
 
 expose(["tinymce/pasteplugin/Utils","tinymce/pasteplugin/WordFilter"]);
-})(this);/**
+})(this);
+/**
  * plugin.js
  *
  * Copyright, Moxiecode Systems AB
@@ -43143,6 +42802,9 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
             "Latex:latex",
             "Xml:xml",
             "ActionScript:actionScript",
+            "Matlab:matlab",
+            "Scala:scala",
+            "Sql:sql"
          ];
 		var items = [];
     	for(var i in langs) {
@@ -43202,7 +42864,7 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
 	ed.addCommand('toggleCode', toggleCode);
     
     ed.addShortcut('ctrl+shift+c', '', 'toggleCode');
-	ed.addShortcut('command+shift+c', '', 'toggleCode');
+	ed.addShortcut('meta+shift+c', '', 'toggleCode');
 
 	// life
 	if(LeaAce.canAce()) {
@@ -43236,26 +42898,27 @@ tinymce.PluginManager.add('leanote_code', function(editor, url) {
 		var num = e.which ? e.which : e.keyCode;
     	if (num == 9) { // tab pressed
     		if(!e.shiftKey) {
- 				// ed.execCommand('Indent');
-    			// TODO 如果当前在li, ul, ol下不执行!!
-    			// 如果在pre下就加tab
 	    		// var node = ed.selection.getNode();
 	    		/*
 				if(node.nodeName == "PRE") {
                     ed.execCommand('mceInsertHTML', false, '\x09'); // inserts tab
 				} else {
 				*/
+				// 如果是在li下的, 就不要控制
+				var node = ed.selection.getNode();
+				if (node && (node.nodeName == 'LI' || $(node.closest('li')).length > 0)) {
+					return true;
+				}
 				ed.insertContent("&nbsp;&nbsp;&nbsp;&nbsp;");
+	            e.preventDefault();
+	            e.stopPropagation();   			
+	            return false;
                 // ed.execCommand('mceInsertHTML', false, "&nbsp;&nbsp;&nbsp;&nbsp;"); // inserts 空格
 				// }
     		} else {
     			// delete 4 个空格
 				// ed.execCommand('Outdent');
     		}
-    		
-            e.preventDefault();
-            e.stopPropagation();   			
-            return false;
        }
 	});
 });/**
