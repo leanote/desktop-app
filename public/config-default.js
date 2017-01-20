@@ -33,7 +33,7 @@ var Config = {
             "name": "日本語"
         }
     ],
-    "lang": "en-us",
+    "lang": "",
     "theme": "",
     "view": "snippet"
 };
