@@ -1225,11 +1225,12 @@ Note.hideSpin = function() {
 	me.startInterval();
 };
 // nodejs调用
-Note.syncFinished = function() {
+Note.syncFinished = function(hasError) {
 	var me = this;
 	me.hideSpin();
-	me._syncWarningE.hide();
-
+	if (!hasError) {
+		me._syncWarningE.hide();
+	}
 	Note.hideSyncProgress();
 };
 // 过时
@@ -1278,9 +1279,9 @@ Note.notLogin = function() {
 };
 Note.needUpgradeAccount = function () {
 	var me = this;
-	me._syncWarningE.show();
 	me.hideSpin();
 	SyncService.setSyncFinished();
+	me._syncWarningE.show();
 	me._syncWarningE.data('reason', 'NEED-UPGRADE-ACCOUNT');
 	me._syncWarningE.attr('title', getMsg('You need to upgrade Leanote account'));
 };

@@ -1507,25 +1507,26 @@ var ContextTips = {
 };
 
 function goToMainPage() {
-	var BrowserWindow = gui.remote.BrowserWindow;
-	var win = new BrowserWindow(getMainWinParams());
-	win.loadURL('file://' + __dirname + '/note.html?from=login');
+	// var BrowserWindow = gui.remote.BrowserWindow;
+	// var win = new BrowserWindow(getMainWinParams());
+	// win.loasdURL('file://' + __dirname + '/note.html?from=login');
+	const {ipcRenderer} = require('electron');
+	var ipc = ipcRenderer;
+	var params = getMainWinParams();
+	params.html = 'note.html?from=login';
+	ipc.send('openUrl', params);
 }
 
 function toLogin() {
-	var BrowserWindow = gui.remote.BrowserWindow;
+	const {ipcRenderer} = require('electron');
+	var ipc = ipcRenderer;
+	// var BrowserWindow = gui.remote.BrowserWindow;
 	if(isMac()) {
-		var win = new BrowserWindow(
-			{ width: 278, height: 370, show: true, frame: false, resizable: false }
-		);
-		win.loadURL('file://' + __dirname + '/login.html');
+		ipc.send('openUrl', {html: 'login.html', width: 278, height: 370, show: true, frame: false, resizable: false })
 	} else {
-		var win = new BrowserWindow(
-			{ width: 278, height: 400, show: true, frame: true, resizable: false }
-		);
-		win.loadURL('file://' + __dirname + '/login.html');
+		ipc.send('openUrl', { width: 278, height: 400, show: true, frame: true, resizable: false })
 	}
-	gui.getCurrentWindow().close();
+	// gui.getCurrentWindow().close();
 }
 // 添加用户
 function switchAccount() {

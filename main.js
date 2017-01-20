@@ -109,6 +109,64 @@ var DB = {
 // initialization and ready for creating browser windows.
 app.on('ready', openIt);
 
+function removeEvents (win) {
+  win.removeAllListeners('closed');
+  win.removeAllListeners('focus');
+  win.removeAllListeners('blur');
+  win.removeAllListeners('close');
+}
+
+function bindEvents (win) {
+
+  // Emitted when the window is closed.
+  win.on('closed', function() {
+    console.log('closed');
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    win = null;
+  });
+
+  win.on('focus', function() {
+    console.log('focus');
+    // ipc.send('focusWindow'); mainProcess没有该方法
+    if(win && win.webContents)
+      win.webContents.send('focusWindow');
+  });
+  win.on('blur', function() {
+    console.log('blur');
+    if(win && win.webContents)
+      win.webContents.send('blurWindow');
+  });
+
+  function close (e, force) {
+    console.log('close:', force);
+    if (win) {
+      win.hide();
+      e && e.preventDefault();
+      win.webContents.send('closeWindow');
+    } else {
+      app.quit();
+    }
+  }
+  
+  // 以前的关闭是真关闭, 现是是假关闭了
+  // 关闭,先保存数据
+  win.on('close', function(e) {
+    // windows支持tray, 点close就是隐藏
+    if (process.platform.toLowerCase().indexOf('win') === 0) { // win32
+      win.hide();
+      e.preventDefault();
+      return;
+    }
+
+    // mac 在docker下quit;
+    // linux直接点x linux不支持Tray
+    close(e, false);
+  });
+
+}
+
 function openIt() {
   // 数据库
   DB.init();
@@ -131,52 +189,7 @@ function openIt() {
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/note.html');
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    console.log('closed');
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
-
-  mainWindow.on('focus', function() {
-    console.log('focus');
-    // ipc.send('focusWindow'); mainProcess没有该方法
-    if(mainWindow && mainWindow.webContents)
-      mainWindow.webContents.send('focusWindow');
-  });
-  mainWindow.on('blur', function() {
-    console.log('blur');
-    if(mainWindow && mainWindow.webContents)
-      mainWindow.webContents.send('blurWindow');
-  });
-
-  function close (e, force) {
-    console.log('close:', force);
-    if (mainWindow) {
-      mainWindow.hide();
-      e && e.preventDefault();
-      mainWindow.webContents.send('closeWindow');
-    } else {
-      app.quit();
-    }
-  }
-  
-  // 以前的关闭是真关闭, 现是是假关闭了
-  // 关闭,先保存数据
-  mainWindow.on('close', function(e) {
-    // windows支持tray, 点close就是隐藏
-    if (process.platform.toLowerCase().indexOf('win') === 0) { // win32
-      mainWindow.hide();
-      e.preventDefault();
-      return;
-    }
-
-    // mac 在docker下quit;
-    // linux直接点x linux不支持Tray
-    close(e, false);
-  });
+  bindEvents(mainWindow);
 
   // 前端发来可以关闭了
   ipc.on('quit-app', function(event, arg) {
@@ -186,6 +199,25 @@ function openIt() {
       mainWindow = null;
     } else {
       app.quit();
+    }
+  });
+
+  // open login.html and note.html
+  ipc.on('openUrl', function(event, arg) {
+    console.log('openUrl', arg);
+
+    var html = arg.html;
+    var everWindow = mainWindow;
+    var win2 = new BrowserWindow(arg);
+    win2.loadURL('file://' + __dirname + '/' + html);
+    mainWindow = win2;
+
+    // remove all events then close it
+    removeEvents(everWindow);
+    everWindow.close();
+
+    if (html.indexOf('note.html') >= 0) {
+      bindEvents(mainWindow)
     }
   });
 
