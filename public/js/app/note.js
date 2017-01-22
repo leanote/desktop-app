@@ -847,21 +847,22 @@ Note.renderChangedNote = function(changedNote) {
 // 清空右侧note信息, 可能是共享的,
 // 此时需要清空只读的, 且切换到note edit模式下
 Note.clearNoteInfo = function() {
-        Note.clearCurNoteId();
-        Tag.input.clearTags();
-        $("#noteTitle").val("");
-        setEditorContent("");
+    Note.clearCurNoteId();
+    Tag.input.clearTags();
+    $("#noteTitle").val("");
+    setEditorContent("");
 
-        // markdown editor
-        /*
-        $("#wmd-input").val("");
-        $("#wmd-preview").html("");
-        */
+    // markdown editor
+    /*
+    $("#wmd-input").val("");
+    $("#wmd-preview").html("");
+    */
 
-        // 只隐藏即可
-        $("#noteRead").hide();
-    }
-    // 清除noteList导航
+    // 只隐藏即可
+    $("#noteRead").hide();
+};
+
+// 清除noteList导航
 Note.clearNoteList = function() {
     Note.noteItemListO.html(""); // 清空
 }
@@ -1252,23 +1253,31 @@ Note.hideSyncProgress = function() {
 Note.unConnected = function() {
     var me = this;
     me._syncWarningE.show();
-    SyncService.setSyncFinished();
+    SyncService.setSyncFinished(true);
     me.hideSpin();
     me._syncWarningE.data('reason', 'unConnected');
     me._syncWarningE.attr('title', 'Network error');
+};
+// 网络已经连接好了
+Note.connected = function() {
+    var me = this;
+    if (me._syncWarningE.data('reason') == 'unConnected') {
+    	me._syncWarningE.data('reason', '-');
+    	me._syncWarningE.hide();
+    }
 };
 Note.notLogin = function() {
     var me = this;
     me._syncWarningE.show();
     me.hideSpin();
-    SyncService.setSyncFinished();
+    SyncService.setSyncFinished(true);
     me._syncWarningE.data('reason', 'notLogin');
     me._syncWarningE.attr('title', getMsg('You need to sign in Leanote'));
 };
 Note.needUpgradeAccount = function() {
     var me = this;
     me.hideSpin();
-    SyncService.setSyncFinished();
+    SyncService.setSyncFinished(true);
     me._syncWarningE.show();
     me._syncWarningE.data('reason', 'NEED-UPGRADE-ACCOUNT');
     me._syncWarningE.attr('title', getMsg('You need to upgrade Leanote account'));
@@ -1284,7 +1293,7 @@ Note.fixNetOrAuthError = function() {
     } else if (reason == 'notLogin') {
         alert(getMsg('You need to sign in Leanote'));
         // 弹出登录框登录之, 重新弹出
-        window.open('login.html?ref=needLogin');
+        toLogin();
 
         // 需要升级Leanote
     } else if (reason == 'NEED-UPGRADE-ACCOUNT') {

@@ -220,9 +220,9 @@ TagInput.prototype = {
   // called by Note
   setTags: function(tags) {
   	if(!Array.isArray(tags)) {
-  		return;
+      tags = [];
   	}
-    this.$tags.html('');
+    this.clearTags();
   	for(var i = 0; i < tags.length; ++i) {
   		this._addTag(tags[i]);
   	}

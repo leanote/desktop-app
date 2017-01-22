@@ -1216,8 +1216,8 @@ LeaAce = {
 function fullSync(callback) {
     log('full sync');
     $('.loading-footer').show();
-    SyncService.fullSync(function(ret, ok) {
-        callback && callback(ok);
+    SyncService.fullSync(function(err, ret) {
+        callback && callback(err, ret);
     });
 }
 
@@ -1525,9 +1525,29 @@ function initPage(initedCallback) {
             else if ('LastSyncUsn' in UserInfo && UserInfo['LastSyncUsn'] > 0) {
                 _init();
             } else {
-                fullSync(function(ok) {
-                    if (!ok) {
-                        Notify.show({ title: 'Info', body: getMsg('Sync error, retry to sync after 3 seconds') });
+                fullSync(function(err, info) {
+                    if (err) {
+                    	if (typeof err == 'object') {
+	                    	if(err['Msg'] == 'NOTLOGIN') {
+	                    		alert(getMsg('You need to sign in Leanote'));
+	                    		toLogin();
+	                    		return;
+							}
+							if(err['Msg'] == 'NEED-UPGRADE-ACCOUNT') {
+								alert(getMsg('You need to upgrade Leanote account'));
+								openExternal('https://leanote.com/pricing#buy');
+								setTimeout(function () {
+		                    		toLogin();
+								}, 1000);
+								return;
+							}
+                    	}
+
+                    	if (isMac()) {
+	                        Notify.show({ title: 'Info', body: getMsg('Sync error, retry to sync after 3 seconds') });
+                    	} else {
+                    		alert(getMsg('Sync error, retry to sync after 3 seconds'));
+                    	}
                         setTimeout(function() {
                             reloadApp();
                         }, 3000);

@@ -116,7 +116,19 @@ function removeEvents (win) {
   win.removeAllListeners('close');
 }
 
+function close (e, force) {
+  console.log('close:', force);
+  if (mainWindow) {
+    mainWindow.hide();
+    e && e.preventDefault();
+    mainWindow.webContents.send('closeWindow');
+  } else {
+    app.quit();
+  }
+}
+
 function bindEvents (win) {
+  mainWindow = win;
 
   // Emitted when the window is closed.
   win.on('closed', function() {
@@ -138,17 +150,6 @@ function bindEvents (win) {
     if(win && win.webContents)
       win.webContents.send('blurWindow');
   });
-
-  function close (e, force) {
-    console.log('close:', force);
-    if (win) {
-      win.hide();
-      e && e.preventDefault();
-      win.webContents.send('closeWindow');
-    } else {
-      app.quit();
-    }
-  }
   
   // 以前的关闭是真关闭, 现是是假关闭了
   // 关闭,先保存数据
