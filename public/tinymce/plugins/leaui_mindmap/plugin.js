@@ -58,7 +58,7 @@ tinymce.PluginManager.add('leaui_mindmap', function(editor, url) {
 					km.exportData('png').then(function(data) {
 						var json = JSON.stringify(km.exportJson());
 						// console.log(json);
-						var img = '<img src="' + data + '" data-mind-json=\'' + json + '\'>';
+						var img = '<img src="' + data + '" data-mce-src="-" data-mind-json=\'' + json + '\'>';
 						editor.insertContent(img);
 
 						me.parent().parent().close();
