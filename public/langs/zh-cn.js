@@ -327,5 +327,7 @@
     "Sync error": "同步失败",
     "Message": "信息",
     "notExists": "服务端笔记不存在",
-    "fileUploadError": "图片/附件上传失败"
+    "fileUploadError": "图片/附件上传失败",
+
+    "Toggle DevTools": "切换开发者工具"
 }  

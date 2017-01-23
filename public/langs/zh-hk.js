@@ -315,5 +315,17 @@
     "Close": "關閉",
 
     "Snippet view": "摘要視圖",
-    "List view": "列表視圖"
+    "List view": "列表視圖",
+    
+    "Network error, please check out your network.": "網絡異常, 請檢查網絡或稍後再試",
+    "You need to sign in Leanote": "您需要重新登錄Leanote",
+    "You need to upgrade Leanote account": "同步失敗, 帳戶已到期或流量已用完, 您需要升級Leanote帳戶",
+
+    "It will not be synced before fixed.": "該筆記未解決前將不會同步",
+    "Sync error": "同步失敗",
+    "Message": "信息",
+    "notExists": "服務端筆記不存在",
+    "fileUploadError": "圖片/附件上傳失敗",
+
+    "Toggle DevTools": "切換開發者工具"
 }
