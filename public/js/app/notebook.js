@@ -724,7 +724,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
             if (callback) {
                 callback(cacheNotes);
             } else {
-                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
+                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId, true);
             }
             return;
         }
@@ -742,7 +742,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
             if (callback) {
                 callback(cacheNotes);
             } else {
-                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
+                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId, true);
             }
             return;
         } else {
@@ -767,7 +767,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
             if (callback) {
                 callback(cacheNotes);
             } else {
-                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId);
+                Note.renderNotesAndTargetNote(cacheNotes, needRendNoteId, false);
             }
             me.hideNoteAndEditorLoading();
         };

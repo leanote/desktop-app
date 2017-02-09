@@ -1971,7 +1971,7 @@ function setMacTopMenu() {
                 });
             }
         }, {
-            label: 'Toggle DevTools',
+            label: getMsg('Toggle DevTools'),
             accelerator: isMac_ ? 'Alt+Command+I' : 'Ctrl+I',
             click: function() { gui.win.toggleDevTools(); }
         }, {

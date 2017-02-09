@@ -329,5 +329,12 @@
     "notExists": "服务端笔记不存在",
     "fileUploadError": "图片/附件上传失败",
 
-    "Toggle DevTools": "切换开发者工具"
+    "Toggle DevTools": "切换开发者工具",
+
+    "Date Created - ASC": "按创建时间-升序",
+    "Date Created - DESC": "按创建时间-降序",
+    "Date Updated - ASC": "按更新时间-升序",
+    "Date Updated - DESC": "按更新时间-降序",
+    "Title - ASC": "按标题-升序",
+    "Title - DESC": "按标题-降序"
 }  
