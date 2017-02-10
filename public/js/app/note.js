@@ -152,10 +152,6 @@ Note.setNotesSorter = function (sortType) {
 };
 
 // render前先排序
-Note.sortNotesToRender = function (notes) {
-	Note.sortNotes(notes);
-};
-
 Note.sortNotes = function (notes) {
 	if (isEmpty(notes)) {
 		return;
@@ -1067,7 +1063,7 @@ Note.renderNotes = function(notes, forNewNote, hasSorted) {
 
     // 重新排序
     if (!hasSorted) {
-	    Note.sortNotesToRender(notes);
+	    Note.sortNotes(notes);
     }
 
     // 20个一次
@@ -2620,7 +2616,6 @@ var Attach = {
                     }
                 } else {}
             });
-
         });
 
         // make link
