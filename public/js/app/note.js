@@ -1108,15 +1108,15 @@ Note._getNoteHtmlObjct = function(note, isShared) {
             tmp = tt(Note.getItemTplNoImg(), classes, this.newNoteSeq(), note.NoteId, note.Title || getMsg('UnTitled'), Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc);
         }
         // blog ?
+        var $tmp = $(tmp);
         if (!note.IsBlog) {
-            tmp = $(tmp);
-            tmp.removeClass('item-b');
+            $tmp.removeClass('item-b');
         } else {
-            tmp.addClass('item-b');
+            $tmp.addClass('item-b');
         }
         // star ?
         if (note.Star) {
-            $(tmp).addClass('item-is-star');
+            $tmp.addClass('item-is-star');
         }
 
         return tmp;
