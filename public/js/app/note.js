@@ -137,8 +137,17 @@ Note.notebookHasNotes = function(notebookId) {
 // sortType = dateCreatedASC dateCreatedDESC
 Note.setNotesSorter = function (sortType) {
 	Config.sortType = sortType;
+
+    // 如果当前是tagSearch, search, star 怎么办?
 	// 重新Render
-	Notebook.changeNotebook(Notebook.curNotebookId);
+    if (Notebook.isTag || Notebook.isStarred || Notebook.isSearch) {
+        Note.renderNotesAndTargetNote(Note._everNotes, false, false);
+    } else {
+        // 其实这里也可以用Note._everNotes, 主要是为了缓存数据
+        Notebook.changeNotebook(Notebook.curNotebookId);
+    }
+    // Note.renderNotesAndTargetNote(Note._everNotes, false, false);
+
 	Api.writeConfig(Config);
 };
 
@@ -1025,6 +1034,9 @@ Note.renderNotes = function(notes, forNewNote, hasSorted) {
 
     this.clearSeqForNew();
     this.batch.reset();
+
+    // 为了切换排序方式用
+    Note._everNotes = notes;
 
     // 手机端不用
     // slimScroll使得手机端滚动不流畅
@@ -3285,7 +3297,7 @@ $(function() {
         var noteViewMenus = new gui.Menu();
         noteViewMenus.append(new gui.MenuItem({
             checked: Config.view === "snippet",
-            label: Api.getMsg("Snippet view"),
+            label: Api.getMsg("Snippet View"),
             type: "checkbox",
             click: function() {
                 Note.switchView('snippet');
@@ -3293,15 +3305,13 @@ $(function() {
         }));
         noteViewMenus.append(new gui.MenuItem({
             checked: Config.view === "list",
-            label: Api.getMsg("List view"),
+            label: Api.getMsg("List View"),
             type: "checkbox",
             click: function() {
                 Note.switchView('list');
             }
         }));
-        noteViewMenus.append(new gui.MenuItem({
-            type: "separator"
-        }));
+        noteViewMenus.append(new gui.MenuItem({type: "separator"}));
         noteViewMenus.append(new gui.MenuItem({
             checked: Config.sortType == "dateCreatedASC",
             label: Api.getMsg("Date Created - ASC"),
@@ -3318,6 +3328,7 @@ $(function() {
             	Note.setNotesSorter('dateCreatedDESC');
             }
         }));
+        noteViewMenus.append(new gui.MenuItem({type: "separator"}));
         noteViewMenus.append(new gui.MenuItem({
             checked: Config.sortType == "dateUpdatedASC",
             label: Api.getMsg("Date Updated - ASC"),
@@ -3334,6 +3345,7 @@ $(function() {
             	Note.setNotesSorter('dateUpdatedDESC');
             }
         }));
+        noteViewMenus.append(new gui.MenuItem({type: "separator"}));
         noteViewMenus.append(new gui.MenuItem({
             checked: Config.sortType == "titleASC",
             label: Api.getMsg("Title - ASC"),

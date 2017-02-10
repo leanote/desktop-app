@@ -51,7 +51,7 @@ TagNav.prototype = {
   	NoteService.searchNoteByTag(tag, function(notes) {
   		hideLoading();
   		if(notes) {
-  			Note.renderNotes(notes);
+  			// Note.renderNotes(notes);
   			Note.renderNotesAndTargetNote(notes, noteId);
   		}
   	});

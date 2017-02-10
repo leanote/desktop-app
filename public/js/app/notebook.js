@@ -788,6 +788,11 @@ Notebook.changeCurNotebookTitle = function(title, isStarred, subTitle, isTag, is
     me.isStarred = isStarred;
     me.isTag = isTag;
     me.isSearch = isSearch;
+    if (isTag) {
+        $('#myNotebookNavForListNav').addClass('tag-title');
+    } else {
+        $('#myNotebookNavForListNav').removeClass('tag-title');
+    }
 };
 
 // 笔记列表与编辑器的mask loading

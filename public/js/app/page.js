@@ -1974,21 +1974,21 @@ function setMacTopMenu() {
             label: getMsg('Toggle DevTools'),
             accelerator: isMac_ ? 'Alt+Command+I' : 'Ctrl+I',
             click: function() { gui.win.toggleDevTools(); }
-        }, {
+        }/*, {
             type: 'separator'
         }, {
-            label: Api.getMsg('Snippet view'),
+            label: Api.getMsg('Snippet View'),
             // type: "checkbox",
             click: function() {
                 Note.switchView('snippet');
             },
         }, {
-            label: Api.getMsg('List view'),
+            label: Api.getMsg('List View'),
             // type: "checkbox",
             click: function() {
                 Note.switchView('list');
             },
-        }, ]
+        }, */]
     }, {
         label: 'Window',
         submenu: [{

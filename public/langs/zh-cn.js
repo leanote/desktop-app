@@ -316,8 +316,8 @@
     "Open": "打开",
     "Close": "关闭",
 
-    "Snippet view": "摘要视图",
-    "List view": "列表视图",
+    "Snippet View": "摘要视图",
+    "List View": "列表视图",
 
     "Network error, please check out your network.": "网络异常, 请检查网络或稍后再试",
     "You need to sign in Leanote": "您需要重新登录Leanote",
