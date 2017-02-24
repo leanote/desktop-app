@@ -1037,7 +1037,7 @@ LeaAce = {
             return true;
         } else {
             // 找到父是pre
-            $pre = $node.closest("pre");
+            var $pre = $node.closest("pre");
             if ($pre.length == 0) {
                 return false;
             }
@@ -1061,7 +1061,7 @@ LeaAce = {
             return false;
         } else {
             // 找到父是pre
-            $pre = $node.closest("pre");
+            var $pre = $node.closest("pre");
             if ($pre.length == 0) {
                 return false;
             }

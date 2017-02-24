@@ -903,7 +903,7 @@ Note.renderChangedNote = function(changedNote) {
         $leftNoteNav.find(".desc").html(trimTitle(changedNote.Desc));
     }
     if (changedNote.ImgSrc) {
-        $thumb = $leftNoteNav.find(".item-thumb");
+        var $thumb = $leftNoteNav.find(".item-thumb");
         // 有可能之前没有图片
         if ($thumb.length > 0) {
             $thumb.find("img").attr("src", Note.fixImageSrc(changedNote.ImgSrc));
@@ -2499,8 +2499,6 @@ Note.initContextmenu = function() {
             this.menu.append(gui.getSeparatorMenu());
             this.menu.append(this.exports);
         }
-
-        T = this;
 
         this.enable = function(name, ok) {
                 this[name].enabled = ok;
