@@ -710,7 +710,7 @@ Notebook.changeNotebook = function(notebookId, callback, needRendNoteId) {
 
     var url = "/note/listNotes/";
     var param = { notebookId: notebookId };
-
+    var cacheNotes = null;
     // 废纸篓
     if (Notebook.isTrashNotebookId(notebookId)) {
         url = "/note/listTrashNotes";
