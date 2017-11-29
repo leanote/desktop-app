@@ -956,8 +956,10 @@ Note.renderNote = function(note) {
     if (!note) {
         return;
     }
+    var title = note.Title || '';
+    title = title.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     // title
-    $("#noteTitle").val(note.Title);
+    $("#noteTitle").val(title);
 
     // 当前正在编辑的
     // tags
@@ -1997,7 +1999,7 @@ Note.renderStars = function(notes) {
     me.starNotesO.html('');
     for (var i = 0; i < notes.length; ++i) {
         var note = notes[i];
-        var t = tt(me.starItemT, note.NoteId, note.Title || getMsg('Untitled'));
+        var t = tt(me.starItemT, note.NoteId, trimTitle(note.Title) || getMsg('Untitled'));
         me.starNotesO.append(t);
     }
 
