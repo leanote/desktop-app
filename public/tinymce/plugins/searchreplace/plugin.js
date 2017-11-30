@@ -277,7 +277,8 @@
 				type: 'window',
 				layout: "flex",
 				pack: "center",
-				align: "center",
+				align: "right",
+				classes: "find-replace-ctn",
 				onClose: function() {
 					editor.focus();
 					self.done();
@@ -362,6 +363,17 @@
 					]
 				}
 			}).renderTo().reflow();
+			
+			if ($('body').is('.writting')) {
+				win.moveTo($('body').width()-$('.mce-find-replace-ctn').width(), 40)
+			} else {
+				var w = $('body').width() - $('#note').width();
+				var left = w - $('.mce-find-replace-ctn').width() - 2;
+				if (left < 0) {
+					left = 0;
+				}
+				win.moveTo(left, 40)
+			}
 		}
 
 		self.init = function(ed) {
