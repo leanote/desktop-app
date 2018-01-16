@@ -12075,7 +12075,7 @@ SmartyPants does not modify characters within <pre>, <code>, <kbd>, or <script> 
         editor.hooks.chain("onPreviewRefresh", function () {
             $('#preview-contents pre code').each(function () {
                 var classes = $(this).attr('class');
-                if (classes != 'language-flow' && classes != 'language-sequence') {
+                if (classes != 'language-flow' && classes != 'language-sequence' && classes != 'language-mermaid' && classes != 'language-chart') {
                     $(this).parent().addClass('prettyprint linenums'); 
                 }
             });
@@ -12651,35 +12651,65 @@ define('extensions/umlDiagrams',[
 			});
 		});
 	}
-
-	function renderFlow() {
-		var flows = previewContentsElt.querySelectorAll('.prettyprint > .language-flow');
-		if (!flows || flows.length == 0) {
-			return;
-		}
-		// console.log('flows')
-		require(['flow-chart'], function (flowChart) {
-			_.each(flows, function(elt) {
-				try {
-					var chart = flowChart.parse(elt.textContent);
-					var preElt = elt.parentNode;
-					var containerElt = crel('div', {
-						class: 'flow-chart'
-					});
-					preElt.parentNode.replaceChild(containerElt, preElt);
-					chart.drawSVG(containerElt, JSON.parse(umlDiagrams.config.flowchartOptions));
-				}
-				catch(e) {
-					console.error(e);
-				}
-			});
-		});
-	}
+	function renderChart() {
+                var c = previewContentsElt.querySelectorAll('.prettyprint > .language-chart');
+                if (!c || c.length == 0) {
+                        return;
+                }
+                console.log(c);
+                require(['chart'], function (chart) {
+                        _.each(c, function(elt) {
+                                try {
+                                        var jsonObject = JSON.parse(elt.textContent);
+                                        var preElt = elt.parentNode;
+                                        var containerElt = crel('canvas', {
+                                                //class: 'flow-chart'
+                                        });
+                                        preElt.parentNode.replaceChild(containerElt, preElt);
+					var ctx = containerElt.getContext('2d');
+					new Chart(ctx, jsonObject);
+                                }
+                                catch(e) {
+                                        console.error(e);
+                                }
+                        });
+                });
+        }
+	function renderMermaid() {
+                var mer = previewContentsElt.querySelectorAll('.prettyprint > .language-mermaid');
+                if (!mer || mer.length == 0) {
+                        return;
+                }
+                console.log(mer);
+		return;
+                require(['mermaid'], function (mermaid) {
+                        console.log('xxx');
+                        _.each(mer, function(elt) {
+                                try {
+                                        /*
+                                        var chart = flowChart.parse(elt.textContent);
+                                        var preElt = elt.parentNode;
+                                        var containerElt = crel('div', {
+                                                class: 'flow-chart'
+                                        });
+                                        preElt.parentNode.replaceChild(containerElt, preElt);
+                                        chart.drawSVG(containerElt, JSON.parse(umlDiagrams.config.flowchartOptions));
+                                        */
+                                        console.log(elt)
+                                }
+                                catch(e) {
+                                        console.error(e);
+                                }
+                        });
+                });
+        }
 
 	function onToggleMode(editor) {
 		editor.hooks.chain("onPreviewRefresh", function() {
 			renderSequence();
 			renderFlow();
+			renderMermaid();
+			renderChart();
 		});
 	}
 
@@ -17675,7 +17705,9 @@ requirejs.config({
         Diagram: 'public/libs/uml/sequence-diagram.min',
         'diagram-grammar': 'public/libs/uml/diagram-grammar.min',
         raphael: 'public/libs/uml/raphael.min',
-        'flow-chart': 'public/libs/uml/flowchart.amd-1.3.4.min'
+        'flow-chart': 'public/libs/uml/flowchart.amd-1.3.4.min',
+        'mermaid': 'public/libs/uml/mermaid',
+	'chart': 'public/js/chart'
     },
     shim: {
         underscore: {
