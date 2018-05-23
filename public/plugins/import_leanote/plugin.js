@@ -24,7 +24,7 @@ define(function() {
 			},
 			'zh-cn': {
 				'importLeanote': '导入Leanote',
-				'Choose Leanote files(.leanote)': '选择Leanote文件(.enex)',
+				'Choose Leanote files(.leanote)': '选择Leanote文件(.leanote)',
 				'Close': "关闭",
 				'Import to': "导入至",
 				"Done! %s notes imported!": "完成, 成功导入 %s 个笔记!",
@@ -34,7 +34,7 @@ define(function() {
 			},
 			'zh-hk': {
 				'importLeanote': '導入Leanote',
-				'Choose Leanote files(.leanote)': '選擇Leanote文件(.enex)',
+				'Choose Leanote files(.leanote)': '選擇Leanote文件(.leanote)',
 				'Close': "關閉",
 				"Import to": "導入至",
 				"Done! %s notes imported!": "完成, 成功導入 %s 個筆記!",
