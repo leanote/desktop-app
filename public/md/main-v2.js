@@ -12675,34 +12675,30 @@ define('extensions/umlDiagrams',[
                         });
                 });
         }
-	function renderMermaid() {
-                var mer = previewContentsElt.querySelectorAll('.prettyprint > .language-mermaid');
-                if (!mer || mer.length == 0) {
-                        return;
-                }
-                console.log(mer);
-		return;
-                require(['mermaid'], function (mermaid) {
-                        console.log('xxx');
-                        _.each(mer, function(elt) {
-                                try {
-                                        /*
-                                        var chart = flowChart.parse(elt.textContent);
-                                        var preElt = elt.parentNode;
-                                        var containerElt = crel('div', {
-                                                class: 'flow-chart'
-                                        });
-                                        preElt.parentNode.replaceChild(containerElt, preElt);
-                                        chart.drawSVG(containerElt, JSON.parse(umlDiagrams.config.flowchartOptions));
-                                        */
-                                        console.log(elt)
-                                }
-                                catch(e) {
-                                        console.error(e);
-                                }
-                        });
-                });
+    function renderMermaid() {
+        var mer = previewContentsElt.querySelectorAll('.prettyprint > .language-mermaid');
+        if (!mer || mer.length == 0) {
+            return;
         }
+
+        //loadJs('https://cdn.bootcss.com/mermaid/7.1.2/mermaid.js', function () {
+            _.each(mer, function(elt) {
+                try {
+                    var text = elt.textContent;
+                    var preElt = elt.parentNode;
+                    var containerElt = crel('div', {
+                        class: 'mermaid flow-chart',
+                        style: 'max-width: 960px; margin:0 auto;',
+                    }, text);
+                    preElt.parentNode.replaceChild(containerElt, preElt);
+                    mermaid.init({noteMargin: 10}, ".mermaid");
+                }
+                catch(e) {
+                    console.error(e);
+                }
+            });
+        //});
+    }
 
 	function onToggleMode(editor) {
 		editor.hooks.chain("onPreviewRefresh", function() {
@@ -12893,6 +12889,36 @@ define('extensions/emailConverter',[
     };
 
     return emailConverter;
+});
+
+define('extensions/emojiConverter',[
+    "classes/Extension",
+], function(Extension) {
+    var emojiConverter = new Extension("emojiConverter", "Markdown Emoji", true);
+    emojiConverter.onPagedownConfigure = function(editor) {
+        editor.getConverter().hooks.chain("postConversion", function(text) {
+            return text.replace(/:([-\w]+):/g, function(match, emoji) {
+                    return '<i class="em em-' + emoji + '"></i>';
+            });
+        });
+    };
+
+    return emojiConverter;
+});
+
+define('extensions/containerConverter',[
+    "classes/Extension",
+], function(Extension) {
+    var converter = new Extension("containerConverter", "Markdown Container", true);
+    converter.onPagedownConfigure = function(editor) {
+        editor.getConverter().hooks.chain("postConversion", function(text) {
+            return text.replace(/::: (success|warning|info|danger) <br>\n(.+)\n:::/gm, function(match, level, context) {
+                    return '<div class="' + level + '">' + context + '</div>';
+            });
+        });
+    };
+
+    return converter;
 });
 
 define('extensions/todoList',[
@@ -13906,6 +13932,8 @@ define('eventMgr',[
     "extensions/toc",
     "extensions/mathJax",
     "extensions/emailConverter",
+    "extensions/emojiConverter",
+    "extensions/containerConverter",
     "extensions/todoList",
     "extensions/scrollLink",
     "extensions/htmlSanitizer",
