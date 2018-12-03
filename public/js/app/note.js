@@ -3700,7 +3700,7 @@ Note._getError = function(err, ret) {
     var Err = {};
     try {
         if (err && typeof err == 'object') {
-            Err.err = err.toString();
+            Err.err = JSON.stringify(err)
         }
     } catch (e) {}
     if (typeof ret == 'object' && 'Msg' in ret) {
