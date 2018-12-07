@@ -466,8 +466,9 @@ function pasteImage(e) {
 			insertImage(url);
 		});
 		e && e.preventDefault();
+		return true
 	}
-	return;
+	return false;
 
 	// 以下是node-webkit版
 
