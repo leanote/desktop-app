@@ -677,12 +677,12 @@ window.debug = false;
 <script>
 window.require = window.requireNode;
 </script>
-<!-- 远程控制, 升级 -->
+<!-- 升级 -->
 <script>
 (function () {
   var s = document.createElement('script');
   s.type = 'text/javascript';
-  s.src = 'http://app.leanote.com/js/app_electron.js?t=' + Math.ceil(new Date() / 3600000);
+  s.src = 'https://leanote.com/js/app_electron.js?t=' + Math.ceil(new Date() / 3600000);
   document.getElementsByTagName('body')[0].appendChild(s);
 })();
 </script>
