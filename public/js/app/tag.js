@@ -99,6 +99,11 @@ TagNav.prototype = {
   // 更新tags，并重绘到左侧
   setTags: function(tags) {
   	this.tags = tags || [];
+	// wdd add start
+    this.tags.sort(function(a, b){
+ return a.Tag.toLowerCase() > b.Tag.toLowerCase() ? 1 : -1;
+});
+// wdd add end
   	$('#tagNav').html('');
   	for(var i in this.tags) {
   		var noteTag = this.tags[i];
