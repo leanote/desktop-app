@@ -518,7 +518,7 @@ Note.getImgSrc = function(content) {
         var imgs = $(content).find("img");
         for (var i in imgs) {
             var src = imgs.eq(i).attr("src");
-            if (src) {
+            if(src && src.indexOf('data:image') < 0) { // 不是base64数据
                 return src;
             }
         }
@@ -3700,7 +3700,7 @@ Note._getError = function(err, ret) {
     var Err = {};
     try {
         if (err && typeof err == 'object') {
-            Err.err = err.toString();
+            Err.err = JSON.stringify(err)
         }
     } catch (e) {}
     if (typeof ret == 'object' && 'Msg' in ret) {
