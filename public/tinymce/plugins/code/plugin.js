@@ -46,13 +46,13 @@ tinymce.PluginManager.add('code', function(editor) {
 	editor.addCommand("mceCodeEditor", showDialog);
 
 	editor.addButton('code', {
-		icon: 'code',
+		icon: 'browse',
 		tooltip: 'Source code',
 		onclick: showDialog
 	});
 
 	editor.addMenuItem('code', {
-		icon: 'code',
+		icon: 'browse',
 		text: 'Source code',
 		context: 'tools',
 		onclick: showDialog
