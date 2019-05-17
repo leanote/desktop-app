@@ -2,6 +2,7 @@
 .settings
 .project
 .bin
+.idea
 
 config.codekit
 .codekit-cache
