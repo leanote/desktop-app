@@ -20,20 +20,42 @@ crashReporter.start({
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
-// single instance
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    mainWindow.show();
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
-    mainWindow.focus();
-  }
-})
+if (!app.makeSingleInstance) {
+  app.allowRendererProcessReuse = true
 
-if (shouldQuit) {
-  app.quit()
+  // single instance
+  const gotTheLock = app.requestSingleInstanceLock()
+  if (!gotTheLock) {
+    console.log("gotTheLock is false, another instance is running")
+    app.quit()
+  } else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      if (mainWindow) {
+        mainWindow.show();
+        if (mainWindow.isMinimized()) {
+          mainWindow.restore();
+        }
+        mainWindow.focus();
+      }
+    })
+  }
+}
+else {
+  // single instance
+  const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      mainWindow.show();
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.focus();
+    }
+  })
+
+  if (shouldQuit) {
+    app.quit()
+  }
 }
 
 // Quit when all windows are closed.
@@ -181,7 +203,10 @@ function openIt() {
       width: 1050, 
       height: 595, 
       frame: process.platform != 'darwin', 
-      transparent: false
+      transparent: false,
+      webPreferences: {
+        nodeIntegration: true
+      }
     }
   );
 
@@ -206,6 +231,9 @@ function openIt() {
   // open login.html and note.html
   ipc.on('openUrl', function(event, arg) {
     console.log('openUrl', arg);
+
+    arg.webPreferences = arg.webPreferences === undefined ? {} : arg.webPreferences;
+    arg.webPreferences.nodeIntegration = true;
 
     var html = arg.html;
     var everWindow = mainWindow;
