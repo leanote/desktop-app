@@ -118,63 +118,78 @@ define(function() {
 
 			// 导入, 选择文件
 			$('#chooseLeanoteFile').click(function() {
+				var callback = function(paths) {
 
-				Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+					if(!paths) {
+						return;
+					}
+
+					var notebookId = me._curNotebook.NotebookId;
+
+					var n = 0;
+
+					me.clear();
+
+					if (!importService) {
+						importService = nodeRequire('./public/plugins/import_leanote/import');
+					}
+
+					importService.importFromLeanote(notebookId, paths,
+						// 全局
+						function(ok) {
+							// $('#importLeanoteMsg .curImportFile').html("");
+							// $('#importLeanoteMsg .curImportNote').html("");
+							setTimeout(function() {
+								$('#importLeanoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
+							}, 500);
+						},
+						// 单个文件
+						function(ok, filename) {
+							if(ok) {
+								$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
+							} else {
+								$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is leanote file ?", filename));
+							}
+						},
+						// 单个笔记
+						function(note) {
+							if(note) {
+								n++;
+								$('#importLeanoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
+
+								// 不要是新的, 不然切换笔记时又会保存一次
+								note.IsNew = false;
+								
+								// 插入到当前笔记中
+								Note.addSync([note]);
+							}
+						}
+					);
+				}
+				var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 					{
 						properties: ['openFile', 'multiSelections'],
 						filters: [
 							{ name: 'Leanote', extensions: ['leanote'] }
 						]
 					},
-					function(paths) {
-						if(!paths) {
-							return;
-						}
+				callback	
+				);
+				if(typeof(po) != "object"){
+					return;
+				}
 
-						var notebookId = me._curNotebook.NotebookId;
-
-						var n = 0;
-
-						me.clear();
-
-						if (!importService) {
-							importService = nodeRequire('./public/plugins/import_leanote/import');
-						}
-
-						importService.importFromLeanote(notebookId, paths,
-							// 全局
-							function(ok) {
-								// $('#importLeanoteMsg .curImportFile').html("");
-								// $('#importLeanoteMsg .curImportNote').html("");
-								setTimeout(function() {
-									$('#importLeanoteMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
-								}, 500);
-							},
-							// 单个文件
-							function(ok, filename) {
-								if(ok) {
-									$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
-								} else {
-									$('#importLeanoteMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is leanote file ?", filename));
-								}
-							},
-							// 单个笔记
-							function(note) {
-								if(note) {
-									n++;
-									$('#importLeanoteMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
-
-									// 不要是新的, 不然切换笔记时又会保存一次
-									note.IsNew = false;
-									
-									// 插入到当前笔记中
-									Note.addSync([note]);
-								}
-							}
-						);
+				po.then(
+					function(re){
+					if(re.canceled !== false || re.filePaths.length < 1){
+						return;
+					}
+					callback(re.filePaths);
+				}, 
+					function(err){
+						alert(err);
 					}
 				);
-
 			});
 		},
 

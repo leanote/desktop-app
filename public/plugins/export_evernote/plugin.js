@@ -405,13 +405,28 @@ define(function() {
 
 		getTargetPath: function(callback) {
 			// showSaveDialog 不支持property选择文件夹
-			Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+			var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 				{
 					defaultPath: Api.gui.app.getPath('userDesktop') + '/',
 					properties: ['openDirectory']
 				}, 
 				function(targetPath) {
 					callback(targetPath);
+				}
+			);
+
+			if(typeof(po) != "object"){
+				return;
+			}
+
+			po.then(function(re){
+				if(re.canceled !== false || re.filePaths.length < 1){
+					return;
+				}
+				callback(re.filePaths[0]);
+			}, 
+				function(err){
+					alert(err);
 				}
 			);
 		},
