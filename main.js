@@ -1,6 +1,6 @@
 // var app = require('electron').app;  // Module to control application life.
 const {app, BrowserWindow, crashReporter, Tray, Menu, ipcMain: ipc} = require('electron');
-var pdfMain = require('pdf_main');
+var pdfMain = require('./src/pdf_main');
 var appIcon;
 
 // Report crashes to our server.
@@ -93,7 +93,7 @@ app.on('activate', function() {
 var DB = {
   init: function () {
     var me = this;
-    var db = require('db_main');
+    var db = require('./src/db_main');
 
     // 前端发来消息
     // m = {token: token, method: 'insert, findOne', dbname: 'notes', params: {username: "life"}};
@@ -192,7 +192,7 @@ function openIt() {
   DB.init();
 
   // 协议
-  var leanoteProtocol = require('leanote_protocol');
+  var leanoteProtocol = require('./src/leanote_protocol');
   leanoteProtocol.init();
 
   // Create the browser window.
@@ -235,7 +235,7 @@ function openIt() {
     arg.webPreferences = arg.webPreferences === undefined ? {} : arg.webPreferences;
     arg.webPreferences.nodeIntegration = true;
     arg.webPreferences.contextIsolation = false;
-    arg.webPreferences.enableRemoteModule = false;
+    arg.webPreferences.enableRemoteModule = true;
 
     var html = arg.html;
     var everWindow = mainWindow;

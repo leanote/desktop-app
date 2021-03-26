@@ -453,7 +453,7 @@ function _setEditorContent(content, isMarkdown, preview, callback) {
 
 // 复制图片
 // 在web端得到图片
-const {clipboard} = require('electron');
+const clipboard= electron.clipboard;
 function pasteImage(e) {
 	var image = clipboard.readImage();
 	if(image) {
@@ -1511,16 +1511,14 @@ function goToMainPage() {
 	// var BrowserWindow = gui.remote.BrowserWindow;
 	// var win = new BrowserWindow(getMainWinParams());
 	// win.loasdURL('file://' + __dirname + '/note.html?from=login');
-	const {ipcRenderer} = require('electron');
-	var ipc = ipcRenderer;
+	const ipc = electron.ipcRenderer;
 	var params = getMainWinParams();
 	params.html = 'note.html?from=login';
 	ipc.send('openUrl', params);
 }
 
 function toLogin() {
-	const {ipcRenderer} = require('electron');
-	var ipc = ipcRenderer;
+	const ipc = electron.ipcRenderer;
 	// var BrowserWindow = gui.remote.BrowserWindow;
 	if(isMac()) {
 		ipc.send('openUrl', {html: 'login.html', width: 278, height: 370, show: true, frame: false, resizable: false })

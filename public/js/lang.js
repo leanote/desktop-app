@@ -1,7 +1,7 @@
 // lang.js
 // 语言
 
-var fs = require('fs');
+const fs = require('fs');
 var lang = {
 	readJson: function(file) {
 		try {

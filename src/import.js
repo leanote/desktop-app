@@ -1,5 +1,13 @@
-var xml2js = require('xml2js');
+var xml2js =require('xml2js');
+var fs = require('fs');
 var async = require('async');
+
+var Evt = require('./evt');
+var File = require('./file');
+var Note = require('./note');
+var Web = require('./web');
+var Tag = require('./tag');
+var Common = require('./common');
 
 var Import = {
 
@@ -13,7 +21,7 @@ var Import = {
    </en-note>\n'
    把<en-note>与</en-note>中间部分抽出
 
-   parsedRes = {hash1: file, hash2: file}
+   parsedRes = [{FileId: ""}]
    */
   parseEvernoteContent: function(xml, parsedRes) {
     var me = this;
@@ -32,31 +40,21 @@ var Import = {
       return '';
     }
     var reg = new RegExp("<en\-media(.*?)\/*>", "g"); // <en-media /> <en-media></en-media>
+    var i = 0;
     // console.log(content);
     while(ret = reg.exec(content)) {
       // ret[1] == type="text/html" style="cursor:pointer;" height="43" hash="bc322a11075e40f3a5b2dce3f2fffcdc"
       try {
-        var attrs = ret[1];
-
-        // 得到hash
-        var hashes = attrs.match(/hash="([0-9a-zA-Z]{32})"/);
-        var hash = '';
-        if (hashes) {
-          hash = hashes[1];
-        }
-        if (!hash) {
-          continue;
-        }
-
-        var res = parsedRes[hash];
+        var res = parsedRes[i];
+        i++;
         var fileId = res['FileId'];
         if(!fileId) {
           continue;
         }
         if(res.IsImage) {
-          var replace = '<img src="' + Api.evtService.getImageLocalUrl(fileId) + '" ' + attrs + '>';
+          var replace = '<img src="' + Evt.getImageLocalUrl(fileId) + '" ' + ret[1] + '>';
         } else {
-          var replace = '<a href="' + Api.evtService.getAttachLocalUrl(fileId) + '">' + res['Title'] + '</a>'
+          var replace = '<a href="' + Evt.getAttachLocalUrl(fileId) + '">' + res['Title'] + '</a>'
         }
         content = content.replace(ret[0], replace);
       } catch(e) {
@@ -67,61 +65,34 @@ var Import = {
     // 如果是<en-media></en-media>, </en-media>匹配不到
     content = content.replace(/<\/en-media>/g, '');
 
+
     return content;
   },
 
   writeTest: function() {
     var path = '/Users/life/Desktop/1428226025985_2.png.txt';
     fs.readFile(path, function(err, xml) {
-      Api.fileService.writeBase64(xml+"", true, 'png', 'a.png', function(file) {
+      File.writeBase64(xml+"", true, 'png', 'a.png', function(file) {
       });
     });
-  },
-
-  // 20150206T031506Z
-  parseEvernoteTime: function (str) {
-    // console.log('parseEvernoteTime');
-    // console.log(str);
-    if (!str || typeof str != 'string' || str.length != '20150206T031506Z'.length) {
-      return new Date();
-    }
-    var year = str.substr(0, 4);
-    var month = str.substr(4, 2);
-    var day = str.substr(6, 2);
-
-    var h = str.substr(9, 2);
-    var m = str.substr(11, 2);
-    var s = str.substr(13, 2);
-
-    var d = new Date(year + '-' + month + '-' + day + ' ' + h + ':' + m + ':' + s);
-    // invalid
-    if (isNaN(d.getTime())) {
-      return new Date();
-    }
-    return d;
   },
 
   parseEachNote: function(note, callback) {
     var me = this;
 
-    var created = note['created'] && note['created'][0];
-    var updated = note['updated'] && note['updated'][0];
-
     var jsonNote = {
       Title: note['title'][0],
       Tags: note['tag'] || [],
-      Content: note['content'][0],
-      CreatedTime: me.parseEvernoteTime(created),
-      UpdatedTime: me.parseEvernoteTime(updated),
+      Content: note['content'][0]
     };
 
     // 文件保存之
     var resources = note['resource'] || [];
-    var parsedRes = {};
+    var parsedRes = [];
     var attachs = [];
-    // console.log("-----------")
-    // console.log(note);
-    // console.log(resources);
+    console.log("-----------")
+    console.log(note);
+    console.log(resources);
     async.eachSeries(resources, function(res, cb) {
         // console.log(res['data'][0]['$']);
         /*
@@ -161,10 +132,9 @@ var Import = {
         // console.log(type);
         // return cb();
 
-        Api.fileService.writeBase64(base64Str, isImage, type, filename, function(file) {
+        File.writeBase64(base64Str, isImage, type, filename, function(file) {
           if(file) {
-            parsedRes[file.hash] = file;
-            // parsedRes.push(file);
+            parsedRes.push(file);
             if(!isImage) {
               attachs.push(file);
             }
@@ -178,14 +148,13 @@ var Import = {
         // 把content的替换之
         // console.log('ok, writeBase64 ok');
         try {
-          // console.log('parsedRes');
-          // console.log(parsedRes);
+          console.log(parsedRes);
           jsonNote.Content = me.parseEvernoteContent(jsonNote.Content, parsedRes);
           jsonNote.Attachs = attachs;
         } catch(e) {
           console.log(e);
         }
-        // console.log(jsonNote);
+        console.log(jsonNote);
         return callback && callback(jsonNote);
       }
     );
@@ -194,12 +163,9 @@ var Import = {
   // callback 是全局的
   // eachFileCallback是每一个文件的
   // eachNoteFileCallback是每一个笔记的
-  // filePaths = []
   importFromEvernote: function(notebookId, filePaths, callback, eachFileCallback, eachNoteCallback) {
     var me = this;
-    // var filePaths = filePaths.split(';');
-    // 
-    var filePaths = filePaths || [];
+    var filePaths = filePaths.split(';');
 
     async.eachSeries(filePaths, function(path, cb) {
       fs.readFile(path, function(err, xml) {
@@ -238,29 +204,31 @@ var Import = {
               try {
 
                 // 保存到数据库中
-                jsonNote.NoteId = Api.commonService.objectId();
+                jsonNote.NoteId = Common.objectId();
                 jsonNote._id = jsonNote.NoteId;
                 jsonNote.IsNew = true;
                 jsonNote.NotebookId = notebookId;
                 jsonNote.Desc = '';
-                jsonNote.IsMarkdown = false;
 
-                // console.log('----------');
+                // jsonNote.Content = "";
+                // jsonNote.Attachs = null;
+
                 // console.log(jsonNote);
+
+                // eachCallback && eachCallback(false);
+                // return cb();
 
                 // 添加tags
                 if(jsonNote.Tags && jsonNote.Tags.length > 0) {
                   for(var h = 0; h < jsonNote.Tags.length; ++h) {
                     var tagTitle = jsonNote.Tags[h];
-                    Api.tagService.addOrUpdateTag(tagTitle, function(tag) {
-                      Api.webService.addTag(tag); 
+                    Tag.addOrUpdateTag(tagTitle, function(tag) {
+                      Web.addTag(tag); 
                     });
                   }
                 }
 
-                console.log('--- haha -- Note.updateNoteOrContent');
-
-                Api.noteService.updateNoteOrContent(jsonNote, function(insertedNote) {
+                Note.updateNoteOrContent(jsonNote, function(insertedNote) {
                   eachCallback && eachCallback(insertedNote);
                   cb();
                 });

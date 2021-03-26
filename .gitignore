@@ -23,3 +23,5 @@ node_modules/fs.extra
 /public/themes/**/*.css
 /public/css/**/*.css
 /dev/node_modules
+
+node_modules

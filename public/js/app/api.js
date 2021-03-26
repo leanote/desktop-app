@@ -17,8 +17,10 @@ var Api = {
 	noteService: NoteService,
 	userService: UserService,
 	dbService: db,
-	ipc: nodeRequire('electron').ipcRenderer,
+	ipc: electron.ipcRenderer,
     projectPath: projectPath,
+    fs: nodeRequire('fs'),
+    path: nodeRequire('path'),
 
 	// 打开本地目录
 	// mac和windows下不同
@@ -45,7 +47,8 @@ var Api = {
 	},
 
 	getConfigFilePath: function() {
-		return __dirname + '/public/config.js';
+        var me = this;
+		return me.evtService.getProjectBasePath() + '/public/config.js';
 	},
 	writeConfig: function(config) {
 		var me = this;

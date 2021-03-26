@@ -1,12 +1,4 @@
-var fs = require('fs');
-var Evt = require('evt');
-var File = require('file');
-var Note = require('note');
-var Web = require('web');
-var Tag = require('tag');
 var async = require('async');
-var Common = require('common');
-var path = require('path');
 var resanitize = require('resanitize');
 var iconv = require('iconv-lite');
 
@@ -81,18 +73,18 @@ var Import = {
   parseHTML: function (notebookId, filename, callback, eachCallback) {
     var me = this;
     try {
-      var data = fs.readFileSync(filename);
+      var data = Api.fs.readFileSync(filename);
       var htmlData = iconv.decode(data, 'utf-8');
       if (!htmlData) {
         return callback(false);
       }
       // utf-16
       if (htmlData.indexOf('�') != -1) {
-        htmlData = iconv.decode(fs.readFileSync(filename), 'utf-16');
+        htmlData = iconv.decode(Api.fs.readFileSync(filename), 'utf-16');
       }
       // gbk
       if (htmlData.indexOf('�') != -1) {
-        htmlData = iconv.decode(fs.readFileSync(filename), 'gbk');
+        htmlData = iconv.decode(Api.fs.readFileSync(filename), 'gbk');
       }
       var body = htmlData.match(/<body[^>]*>([\s\S]*?)<\/body>/i)[1];
       if (!body) {
@@ -119,7 +111,7 @@ var Import = {
           imagePaths.push(imagePath);
         }
       }
-      var dirname = path.dirname(filename);
+      var dirname = Api.path.dirname(filename);
       // console.log('??', dirname)
       var imagePath2ImageInfo = {}; // imagePath => imageInfo
       async.eachSeries(imagePaths, function(imagePath, cb) {
@@ -138,10 +130,10 @@ var Import = {
             absImagePath = absImagePath.substr(1, absImagePath.length-1);
           }
         } else {
-          absImagePath = path.join(dirname, imagePath);
+          absImagePath = Api.path.join(dirname, imagePath);
         }
-        if (fs.existsSync(absImagePath)) {
-          File.copyFile(absImagePath, true, function (imageInfo) {
+        if (Api.fs.existsSync(absImagePath)) {
+          Api.fileService.copyFile(absImagePath, true, function (imageInfo) {
             if (imageInfo) {
               imagePath2ImageInfo[imagePath] = imageInfo;
             }
@@ -185,7 +177,7 @@ var Import = {
           IsNew: true
         };
         jsonNote._id = jsonNote.NoteId;
-        Note.updateNoteOrContent(jsonNote, function(insertedNote) {
+        Api.noteService.updateNoteOrContent(jsonNote, function(insertedNote) {
           eachCallback && eachCallback(insertedNote);
           callback(true);
         });

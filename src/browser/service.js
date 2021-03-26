@@ -1,22 +1,24 @@
-var Common = require('common');
+// dir base on note.html
 
-var Evt = require('evt');
+const electron = require('electron')
+
+var Evt = require('./src/evt');
 var app = require('@electron/remote').app; // .require('app');
 var basePath = app.getPath('appData') + '/leanote'; // /Users/life/Library/Application Support/Leanote'; // require('nw.gui').App.dataPath;
 Evt.setDataBasePath(basePath);
 var protocol = require('electron').protocol; // .require('protocol');
 // 数据库初始化
-var db = require('db');
+var db = require('./src/db');
 // db.init();
 db.initGlobal();
 // 所有service, 与数据库打交道
 var Service = {
-	notebookService: require('notebook'),
-	noteService: require('note'),
-	userService: require('user'),
-	tagService: require('tag'),
-	apiService: require('api'),
-	syncServie: require('sync')
+	notebookService: require('./src/notebook'),
+	noteService: require('./src/note'),
+	userService: require('./src/user'),
+	tagService: require('./src/tag'),
+	apiService: require('./src/api'),
+	syncServie: require('./src/sync')
 };
 // 全局变量
 var ApiService = Service.apiService;
@@ -25,10 +27,11 @@ var SyncService = Service.syncServie;
 var NoteService = Service.noteService;
 var NotebookService = Service.notebookService;
 var TagService = Service.tagService;
-var WebService = require('web');
-var FileService = require('file');
-var EvtService = require('evt');
-var CommonService = require('common');
+var WebService = require('./src/web');
+var FileService = require('./src/file');
+var EvtService = Evt;
+const CommonService = require('./src/common');
+const Common = CommonService
 
 // NodeJs
 var NodeFs = require('fs');
@@ -37,7 +40,8 @@ var NodeFs = require('fs');
 // route = /note/notebook
 // 过时
 Service.dispatch = function() {};
-var gui = require('gui');
+var gui = require('./src/gui');
 // var remote = require('remote');
+
 
 var projectPath = __dirname;
