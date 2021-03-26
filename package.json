@@ -4,7 +4,7 @@
   "main": "main.js",
   "dependencies": {
     "@electron/remote": "^1.0.4",
-    "adm-zip": "0.4.7",
+    "adm-zip": "0.4.11",
     "async": "0.9.0",
     "iconv-lite": "0.4.15",
     "mkdirp": "0.3.5",
