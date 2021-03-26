@@ -2636,28 +2636,27 @@ var Attach = {
 
         // 添加Attach
         $('#chooseFile').click(function() {
-            gui.dialog.showOpenDialog(gui.getCurrentWindow(), {
-                    defaultPath: gui.app.getPath('userDesktop'),
-                    properties: ['openFile', 'multiSelections']
-                },
-                function(paths) {
-                    if (!paths) {
-                        return;
-                    }
-
-                    // 如果是新建的笔记, 必须先保存note
-                    var note = Note.getCurNote();
-                    if (note && note.IsNew) {
-                        Note.curChangedSaveIt(true);
-                    }
-
-                    FileService.addAttach(paths, Note.curNoteId, function(files) {
-                        if (files) {
-                            me.addAttachs(files);
-                        }
-                    });
+            let pr = gui.dialog.showOpenDialog(gui.getCurrentWindow(), {
+                defaultPath: gui.app.getPath('userDesktop'),
+                properties: ['openFile', 'multiSelections']
+            }).then((re) => {
+                if(re.canceled !== false || re.filePaths.length < 1){
+                    return;
                 }
-            );
+                let paths = re.filePaths
+
+                // 如果是新建的笔记, 必须先保存note
+                var note = Note.getCurNote();
+                if (note && note.IsNew) {
+                    Note.curChangedSaveIt(true);
+                }
+
+                FileService.addAttach(paths, Note.curNoteId, function(files) {
+                    if (files) {
+                        me.addAttachs(files);
+                    }
+                });
+            })
         });
     },
     attachListO: $("#attachList"),
