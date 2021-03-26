@@ -4,7 +4,7 @@
  * 选择目录, 将图片保存到文件夹中, 有个html文件(以笔记名命名)
  * 注意, fs.existsSync总返回false, readFileSync可用
  */
-define(function() {
+define(function () {
 	var async; // = require('async');
 
 	var exportPDF = {
@@ -40,7 +40,7 @@ define(function() {
 		},
 
 		_inited: false,
-		init: function() {
+		init: function () {
 			var me = this;
 			if (me._inited) {
 				return;
@@ -56,7 +56,7 @@ define(function() {
 		_initExportPdf: function () {
 			var me = this;
 			// console.log('_initExportPdf');
-			Api.ipc.on('export-pdf-ret', function(event, arg) {
+			Api.ipc.on('export-pdf-ret', function (event, arg) {
 				var seq = arg.seq;
 				// console.log('export-pdf-ret');
 				// console.log(arg);
@@ -66,22 +66,22 @@ define(function() {
 				}
 			});
 		},
-	    exportPdf: function (htmlPath, targetPdfPath, isMarkdown, callback) {
-	    	this._exportPdfSeq++;
-	    	this._exportPdfCallback[this._exportPdfSeq] = callback;
-	    	Api.ipc.send('export-pdf',
-	    		{htmlPath: htmlPath, targetPdfPath: targetPdfPath, isMarkdown: isMarkdown, seq: this._exportPdfSeq});
-	    },
+		exportPdf: function (htmlPath, targetPdfPath, isMarkdown, callback) {
+			this._exportPdfSeq++;
+			this._exportPdfCallback[this._exportPdfSeq] = callback;
+			Api.ipc.send('export-pdf',
+				{ htmlPath: htmlPath, targetPdfPath: targetPdfPath, isMarkdown: isMarkdown, seq: this._exportPdfSeq });
+		},
 
-		getPluginPath: function() {
-			return Api.evtService.getProjectBasePath() + '/public/plugins/export_pdf' ;
+		getPluginPath: function () {
+			return Api.evtService.getProjectBasePath() + '/public/plugins/export_pdf';
 		},
 
 		htmlTpl: '',
 		markdownTpl: '',
-		getTpl: function(isMarkdown) {
+		getTpl: function (isMarkdown) {
 			var tpl = isMarkdown ? this.markdownTpl : this.htmlTpl;
-			if(tpl) {
+			if (tpl) {
 				return tpl;
 			}
 			var basePluginPath = this.getPluginPath();
@@ -93,7 +93,7 @@ define(function() {
 			return tpl;
 		},
 		// 生成html或markdown
-		render: function(note) {
+		render: function (note) {
 			var tpl = this.getTpl(note.IsMarkdown);
 			var title = note.Title || getMsg('Untitled');
 			tpl = tpl.replace(/\{title\}/g, title);
@@ -103,24 +103,24 @@ define(function() {
 			return tpl;
 		},
 
-		replaceAll: function(src, pattern, to) {
-			if(!src) {
+		replaceAll: function (src, pattern, to) {
+			if (!src) {
 				return src;
 			}
-			while(true) {
+			while (true) {
 				var oldSrc = src;
 				src = src.replace(pattern, to);
-				if(oldSrc === src) {
+				if (oldSrc === src) {
 					return src;
 				}
 			}
 		},
 
-		fixFilename: function(filename) {
+		fixFilename: function (filename) {
 			var reg = new RegExp("/|#|\\$|!|\\^|\\*|'| |\"|%|&|\\(|\\)|\\+|\\,|/|:|;|<|>|=|\\?|@|\\||\\\\", 'g');
 			filename = filename.replace(reg, "-");
 			// 防止出现两个连续的-
-			while(filename.indexOf('--') != -1) {
+			while (filename.indexOf('--') != -1) {
 				filename = this.replaceAll(filename, '--', '-');
 			}
 			if (filename.length > 1) {
@@ -131,34 +131,48 @@ define(function() {
 		},
 
 		// 得到可用的文件名, 避免冲突
-		getPdfFilePath: function(pathInfo, n, cb) {
+		getPdfFilePath: function (pathInfo, n, cb) {
 			var me = this;
-			if(n > 1) {
-				pathInfo.nameNotExt = pathInfo.nameNotExtRaw + '-' + n; 
+			if (n > 1) {
+				pathInfo.nameNotExt = pathInfo.nameNotExtRaw + '-' + n;
 			}
 			var absPath = pathInfo.getFullPath();
 
 			// Api.nodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
 			// 在控制台上是可以的
-			Api.nodeFs.exists(absPath, function(exists) {
-				if(!exists) {
+			Api.nodeFs.exists(absPath, function (exists) {
+				if (!exists) {
 					cb(absPath);
 				}
 				else {
-					me.getPdfFilePath(pathInfo, n+1, cb);
+					me.getPdfFilePath(pathInfo, n + 1, cb);
 				}
 			});
 		},
 
-		getTargetPath: function(callback) {
+		getTargetPath: function (callback) {
 			// showSaveDialog 不支持property选择文件夹
-			Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+			var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(),
 				{
 					defaultPath: Api.gui.app.getPath('userDesktop') + '/',
 					properties: ['openDirectory']
-				}, 
-				function(targetPath) {
+				},
+				function (targetPath) {
 					callback(targetPath);
+				}
+			);
+			if(typeof(po) != "object"){
+				return;
+			}
+
+			po.then(function(re){
+				if(re.canceled !== false || re.filePaths.length < 1){
+					return;
+				}
+				callback(re.filePaths[0]);
+			}, 
+				function(err){
+					alert(err);
 				}
 			);
 		},
@@ -170,25 +184,26 @@ define(function() {
 			if (!notebookId) {
 				return;
 			}
-			me.getTargetPath(function(targetPath) {
+			me.getTargetPath(function (targetPath) {
 				if (!targetPath) {
 					return;
 				}
 
 				me.loadingIsClosed = false;
-				Api.loading.show(Api.getMsg('plugin.export_pdf.Exporting'), 
+				Api.loading.show(Api.getMsg('plugin.export_pdf.Exporting'),
 					{
-						hasProgress: true, 
+						hasProgress: true,
 						isLarge: true,
 						onClose: function () {
 							me.loadingIsClosed = true;
-							setTimeout(function() {
+							setTimeout(function () {
 								me.hideLoading();
-						});
-				}});
+							});
+						}
+					});
 				Api.loading.setProgress(1);
 
-				Api.noteService.getNotes(notebookId, function(notes) {
+				Api.noteService.getNotes(notebookId, function (notes) {
 					if (!notes) {
 						me.hideLoading();
 						return;
@@ -196,7 +211,7 @@ define(function() {
 
 					var total = notes.length;
 					var i = 0;
-					async.eachSeries(notes, function(note, cb) {
+					async.eachSeries(notes, function (note, cb) {
 						if (me.loadingIsClosed) {
 							cb();
 							me.hideLoading();
@@ -204,12 +219,12 @@ define(function() {
 						}
 						i++;
 						Api.loading.setProgress(100 * i / total);
-						me._exportPDF(note, targetPath, function() {
+						me._exportPDF(note, targetPath, function () {
 							cb();
-		        		}, i, total);
-					}, function() {
+						}, i, total);
+					}, function () {
 						me.hideLoading();
-						Notify.show({title: 'Info', body: getMsg('plugin.export_pdf.exportSuccess')});
+						Notify.show({ title: 'Info', body: getMsg('plugin.export_pdf.exportSuccess') });
 					});
 				});
 			});
@@ -226,28 +241,29 @@ define(function() {
 			if (!noteIds || noteIds.length == 0) {
 				return;
 			}
-			me.getTargetPath(function(targetPath) {
+			me.getTargetPath(function (targetPath) {
 				if (!targetPath) {
 					return;
 				}
 
 				me.loadingIsClosed = false;
-				Api.loading.show(Api.getMsg('plugin.export_pdf.Exporting'), 
+				Api.loading.show(Api.getMsg('plugin.export_pdf.Exporting'),
 					{
-						hasProgress: true, 
+						hasProgress: true,
 						isLarge: true,
 						onClose: function () {
 							me.loadingIsClosed = true;
-							setTimeout(function() {
+							setTimeout(function () {
 								me.hideLoading();
-						});
-				}});
+							});
+						}
+					});
 				Api.loading.setProgress(1);
 
 				var i = 0;
 				var total = noteIds.length;
 
-				async.eachSeries(noteIds, function(noteId, cb) {
+				async.eachSeries(noteIds, function (noteId, cb) {
 					if (me.loadingIsClosed) {
 						cb();
 						return;
@@ -255,30 +271,30 @@ define(function() {
 
 					i++;
 					Api.loading.setProgress(100 * i / total);
-					Api.noteService.getNote(noteId, function(note) {
+					Api.noteService.getNote(noteId, function (note) {
 
-		        		me._exportPDF(note, targetPath, function(ok) {
-		        			cb();
-		        		}, i, total);
-	        		});
+						me._exportPDF(note, targetPath, function (ok) {
+							cb();
+						}, i, total);
+					});
 
 				}, function () {
 					me.hideLoading();
-					Notify.show({title: 'Info', body: getMsg('plugin.export_pdf.exportSuccess')});
+					Notify.show({ title: 'Info', body: getMsg('plugin.export_pdf.exportSuccess') });
 				});
 			});
 		},
 
-		_exportPDF: function(note, path, callback, i, total) {
+		_exportPDF: function (note, path, callback, i, total) {
 			var me = this;
 			setTimeout(function () {
 				me._exportPDF(note, path, callback, i, total);
 			}, 1000);
 		},
 
-		_exportPDF: function(note, path, callback, i, total) {
+		_exportPDF: function (note, path, callback, i, total) {
 			var me = this;
-			if(!note) {
+			if (!note) {
 				return;
 			}
 
@@ -304,12 +320,12 @@ define(function() {
 			pathInfo.nameNotExtRaw = pathInfo.nameNotExt;
 
 			// 得到可用文件的绝对路径
-			me.getPdfFilePath(pathInfo, 1, function(absPdfFilePath) {
+			me.getPdfFilePath(pathInfo, 1, function (absPdfFilePath) {
 				// 得到存放assets的目录
 				var html = me.render(note);
 				var tempPath = Api.gui.app.getPath('temp');
-				var last = tempPath[tempPath.length-1];
-				if ( last == '/' || last == '\\') {
+				var last = tempPath[tempPath.length - 1];
+				if (last == '/' || last == '\\') {
 					tempPath = tempPath.substr(0, tempPath.length - 1);
 				}
 				var targetHtmlPath = tempPath + '/' + (new Date().getTime()) + '.html';
@@ -324,42 +340,42 @@ define(function() {
 		},
 
 		// 打开前要执行的
-		onOpen: function() {
+		onOpen: function () {
 			var me = this;
 			var gui = Api.gui;
 
-		    var menu = {
-		        label: Api.getMsg('plugin.export_pdf.export'),
-		        enabled: function(noteIds) {
-		        	return true;
-		        },
-		        click: (function() {
-		        	return function(noteIds) {
-		        		me.init();
-		        		me.exportPDF(noteIds);
-		        	}
-		        })()
-		    };
-		    Api.addExportMenu(menu);
+			var menu = {
+				label: Api.getMsg('plugin.export_pdf.export'),
+				enabled: function (noteIds) {
+					return true;
+				},
+				click: (function () {
+					return function (noteIds) {
+						me.init();
+						me.exportPDF(noteIds);
+					}
+				})()
+			};
+			Api.addExportMenu(menu);
 
-		    Api.addExportMenuForNotebook({
-		        label: Api.getMsg('plugin.export_pdf.export'),
-		        enabled: function(notebookId) {
-		        	return true;
-		        },
-		        click: (function() {
-		        	return function(notebookId) {
-		        		me.init();
-		        		me.exportPDFForNotebook(notebookId);
-		        	}
-		        })()
-		    });
+			Api.addExportMenuForNotebook({
+				label: Api.getMsg('plugin.export_pdf.export'),
+				enabled: function (notebookId) {
+					return true;
+				},
+				click: (function () {
+					return function (notebookId) {
+						me.init();
+						me.exportPDFForNotebook(notebookId);
+					}
+				})()
+			});
 		},
 		// 打开后
-		onOpenAfter: function() {
+		onOpenAfter: function () {
 		},
 		// 关闭时需要运行的
-		onClose: function() {
+		onClose: function () {
 		}
 	};
 

@@ -204,6 +204,7 @@ function openIt() {
       height: 595, 
       frame: process.platform != 'darwin', 
       transparent: false,
+      autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true
       }

@@ -118,63 +118,78 @@ define(function() {
 
 			// 导入, 选择文件
 			$('#chooseHTMLFile').click(function() {
+				var callback = function(paths) {
+					if(!paths) {
+						return;
+					}
 
-				Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
+					var notebookId = me._curNotebook.NotebookId;
+
+					var n = 0;
+
+					me.clear();
+					if (!importService) {
+						importService = nodeRequire('./public/plugins/import_html/import');
+					}
+
+					importService.importFromHTML(notebookId, paths,
+						// 全局
+						function(ok) {
+							// $('#importHTMLMsg .curImportFile').html("");
+							// $('#importHTMLMsg .curImportNote').html("");
+							setTimeout(function() {
+								$('#importHTMLMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
+							}, 500);
+						},
+						// 单个文件
+						function(ok, filename) {
+							if(ok) {
+								$('#importHTMLMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
+							} else {
+								$('#importHTMLMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is html file ?", filename));
+							}
+						},
+						// 单个笔记
+						function(note) {
+							if(note) {
+								n++;
+								$('#importHTMLMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
+
+								// 不要是新的, 不然切换笔记时又会保存一次
+								note.IsNew = false;
+								// 插入到当前笔记中
+								Note.addSync([note]);
+							}
+						}
+					);
+				};
+
+			var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 					{
 						properties: ['openFile', 'multiSelections'],
 						filters: [
 							{ name: 'HTML', extensions: ['html'] }
 						]
-					},
-					function(paths) {
-						if(!paths) {
-							return;
-						}
-
-						var notebookId = me._curNotebook.NotebookId;
-
-						var n = 0;
-
-						me.clear();
-						if (!importService) {
-							importService = nodeRequire('./public/plugins/import_html/import');
-						}
-
-						importService.importFromHTML(notebookId, paths,
-							// 全局
-							function(ok) {
-								// $('#importHTMLMsg .curImportFile').html("");
-								// $('#importHTMLMsg .curImportNote').html("");
-								setTimeout(function() {
-									$('#importHTMLMsg .allImport').html(me.getMsg('Done! %s notes imported!', n));
-								}, 500);
-							},
-							// 单个文件
-							function(ok, filename) {
-								if(ok) {
-									$('#importHTMLMsg .curImportFile').html(me.getMsg("Import file: %s Success!", filename));
-								} else {
-									$('#importHTMLMsg .curImportFile').html(me.getMsg("Import file: %s Failure, is html file ?", filename));
-								}
-							},
-							// 单个笔记
-							function(note) {
-								if(note) {
-									n++;
-									$('#importHTMLMsg .curImportNote').html(me.getMsg("Import: %s Success!", note.Title));
-
-									// 不要是新的, 不然切换笔记时又会保存一次
-									note.IsNew = false;
-									// 插入到当前笔记中
-									Note.addSync([note]);
-								}
-							}
-						);
 					}
-				);
+					, callback
+			);
+			if(typeof(po) != "object"){
+				return;
+			}
 
-			});
-		},
+			po.then(
+				function(re){
+				if(re.canceled !== false || re.filePaths.length < 1){
+					return;
+				}
+				callback(re.filePaths);
+			}, 
+				function(err){
+					alert(err);
+				}
+			);
+		});
+	},
 
 		clear: function() {
 			$('#importHTMLMsg .curImportFile').html("");
