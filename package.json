@@ -1,5 +1,8 @@
 {
-  "name"    : "Leanote",
-  "version" : "0.7",
-  "main"    : "main.js"
+  "name": "Leanote",
+  "version": "0.7",
+  "main": "main.js",
+  "dependencies": {
+    "@electron/remote": "^1.0.4"
+  }
 }

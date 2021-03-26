@@ -6,4 +6,5 @@
 
 
 /Users/life/app/electron-v4.1.4-darwin-x64/Electron.app/Contents/MacOS/Electron .
-/Users/life/app/electron-v9.0.0-beta.9-darwin-x64/Electron.app/Contents/MacOS/Electron .
+/Users/life/app/electron-v9.0.0-darwin-x64/Electron.app/Contents/MacOS/Electron .
+/Users/life/app/electron-v12.0.2-darwin-x64/Electron.app/Contents/MacOS/Electron .

@@ -1,9 +1,5 @@
 // var app = require('electron').app;  // Module to control application life.
-const {app, BrowserWindow, crashReporter} = require('electron');
-var ipc = require('electron').ipcMain;
-const electron = require('electron');
-const Menu = electron.Menu
-const Tray = electron.Tray
+const {app, BrowserWindow, crashReporter, Tray, Menu, ipcMain: ipc} = require('electron');
 var pdfMain = require('pdf_main');
 var appIcon;
 
@@ -15,6 +11,7 @@ crashReporter.start({
   autoSubmit: true
 });
 
+require('@electron/remote/main').initialize()
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
@@ -206,7 +203,9 @@ function openIt() {
       transparent: false,
       autoHideMenuBar: true,
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        contextIsolation: false, // https://github.com/electron/electron/issues/27961
+        enableRemoteModule: true
       }
     }
   );
@@ -235,9 +234,14 @@ function openIt() {
 
     arg.webPreferences = arg.webPreferences === undefined ? {} : arg.webPreferences;
     arg.webPreferences.nodeIntegration = true;
+    arg.webPreferences.contextIsolation = false;
+    arg.webPreferences.enableRemoteModule = false;
 
     var html = arg.html;
     var everWindow = mainWindow;
+    if (arg.icon) {
+        arg.icon = new Tray(__dirname + arg.icon)
+    }
     var win2 = new BrowserWindow(arg);
     win2.loadURL('file://' + __dirname + '/' + html);
     mainWindow = win2;
