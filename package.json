@@ -4,14 +4,14 @@
   "main": "main.js",
   "dependencies": {
     "@electron/remote": "^1.0.4",
-    "adm-zip": "0.4.11",
+    "adm-zip": ">=0.4.11",
     "async": "0.9.0",
     "iconv-lite": "0.4.15",
     "mkdirp": "0.3.5",
     "nedb": "1.1.1",
     "needle": "0.7.10",
     "node-getmac": "1.0.3",
-    "resanitize": "0.3.0",
+    "validator": ">=3.22.1",
     "xml2js": "0.4.6"
   }
 }

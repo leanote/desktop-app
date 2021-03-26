@@ -75,7 +75,7 @@ define(function() {
 			}
 
 			async = require('async');
-			resanitize = require('resanitize');
+			resanitize = require('src/resanitize');
 
 			me._inited = true;
 		},

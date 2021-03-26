@@ -5,7 +5,7 @@
  * 使得能尽量(不能保证100%)导入evernote, 即使能导入成功但有可能不能同步!! 因为没有完全验证html
  */
 
-var resanitize = require('resanitize');
+var resanitize = require('src/resanitize');
 
 // Portable override before pull request merge into it
 resanitize.stripUnsafeAttrs = function(str, unsafeAttrs) {

@@ -1,5 +1,5 @@
 var async = require('async');
-var resanitize = require('resanitize');
+var resanitize = require('src/resanitize');
 
 var Import = {
   // 解析Leanote
