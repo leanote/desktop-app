@@ -1175,9 +1175,9 @@ Note._getNoteHtmlObjct = function(note, isShared) {
 
             var tmp;
             if (note.ImgSrc) {
-                tmp = tt(Note.getItemTpl(), classes, i, note.NoteId, Note.fixImageSrc(note.ImgSrc), note.Title || getMsg('UnTitled'), Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
+                tmp = tt(Note.getItemTpl(), classes, i, note.NoteId, Note.fixImageSrc(note.ImgSrc), trimTitle(note.Title) || getMsg('UnTitled'), Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
             } else {
-                tmp = tt(Note.getItemTplNoImg(), classes, i, note.NoteId, note.Title || getMsg('UnTitled'), Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
+                tmp = tt(Note.getItemTplNoImg(), classes, i, note.NoteId, trimTitle(note.Title) || getMsg('UnTitled'), Notebook.getNotebookTitle(note.NotebookId), goNowToDatetime(note.UpdatedTime), note.Desc || '');
             }
 
             Note.noteItemListO.append(tmp);
@@ -3234,7 +3234,7 @@ Note.batch = {
             return;
         }
         var note = Note.getNote(noteId);
-        var title = note.Title || getMsg('unTitled');
+        var title = trimTitle(note.Title) || getMsg('unTitled');
         var desc = note.Desc || '...';
         // desc = substr(note.Content, 0, 200);
 
