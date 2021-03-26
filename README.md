@@ -11,7 +11,7 @@ Please see http://app.leanote.com
 
 ## How to develop it
 
-### 1. Install Electron
+### 1. Install Electron v12.0.2
 
 See https://github.com/atom/electron#downloads
 
