@@ -1628,7 +1628,7 @@ var Note = {
 					try {
 						// 删除源文件, 别删错了啊
 						if(path.indexOf(fileBasePath) >= 0) {
-							fs.unlink(path);
+							fs.unlink(path, () => {});
 						}
 					} catch(e) {
 						console.log(e);

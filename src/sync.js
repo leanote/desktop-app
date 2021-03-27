@@ -1,6 +1,4 @@
 var async = require('async');
-var fs = require('fs');
-var needle = require('needle');
 
 var db = require('./db');
 var Common = require('./common');
