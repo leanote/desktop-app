@@ -2079,10 +2079,14 @@ function userMenu(allUsers) {
 
     Pren.init();
 
-    if (isMac() || debug) {
+    if (isMac() || isDebug) {
         setMacTopMenu();
     }
-    if (debug) {
+    else {
+        gui.Menu.setApplicationMenu(null)
+    }
+
+    if (isDebug) {
         setTimeout(function () {
             gui.win.toggleDevTools();
         }, 3000)

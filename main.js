@@ -5,9 +5,9 @@ var appIcon;
 
 // Report crashes to our server.
 crashReporter.start({
-  productName: 'YourName',
-  companyName: 'YourCompany',
-  submitURL: 'https://your-domain.com/url-to-submit',
+  productName: 'Leanote',
+  companyName: 'Leanote',
+  submitURL: 'https://leanote.com/leanote-desktop/crash-reporter',
   autoSubmit: true
 });
 
@@ -298,7 +298,7 @@ function openIt() {
 
     appIcon.on('click', function (e) {
       show();
-      e.preventDefault();
+      // e.preventDefault();
     });
     appIcon.on('right-click', function () {
       appIcon.popUpContextMenu(contextMenu);

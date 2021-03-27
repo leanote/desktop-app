@@ -121,6 +121,8 @@ function getMsg(key) {
 
 <script>
 $(function() {
+    // 不要显示顶部菜单
+    gui.Menu.setApplicationMenu(null)
 
 	$('.tool-close-blur').click(function() {
 		gui.getCurrentWindow().close();
