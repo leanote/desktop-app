@@ -1792,7 +1792,7 @@ function isURL(str_url) {
 }
 
 function isOtherSiteUrl(url) {
-	return url.indexOf('http://127.0.0.1') < 0 && isURL(url);
+	return url && url.indexOf('http://127.0.0.1') < 0 && isURL(url);
 }
 
 function reloadApp() {
