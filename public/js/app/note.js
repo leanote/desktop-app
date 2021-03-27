@@ -597,7 +597,7 @@ Note.curChangedSaveIt = function(force, callback) {
                 Pjax.changeNote(ret);
             }
 
-            me.setNoteDirty(hasChanged.NoteId, true);
+            ret && me.setNoteDirty(hasChanged.NoteId, ret.IsDirty);
 
             callback && callback(ret);
         }, force);
