@@ -5,20 +5,6 @@
  * 使得能尽量(不能保证100%)导入evernote, 即使能导入成功但有可能不能同步!! 因为没有完全验证html
  */
 
-var resanitize = require('src/resanitize');
-
-// Portable override before pull request merge into it
-resanitize.stripUnsafeAttrs = function(str, unsafeAttrs) {
-    var unsafeAttrsDefault = ['id', 'data', 'class', 'style', 'clear', 'target', 'onclick', 'ondblclick', 'onmousedown', 'onmousemove', 'onmouseover', 'onmouseout', 'onmouseup', 'onkeydown', 'onkeypress', 'onkeyup', 'onabort', 'onerror', 'onload', 'onresize', 'onscroll', 'onunload', 'onblur', 'onchange', 'onfocus', 'onreset', 'onselect', 'onsubmit'];
-    unsafeAttrs = unsafeAttrs || unsafeAttrsDefault;
-    // unsafeAttrs.push(/data\-[a-zA-Z0-9\-]+=".*?"/);
-    unsafeAttrs.push(/data-\w+/i)
-    // console.log(unsafeAttrs);
-    // data-id=""
-    // str = str.replace(/data\-[a-zA-Z0-9\-]+=".*?"/g, '');
-    return str.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
-};
-
 var addHostUrlToHref = function(str, host) {
     //only replace those start immediately with /
     return str.replace(/<a([^>]*?)href=(?:"|')\/([^"']*)(?:"|')([^>]*)>/gi, '<a$1href=\'' + host + '/$2\'$3>');
@@ -26,6 +12,19 @@ var addHostUrlToHref = function(str, host) {
 };
 
 var ENMLOfHTML = function(text, options, cb) {
+
+    // Portable override before pull request merge into it
+    Api.Resanitize.stripUnsafeAttrs = function(str, unsafeAttrs) {
+        var unsafeAttrsDefault = ['id', 'data', 'class', 'style', 'clear', 'target', 'onclick', 'ondblclick', 'onmousedown', 'onmousemove', 'onmouseover', 'onmouseout', 'onmouseup', 'onkeydown', 'onkeypress', 'onkeyup', 'onabort', 'onerror', 'onload', 'onresize', 'onscroll', 'onunload', 'onblur', 'onchange', 'onfocus', 'onreset', 'onselect', 'onsubmit'];
+        unsafeAttrs = unsafeAttrs || unsafeAttrsDefault;
+        // unsafeAttrs.push(/data\-[a-zA-Z0-9\-]+=".*?"/);
+        unsafeAttrs.push(/data-\w+/i)
+        // console.log(unsafeAttrs);
+        // data-id=""
+        // str = str.replace(/data\-[a-zA-Z0-9\-]+=".*?"/g, '');
+        return str.replace(/<([^ >]+?) [^>]*?>/g, Api.Resanitize.filterTag(Api.Resanitize.stripAttrs(unsafeAttrs)));
+    };
+
     if (!cb) {
         cb = options;
     }
@@ -49,11 +48,10 @@ var ENMLOfHTML = function(text, options, cb) {
     // console.log('[source]\n' + source);
     //slow impl TODO find a better html parser
 
-    // resanitize
     var enmlUnsafeAttrs = ['rel', 'id', 'class', 'clear', 'target', 'onclick', 'ondblclick', 'onmousedown', 'onmousemove', 'onmouseover', 'onmouseout', 'onmouseup', 'onkeydown', 'onkeypress', 'onkeyup', 'onabort', 'onerror', 'onload', 'onresize', 'onscroll', 'onunload', 'onblur', 'onchange', 'onfocus', 'onreset', 'onselect', 'onsubmit'];
 
-    text = resanitize.stripUnsafeTags(text);
-    text = resanitize.stripUnsafeAttrs(text, enmlUnsafeAttrs);
+    text = Api.Resanitize.stripUnsafeTags(text);
+    text = Api.Resanitize.stripUnsafeAttrs(text, enmlUnsafeAttrs);
 
     // //TODO use chain .replace
     text = text.replace(/<\/*html>/g, '').replace(/<\/?head>/g, '').replace(/<(\/?)body[^>]*>/g, '<$1div>')

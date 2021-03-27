@@ -34,14 +34,14 @@ const CommonService = require('./src/common');
 const Common = CommonService
 
 // NodeJs
-var NodeFs = require('fs');
+const NodeFs = require('fs');
+const NodePath = require('path');
+const Resanitize = require('./src/resanitize');
 
 // 分发服务
 // route = /note/notebook
 // 过时
 Service.dispatch = function() {};
 var gui = require('./src/gui');
-// var remote = require('remote');
-
 
 var projectPath = __dirname;

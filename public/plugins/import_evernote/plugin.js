@@ -171,20 +171,20 @@ define(function() {
 							{ name: 'Evernote', extensions: ['enex'] }
 						]
 					},
-					callback	
+					callback
 				);
 
-				if(typeof(po) != "object"){
+				if(typeof(po) != "object") {
 					return;
 				}
 
 				po.then(
 					function(re){
-					if(re.canceled !== false || re.filePaths.length < 1){
-						return;
-					}
-					callback(re.filePaths);
-				}, 
+    					if(re.canceled !== false || re.filePaths.length < 1){
+    						return;
+    					}
+    					callback(re.filePaths);
+    				},
 					function(err){
 						alert(err);
 					}

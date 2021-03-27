@@ -2600,8 +2600,10 @@ var Attach = {
             var attachId = $li.data("id");
             var title = $li.find('.attach-title').text();
 
-            gui.dialog.showSaveDialog(gui.getCurrentWindow(), { title: title, defaultPath: gui.app.getPath('userDesktop') + '/' + title }, function(targetPath) {
+            gui.dialog.showSaveDialog(gui.getCurrentWindow(), { title: title, defaultPath: Api.getDefaultPath() + '/' + title }).then((res) => {
+                let targetPath = res.filePath
                 if (targetPath) {
+                    Api.saveLastPath(null, targetPath)
                     var curAttach = me.getAttach(attachId);
                     if (curAttach) {
                         FileService.download(curAttach.Path, targetPath, function(ok, msg) {
@@ -2637,14 +2639,15 @@ var Attach = {
         // 添加Attach
         $('#chooseFile').click(function() {
             let pr = gui.dialog.showOpenDialog(gui.getCurrentWindow(), {
-                defaultPath: gui.app.getPath('userDesktop'),
+                defaultPath: Api.getDefaultPath(),
                 properties: ['openFile', 'multiSelections']
             }).then((re) => {
                 if(re.canceled !== false || re.filePaths.length < 1){
                     return;
                 }
                 let paths = re.filePaths
-
+                Api.saveLastPath(null, paths[0])
+                
                 // 如果是新建的笔记, 必须先保存note
                 var note = Note.getCurNote();
                 if (note && note.IsNew) {

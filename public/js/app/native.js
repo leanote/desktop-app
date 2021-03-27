@@ -125,9 +125,12 @@ function Menu() {
             		downloadImgPath = curPath;
 
             		// title不能设置
-            		gui.dialog.showSaveDialog(gui.getCurrentWindow(), {title: name, defaultPath: gui.app.getPath('userDesktop') + '/' + name}, function(targetPath) {
-            			if(targetPath) {
-
+            		gui.dialog.showSaveDialog(
+                        gui.getCurrentWindow(), 
+                        {title: name, defaultPath: Api.getDefaultPath() + '/' + name}
+                    ).then((res) => {
+                        let targetPath = res.filePath
+            			if (targetPath) {
             				FileService.download(curPath, targetPath, function(ok, msg) {
 								if(ok) {
                                     Notify.show({title: 'Info', body: 'Image saved successful!'});
@@ -135,8 +138,6 @@ function Menu() {
                                     Notify.show({type: 'warning', title: 'Warning', body: 'Image saved failed!'});
 								}
 							});
-            			}
-            			else {
             			}
             		});
             		

@@ -121,7 +121,7 @@ define(function() {
 
             // 遍历模版目录，得到模版
             var templateBasePath = __dirname + "/public/templates";
-            var dirs = Api.nodeFs.readdirSync(templateBasePath);
+            var dirs = Api.NodeFs.readdirSync(templateBasePath);
             for (index in dirs) {
                 var dir = dirs[index];
                 // 读取配置信息

@@ -1,5 +1,4 @@
 var async = require('async');
-var resanitize = require('src/resanitize');
 var iconv = require('iconv-lite');
 
 var Import = {
@@ -43,10 +42,10 @@ var Import = {
   fixContent: function (content) {
     // srip unsage attrs
     var unsafeAttrs = ['id', , /on\w+/i, /data-\w+/i, 'clear', 'target'];
-      content = content.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
+      content = content.replace(/<([^ >]+?) [^>]*?>/g, Api.Resanitize.filterTag(Api.Resanitize.stripAttrs(unsafeAttrs)));
 
       // strip unsafe tags
-      content = resanitize.stripUnsafeTags(content, 
+      content = Api.Resanitize.stripUnsafeTags(content, 
         ['wbr','style', 'comment', 'plaintext', 'xmp', 'listing',
       'applet','base','basefont','bgsound','blink','body','button','dir','embed','fieldset','frameset','head',
       'html','iframe','ilayer','input','isindex','layer','legend','link','marquee','menu','meta','noframes',
@@ -73,18 +72,18 @@ var Import = {
   parseHTML: function (notebookId, filename, callback, eachCallback) {
     var me = this;
     try {
-      var data = Api.fs.readFileSync(filename);
+      var data = Api.NodeFs.readFileSync(filename);
       var htmlData = iconv.decode(data, 'utf-8');
       if (!htmlData) {
         return callback(false);
       }
       // utf-16
       if (htmlData.indexOf('�') != -1) {
-        htmlData = iconv.decode(Api.fs.readFileSync(filename), 'utf-16');
+        htmlData = iconv.decode(Api.NodeFs.readFileSync(filename), 'utf-16');
       }
       // gbk
       if (htmlData.indexOf('�') != -1) {
-        htmlData = iconv.decode(Api.fs.readFileSync(filename), 'gbk');
+        htmlData = iconv.decode(Api.NodeFs.readFileSync(filename), 'gbk');
       }
       var body = htmlData.match(/<body[^>]*>([\s\S]*?)<\/body>/i)[1];
       if (!body) {
@@ -111,7 +110,7 @@ var Import = {
           imagePaths.push(imagePath);
         }
       }
-      var dirname = Api.path.dirname(filename);
+      var dirname = Api.NodePath.dirname(filename);
       // console.log('??', dirname)
       var imagePath2ImageInfo = {}; // imagePath => imageInfo
       async.eachSeries(imagePaths, function(imagePath, cb) {
@@ -130,9 +129,9 @@ var Import = {
             absImagePath = absImagePath.substr(1, absImagePath.length-1);
           }
         } else {
-          absImagePath = Api.path.join(dirname, imagePath);
+          absImagePath = Api.NodePath.join(dirname, imagePath);
         }
-        if (Api.fs.existsSync(absImagePath)) {
+        if (Api.NodeFs.existsSync(absImagePath)) {
           Api.fileService.copyFile(absImagePath, true, function (imageInfo) {
             if (imageInfo) {
               imagePath2ImageInfo[imagePath] = imageInfo;

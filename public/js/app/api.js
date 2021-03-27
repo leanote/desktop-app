@@ -1,216 +1,222 @@
-
 // 只有api的插件才能访问
 var Api = {
-	notebook: Notebook,
-	note: Note,
-	tag: Tag,
-	loading: Loading,
-	gui: gui,
-	onClose: onClose,
-	switchToLoginWhenNoUser: switchToLoginWhenNoUser,
-	reloadApp: reloadApp,
-	isMac: isMac(),
-	nodeFs: NodeFs,
-	evtService: EvtService,
-	commonService: CommonService,
-	fileService: FileService,
-	noteService: NoteService,
-	userService: UserService,
-	dbService: db,
-	ipc: electron.ipcRenderer,
+    notebook: Notebook,
+    note: Note,
+    tag: Tag,
+    loading: Loading,
+    gui: gui,
+    onClose: onClose,
+    switchToLoginWhenNoUser: switchToLoginWhenNoUser,
+    reloadApp: reloadApp,
+    isMac: isMac(),
+    NodeFs,
+    NodePath,
+    evtService: EvtService,
+    commonService: CommonService,
+    fileService: FileService,
+    noteService: NoteService,
+    userService: UserService,
+    dbService: db,
+    ipc: electron.ipcRenderer,
     projectPath: projectPath,
-    fs: nodeRequire('fs'),
-    path: nodeRequire('path'),
+    Resanitize,
 
-	// 打开本地目录
-	// mac和windows下不同
-	openLocalDir: function (dir) {
-		if (isMac()) {
-			gui.Shell.showItemInFolder(dir);
-		}
-		else {
-			gui.Shell.openItem(dir);
-		}
-	},
+    // 打开本地目录
+    // mac和windows下不同
+    openLocalDir: function(dir) {
+        if (isMac()) {
+            gui.Shell.showItemInFolder(dir);
+        } else {
+            gui.Shell.openItem(dir);
+        }
+    },
 
-	// 得到当前版本
-	getCurVersion: function (callback) {
-		var me = this;
-		var vFile = me.evtService.getProjectBasePath() + '/data/version';
-		// fs.writeFileSync('./output.json',JSON.stringify({a:1,b:2}));
-		try {
-			var v = JSON.parse(fs.readFileSync(vFile));
-			return v;
-		} catch(e) {
-			return false;
-		}
-	},
-
-	getConfigFilePath: function() {
+    // 得到当前版本
+    getCurVersion: function(callback) {
         var me = this;
-		return me.evtService.getProjectBasePath() + '/public/config.js';
-	},
-	writeConfig: function(config) {
-		var me = this;
-		var fileData = "var Config = " + JSON.stringify(config, null, 4) + ';';
-		var ok = me.commonService.writeFile(me.getConfigFilePath(), fileData);
-		return ok;
-	},
+        var vFile = me.evtService.getProjectBasePath() + '/data/version';
+        // fs.writeFileSync('./output.json',JSON.stringify({a:1,b:2}));
+        try {
+            var v = JSON.parse(fs.readFileSync(vFile));
+            return v;
+        } catch (e) {
+            return false;
+        }
+    },
 
-	// data = {'en-us': {}, 'zh-cn' {}};
-	// prefix = 'plugin.theme'
-	_langs: {
-		'en-us': {
-			'default': 'Default',
-		},
-		'zh-cn': {
-			'default': '默认',
-		}
-	},
-	curLang: curLang,
-	defaultLang: 'en-us',
-	// 添加语言包
-	addLangMsgs: function(data, prefix) {
-		var me = this;
-		if(!data) {
-			return;
-		}
-		if(prefix) {
-			prefix += '.'; // prefix.
-		}
-		for(var lang in data) {
-			var msgs = data[lang] || {};
-			me._langs[lang] || (me._langs[lang] = {});
-			for(var key in msgs) {
-				me._langs[lang][prefix + key] = msgs[key];
-			}
-		}
-	},
-	isArray: function(obj) {
-		return Object.prototype.toString.call(obj) === '[object Array]';
-	},
-	// 国际化
-	getMsg: function(key, prefix, data) {
-		var me = this;
-		if(!key) {
-			return '';
-		}
-		var rawKey = key;
-		if(prefix) {
-			key = prefix + '.' + key;
-		}
+    getConfigFilePath: function() {
+        var me = this;
+        return me.evtService.getProjectBasePath() + '/public/config.js';
+    },
+    writeConfig: function(config) {
+        var me = this;
+        var fileData = "var Config = " + JSON.stringify(config, null, 4) + ';';
+        var ok = me.commonService.writeFile(me.getConfigFilePath(), fileData);
+        return ok;
+    },
 
-		var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || rawKey;
+    // data = {'en-us': {}, 'zh-cn' {}};
+    // prefix = 'plugin.theme'
+    _langs: {
+        'en-us': {
+            'default': 'Default',
+        },
+        'zh-cn': {
+            'default': '默认',
+        }
+    },
+    curLang: curLang,
+    defaultLang: 'en-us',
+    // 添加语言包
+    addLangMsgs: function(data, prefix) {
+        var me = this;
+        if (!data) {
+            return;
+        }
+        if (prefix) {
+            prefix += '.'; // prefix.
+        }
+        for (var lang in data) {
+            var msgs = data[lang] || {};
+            me._langs[lang] || (me._langs[lang] = {});
+            for (var key in msgs) {
+                me._langs[lang][prefix + key] = msgs[key];
+            }
+        }
+    },
+    isArray: function(obj) {
+        return Object.prototype.toString.call(obj) === '[object Array]';
+    },
+    // 国际化
+    getMsg: function(key, prefix, data) {
+        var me = this;
+        if (!key) {
+            return '';
+        }
+        var rawKey = key;
+        if (prefix) {
+            key = prefix + '.' + key;
+        }
 
-		if(data) {
-			if(!me.isArray(data)) {
-				data = [data];
-			}
-			for(var i = 0; i < data.length; ++i) {
-				msg = msg.replace("%s", data[i]);
-			}
-		}
-		return msg;
-	},
+        var msg = me._langs[me.curLang][key] || me._langs[me.defaultLang][key] || rawKey;
 
-	// 与之前lang.js取出的数据合并
-	_init: function() {
-		var me = this;
-		me._langs[me.curLang] || (me._langs[me.curLang] = {});
-		$.extend(me._langs[me.curLang], window.langData);
+        if (data) {
+            if (!me.isArray(data)) {
+                data = [data];
+            }
+            for (var i = 0; i < data.length; ++i) {
+                msg = msg.replace("%s", data[i]);
+            }
+        }
+        return msg;
+    },
 
-		// extend
-		window.getMsg = function(key, prefix, data) {
-			return me.getMsg(key, prefix, data);
-		};
-	},
+    // 与之前lang.js取出的数据合并
+    _init: function() {
+        var me = this;
+        me._langs[me.curLang] || (me._langs[me.curLang] = {});
+        $.extend(me._langs[me.curLang], window.langData);
 
-	_callOpenAfter: function() {
+        // extend
+        window.getMsg = function(key, prefix, data) {
+            return me.getMsg(key, prefix, data);
+        };
+    },
 
-	},
+    _callOpenAfter: function() {
 
-	_themeMenu: null,
-	getThemeMenu: function() {
-		var me = this;
-		return me._themeMenu;
-	},
-	setThemeMenu: function(menus) {
-		var me = this;
-		me._themeMenu = menus;
-	},
+    },
 
-  // markdown theme
-  _mdThemeMenu: null,
-  getMdThemeMenu: function() {
-    var me = this;
-		return me._mdThemeMenu;
-  },
-  setMdThemeMenu: function(menus) {
-    var me = this;
-    me._mdThemeMenu = menus;
-  },
+    _themeMenu: null,
+    getThemeMenu: function() {
+        var me = this;
+        return me._themeMenu;
+    },
+    setThemeMenu: function(menus) {
+        var me = this;
+        me._themeMenu = menus;
+    },
 
-	_importMenus: [],
-	addImportMenu: function(menu) {
-		var me = this;
-		me._importMenus.push(menu);
-	},
-	getImportMenus: function() {
-		var me = this;
-		return me._importMenus;
-	},
-	// 添加用户menu
-	addUserMenu: function(menus, pos) {
+    // markdown theme
+    _mdThemeMenu: null,
+    getMdThemeMenu: function() {
+        var me = this;
+        return me._mdThemeMenu;
+    },
+    setMdThemeMenu: function(menus) {
+        var me = this;
+        me._mdThemeMenu = menus;
+    },
+
+    _importMenus: [],
+    addImportMenu: function(menu) {
+        var me = this;
+        me._importMenus.push(menu);
+    },
+    getImportMenus: function() {
+        var me = this;
+        return me._importMenus;
+    },
+    // 添加用户menu
+    addUserMenu: function(menus, pos) {
 
 
-	},
-	addNotebookMenu: function(menu, pos) {
+    },
+    addNotebookMenu: function(menu, pos) {
 
-	},
-	addTrashMenu: function(menu, pos) {
+    },
+    addTrashMenu: function(menu, pos) {
 
-	},
+    },
 
-	// 导出
-	_exportMenus: [],
-	addExportMenu: function(menu) {
-		var me = this;
-		me._exportMenus.push(menu);
-	},
-	getExportMenus: function() {
-		var me = this;
-		return me._exportMenus;
-	},
+    // 导出
+    _exportMenus: [],
+    addExportMenu: function(menu) {
+        var me = this;
+        me._exportMenus.push(menu);
+    },
+    getExportMenus: function() {
+        var me = this;
+        return me._exportMenus;
+    },
 
-	// 导出, 笔记本下
-	_exportMenusForNotebook: [],
-	addExportMenuForNotebook: function(menu) {
-		var me = this;
-		me._exportMenusForNotebook.push(menu);
-	},
-	getExportMenusForNotebook: function() {
-		var me = this;
-		return me._exportMenusForNotebook;
-	},
+    // 导出, 笔记本下
+    _exportMenusForNotebook: [],
+    addExportMenuForNotebook: function(menu) {
+        var me = this;
+        me._exportMenusForNotebook.push(menu);
+    },
+    getExportMenusForNotebook: function() {
+        var me = this;
+        return me._exportMenusForNotebook;
+    },
 
-	// 更多菜单
-	_moreMenus: [],
-	getMoreMenus: function() {
-		var me = this;
-		return me._moreMenus;
-	},
-	addMoreMenu: function(menu) {
-		var me = this;
-		me._moreMenus.push(menu);
-	}
+    // 更多菜单
+    _moreMenus: [],
+    getMoreMenus: function() {
+        var me = this;
+        return me._moreMenus;
+    },
+    addMoreMenu: function(menu) {
+        var me = this;
+        me._moreMenus.push(menu);
+    },
+
+    _lastPath: null,
+    getDefaultPath () {
+        return this._lastPath || this.gui.app.getPath('userDesktop')
+    },
+    saveLastPath (dir, filePath) {
+        this._lastPath = dir || this.NodePath.dirname(filePath)
+    }
 };
 
 //-------------
 // 全局事件机制
 
 $.extend(Api, {
-	_eventCallbacks: {},
-	_listen: function(type, callback) {
+    _eventCallbacks: {},
+    _listen: function(type, callback) {
         var callbacks = this._eventCallbacks[type] || (this._eventCallbacks[type] = []);
         callbacks.push(callback);
     },
@@ -218,7 +224,7 @@ $.extend(Api, {
     on: function(name, callback) {
         var names = name.split(/\s+/);
         for (var i = 0; i < names.length; ++i) {
-        	this._listen(names[i], callback);
+            this._listen(names[i], callback);
         }
         return this;
     },

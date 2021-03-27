@@ -1,5 +1,4 @@
 var async = require('async');
-var resanitize = require('src/resanitize');
 
 var Import = {
   // 解析Leanote
@@ -41,7 +40,7 @@ var Import = {
     async.eachSeries(filePaths, function(path, cb) {
 
       try {
-        var json = JSON.parse(Api.fs.readFileSync(path));
+        var json = JSON.parse(Api.NodeFs.readFileSync(path));
         me.parseLeanote(notebookId, json, function(ret) {
           // 单个文件完成
           eachFileCallback(ret, path)
@@ -206,10 +205,10 @@ var Import = {
   fixContent: function (content) {
     // srip unsage attrs
     var unsafeAttrs = ['id', , /on\w+/i, /data-\w+/i, 'clear', 'target'];
-      content = content.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
+      content = content.replace(/<([^ >]+?) [^>]*?>/g, Api.Resanitize.filterTag(Api.Resanitize.stripAttrs(unsafeAttrs)));
 
       // strip unsafe tags
-      content = resanitize.stripUnsafeTags(content, 
+      content = Api.Resanitize.stripUnsafeTags(content, 
         ['wbr','style', 'comment', 'plaintext', 'xmp', 'listing',
       'applet','base','basefont','bgsound','blink','body','button','dir','embed','fieldset','frameset','head',
       'html','iframe','ilayer','input','isindex','label','layer','legend','link','marquee','menu','meta','noframes',

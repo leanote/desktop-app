@@ -28,7 +28,6 @@
  */
 define(function() {
 	var async; //  = require('async');
-	var resanitize; // = require('resanitize');
 
 	//===========
 	// start
@@ -75,7 +74,6 @@ define(function() {
 			}
 
 			async = require('async');
-			resanitize = require('src/resanitize');
 
 			me._inited = true;
 		},
@@ -110,10 +108,10 @@ define(function() {
 		fixContent: function (content) {
 			// srip unsage attrs
 			var unsafeAttrs = ['id', , /on\w+/i, /data-\w+/i, 'clear', 'target'];
-		    content = content.replace(/<([^ >]+?) [^>]*?>/g, resanitize.filterTag(resanitize.stripAttrs(unsafeAttrs)));
+		    content = content.replace(/<([^ >]+?) [^>]*?>/g, Api.Resanitize.filterTag(Api.Resanitize.stripAttrs(unsafeAttrs)));
 
 		    // strip unsafe tags
-		    content = resanitize.stripUnsafeTags(content, 
+		    content = Api.Resanitize.stripUnsafeTags(content, 
 		    	['wbr','style', 'comment', 'plaintext', 'xmp', 'listing',
 			  'applet','base','basefont','bgsound','blink','body','button','dir','embed','fieldset','frameset','head',
 			  'html','iframe','ilayer','input','isindex','label','layer','legend','link','marquee','menu','meta','noframes',
@@ -405,9 +403,9 @@ define(function() {
 			}
 			var absPath = pathInfo.getFullPath();
 
-			// Api.nodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
+			// Api.NodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
 			// 在控制台上是可以的
-			Api.nodeFs.exists(absPath, function(exists) {
+			Api.NodeFs.exists(absPath, function(exists) {
 				if(!exists) {
 					cb(absPath);
 				}
@@ -421,28 +419,22 @@ define(function() {
 			// showSaveDialog 不支持property选择文件夹
 			var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), 
 				{
-					defaultPath: Api.gui.app.getPath('userDesktop') + '/',
+					defaultPath: Api.getDefaultPath(),
 					properties: ['openDirectory']
-				}, 
-				function(targetPath) {
-					callback(targetPath);
 				}
 			);
 
-			if(typeof(po) != "object"){
+			if (typeof(po) != "object") {
 				return;
 			}
 
-			po.then(function(re){
-				if(re.canceled !== false || re.filePaths.length < 1){
+			po.then((re) => {
+    			if(re.canceled !== false || re.filePaths.length < 1){
 					return;
 				}
+                Api.saveLastPath(re.filePaths[0])
 				callback(re.filePaths[0]);
-			}, 
-				function(err){
-					alert(err);
-				}
-			);
+			});
 		},
 
 		loadingIsClosed: false,

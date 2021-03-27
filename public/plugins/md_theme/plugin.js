@@ -29,9 +29,9 @@ define(function() {
 			var me = this;
 			// 遍历主题目录, 得到主题列表 
 			var themeFolder = __dirname + "/public/themes/markdown";
-			Api.nodeFs.readdirSync(themeFolder)
+			Api.NodeFs.readdirSync(themeFolder)
                 .filter(function(theme) {
-                    return Api.nodeFs.statSync(themeFolder + "/" + theme).isDirectory();
+                    return Api.NodeFs.statSync(themeFolder + "/" + theme).isDirectory();
                 })
                 .forEach(function(theme) {
     				me._themeMap[theme] = {

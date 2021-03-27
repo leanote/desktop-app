@@ -1,7 +1,9 @@
-const {dialog, Menu, MenuItem, app} = require('electron').remote;
-var remote = require('electron').remote;
+const {dialog, Menu, MenuItem, app} = require('@electron/remote')
+var remote = require('@electron/remote');
+const path = require('path')
 
 // var dialog = require('dialog');
+let _lastOpenPath = null
 var gui = {
 	Menu: Menu,
 	MenuItem: MenuItem,
