@@ -232,6 +232,10 @@ function openIt() {
   ipc.on('openUrl', function(event, arg) {
     console.log('openUrl', arg);
 
+    // if (appIcon) {
+    //     appIcon.destroy()
+    // }
+
     arg.webPreferences = arg.webPreferences === undefined ? {} : arg.webPreferences;
     arg.webPreferences.nodeIntegration = true;
     arg.webPreferences.contextIsolation = false;
@@ -268,6 +272,8 @@ function openIt() {
     }
   }
 
+  // tray只要实例化一次
+  // tray在windows下可能会有两个, 原因不明, 当注销后再启动
   var trayShowed = false;
   ipc.on('show-tray', function(event, arg) {
     if (trayShowed) {
@@ -278,6 +284,8 @@ function openIt() {
     if (process.platform == 'linux') {
       return;
     }
+
+    console.log('show tray')
 
     appIcon = new Tray(__dirname + '/public/images/tray/' + ( process.platform == 'darwin' ? 'trayTemplate.png' : 'tray.png'))
     var contextMenu = Menu.buildFromTemplate([

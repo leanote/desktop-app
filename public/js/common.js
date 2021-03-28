@@ -1579,7 +1579,7 @@ function isMac() {
 function getMainWinParams() {
 	if(isMac()) {
 		return {
-			"icon": "/public/images/logo/leanote.png",
+			// "icon": "/public/images/logo/leanote.png",
 			frame: false,
 			transparent: false,
 			width: 258,
@@ -1589,7 +1589,7 @@ function getMainWinParams() {
 		};
 	}
 	return {
-		"icon": "/public/images/logo/leanote.png",
+		// "icon": "/public/images/logo/leanote.png",
 		frame: true,
 		transparent: false,
 		width: 1100,

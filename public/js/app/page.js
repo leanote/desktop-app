@@ -1409,6 +1409,9 @@ function showLocalAccountWarning() {
 function initPage(initedCallback) {
     console.log('init page');
 
+    // 不要显示顶部菜单
+    gui.Menu.setApplicationMenu(null)
+
     // 笔记本, 事件, menu初始化
     Notebook.init();
     // 笔记
