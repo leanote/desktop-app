@@ -237,14 +237,22 @@ function log(o) {
               </div>
 
               <div id="newMyNote">
-                <a id="newNoteBtn" title="New note">
-                  <span class="new-note-text"  title="New note">+</span>
-                </a>
-                <span class="new-split">|</span>
-                <a id="newNoteMarkdownBtn" title="New markdown note">
-                  <span class="new-markdown-text" title="New markdown note">+M</span>
-                </a>
+
+                <!-- Split button -->
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle btn-xs" 
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-file" aria-hidden="true"></i> <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a id="newNoteBtn" href="#">New Document</a></li>
+                    <li><a id="newNoteMarkdownBtn" href="#">New Markdown</a></li>
+                  </ul>
+                </div>
+
                 <span id="curNotebookForNewNote" notebookId="" style="display: none"></span>
+                            
+              
               </div>
 
           </div>
