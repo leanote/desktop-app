@@ -1658,7 +1658,7 @@ var Note = {
 			var path = attachs[i].Path;
 			if(path && path.indexOf(fileBasePath) >= 0) {
 				try {
-					fs.unlink(path);
+					fs.unlink(path, () => {});
 				} catch(e) {
 					console.error(e);
 				}

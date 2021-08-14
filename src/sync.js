@@ -43,6 +43,7 @@ var Sync = {
     }, 
     */
     _needIncrSyncAgain: false,
+    _reSyncAgainTimes: 0,
 
     // notebook
     _syncNotebookIsLastChunk: false,
@@ -711,7 +712,8 @@ var Sync = {
                     // send changes
                     callback && callback();
                 } else {
-
+                    console.error('_needIncrSyncAgain callback')
+                    callback && callback();
                 }
             });
 
@@ -778,6 +780,8 @@ var Sync = {
         console.log('inc sync start');
         if (again) {
             console.log('again >>');
+        } else {
+            me._reSyncAgainTimes = 0
         }
 
         // 得到当前LastSyncUsn
@@ -953,7 +957,6 @@ var Sync = {
                     return;
                 }
                 console.error('---?? checkNeedIncSyncAgain ??------' + usn)
-                console.trace();
                 me._needIncrSyncAgain = true;
             }
         }
@@ -1205,8 +1208,9 @@ var Sync = {
                 me.addSyncProcessStatus(10);
 
                 // 重新再来一次增量同步
-                if (me._needIncrSyncAgain) {
+                if (me._needIncrSyncAgain && me._reSyncAgainTimes < 5) {
                     console.error('    needIncrSyncAgain')
+                    me._reSyncAgainTimes++
                     me.fixConflictsForSendChanges(function() {
                         me.incrSync(true);
                     });
