@@ -11,7 +11,7 @@
     "nedb": "1.1.1",
     "needle": "git://github.com/leanote/needle.git",
     "node-getmac": "1.0.3",
-    "validator": ">=3.22.1",
+    "validator": ">=13.7.0",
     "xml2js": "0.4.6"
   }
 }
