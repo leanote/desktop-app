@@ -1405,7 +1405,7 @@ Note.syncProcess = function(msg) {
 Note.saveNote = function(e) {
     var num = e.which ? e.which : e.keyCode;
     // 保存
-    if ((e.ctrlKey || e.metaKey) && num == 83) { // ctrl + s or command + s
+    if ((e.ctrlKey || e.metaKey) && num == 83 && editorIsDirty()) { // ctrl + s or command + s
         incrSync(true);
         e.preventDefault();
         return false;
