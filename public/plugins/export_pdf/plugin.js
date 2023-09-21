@@ -116,7 +116,7 @@ define(function() {
         },
 
         fixFilename: function(filename) {
-            var reg = new RegExp("/|#|\\$|!|\\^|\\*|'| |\"|%|&|\\(|\\)|\\+|\\,|/|:|;|<|>|=|\\?|@|\\||\\\\", 'g');
+            var reg = new RegExp("/\\$|!|\\^|\\*|'|\"|%|&|\\+|\\,|:|;|<|>|=|\\?|@|\\|\\\\", 'g');
             filename = filename.replace(reg, "-");
             // 防止出现两个连续的-
             while (filename.indexOf('--') != -1) {
