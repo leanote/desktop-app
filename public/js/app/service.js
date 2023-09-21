@@ -11,12 +11,12 @@ var db = require('db');
 db.initGlobal();
 // 所有service, 与数据库打交道
 var Service = {
-	notebookService: require('notebook'),
-	noteService: require('note'),
-	userService: require('user'),
-	tagService: require('tag'),
-	apiService: require('api'),
-	syncServie: require('sync')
+    notebookService: require('notebook'),
+    noteService: require('note'),
+    userService: require('user'),
+    tagService: require('tag'),
+    apiService: require('api'),
+    syncServie: require('sync')
 };
 // 全局变量
 var ApiService = Service.apiService;
@@ -32,11 +32,13 @@ var CommonService = require('common');
 
 // NodeJs
 var NodeFs = require('fs');
+var Path = require('path');
 
 // 分发服务
 // route = /note/notebook
 // 过时
-Service.dispatch = function() {};
+Service.dispatch = function () {
+};
 var gui = require('gui');
 // var remote = require('remote');
 
