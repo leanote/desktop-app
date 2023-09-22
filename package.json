@@ -2,10 +2,13 @@
   "name": "leanote-desktop",
   "version": "1.0.0",
   "main": "main.js",
+  "description": "20230922编译[dlgcy.com]",
+  "author": "leanote",
   "dependencies": {
     "@electron/remote": "^1.0.4",
     "adm-zip": ">=0.4.11",
     "async": "2.6.4",
+    "electron-squirrel-startup": "^1.0.0",
     "iconv-lite": "0.4.15",
     "mkdirp": "0.3.5",
     "nedb": "1.1.1",
@@ -15,6 +18,17 @@
     "xml2js": "0.4.6"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "electron": "^26.2.2"
+  },
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   }
 }
