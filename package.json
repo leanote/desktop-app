@@ -1,5 +1,5 @@
 {
-  "name": "Leanote-Desktop",
+  "name": "leanote-desktop",
   "version": "1.0.0",
   "main": "main.js",
   "dependencies": {
@@ -13,5 +13,8 @@
     "node-getmac": "1.0.3",
     "validator": ">=13.7.0",
     "xml2js": "0.4.6"
+  },
+  "devDependencies": {
+    "electron": "^26.2.2"
   }
 }
