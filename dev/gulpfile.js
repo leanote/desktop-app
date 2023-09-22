@@ -28,9 +28,9 @@ gulp.task('less', function() {
 });
 
 // 开发服务
-gulp.task('dev', ['less'], function() {
-    gulp.watch(styleDir + '/**/*.less', ['less']);
-    gulp.watch(styleDir2 + '/**/*.less', ['less']);
+gulp.task('dev', gulp.series('less'), function() {
+    gulp.watch(styleDir + '/**/*.less', gulp.series('less'));
+    gulp.watch(styleDir2 + '/**/*.less', gulp.series('less'));
 });
 
-gulp.task('default', ['dev']);
+gulp.task('default', gulp.series('dev'));

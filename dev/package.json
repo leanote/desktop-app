@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "electron": "^26.2.2",
+    "gulp": "^4.0.2",
     "gulp-clean-css": "^2.3.2",
     "gulp-concat": "",
     "gulp-less": "^3.3.0",
