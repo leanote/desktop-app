@@ -1,6 +1,6 @@
 {
   "name": "leanote-desktop",
-  "version": "1.0.0",
+  "version": "2.7.0",
   "main": "main.js",
   "description": "20230922编译[dlgcy.com]",
   "author": "leanote",
@@ -15,7 +15,7 @@
     "needle": "git://github.com/leanote/needle.git",
     "node-getmac": "1.0.3",
     "validator": ">=13.7.0",
-    "xml2js": "0.4.6"
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.4.2",
@@ -24,11 +24,23 @@
     "@electron-forge/maker-squirrel": "^6.4.2",
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
-    "electron": "^26.2.2"
+    "electron": "^26.6.5"
   },
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/DLGCY_Clone/leanote-desktop-app.git"
+  },
+  "keywords": [
+    "leanote"
+  ],
+  "license": "MIT"
 }
