@@ -113,6 +113,54 @@ define(function () {
             return Api.getMsg(txt, 'plugin.import_leanote', data)
         },
 
+        // 获取文件名
+        getFilePath: function (callback) {
+            var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), {
+                    properties: ['openFile', 'multiSelections'],
+                    filters: [
+                        {name: 'Leanote', extensions: ['leanote']}
+                    ]
+                },
+                callback
+            );
+
+            if(typeof(po) != "object") {
+                return;
+            }
+
+            po.then(
+                function(re){
+                    if(re.canceled !== false || re.filePaths.length < 1){
+                        return;
+                    }
+                    callback(re.filePaths);
+                },
+                function(err){
+                    alert(err);
+                }
+            );
+        },
+
+        // 获取文件夹
+        getTargetPaths: function(callback) {
+            // showSaveDialog 不支持property选择文件夹
+            var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), {
+                defaultPath: Api.getDefaultPath(),
+                properties: ['openDirectory', 'multiSelections']
+            });
+            if (typeof(po) != "object") {
+                return;
+            }
+
+            po.then(function(re) {
+                if (re.canceled !== false || re.filePaths.length < 1) {
+                    return callback();
+                }
+                Api.saveLastPath(re.filePaths[0])
+                callback(re.filePaths);
+            });
+        },
+
         init: function () {
             var me = this;
             me._inited = true;
@@ -127,13 +175,7 @@ define(function () {
             // 导入, 选择文件
             $('#chooseLeanoteFile').click(function () {
 
-                Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(),
-                    {
-                        properties: ['openFile', 'multiSelections'],
-                        filters: [
-                            {name: 'Leanote', extensions: ['leanote']}
-                        ]
-                    },
+                me.getFilePath(
                     function (paths) {
                         if (!paths) {
                             return;
@@ -185,21 +227,21 @@ define(function () {
 
             });
 
-            // import,chosen dir
+            // 导入,选择文件夹
             $('#chooseLeanoteDir').click(function () {
-                Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(),
-                    {properties: ['openDirectory', 'multiSelections']},
+                me.getTargetPaths(
                     function (paths) {
                         if (!paths) {
                             return;
                         }
+                        
                         function dfsListDir(path, curNotebookId) {
                             var notes = [];
-                            var fileNames = Api.nodeFs.readdirSync(path);
+                            var fileNames = Api.NodeFs.readdirSync(path);
                             for (var i in fileNames) {
                                 var fileName = fileNames[i];
                                 var curFile = Api.path.join(path, fileName);
-                                if (Api.nodeFs.statSync(curFile).isDirectory()) {
+                                if (Api.NodeFs.statSync(curFile).isDirectory()) {
                                     // create node
                                     var childNotebookID = Api.notebook.addChildNotebookDir(curNotebookId, fileName);
                                     dfsListDir(curFile, childNotebookID);
