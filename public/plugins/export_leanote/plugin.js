@@ -98,7 +98,7 @@ define(function () {
             },
 
             fixFilename: function (filename) {
-                var reg = new RegExp("/|#|\\$|!|\\^|\\*|'| |\"|%|&|\\(|\\)|\\+|\\,|/|:|;|<|>|=|\\?|@|\\||\\\\", 'g');
+                var reg = new RegExp("/\\$|!|\\^|\\*|'|\"|%|&|\\+|\\,|:|;|<|>|=|\\?|@|\\|\\\\", 'g');
                 filename = filename.replace(reg, "-");
                 // 防止出现两个连续的-
                 while (filename.indexOf('--') != -1) {
@@ -426,9 +426,9 @@ define(function () {
                 }
                 var absPath = pathInfo.getFullPath();
 
-                // Api.nodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
+                // Api.NodeFs.existsSync(absPath) 总是返回false, 不知道什么原因
                 // 在控制台上是可以的
-                Api.nodeFs.exists(absPath, function (exists) {
+                Api.NodeFs.exists(absPath, function (exists) {
                     if (!exists) {
                         cb(absPath);
                     }
@@ -438,17 +438,23 @@ define(function () {
                 });
             },
 
-            getTargetPath: function (callback) {
+            getTargetPath: function(callback) {
                 // showSaveDialog 不支持property选择文件夹
-                Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(),
-                    {
-                        defaultPath: Api.gui.app.getPath('userDesktop') + '/',
-                        properties: ['openDirectory']
-                    },
-                    function (targetPath) {
-                        callback(targetPath);
+                var po = Api.gui.dialog.showOpenDialog(Api.gui.getCurrentWindow(), {
+                    defaultPath: Api.getDefaultPath(),
+                    properties: ['openDirectory']
+                });
+                if (typeof(po) != "object") {
+                    return;
+                }
+    
+                po.then(function(re) {
+                    if (re.canceled !== false || re.filePaths.length < 1) {
+                        return callback();
                     }
-                );
+                    Api.saveLastPath(re.filePaths[0])
+                    callback(re.filePaths[0]);
+                });
             },
 
             loadingIsClosed: false,
@@ -459,8 +465,8 @@ define(function () {
                     Api.notebook.getSubNotebooks(notebookId).forEach(function (note) {
                         // mkdir and set path
                         var subDir = Api.path.join(targetPath, note.Title);
-                        if (Api.nodeFs.existsSync(subDir) == false) {
-                            Api.nodeFs.mkdirSync(subDir);
+                        if (Api.NodeFs.existsSync(subDir) == false) {
+                            Api.NodeFs.mkdirSync(subDir);
                         }
 
                         // dfs
@@ -509,11 +515,15 @@ define(function () {
                         return;
                     }
 
-                    targetPath = Api.path.join(targetPath[0],
-                        Api.notebook.getNotebook(notebookId).Title);
-                    if (Api.nodeFs.existsSync(targetPath) == false) {
-                        Api.nodeFs.mkdirSync(targetPath);
-                    }
+                    targetPath = Api.path.join(targetPath, Api.notebook.getNotebook(notebookId).Title);
+                    // if (Api.NodeFs.existsSync(targetPath) == false) {
+                    //     Api.NodeFs.mkdirSync(targetPath);
+                    // }
+                    Api.NodeFs.exists(targetPath, function (exists) {
+                        if (!exists) {
+                            Api.NodeFs.mkdirSync(targetPath);
+                        }
+                    });
 
                     me.loadingIsClosed = false;
                     Api.loading.show(Api.getMsg('plugin.export_leanote.Exporting'),
@@ -536,8 +546,8 @@ define(function () {
                         Api.notebook.getSubNotebooks(notebookId).forEach(function (note) {
                             // mkdir and set path
                             var subDir = Api.path.join(targetPath, note.Title);
-                            if (Api.nodeFs.existsSync(subDir) == false) {
-                                Api.nodeFs.mkdirSync(subDir);
+                            if (Api.NodeFs.existsSync(subDir) == false) {
+                                Api.NodeFs.mkdirSync(subDir);
                             }
 
                             // dfs

@@ -34,6 +34,6 @@ var Config = {
         }
     ],
     "lang": "",
-    "theme": "pebbles",
+    "theme": "",
     "view": "snippet"
 };
