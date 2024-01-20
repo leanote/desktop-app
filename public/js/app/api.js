@@ -19,6 +19,7 @@ var Api = {
     dbService: db,
     ipc: electron.ipcRenderer,
     projectPath: projectPath,
+    path: Path,
     Resanitize,
 
     // 打开本地目录

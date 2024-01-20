@@ -1,17 +1,40 @@
 {
-  "name": "Leanote-Desktop",
-  "version": "1.0.0",
+  "name": "leanote-desktop",
+  "version": "2.8.0",
   "main": "main.js",
+  "description": "20240112编译[dlgcy.com]",
+  "author": "leanote",
   "dependencies": {
     "@electron/remote": "^1.0.4",
     "adm-zip": ">=0.4.11",
-    "async": "0.9.0",
+    "async": "2.6.4",
+    "electron-squirrel-startup": "^1.0.0",
+    "gulp": "^4.0.2",
     "iconv-lite": "0.4.15",
     "mkdirp": "0.3.5",
     "nedb": "1.1.1",
     "needle": "git://github.com/leanote/needle.git",
     "node-getmac": "1.0.3",
-    "validator": ">=3.22.1",
-    "xml2js": "0.4.6"
+    "resanitize": "^0.2.0",
+    "validator": ">=13.7.0",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "electron": "^12.0.2"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/DLGCY_Clone/leanote-desktop-app.git"
+  },
+  "keywords": [
+    "leanote"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "electron ."
   }
 }

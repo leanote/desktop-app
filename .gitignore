@@ -25,3 +25,4 @@ node_modules/fs.extra
 /dev/node_modules
 
 node_modules
+out/
